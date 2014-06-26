@@ -3,7 +3,7 @@
 import os
 
 
-def get_os_tmp_folder():
+def get_tmp_folder():
     tmp = '/tmp'
     if os.path.exists(tmp) and os.path.isdir(tmp):
         res = tmp
