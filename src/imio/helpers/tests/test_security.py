@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-"""Setup/installation tests for this package."""
+
+from AccessControl.SecurityManagement import getSecurityManager
 
 from imio.helpers.testing import IntegrationTestCase
 
@@ -18,6 +19,7 @@ class TestSecurityModule(IntegrationTestCase):
 
     def test_call_as_super_user(self):
         """
+        Normal usecase of call_as_super_user
         """
         from imio.helpers.security import call_as_super_user
 
@@ -46,6 +48,37 @@ class TestSecurityModule(IntegrationTestCase):
                 obj_id='forbidden_folder',
             )
         except Unauthorized:
-            self.fail(msg='call_with_super_user throwed an Unauthorized exception')
+            self.fail(msg='call_as_super_user throwed an Unauthorized exception')
         # the folder should be created
         self.assertTrue('forbidden_folder' in self.portal.objectIds())
+
+    def test_call_as_super_user_fallback(self):
+        """
+        Test if we get back to our original security manager after the callable excution.
+        """
+        from imio.helpers.security import call_as_super_user
+
+        def some_callable():
+            return 42
+
+        old_security_manager = getSecurityManager()
+        call_as_super_user(some_callable)
+        msg = "The security manager was not restored back."
+        self.assertTrue(old_security_manager == getSecurityManager(), msg)
+
+    def test_call_as_super_user_exception_fallback(self):
+        """
+        Test if we get back to our original security manager if the callable excution
+        goes wrong.
+        """
+        from imio.helpers.security import call_as_super_user
+
+        def some_crash_method():
+            42 / 0
+
+        old_security_manager = getSecurityManager()
+        try:
+            call_as_super_user(some_crash_method)
+        except:
+            msg = "The security manager was not restored back."
+            self.assertTrue(old_security_manager == getSecurityManager(), msg)
