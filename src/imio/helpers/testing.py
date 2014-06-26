@@ -2,7 +2,6 @@
 """Base module for unittesting."""
 
 from plone.app.robotframework.testing import AUTOLOGIN_LIBRARY_FIXTURE
-from plone.app.testing import applyProfile
 from plone.app.testing import FunctionalTesting
 from plone.app.testing import IntegrationTesting
 from plone.app.testing import login
@@ -13,29 +12,26 @@ from plone.app.testing import TEST_USER_ID
 from plone.app.testing import TEST_USER_NAME
 from plone.testing import z2
 
-import unittest2 as unittest
-
 import imio.helpers
 
+import unittest2 as unittest
 
-class ImioHelpersLayer(PloneSandboxLayer):
+
+class PloneWithHelpersLayer(PloneSandboxLayer):
 
     defaultBases = (PLONE_FIXTURE,)
-    products = ('imio.helpers',
-               )
 
     def setUpZope(self, app, configurationContext):
         """Set up Zope."""
         # Load ZCML
-        self.loadZCML(package=imio.helpers,
-                      name='testing.zcml')
-        for p in self.products:
-            z2.installProduct(app, p)
+        self.loadZCML(
+            package=imio.helpers,
+            name='testing.zcml'
+        )
+        z2.installProduct(app, 'imio.helpers')
 
     def setUpPloneSite(self, portal):
         """Set up Plone."""
-        # Install into Plone site using portal_setup
-        applyProfile(portal, 'imio.helpers:testing')
 
         # Login and create some test content
         setRoles(portal, TEST_USER_ID, ['Manager'])
@@ -49,31 +45,33 @@ class ImioHelpersLayer(PloneSandboxLayer):
 
     def tearDownZope(self, app):
         """Tear down Zope."""
-        for p in reversed(self.products):
-            z2.uninstallProduct(app, p)
+        z2.uninstallProduct(app, 'imio.helpers')
 
-
-FIXTURE = ImioHelpersLayer(
+FIXTURE = PloneWithHelpersLayer(
     name="FIXTURE"
-    )
+)
 
 
 INTEGRATION = IntegrationTesting(
     bases=(FIXTURE,),
     name="INTEGRATION"
-    )
+)
 
 
 FUNCTIONAL = FunctionalTesting(
     bases=(FIXTURE,),
     name="FUNCTIONAL"
-    )
+)
 
 
-ACCEPTANCE = FunctionalTesting(bases=(FIXTURE,
-                                      AUTOLOGIN_LIBRARY_FIXTURE,
-                                      z2.ZSERVER_FIXTURE),
-                               name="ACCEPTANCE")
+ACCEPTANCE = FunctionalTesting(
+    bases=(
+        FIXTURE,
+        AUTOLOGIN_LIBRARY_FIXTURE,
+        z2.ZSERVER_FIXTURE
+    ),
+    name="ACCEPTANCE"
+)
 
 
 class IntegrationTestCase(unittest.TestCase):
@@ -90,3 +88,7 @@ class FunctionalTestCase(unittest.TestCase):
     """Base class for functional tests."""
 
     layer = FUNCTIONAL
+
+    def setUp(self):
+        super(IntegrationTestCase, self).setUp()
+        self.portal = self.layer['portal']

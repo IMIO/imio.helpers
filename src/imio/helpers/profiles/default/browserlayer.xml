@@ -1,7 +1,0 @@
-<?xml version="1.0"?>
-<layers>
-  <layer
-    name="imio.helpers"
-    interface="imio.helpers.interfaces.IImioHelpersLayer"
-  />
-</layers>
