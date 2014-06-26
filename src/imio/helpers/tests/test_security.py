@@ -19,7 +19,7 @@ class TestSecurityModule(IntegrationTestCase):
     def test_call_as_super_user(self):
         """
         """
-        from imio.helpers.security import call_with_super_user
+        from imio.helpers.security import call_as_super_user
 
         # lower roles of ur test user
         setRoles(self.portal, TEST_USER_ID, ['Reader'])
@@ -40,7 +40,7 @@ class TestSecurityModule(IntegrationTestCase):
 
         # now try to call through call_with_super_user()
         try:
-            call_with_super_user(
+            call_as_super_user(
                 some_unautorized_creation_method,
                 'Folder',
                 obj_id='forbidden_folder',

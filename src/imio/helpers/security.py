@@ -9,7 +9,7 @@ from Products.CMFCore.tests.base.security import OmnipotentUser
 from plone import api
 
 
-def call_with_super_user(callable_obj, *args, **named_args):
+def call_as_super_user(callable_obj, *args, **named_args):
     """
     Call a callable object after switching to a security manager with omnipotent user
     then fall back to the original security manager.
