@@ -16,3 +16,4 @@ parts/
 src/*
 !src/imio
 var/
+.coverage
