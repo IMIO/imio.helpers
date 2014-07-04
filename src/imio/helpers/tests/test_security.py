@@ -82,3 +82,18 @@ class TestSecurityModule(IntegrationTestCase):
         except:
             msg = "The security manager was not restored back."
             self.assertTrue(old_security_manager == getSecurityManager(), msg)
+
+    def test_call_as_super_user_has_role(self):
+        """
+        Test if super user has method has_role() and that it always return true.
+        """
+        from imio.helpers.security import call_as_super_user
+
+        def some_method_that_will_call_has_role():
+            super_user = api.user.get_current()
+            msg = 'super user has no method has_role()'
+            self.assertTrue(hasattr(super_user, 'has_role'), msg)
+            has_role_result = super_user.has_role('YOLO Role')
+            self.assertTrue(has_role_result)
+
+        call_as_super_user(some_method_that_will_call_has_role)

@@ -20,7 +20,7 @@ def call_as_super_user(callable_obj, *args, **named_args):
         OmnipotentUser does  not implement has_role() so we have to define our own super
         user class implmenting the method.
         """
-        def has_role(self, *rags, **kwargs):
+        def has_role(self, *args, **kwargs):
             return True
 
     oldsm = getSecurityManager()
