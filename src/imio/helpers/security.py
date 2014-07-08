@@ -28,10 +28,11 @@ def call_as_super_user(callable_obj, *args, **named_args):
     portal = api.portal.getSite()
     newSecurityManager(None, SuperUser().__of__(portal.aq_inner.aq_parent.acl_users))
     try:
-        callable_obj(*args, **named_args)
+        result = callable_obj(*args, **named_args)
     except Exception, exc:
         # in case something wrong happen, make sure we fall back to original user
         setSecurityManager(oldsm)
         raise exc
     # fall back to original user
     setSecurityManager(oldsm)
+    return result

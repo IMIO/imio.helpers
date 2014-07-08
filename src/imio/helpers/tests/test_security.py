@@ -27,7 +27,8 @@ class TestSecurityModule(IntegrationTestCase):
         setRoles(self.portal, TEST_USER_ID, ['Reader'])
 
         def some_unautorized_creation_method(obj_type, obj_id='some_id'):
-            api.content.create(type=obj_type, id=obj_id, container=self.portal)
+            obj = api.content.create(type=obj_type, id=obj_id, container=self.portal)
+            return obj
 
         # callable should throws Unauthorized exception
         exception_was_thrown = False
@@ -42,7 +43,7 @@ class TestSecurityModule(IntegrationTestCase):
 
         # now try to call through call_with_super_user()
         try:
-            call_as_super_user(
+            result = call_as_super_user(
                 some_unautorized_creation_method,
                 'Folder',
                 obj_id='forbidden_folder',
@@ -51,6 +52,7 @@ class TestSecurityModule(IntegrationTestCase):
             self.fail(msg='call_as_super_user throwed an Unauthorized exception')
         # the folder should be created
         self.assertTrue('forbidden_folder' in self.portal.objectIds())
+        self.assertTrue(result == self.portal.forbidden_folder)
 
     def test_call_as_super_user_fallback(self):
         """
