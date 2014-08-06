@@ -14,7 +14,7 @@ class ZCTextIndexInfo:
 def addOrUpdateIndexes(portal, indexInfos={}):
     '''This method creates or updates, in a p_portal, definitions of indexes
        in its portal_catalog, based on index-related information given in
-       p_indexInfo. p_indexInfo is a dictionary of the form
+       p_indexInfos. p_indexInfos is a dictionary of the form
        {s_indexName: (s_indexType, s_indexExtra)}.
        Here are some examples of index types: "FieldIndex", "ZCTextIndex", "DateIndex".'''
     catalog = getToolByName(portal, 'portal_catalog')
