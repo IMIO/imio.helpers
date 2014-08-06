@@ -7,7 +7,7 @@ logger = logging.getLogger('imio.helpers:catalog')
 
 class ZCTextIndexInfo:
     '''Silly class used for storing information about a ZCTextIndex.'''
-    lexicon_id = "plone_lexicon"
+    lexicon_id = 'plone_lexicon'
     index_type = 'Okapi BM25 Rank'
 
 
@@ -15,16 +15,25 @@ def addOrUpdateIndexes(portal, indexInfos={}):
     '''This method creates or updates, in a p_portal, definitions of indexes
        in its portal_catalog, based on index-related information given in
        p_indexInfo. p_indexInfo is a dictionary of the form
-       {s_indexName:s_indexType}. Here are some examples of index types:
-       "FieldIndex", "ZCTextIndex", "DateIndex".
-       p_metadataInfo is a list of metadata to create from given p_indexInfo.'''
+       {s_indexName: (s_indexType, s_indexExtra)}.
+       Here are some examples of index types: "FieldIndex", "ZCTextIndex", "DateIndex".'''
     catalog = getToolByName(portal, 'portal_catalog')
     zopeCatalog = catalog._catalog
-    for indexName, indexType in indexInfos.iteritems():
+    for indexName, indexInfo in indexInfos.iteritems():
+        indexType, extra = indexInfo
+        if indexType == 'ZCTextIndex' and not extra:
+            extra = ZCTextIndexInfo()
         # If this index already exists but with a different type, remove it.
-        if (indexName in zopeCatalog.indexes):
-            oldType = zopeCatalog.indexes[indexName].__class__.__name__
-            if oldType != indexType:
+        if indexName in zopeCatalog.indexes:
+            storedIndex = zopeCatalog.indexes[indexName]
+            oldType = storedIndex.meta_type
+            needToDeleteIndex = False
+            # if other indexType or changing 'extra' record of a 'ZCTextIndex', remove the index
+            if oldType != indexType or \
+               (indexType == 'ZCTextIndex' and
+               (storedIndex.lexicon_id != extra.lexicon_id or storedIndex._index_type != extra.index_type)):
+                needToDeleteIndex = True
+            if needToDeleteIndex:
                 catalog.delIndex(indexName)
                 logger.info('Existing index "%s" of type "%s" was removed:'
                             ' we need to recreate it with type "%s".' %
@@ -33,10 +42,7 @@ def addOrUpdateIndexes(portal, indexInfos={}):
         if indexName not in zopeCatalog.indexes:
             # We need to create this index
             addedIndexes.append(indexName)
-            if indexType != 'ZCTextIndex':
-                catalog.addIndex(indexName, indexType)
-            else:
-                catalog.addIndex(indexName, indexType, extra=ZCTextIndexInfo)
+            catalog.addIndex(indexName, indexType, extra)
             logger.info('Created index "%s" of type "%s"...' % (indexName, indexType))
 
     if addedIndexes:
