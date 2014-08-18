@@ -8,3 +8,5 @@
 ====================
 imio.helpers
 ====================
+
+Various helper methods for development.
