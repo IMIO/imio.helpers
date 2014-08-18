@@ -5,6 +5,8 @@ from plone import api
 from imio.helpers.testing import IntegrationTestCase
 from imio.helpers.catalog import addOrUpdateIndexes
 from imio.helpers.catalog import addOrUpdateColumns
+from imio.helpers.catalog import removeIndexes
+from imio.helpers.catalog import removeColumns
 from imio.helpers.catalog import ZCTextIndexInfo
 
 
@@ -113,3 +115,33 @@ class TestCatalogModule(IntegrationTestCase):
         # and back to a ZCTextIndex
         addOrUpdateIndexes(self.portal, {'sample_zctextindex': ('ZCTextIndex', {})})
         self.assertTrue(self.catalog._catalog.indexes['sample_zctextindex'].meta_type == 'ZCTextIndex')
+
+    def test_removeIndexes(self):
+        """
+        Normal usecase of removeIndexes, this will remove given indexes
+        and will not fail even if the index does not exist.
+        """
+        # remove an existing index, it will only remove the index, not column if also exists
+        self.assertTrue('Description' in self.catalog.indexes())
+        self.assertTrue('Description' in self.catalog.schema())
+        removeIndexes(self.portal, indexes=('Description', ))
+        self.assertTrue(not 'Description' in self.catalog.indexes())
+        # the metadata with same name still exists
+        self.assertTrue('Description' in self.catalog.schema())
+        # if we try to remove an unexisting index, it does not fail
+        removeIndexes(self.portal, indexes=('Description', ))
+
+    def test_removeColumns(self):
+        """
+        Normal usecase of removeColumns, this will remove given colmuns
+        and will not fail even if the column does not exist.
+        """
+        # remove an existing column, it will only remove the column, not the index if also exists
+        self.assertTrue('Description' in self.catalog.schema())
+        self.assertTrue('Description' in self.catalog.indexes())
+        removeColumns(self.portal, columns=('Description', ))
+        self.assertTrue(not 'Description' in self.catalog.schema())
+        # the index with same name still exists
+        self.assertTrue('Description' in self.catalog.indexes())
+        # if we try to remove an unexisting column, it does not fail
+        removeColumns(self.portal, columns=('Description', ))

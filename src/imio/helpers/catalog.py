@@ -50,6 +50,18 @@ def addOrUpdateIndexes(portal, indexInfos={}):
         catalog.reindexIndex(addedIndexes, portal.REQUEST)
 
 
+def removeIndexes(portal, indexes=()):
+    '''This method will remove given p_indexes if found in the portal_catalog.'''
+    catalog = getToolByName(portal, 'portal_catalog')
+    registered_indexes = catalog.indexes()
+    for index in indexes:
+        if index in registered_indexes:
+            catalog.delIndex(index)
+            logger.info('Removed index "%s"...' % index)
+        else:
+            logger.info('Trying to remove an unexisting index with name "%s"...' % index)
+
+
 def addOrUpdateColumns(portal, columnInfos=()):
     '''This method creates or updates, in a p_portal, definitions of metadata
        defined in given p_metadataInfos.'''
@@ -73,3 +85,16 @@ def addOrUpdateColumns(portal, columnInfos=()):
                 logger.error('Could not update metadata for an object from the uid %r.' % path)
             else:
                 obj.reindexObject(idxs=addedColumns)
+
+
+def removeColumns(portal, columns=()):
+    '''
+    '''
+    catalog = getToolByName(portal, 'portal_catalog')
+    registered_columns = catalog.schema()
+    for column in columns:
+        if column in registered_columns:
+            catalog.delColumn(column)
+            logger.info('Removed column "%s"...' % column)
+        else:
+            logger.info('Trying to remove an unexisting column with name "%s"...' % column)
