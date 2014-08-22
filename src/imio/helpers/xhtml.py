@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import lxml.html
-from lxml.etree import XMLSyntaxError
 
 
 def removeBlanks(xhtmlContent):
@@ -24,14 +23,12 @@ def xhtmlContentIsEmpty(xhtmlContent):
     if not xhtmlContent or not xhtmlContent.strip():
         return True
 
-    try:
-        # surround xhtmlContent with a special tag so we are sure that tree is always
-        # a list of children of this special tag
-        xhtmlContent = "<special_tag>%s</special_tag>" % xhtmlContent
-        tree = lxml.html.fromstring(unicode(xhtmlContent, 'utf-8'))
-    except XMLSyntaxError:
-        # if we can not parse it, consider it as not empty
-        return False
+    # surround xhtmlContent with a special tag so we are sure that tree is always
+    # a list of children of this special tag
+    xhtmlContent = "<special_tag>%s</special_tag>" % xhtmlContent
+    import ipdb; ipdb.set_trace()
+    tree = lxml.html.fromstring(unicode(xhtmlContent, 'utf-8'))
+
     for el in tree:
         if not el.text or el.text.strip() == u'':
             el.getparent().remove(el)
