@@ -26,7 +26,6 @@ def xhtmlContentIsEmpty(xhtmlContent):
     # surround xhtmlContent with a special tag so we are sure that tree is always
     # a list of children of this special tag
     xhtmlContent = "<special_tag>%s</special_tag>" % xhtmlContent
-    import ipdb; ipdb.set_trace()
     tree = lxml.html.fromstring(unicode(xhtmlContent, 'utf-8'))
 
     for el in tree:
