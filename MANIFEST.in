@@ -7,3 +7,5 @@ include .coveragerc
 include .travis.yml
 include Makefile
 global-exclude *.pyc
+recursive-include docs *.GPL
+recursive-include docs *.rst
