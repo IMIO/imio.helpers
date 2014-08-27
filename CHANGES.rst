@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.2 (unreleased)
+0.2 (2014-08-27)
 ----------------
 
 - Added xhtml.py module with helper methods for XHTML content :
