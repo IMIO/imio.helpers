@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.3 (unreleased)
+0.3 (2014-09-04)
 ----------------
 
 - Corrected bug in 'xhtmlContentIsEmpty' that did not managed correctly complex HTML tree.
