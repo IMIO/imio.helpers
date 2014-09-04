@@ -34,6 +34,11 @@ class TestXHTMLModule(IntegrationTestCase):
         self.assertTrue(xhtmlContentIsEmpty('<p></p>'))
         self.assertTrue(xhtmlContentIsEmpty('<br><br /><br/>'))
         self.assertTrue(xhtmlContentIsEmpty('<p></p><p>&nbsp;</p><p> </p><b></b><i> </i>'))
+        # complex empty tree
+        self.assertTrue(xhtmlContentIsEmpty('<table><tr><td> </td><td>&nbsp;</td></tr></table>'))
+        self.assertTrue(not xhtmlContentIsEmpty("Some text without any tag"))
+        self.assertTrue(not xhtmlContentIsEmpty("<p>Some broken HTML<broken_tag>text<broken_tag> </i></div>"))
         self.assertTrue(not xhtmlContentIsEmpty('<p>Some text to keep</p>'))
         self.assertTrue(not xhtmlContentIsEmpty('<p>&nbsp;</p><p>Some text to keep</p><i>&nbsp;</i>'))
         self.assertTrue(not xhtmlContentIsEmpty('<p>&nbsp;</p><i>Some text to keep</i>'))
+        self.assertTrue(not xhtmlContentIsEmpty('<table><tr><td>Some text to keep</td><td>&nbsp;</td></tr></table>'))

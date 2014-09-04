@@ -23,13 +23,5 @@ def xhtmlContentIsEmpty(xhtmlContent):
     if not xhtmlContent or not xhtmlContent.strip():
         return True
 
-    # surround xhtmlContent with a special tag so we are sure that tree is always
-    # a list of children of this special tag
-    xhtmlContent = "<special_tag>%s</special_tag>" % xhtmlContent
     tree = lxml.html.fromstring(unicode(xhtmlContent, 'utf-8'))
-
-    for el in tree:
-        if not el.text or el.text.strip() == u'':
-            el.getparent().remove(el)
-    # are there children left?  If not, it means that the field is empty...
-    return not bool(tree.getchildren())
+    return not bool(tree.text_content().strip())
