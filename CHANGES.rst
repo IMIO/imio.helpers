@@ -4,7 +4,9 @@ Changelog
 0.3 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Corrected bug in 'xhtmlContentIsEmpty' that did not managed correctly complex HTML tree.
+  We use now lxml method 'text_content' to check if a HTML structure will render something or not.
+  [gbastien]
 
 
 0.2 (2014-08-27)
