@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.4.1 (unreleased)
+0.4.1 (2014-09-11)
 ------------------
 
 - Corrected bug in 'removeBlanks' that removed children of an empty parent tag, that leaded
