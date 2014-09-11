@@ -11,10 +11,11 @@ def removeBlanks(xhtmlContent):
     xhtmlContent = "<special_tag>%s</special_tag>" % xhtmlContent
     tree = lxml.html.fromstring(unicode(xhtmlContent, 'utf-8'))
     for el in tree.getchildren():
-        if not el.text or el.text.strip() == u'':
+        # el can be a subtree, like <ul><li>...</li></ul> we must consider entire rendering of it
+        if not el.text_content().strip():
             el.getparent().remove(el)
     # only return children of the <special_tag>
-    return ''.join([lxml.html.tostring(x, encoding='utf-8') for x in tree.iterchildren()])
+    return ''.join([lxml.html.tostring(x, encoding='utf-8', pretty_print=True, method='xml') for x in tree.iterchildren()])
 
 
 def xhtmlContentIsEmpty(xhtmlContent):

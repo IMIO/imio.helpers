@@ -1,10 +1,12 @@
 Changelog
 =========
 
-0.4 (unreleased)
-----------------
+0.4.1 (unreleased)
+------------------
 
-- Nothing changed yet.
+- Corrected bug in 'removeBlanks' that removed children of an empty parent tag, that leaded
+  to removal of complex trees like <u><li>My text</li><li>My second text</li></ul>.
+  [gbastien]
 
 
 0.3 (2014-09-04)

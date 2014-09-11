@@ -21,9 +21,20 @@ class TestXHTMLModule(IntegrationTestCase):
         self.assertTrue(removeBlanks('<p></p><br><br /><br/>') == '')
         self.assertTrue(removeBlanks('<p>&nbsp;</p>') == '')
         self.assertTrue(removeBlanks('<p>&nbsp;<p><p>&nbsp;</p><i></i>') == '')
-        self.assertTrue(removeBlanks('<p>Some text to keep</p><p>&nbsp;</p><i></i>') == '<p>Some text to keep</p>')
-        self.assertTrue(removeBlanks('<p> </p><p>Some text to keep</p><p>&nbsp;</p>') == '<p>Some text to keep</p>')
-        self.assertTrue(removeBlanks('<p>Text line 1</p><p>Text line 2</p>') == '<p>Text line 1</p><p>Text line 2</p>')
+        self.assertTrue(removeBlanks('<p>Some text to keep</p><p>&nbsp;</p><i></i>') ==
+                        '<p>Some text to keep</p>\n')
+        self.assertTrue(removeBlanks('<p> </p><p>Some text to keep</p><p>&nbsp;</p>') ==
+                        '<p>Some text to keep</p>\n')
+        self.assertTrue(removeBlanks('<p>Text line 1</p><p>Text line 2</p>') ==
+                        '<p>Text line 1</p>\n<p>Text line 2</p>\n')
+        # complex tree filled
+        self.assertTrue(removeBlanks('<ul><li>First line</li><li>second line</li></ul>') ==
+                        '<ul>\n  <li>First line</li>\n  <li>second line</li>\n</ul>\n')
+        # complex tree semi-filled
+        self.assertTrue(removeBlanks('<ul><li>First line</li><li></li></ul>') ==
+                        '<ul>\n  <li>First line</li>\n  <li/>\n</ul>\n')
+        # empty complex tree
+        self.assertTrue(removeBlanks('<ul><li></li><li></li></ul>') == '')
 
     def test_xhtmlContentIsEmpty(self):
         """
