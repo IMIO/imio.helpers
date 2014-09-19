@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.4.2 (unreleased)
+0.4.2 (2014-09-19)
 ------------------
 
 - Do not consider xhtmlContent to easily empty : xhtmlContent is empty if it does not produce
