@@ -4,7 +4,9 @@ Changelog
 0.4.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Do not consider xhtmlContent to easily empty : xhtmlContent is empty if it does not produce
+  text, does not have attributes and does not have children.
+- Use method xhtmlContentIsEmpty in method removeBlanks to avoid duplicating code and logic.
 
 
 0.4.1 (2014-09-11)
