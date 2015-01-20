@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.4.3 (unreleased)
+0.4.3 (2015-01-20)
 ------------------
 
 - Added method addClassToLastChildren that will add a specific class attribute
