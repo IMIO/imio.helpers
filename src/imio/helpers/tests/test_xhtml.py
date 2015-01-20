@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from imio.helpers.testing import IntegrationTestCase
+from imio.helpers.xhtml import addClassToLastChildren
 from imio.helpers.xhtml import removeBlanks
 from imio.helpers.xhtml import xhtmlContentIsEmpty
 
@@ -60,3 +61,50 @@ class TestXHTMLModule(IntegrationTestCase):
         self.assertTrue(not xhtmlContentIsEmpty('<p>&nbsp;</p><i>Some text to keep</i>'))
         self.assertTrue(not xhtmlContentIsEmpty('<table><tr><td>Some text to keep</td><td>&nbsp;</td></tr></table>'))
         self.assertTrue(not xhtmlContentIsEmpty('<p><img src="my_image_path.png"/></p>'))
+
+    def test_addClassToLastChildren(self):
+        """
+          Test if adding a class to last x tags of a given XHTML content works.
+          By default, this method receives following parameters :
+          - xhtmlContent;
+          - className={'p': 'paraKeepWithNext',
+                       'li': 'itemKeepWithNext'};
+          - tags=('p', 'li', );
+          - numberOfChars=60.
+        """
+        self.assertTrue(addClassToLastChildren('') == '')
+        self.assertTrue(addClassToLastChildren(None) is None)
+        self.assertTrue(addClassToLastChildren('text') == 'text')
+        # if tag is not handled, it does not change anything, by default, tags 'p' and 'li' are handled
+        self.assertTrue(addClassToLastChildren('<span>My text with tag not handled</span>') ==
+                        '<span>My text with tag not handled</span>\n')
+        # now test with a single small handled tag, text size is lower than numberOfChars
+        self.assertTrue(addClassToLastChildren('<p>My small text</p>') ==
+                        '<p class="paraKeepWithNext">My small text</p>\n')
+        # existing class attribute is kept
+        self.assertTrue(addClassToLastChildren('<p class="myclass">My small text</p>') ==
+                        '<p class="paraKeepWithNext myclass">My small text</p>\n')
+        # test that if text is smaller than numberOfChars, several last tags are adapted
+        self.assertTrue(addClassToLastChildren('<p>My small text</p><p>My small text</p>') ==
+                        '<p class="paraKeepWithNext">My small text</p>\n'
+                        '<p class="paraKeepWithNext">My small text</p>\n')
+        # large text, only relevant tags are adapted until numberOfChars is rechead
+        self.assertTrue(addClassToLastChildren('<p>13 chars line</p>'
+                                               '<p>33 characters text line text line</p>'
+                                               '<p>33 characters text line text line</p>') ==
+                        '<p>13 chars line</p>\n<p class="paraKeepWithNext">33 characters text line text line</p>\n'
+                        '<p class="paraKeepWithNext">33 characters text line text line</p>\n')
+        # test mixing different handled tags like 'li' and 'p'
+        self.assertTrue(addClassToLastChildren('<p>13 chars line</p><ul><li>Line 1</li><li>Line 2</li>'
+                                               '<li>33 characters text line text line</li></ul>'
+                                               '<p>33 characters text line text line</p>') ==
+                        '<p>13 chars line</p>\n<ul>\n  <li>Line 1</li>\n  <li>Line 2</li>\n  '
+                        '<li class="paraKeepWithNext">33 characters text line text line</li>\n</ul>\n'
+                        '<p class="paraKeepWithNext">33 characters text line text line</p>\n')
+        # as soon as an unhandled tag is discover, adaptation stops
+        self.assertTrue(addClassToLastChildren('<p>13 chars line</p>'
+                                               '<img src="image.png"/>'
+                                               '<p>13 chars line</p>') ==
+                        '<p>13 chars line</p>\n'
+                        '<img src="image.png"/>\n'
+                        '<p class="paraKeepWithNext">13 chars line</p>\n')

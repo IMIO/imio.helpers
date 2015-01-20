@@ -4,7 +4,9 @@ Changelog
 0.4.3 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Added method addClassToLastChildren that will add a specific class attribute
+  to last tags of a given xhtmlContent.
+  [gbastien]
 
 
 0.4.2 (2014-09-19)
@@ -12,8 +14,9 @@ Changelog
 
 - Do not consider xhtmlContent to easily empty : xhtmlContent is empty if it does not produce
   text, does not have attributes and does not have children.
+  [gbastien]
 - Use method xhtmlContentIsEmpty in method removeBlanks to avoid duplicating code and logic.
-
+  [gbastien]
 
 0.4.1 (2014-09-11)
 ------------------
