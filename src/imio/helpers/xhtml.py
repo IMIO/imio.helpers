@@ -44,10 +44,12 @@ def removeBlanks(xhtmlContent):
 
 
 def addClassToLastChildren(xhtmlContent,
-                           className='paraKeepWithNext',
+                           classNames={'p': 'pmParaKeepWithNext',
+                                       'li': 'podItemKeepWithNext'},
                            tags=('p', 'ul', 'li', ),
                            numberOfChars=60):
-    '''This method will add a class attribute adding p_className to the last tags of given p_xhtmlContent.
+    '''This method will add a class attribute adding class correspondig to tag given in p_classNames
+       to the last tags of given p_xhtmlContent.
        It only consider given p_tags and will define the class on last tags until it contains given
        p_numberOfChars number of characters.
     '''
@@ -81,11 +83,11 @@ def addClassToLastChildren(xhtmlContent,
                     managedNumberOfChars = adaptTree(subchildren, managedNumberOfChars=managedNumberOfChars)
                 else:
                     # check if tag did not already have a class attribute
-                    # in this case, we append className to existing classes
+                    # in this case, we append classNames[child.tag] to existing classes
                     if 'class' in child.attrib:
-                        child.attrib['class'] = '{0} {1}'.format(className, child.attrib['class'])
+                        child.attrib['class'] = '{0} {1}'.format(classNames[child.tag], child.attrib['class'])
                     else:
-                        child.attrib['class'] = className
+                        child.attrib['class'] = classNames[child.tag]
                     managedNumberOfChars += child.text and len(child.text) or 0
                 if managedNumberOfChars >= numberOfChars:
                     stillNeedToAdaptPreviousChild = False

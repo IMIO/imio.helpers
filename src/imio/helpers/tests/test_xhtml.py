@@ -67,8 +67,8 @@ class TestXHTMLModule(IntegrationTestCase):
           Test if adding a class to last x tags of a given XHTML content works.
           By default, this method receives following parameters :
           - xhtmlContent;
-          - className={'p': 'paraKeepWithNext',
-                       'li': 'itemKeepWithNext'};
+          - classNames={'p': 'pmParaKeepWithNext',
+                       'li': 'podItemKeepWithNext'};
           - tags=('p', 'li', );
           - numberOfChars=60.
         """
@@ -80,31 +80,31 @@ class TestXHTMLModule(IntegrationTestCase):
                         '<span>My text with tag not handled</span>\n')
         # now test with a single small handled tag, text size is lower than numberOfChars
         self.assertTrue(addClassToLastChildren('<p>My small text</p>') ==
-                        '<p class="paraKeepWithNext">My small text</p>\n')
+                        '<p class="pmParaKeepWithNext">My small text</p>\n')
         # existing class attribute is kept
         self.assertTrue(addClassToLastChildren('<p class="myclass">My small text</p>') ==
-                        '<p class="paraKeepWithNext myclass">My small text</p>\n')
+                        '<p class="pmParaKeepWithNext myclass">My small text</p>\n')
         # test that if text is smaller than numberOfChars, several last tags are adapted
         self.assertTrue(addClassToLastChildren('<p>My small text</p><p>My small text</p>') ==
-                        '<p class="paraKeepWithNext">My small text</p>\n'
-                        '<p class="paraKeepWithNext">My small text</p>\n')
+                        '<p class="pmParaKeepWithNext">My small text</p>\n'
+                        '<p class="pmParaKeepWithNext">My small text</p>\n')
         # large text, only relevant tags are adapted until numberOfChars is rechead
         self.assertTrue(addClassToLastChildren('<p>13 chars line</p>'
                                                '<p>33 characters text line text line</p>'
                                                '<p>33 characters text line text line</p>') ==
-                        '<p>13 chars line</p>\n<p class="paraKeepWithNext">33 characters text line text line</p>\n'
-                        '<p class="paraKeepWithNext">33 characters text line text line</p>\n')
+                        '<p>13 chars line</p>\n<p class="pmParaKeepWithNext">33 characters text line text line</p>\n'
+                        '<p class="pmParaKeepWithNext">33 characters text line text line</p>\n')
         # test mixing different handled tags like 'li' and 'p'
         self.assertTrue(addClassToLastChildren('<p>13 chars line</p><ul><li>Line 1</li><li>Line 2</li>'
                                                '<li>33 characters text line text line</li></ul>'
                                                '<p>33 characters text line text line</p>') ==
                         '<p>13 chars line</p>\n<ul>\n  <li>Line 1</li>\n  <li>Line 2</li>\n  '
-                        '<li class="paraKeepWithNext">33 characters text line text line</li>\n</ul>\n'
-                        '<p class="paraKeepWithNext">33 characters text line text line</p>\n')
+                        '<li class="podItemKeepWithNext">33 characters text line text line</li>\n</ul>\n'
+                        '<p class="pmParaKeepWithNext">33 characters text line text line</p>\n')
         # as soon as an unhandled tag is discover, adaptation stops
         self.assertTrue(addClassToLastChildren('<p>13 chars line</p>'
                                                '<img src="image.png"/>'
                                                '<p>13 chars line</p>') ==
                         '<p>13 chars line</p>\n'
                         '<img src="image.png"/>\n'
-                        '<p class="paraKeepWithNext">13 chars line</p>\n')
+                        '<p class="pmParaKeepWithNext">13 chars line</p>\n')

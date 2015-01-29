@@ -4,7 +4,9 @@ Changelog
 0.4.4 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Make it possible to pass specific class by tag to hxtml.addClassToLastChildren,
+  this way, a specific class can be set depending on the node tag.
+  [gbastien]
 
 
 0.4.3 (unreleased)
