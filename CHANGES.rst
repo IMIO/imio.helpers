@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.4.4 (unreleased)
+0.4.4 (2015-01-29)
 ------------------
 
 - Make it possible to pass specific class by tag to hxtml.addClassToLastChildren,
