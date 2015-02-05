@@ -4,7 +4,9 @@ Changelog
 0.4.5 (unreleased)
 ------------------
 
-- Added a method to test if the buildout is in development mode (IS_DEV_ENV=True).
+- Added method to test if the buildout is in development mode (IS_DEV_ENV=True).
+  [sgeulette]
+- Added method to generate a password following criterias.
   [sgeulette]
 
 

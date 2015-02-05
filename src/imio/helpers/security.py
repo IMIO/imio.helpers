@@ -1,6 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import os
+import string
+from itertools import chain
+from time import time
+from random import seed, choice, sample
+
 from AccessControl.SecurityManagement import getSecurityManager
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import setSecurityManager
@@ -49,3 +54,28 @@ def is_develop_environment():
         return True
     else:
         return False
+
+
+def generate_password(length=10, digits=1, upper=1, lower=1, special=1):
+    """
+        Create a random password with the specified length and minimum numbers of
+        digit, upper and lower case letters, special characters.
+    """
+    seed(time())
+
+    lowercase = string.lowercase.translate(None, "o")
+    uppercase = string.uppercase.translate(None, "O")
+    # string.punctuation contains !"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~
+    specials = '!#$%&*+-<=>?@'
+    letters = "{0:s}{1:s}{2:s}".format(lowercase, uppercase, specials)
+
+    password = list(
+        chain(
+            (choice(uppercase) for _ in range(upper)),
+            (choice(lowercase) for _ in range(lower)),
+            (choice(string.digits) for _ in range(digits)),
+            (choice(specials) for _ in range(special)),
+            (choice(letters) for _ in range((length - digits - upper - lower - special)))
+        )
+    )
+    return "".join(sample(password, len(password)))
