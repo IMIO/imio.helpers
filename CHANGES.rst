@@ -4,7 +4,8 @@ Changelog
 0.4.5 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Added a method to test if the buildout is in development mode (IS_DEV_ENV=True).
+  [sgeulette]
 
 
 0.4.4 (2015-01-29)

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import os
 from AccessControl.SecurityManagement import getSecurityManager
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import setSecurityManager
@@ -36,3 +37,15 @@ def call_as_super_user(callable_obj, *args, **named_args):
     # fall back to original user
     setSecurityManager(oldsm)
     return result
+
+
+def is_develop_environment():
+    """
+        Test if the environment variable named IS_DEV_ENV is added by the buildout and get the value
+    """
+    TRUISMS = ['yes', 'y', 'true', 'on']
+    var = os.getenv('IS_DEV_ENV', 'false')
+    if var.lower() in TRUISMS:
+        return True
+    else:
+        return False

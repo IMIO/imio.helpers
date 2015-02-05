@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import os
 from AccessControl.SecurityManagement import getSecurityManager
 
 from imio.helpers.testing import IntegrationTestCase
@@ -99,3 +100,9 @@ class TestSecurityModule(IntegrationTestCase):
             self.assertTrue(has_role_result)
 
         call_as_super_user(some_method_that_will_call_has_role)
+
+    def test_is_develop_environment(self):
+        from imio.helpers.security import is_develop_environment
+        self.assertFalse(is_develop_environment())
+        os.environ['IS_DEV_ENV'] = 'true'
+        self.assertTrue(is_develop_environment())
