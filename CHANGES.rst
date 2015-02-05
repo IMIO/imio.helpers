@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.4.5 (unreleased)
+0.4.5 (2015-02-05)
 ------------------
 
 - Added method to test if the buildout is in development mode (IS_DEV_ENV=True).
