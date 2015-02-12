@@ -67,7 +67,7 @@ def generate_password(length=10, digits=1, upper=1, lower=1, special=1):
     uppercase = string.uppercase.translate(None, "O")
     # string.punctuation contains !"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~
     specials = '!#$%&*+-<=>?@'
-    letters = "{0:s}{1:s}{2:s}".format(lowercase, uppercase, specials)
+    letters = "{0:s}{1:s}".format(lowercase, uppercase)
 
     password = list(
         chain(
