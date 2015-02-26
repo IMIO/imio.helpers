@@ -19,7 +19,7 @@ class TestSecurityModule(IntegrationTestCase):
         self.assertTrue(is_develop_environment())
 
     def test_generate_password(self):
-        pwd = generate_password(length=10, digits=1, upper=1, lower=1, special=1)
+        pwd = generate_password(length=10, digits=1, upper=1, lower=1, special=1, readable=False)
         self.assertEqual(len(pwd), 10)
         self.assertIsNotNone(re.search(r'\d', pwd))
         self.assertIsNotNone(re.search(r'[A-Z]', pwd))
