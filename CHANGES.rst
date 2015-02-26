@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.4.6 (unreleased)
+0.4.6 (2015-02-26)
 ------------------
 
 - Added method markEmptyTags that will mark empty tags of a given
