@@ -7,6 +7,9 @@ Changelog
 - Added method markEmptyTags that will mark empty tags of a given
   xhtmlContent with a specific CSS class.
   [gbastien]
+- Removed method security.call_as_super_user as we will rely on
+  plone.api.env.adopt_roles to execute some methods as super user.
+  [gbastien]
 
 
 0.4.5 (2015-02-05)
