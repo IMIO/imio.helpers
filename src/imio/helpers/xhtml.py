@@ -3,9 +3,11 @@ import lxml.html
 import types
 
 
-def xhtmlContentIsEmpty(xhtmlContent):
+def xhtmlContentIsEmpty(xhtmlContent, tagWithAttributeIsNotEmpty=True):
     '''This method checks if given p_xhtmlContent will produce someting on rendering.
-       p_xhtmlContent can either be a string or already a lxml.html element.'''
+       p_xhtmlContent can either be a string or already a lxml.html element.
+       If p_tagWithAttributeIsNotEmpty is True, a tag without text but with an attribute will
+       be considered not empty.'''
     # first check if xhtmlContent is not simply None or so
     isStr = isinstance(xhtmlContent, types.StringType) or isinstance(xhtmlContent, types.NoneType)
     if isStr and (not xhtmlContent or not xhtmlContent.strip()):
@@ -16,15 +18,21 @@ def xhtmlContentIsEmpty(xhtmlContent):
         tree = lxml.html.fromstring(unicode(xhtmlContent, 'utf-8'))
     else:
         tree = xhtmlContent
+
+    def _isEmpty(child):
+        return not bool(child.text_content().strip()) and \
+            not bool(tagWithAttributeIsNotEmpty and child.attrib) and \
+            not bool(child.getchildren())
+
     if tree.tag == 'special_tag':
         if tree.getchildren():
-            for el in tree.getchildren():
-                if bool(el.text_content().strip()) or bool(el.attrib) or bool(el.getchildren()):
+            for child in tree.getchildren():
+                if not _isEmpty(child):
                     return False
             return True
 
     # if xhtmlContent renders text or has attributes or has children, we consider it not empty
-    return not bool(tree.text_content().strip()) and not bool(tree.attrib) and not bool(tree.getchildren())
+    return _isEmpty(tree)
 
 
 def removeBlanks(xhtmlContent):
@@ -117,7 +125,7 @@ def markEmptyTags(xhtmlContent, markingClass='highlightBlankRow', tagTitle='', o
         if not child.tag in tags:
             continue
 
-        if xhtmlContentIsEmpty(child):
+        if xhtmlContentIsEmpty(child, tagWithAttributeIsNotEmpty=False):
             childrenToMark.append(child)
         else:
             if onlyAtTheEnd:

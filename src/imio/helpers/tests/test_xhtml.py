@@ -140,3 +140,6 @@ class TestXHTMLModule(IntegrationTestCase):
         # we can also specify to add a title attribute to the highlighted tags
         self.assertTrue(markEmptyTags("<p>Text</p><p></p>", tagTitle='My tag title') ==
                         '<p>Text</p>\n<p class="highlightBlankRow" title="My tag title"/>\n')
+        # if an empty tag already have a class, the marking class is appended to it
+        self.assertTrue(markEmptyTags("<p class='existingClass'></p>") ==
+                        '<p class="highlightBlankRow existingClass"/>\n')
