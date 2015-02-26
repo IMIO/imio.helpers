@@ -122,14 +122,12 @@ def markEmptyTags(xhtmlContent, markingClass='highlightBlankRow', tagTitle='', o
     childrenToMark = []
     # find children to mark, aka empty tags taking into account p_onlyAtTheEnd
     for child in tree.getchildren():
-        if not child.tag in tags:
-            continue
-
-        if xhtmlContentIsEmpty(child, tagWithAttributeIsNotEmpty=False):
+        if child.tag in tags and xhtmlContentIsEmpty(child, tagWithAttributeIsNotEmpty=False):
             childrenToMark.append(child)
-        else:
-            if onlyAtTheEnd:
-                childrenToMark = []
+        elif onlyAtTheEnd:
+            # if tag is not managed or not empty, we reinitialize the childrenToMark
+            # because we are on a tag that is not considered empty
+            childrenToMark = []
     for child in childrenToMark:
         if 'class' in child.attrib:
             child.attrib['class'] = '{0} {1}'.format(markingClass, child.attrib['class'])
