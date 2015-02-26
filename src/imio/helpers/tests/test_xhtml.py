@@ -2,6 +2,7 @@
 
 from imio.helpers.testing import IntegrationTestCase
 from imio.helpers.xhtml import addClassToLastChildren
+from imio.helpers.xhtml import markEmptyTags
 from imio.helpers.xhtml import removeBlanks
 from imio.helpers.xhtml import xhtmlContentIsEmpty
 
@@ -108,3 +109,34 @@ class TestXHTMLModule(IntegrationTestCase):
                         '<p>13 chars line</p>\n'
                         '<img src="image.png"/>\n'
                         '<p class="pmParaKeepWithNext">13 chars line</p>\n')
+
+    def test_markEmptyTags(self):
+        """
+          Test if empty tags are correctly marked with a CSS class.
+          markEmptyTags can receive different parameters :
+          - markingClass : the class that will mark the empty tags;
+          - tagTitle : if given, a 'title' attribute is added to the marked tags;
+          - onlyAtTheEnd : if True, only empty tags at the end of the XHTML content are marked;
+          - tags : a list of handled tags.
+        """
+        self.assertTrue(markEmptyTags('') == '')
+        self.assertTrue(markEmptyTags(None) is None)
+        self.assertTrue(markEmptyTags("<p></p>") == '<p class="highlightBlankRow"/>\n')
+        self.assertTrue(markEmptyTags("<p> </p>") == '<p class="highlightBlankRow"> </p>\n')
+        self.assertTrue(markEmptyTags("<p>Text</p>") == '<p>Text</p>\n')
+        self.assertTrue(markEmptyTags("<p>Text</p><p></p>") == '<p>Text</p>\n<p class="highlightBlankRow"/>\n')
+        # change markingClass
+        self.assertTrue(markEmptyTags("<p> </p>", markingClass='customClass') == '<p class="customClass"> </p>\n')
+        # "span" not handled by default
+        self.assertTrue(markEmptyTags("<span></span>") == '<span/>\n')
+        # but "span" could be handled if necessary
+        self.assertTrue(markEmptyTags("<span></span>", tags=('span', )) == '<span class="highlightBlankRow"/>\n')
+        # by default every empty tags are highlighted, but we can specify to highlight only trailing
+        # ones aka only tags ending the XHTML content
+        self.assertTrue(markEmptyTags("<p></p><p>Text</p><p></p>") ==
+                        '<p class="highlightBlankRow"/>\n<p>Text</p>\n<p class="highlightBlankRow"/>\n')
+        self.assertTrue(markEmptyTags("<p></p><p>Text</p><p></p>", onlyAtTheEnd=True) ==
+                        '<p/>\n<p>Text</p>\n<p class="highlightBlankRow"/>\n')
+        # we can also specify to add a title attribute to the highlighted tags
+        self.assertTrue(markEmptyTags("<p>Text</p><p></p>", tagTitle='My tag title') ==
+                        '<p>Text</p>\n<p class="highlightBlankRow" title="My tag title"/>\n')

@@ -98,3 +98,36 @@ def addClassToLastChildren(xhtmlContent,
     adaptTree(children)
 
     return ''.join([lxml.html.tostring(x, encoding='utf-8', pretty_print=True, method='xml') for x in tree.iterchildren()])
+
+
+def markEmptyTags(xhtmlContent, markingClass='highlightBlankRow', tagTitle='', onlyAtTheEnd=False, tags=('p', 'div', )):
+    '''This will add a CSS class p_markingClass to tags of the given p_xhtmlContent
+       that are empty.  If p_onlyAtTheEnd is True, it will only mark empty rows that are
+       ending the XHTML content.'''
+    if not xhtmlContent or not xhtmlContent.strip():
+        return xhtmlContent
+
+    # surround xhtmlContent with a special tag so we are sure that tree is always
+    # a list of children of this special tag
+    xhtmlContent = "<special_tag>%s</special_tag>" % xhtmlContent
+    tree = lxml.html.fromstring(unicode(xhtmlContent, 'utf-8'))
+    childrenToMark = []
+    # find children to mark, aka empty tags taking into account p_onlyAtTheEnd
+    for child in tree.getchildren():
+        if not child.tag in tags:
+            continue
+
+        if xhtmlContentIsEmpty(child):
+            childrenToMark.append(child)
+        else:
+            if onlyAtTheEnd:
+                childrenToMark = []
+    for child in childrenToMark:
+        if 'class' in child.attrib:
+            child.attrib['class'] = '{0} {1}'.format(markingClass, child.attrib['class'])
+        else:
+            child.attrib['class'] = markingClass
+        # add a title to the tag if necessary
+        if tagTitle:
+            child.attrib['title'] = tagTitle
+    return ''.join([lxml.html.tostring(x, encoding='utf-8', pretty_print=True, method='xml') for x in tree.iterchildren()])

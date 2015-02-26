@@ -4,7 +4,9 @@ Changelog
 0.4.6 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Added method markEmptyTags that will mark empty tags of a given
+  xhtmlContent with a specific CSS class.
+  [gbastien]
 
 
 0.4.5 (2015-02-05)
