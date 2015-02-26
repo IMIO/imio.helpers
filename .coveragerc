@@ -8,3 +8,4 @@ omit =
     parts/*
     devel/*
     src/imio/__init__.py
+    src/imio/helpers/tests/__init__.py
