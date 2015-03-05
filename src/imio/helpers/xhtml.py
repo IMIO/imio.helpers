@@ -53,8 +53,15 @@ def removeBlanks(xhtmlContent):
 
 def addClassToLastChildren(xhtmlContent,
                            classNames={'p': 'pmParaKeepWithNext',
+                                       'strong': 'pmParaKeepWithNext',
+                                       'span': 'pmParaKeepWithNext',
+                                       'strike': 'pmParaKeepWithNext',
+                                       'i': 'pmParaKeepWithNext',
+                                       'em': 'pmParaKeepWithNext',
+                                       'div': 'pmParaKeepWithNext',
+                                       'ul': '',
                                        'li': 'podItemKeepWithNext'},
-                           tags=('p', 'ul', 'li', ),
+                           tags=('p', 'strong', 'span', 'strike', 'i', 'em', 'div', 'li', 'ul', ),
                            numberOfChars=60):
     '''This method will add a class attribute adding class correspondig to tag given in p_classNames
        to the last tags of given p_xhtmlContent.
@@ -82,21 +89,21 @@ def addClassToLastChildren(xhtmlContent,
         numberOfChildren = len(children)
         while stillNeedToAdaptPreviousChild and i <= numberOfChildren:
             child = children[-i]
-            if not child.tag in tags:
+            if not child.tag in tags and not child.getchildren():
                 stillNeedToAdaptPreviousChild = False
             else:
+                # check if tag did not already have a class attribute
+                # in this case, we append classNames[child.tag] to existing classes
+                if 'class' in child.attrib:
+                    child.attrib['class'] = '{0} {1}'.format(classNames[child.tag], child.attrib['class'])
+                else:
+                    child.attrib['class'] = classNames[child.tag]
+                managedNumberOfChars += child.text and len(child.text) or 0
                 subchildren = child.getchildren()
                 if subchildren:
                     # recursion is done here
                     managedNumberOfChars = adaptTree(subchildren, managedNumberOfChars=managedNumberOfChars)
-                else:
-                    # check if tag did not already have a class attribute
-                    # in this case, we append classNames[child.tag] to existing classes
-                    if 'class' in child.attrib:
-                        child.attrib['class'] = '{0} {1}'.format(classNames[child.tag], child.attrib['class'])
-                    else:
-                        child.attrib['class'] = classNames[child.tag]
-                    managedNumberOfChars += child.text and len(child.text) or 0
+
                 if managedNumberOfChars >= numberOfChars:
                     stillNeedToAdaptPreviousChild = False
                 i = i + 1

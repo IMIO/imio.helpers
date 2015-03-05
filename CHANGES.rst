@@ -4,7 +4,7 @@ Changelog
 0.4.7 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Adapted method xhtml.addClassToLastChildren to mark parent tag containing unhandled tags.
 
 
 0.4.6 (2015-02-26)

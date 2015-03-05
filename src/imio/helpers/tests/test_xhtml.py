@@ -77,8 +77,8 @@ class TestXHTMLModule(IntegrationTestCase):
         self.assertTrue(addClassToLastChildren(None) is None)
         self.assertTrue(addClassToLastChildren('text') == 'text')
         # if tag is not handled, it does not change anything, by default, tags 'p' and 'li' are handled
-        self.assertTrue(addClassToLastChildren('<span>My text with tag not handled</span>') ==
-                        '<span>My text with tag not handled</span>\n')
+        self.assertTrue(addClassToLastChildren('<unhandled_tag>My text with tag not handled</unhandled_tag>') ==
+                        '<unhandled_tag>My text with tag not handled</unhandled_tag>\n')
         # now test with a single small handled tag, text size is lower than numberOfChars
         self.assertTrue(addClassToLastChildren('<p>My small text</p>') ==
                         '<p class="pmParaKeepWithNext">My small text</p>\n')
@@ -95,11 +95,16 @@ class TestXHTMLModule(IntegrationTestCase):
                                                '<p>33 characters text line text line</p>') ==
                         '<p>13 chars line</p>\n<p class="pmParaKeepWithNext">33 characters text line text line</p>\n'
                         '<p class="pmParaKeepWithNext">33 characters text line text line</p>\n')
+        # tags with children
+        self.assertTrue(addClassToLastChildren('<p><strong>Strong text</strong> Paragraph text</p>') ==
+                        '<p class="pmParaKeepWithNext"><strong class="pmParaKeepWithNext">'
+                        'Strong text</strong> Paragraph text</p>\n')
+
         # test mixing different handled tags like 'li' and 'p'
         self.assertTrue(addClassToLastChildren('<p>13 chars line</p><ul><li>Line 1</li><li>Line 2</li>'
                                                '<li>33 characters text line text line</li></ul>'
                                                '<p>33 characters text line text line</p>') ==
-                        '<p>13 chars line</p>\n<ul>\n  <li>Line 1</li>\n  <li>Line 2</li>\n  '
+                        '<p>13 chars line</p>\n<ul class="">\n  <li>Line 1</li>\n  <li>Line 2</li>\n  '
                         '<li class="podItemKeepWithNext">33 characters text line text line</li>\n</ul>\n'
                         '<p class="pmParaKeepWithNext">33 characters text line text line</p>\n')
         # as soon as an unhandled tag is discover, adaptation stops
