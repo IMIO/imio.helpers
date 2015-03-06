@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.4.7 (unreleased)
+0.4.7 (2015-03-06)
 ------------------
 
 - Adapted method xhtml.addClassToLastChildren to mark parent tag containing unhandled tags.
