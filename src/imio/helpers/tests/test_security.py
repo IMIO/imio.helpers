@@ -14,6 +14,7 @@ class TestSecurityModule(IntegrationTestCase):
     """
 
     def test_is_develop_environment(self):
+        os.environ['IS_DEV_ENV'] = 'false'
         self.assertFalse(is_develop_environment())
         os.environ['IS_DEV_ENV'] = 'true'
         self.assertTrue(is_develop_environment())
