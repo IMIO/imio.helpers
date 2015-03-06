@@ -53,11 +53,11 @@ def removeBlanks(xhtmlContent):
 
 def addClassToLastChildren(xhtmlContent,
                            classNames={'p': 'pmParaKeepWithNext',
-                                       'strong': 'pmParaKeepWithNext',
-                                       'span': 'pmParaKeepWithNext',
-                                       'strike': 'pmParaKeepWithNext',
-                                       'i': 'pmParaKeepWithNext',
-                                       'em': 'pmParaKeepWithNext',
+                                       'strong': '',
+                                       'span': '',
+                                       'strike': '',
+                                       'i': '',
+                                       'em': '',
                                        'div': 'pmParaKeepWithNext',
                                        'ul': '',
                                        'li': 'podItemKeepWithNext'},
@@ -98,7 +98,7 @@ def addClassToLastChildren(xhtmlContent,
                     child.attrib['class'] = '{0} {1}'.format(classNames[child.tag], child.attrib['class'])
                 else:
                     child.attrib['class'] = classNames[child.tag]
-                managedNumberOfChars += child.text and len(child.text) or 0
+                managedNumberOfChars += child.text_content() and len(child.text_content()) or 0
                 subchildren = child.getchildren()
                 if subchildren:
                     # recursion is done here

@@ -96,9 +96,12 @@ class TestXHTMLModule(IntegrationTestCase):
                         '<p>13 chars line</p>\n<p class="pmParaKeepWithNext">33 characters text line text line</p>\n'
                         '<p class="pmParaKeepWithNext">33 characters text line text line</p>\n')
         # tags with children
-        self.assertTrue(addClassToLastChildren('<p><strong>Strong text</strong> Paragraph text</p>') ==
-                        '<p class="pmParaKeepWithNext"><strong class="pmParaKeepWithNext">'
-                        'Strong text</strong> Paragraph text</p>\n')
+        self.assertTrue(addClassToLastChildren('<p>First untouched paragraph</p>'
+                                               '<p><strong>Strong text Strong text Strong text Strong text</strong> '
+                                               'Paragraph text Paragraph text Paragraph text</p>') ==
+                        '<p>First untouched paragraph</p>\n'
+                        '<p class="pmParaKeepWithNext"><strong class="">Strong text Strong text Strong '
+                        'text Strong text</strong> Paragraph text Paragraph text Paragraph text</p>\n')
 
         # test mixing different handled tags like 'li' and 'p'
         self.assertTrue(addClassToLastChildren('<p>13 chars line</p><ul><li>Line 1</li><li>Line 2</li>'
