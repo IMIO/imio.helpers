@@ -62,12 +62,12 @@ def removeIndexes(portal, indexes=()):
             logger.info('Trying to remove an unexisting index with name "%s"...' % index)
 
 
-def addOrUpdateColumns(portal, columnInfos=()):
-    '''This method creates or updates, in a p_portal, definitions of metadata
-       defined in given p_metadataInfos.'''
+def addOrUpdateColumns(portal, columns=()):
+    '''This method creates or updates in a p_portal portal_catalog
+       the metadata given in p_columns.'''
     catalog = getToolByName(portal, 'portal_catalog')
     addedColumns = []
-    for column in columnInfos:
+    for column in columns:
         # Only add it if not already existing
         if not column in catalog.schema():
             addedColumns.append(column)
@@ -88,8 +88,8 @@ def addOrUpdateColumns(portal, columnInfos=()):
 
 
 def removeColumns(portal, columns=()):
-    '''
-    '''
+    '''This method will remove in p_portal portal_catalog
+       the metadata given in p_columns.'''
     catalog = getToolByName(portal, 'portal_catalog')
     registered_columns = catalog.schema()
     for column in columns:
