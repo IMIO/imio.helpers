@@ -120,7 +120,12 @@ def addClassToLastChildren(xhtmlContent,
     # call recursive method 'adaptTree' that whill adapt children and subchildren
     adaptTree(children)
 
-    return ''.join([lxml.html.tostring(x, encoding='utf-8', pretty_print=True, method='xml') for x in tree.iterchildren()])
+    # use encoding to 'ascii' so HTML entities are translated to something readable
+    res = ''.join([lxml.html.tostring(x,
+                                      encoding='ascii',
+                                      pretty_print=True,
+                                      method='xml') for x in tree.iterchildren()])
+    return res
 
 
 def markEmptyTags(xhtmlContent, markingClass='highlightBlankRow', tagTitle='', onlyAtTheEnd=False, tags=('p', 'div', )):

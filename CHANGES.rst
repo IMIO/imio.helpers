@@ -7,6 +7,10 @@ Changelog
 - Manage every text formatting tags in xhtml.addClassToLastChildren and
   do not break on unknwon tags.
   [gbastien]
+- Replace special characters by corresponding HTML entity in xhtml.addClassToLastChildren
+  so rendered content still contains original HTML entities.  This avoid HTML entities being
+  rendered as UTF-8 characters and some weirdly recognized ("&nbsp;").
+  [gbastien]
 
 
 0.4.7 (2015-03-06)

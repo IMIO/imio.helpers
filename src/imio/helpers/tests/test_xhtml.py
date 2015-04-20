@@ -158,6 +158,11 @@ class TestXHTMLModule(IntegrationTestCase):
                         '<unknown class="">\n    '
                         '<tagtag>Text</tagtag>\n  '
                         '</unknown>\n</p>\n')
+        # special characters are transformed to HTML entities
+        text = "<p>Some spécial charaçters &eacute;</p><p>&nbsp;</p>"
+        self.assertTrue(addClassToLastChildren(text) ==
+                        '<p class="pmParaKeepWithNext">Some sp&#233;cial chara&#231;ters &#233;</p>\n'
+                        '<p class="pmParaKeepWithNext">&#160;</p>\n')
 
     def test_markEmptyTags(self):
         """
