@@ -53,20 +53,26 @@ def removeBlanks(xhtmlContent):
 
 def addClassToLastChildren(xhtmlContent,
                            classNames={'p': 'pmParaKeepWithNext',
+                                       'div': 'pmParaKeepWithNext',
                                        'strong': '',
                                        'span': '',
                                        'strike': '',
                                        'i': '',
                                        'em': '',
-                                       'div': 'pmParaKeepWithNext',
+                                       'u': '',
+                                       'small': '',
+                                       'mark': '',
+                                       'del': '',
+                                       'ins': '',
+                                       'sub': '',
+                                       'sup': '',
                                        'ul': '',
                                        'li': 'podItemKeepWithNext'},
-                           tags=('p', 'strong', 'span', 'strike', 'i', 'em', 'div', 'li', 'ul', ),
                            numberOfChars=60):
     '''This method will add a class attribute adding class correspondig to tag given in p_classNames
        to the last tags of given p_xhtmlContent.
-       It only consider given p_tags and will define the class on last tags until it contains given
-       p_numberOfChars number of characters.
+       It only consider given p_classNames keys which are text formatting tags and will define the class
+       on last tags until it contains given p_numberOfChars number of characters.
     '''
     if not xhtmlContent or not xhtmlContent.strip():
         return xhtmlContent
@@ -77,6 +83,8 @@ def addClassToLastChildren(xhtmlContent,
     children = tree.getchildren()
     if not children:
         return xhtmlContent
+
+    tags = classNames.keys()
 
     def adaptTree(children, managedNumberOfChars=0):
         """
@@ -95,9 +103,9 @@ def addClassToLastChildren(xhtmlContent,
                 # check if tag did not already have a class attribute
                 # in this case, we append classNames[child.tag] to existing classes
                 if 'class' in child.attrib:
-                    child.attrib['class'] = '{0} {1}'.format(classNames[child.tag], child.attrib['class'])
+                    child.attrib['class'] = '{0} {1}'.format(classNames.get(child.tag, ''), child.attrib['class'])
                 else:
-                    child.attrib['class'] = classNames[child.tag]
+                    child.attrib['class'] = classNames.get(child.tag, '')
                 managedNumberOfChars += child.text_content() and len(child.text_content()) or 0
                 subchildren = child.getchildren()
                 if subchildren:

@@ -117,6 +117,47 @@ class TestXHTMLModule(IntegrationTestCase):
                         '<p>13 chars line</p>\n'
                         '<img src="image.png"/>\n'
                         '<p class="pmParaKeepWithNext">13 chars line</p>\n')
+        # test with sub tags
+        self.assertTrue(addClassToLastChildren('<p>Text</p><p><u><strong>dsdklm</strong></u></p>') ==
+                        '<p class="pmParaKeepWithNext">Text</p>\n'
+                        '<p class="pmParaKeepWithNext">\n  '
+                        '<u class="">\n    '
+                        '<strong class="">dsdklm</strong>\n  '
+                        '</u>\n</p>\n')
+        # test every available tags
+        self.assertTrue(addClassToLastChildren('<p>Text</p>'
+                                               '<p><strong>Strong</strong></p>'
+                                               '<p><span>Span</span></strong>'
+                                               '<p><strike>Strike</strike></p>'
+                                               '<p><i>I</i></p>'
+                                               '<p><em>Em</em></p>'
+                                               '<p><u>U</u></p>'
+                                               '<p><small>Small</small></p>'
+                                               '<p><mark>Mark</mark></p>'
+                                               '<p><del>Del</del></p>'
+                                               '<p><ins>Ins</ins></p>'
+                                               '<p><sub>Sub</sub></p>'
+                                               '<p><sup>Sup</sup></p>',
+                                               numberOfChars=85) ==
+                        '<p class="pmParaKeepWithNext">Text</p>\n'
+                        '<p class="pmParaKeepWithNext">\n  <strong class="">Strong</strong>\n</p>\n'
+                        '<p class="pmParaKeepWithNext">\n  <span class="">Span</span>\n</p>\n'
+                        '<p class="pmParaKeepWithNext">\n  <strike class="">Strike</strike>\n</p>\n'
+                        '<p class="pmParaKeepWithNext">\n  <i class="">I</i>\n</p>\n'
+                        '<p class="pmParaKeepWithNext">\n  <em class="">Em</em>\n</p>\n'
+                        '<p class="pmParaKeepWithNext">\n  <u class="">U</u>\n</p>\n'
+                        '<p class="pmParaKeepWithNext">\n  <small class="">Small</small>\n</p>\n'
+                        '<p class="pmParaKeepWithNext">\n  <mark class="">Mark</mark>\n</p>\n'
+                        '<p class="pmParaKeepWithNext">\n  <del class="">Del</del>\n</p>\n'
+                        '<p class="pmParaKeepWithNext">\n  <ins class="">Ins</ins>\n</p>\n'
+                        '<p class="pmParaKeepWithNext">\n  <sub class="">Sub</sub>\n</p>\n'
+                        '<p class="pmParaKeepWithNext">\n  <sup class="">Sup</sup>\n</p>\n')
+        # does not break with unknown tags
+        self.assertTrue(addClassToLastChildren('<p><unknown><tagtag>Text</tagtag></unknown></p>') ==
+                        '<p class="pmParaKeepWithNext">\n  '
+                        '<unknown class="">\n    '
+                        '<tagtag>Text</tagtag>\n  '
+                        '</unknown>\n</p>\n')
 
     def test_markEmptyTags(self):
         """

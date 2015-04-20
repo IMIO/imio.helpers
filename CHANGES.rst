@@ -4,13 +4,16 @@ Changelog
 0.4.8 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Manage every text formatting tags in xhtml.addClassToLastChildren and
+  do not break on unknwon tags.
+  [gbastien]
 
 
 0.4.7 (2015-03-06)
 ------------------
 
 - Adapted method xhtml.addClassToLastChildren to mark parent tag containing unhandled tags.
+  [gbastien]
 
 
 0.4.6 (2015-02-26)
