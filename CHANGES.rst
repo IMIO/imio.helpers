@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.4.8 (unreleased)
+0.4.8 (2015-04-20)
 ------------------
 
 - Manage every text formatting tags in xhtml.addClassToLastChildren and
