@@ -100,14 +100,14 @@ class TestXHTMLModule(IntegrationTestCase):
                                                '<p><strong>Strong text Strong text Strong text Strong text</strong> '
                                                'Paragraph text Paragraph text Paragraph text</p>') ==
                         '<p>First untouched paragraph</p>\n'
-                        '<p class="pmParaKeepWithNext"><strong class="">Strong text Strong text Strong '
+                        '<p class="pmParaKeepWithNext"><strong>Strong text Strong text Strong '
                         'text Strong text</strong> Paragraph text Paragraph text Paragraph text</p>\n')
 
         # test mixing different handled tags like 'li' and 'p'
         self.assertTrue(addClassToLastChildren('<p>13 chars line</p><ul><li>Line 1</li><li>Line 2</li>'
                                                '<li>33 characters text line text line</li></ul>'
                                                '<p>33 characters text line text line</p>') ==
-                        '<p>13 chars line</p>\n<ul class="">\n  <li>Line 1</li>\n  <li>Line 2</li>\n  '
+                        '<p>13 chars line</p>\n<ul>\n  <li>Line 1</li>\n  <li>Line 2</li>\n  '
                         '<li class="podItemKeepWithNext">33 characters text line text line</li>\n</ul>\n'
                         '<p class="pmParaKeepWithNext">33 characters text line text line</p>\n')
         # as soon as an unhandled tag is discover, adaptation stops
@@ -121,8 +121,8 @@ class TestXHTMLModule(IntegrationTestCase):
         self.assertTrue(addClassToLastChildren('<p>Text</p><p><u><strong>dsdklm</strong></u></p>') ==
                         '<p class="pmParaKeepWithNext">Text</p>\n'
                         '<p class="pmParaKeepWithNext">\n  '
-                        '<u class="">\n    '
-                        '<strong class="">dsdklm</strong>\n  '
+                        '<u>\n    '
+                        '<strong>dsdklm</strong>\n  '
                         '</u>\n</p>\n')
         # test every available tags
         self.assertTrue(addClassToLastChildren('<p>Text</p>'
@@ -140,22 +140,22 @@ class TestXHTMLModule(IntegrationTestCase):
                                                '<p><sup>Sup</sup></p>',
                                                numberOfChars=85) ==
                         '<p class="pmParaKeepWithNext">Text</p>\n'
-                        '<p class="pmParaKeepWithNext">\n  <strong class="">Strong</strong>\n</p>\n'
-                        '<p class="pmParaKeepWithNext">\n  <span class="">Span</span>\n</p>\n'
-                        '<p class="pmParaKeepWithNext">\n  <strike class="">Strike</strike>\n</p>\n'
-                        '<p class="pmParaKeepWithNext">\n  <i class="">I</i>\n</p>\n'
-                        '<p class="pmParaKeepWithNext">\n  <em class="">Em</em>\n</p>\n'
-                        '<p class="pmParaKeepWithNext">\n  <u class="">U</u>\n</p>\n'
-                        '<p class="pmParaKeepWithNext">\n  <small class="">Small</small>\n</p>\n'
-                        '<p class="pmParaKeepWithNext">\n  <mark class="">Mark</mark>\n</p>\n'
-                        '<p class="pmParaKeepWithNext">\n  <del class="">Del</del>\n</p>\n'
-                        '<p class="pmParaKeepWithNext">\n  <ins class="">Ins</ins>\n</p>\n'
-                        '<p class="pmParaKeepWithNext">\n  <sub class="">Sub</sub>\n</p>\n'
-                        '<p class="pmParaKeepWithNext">\n  <sup class="">Sup</sup>\n</p>\n')
-        # does not break with unknown tags
+                        '<p class="pmParaKeepWithNext">\n  <strong>Strong</strong>\n</p>\n'
+                        '<p class="pmParaKeepWithNext">\n  <span>Span</span>\n</p>\n'
+                        '<p class="pmParaKeepWithNext">\n  <strike>Strike</strike>\n</p>\n'
+                        '<p class="pmParaKeepWithNext">\n  <i>I</i>\n</p>\n'
+                        '<p class="pmParaKeepWithNext">\n  <em>Em</em>\n</p>\n'
+                        '<p class="pmParaKeepWithNext">\n  <u>U</u>\n</p>\n'
+                        '<p class="pmParaKeepWithNext">\n  <small>Small</small>\n</p>\n'
+                        '<p class="pmParaKeepWithNext">\n  <mark>Mark</mark>\n</p>\n'
+                        '<p class="pmParaKeepWithNext">\n  <del>Del</del>\n</p>\n'
+                        '<p class="pmParaKeepWithNext">\n  <ins>Ins</ins>\n</p>\n'
+                        '<p class="pmParaKeepWithNext">\n  <sub>Sub</sub>\n</p>\n'
+                        '<p class="pmParaKeepWithNext">\n  <sup>Sup</sup>\n</p>\n')
+        # does not break with unknown sub tags
         self.assertTrue(addClassToLastChildren('<p><unknown><tagtag>Text</tagtag></unknown></p>') ==
                         '<p class="pmParaKeepWithNext">\n  '
-                        '<unknown class="">\n    '
+                        '<unknown>\n    '
                         '<tagtag>Text</tagtag>\n  '
                         '</unknown>\n</p>\n')
         # special characters are transformed to HTML entities

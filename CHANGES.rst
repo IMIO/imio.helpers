@@ -4,7 +4,9 @@ Changelog
 0.4.9 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- In xhtml.addClassToLastChildren, do not define an empty class attribute.  Indeed, not 
+  managed tags were decorated with a 'class=""' attribute, this is no more the case.
+  [gbastien]
 
 
 0.4.8 (2015-04-20)

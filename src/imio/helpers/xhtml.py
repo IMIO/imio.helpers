@@ -102,10 +102,12 @@ def addClassToLastChildren(xhtmlContent,
             else:
                 # check if tag did not already have a class attribute
                 # in this case, we append classNames[child.tag] to existing classes
+                # and only if there is a classNames[child.tag]
+                cssClass = classNames.get(child.tag, '')
                 if 'class' in child.attrib:
-                    child.attrib['class'] = '{0} {1}'.format(classNames.get(child.tag, ''), child.attrib['class'])
-                else:
-                    child.attrib['class'] = classNames.get(child.tag, '')
+                    cssClass = '{0} {1}'.format(cssClass, child.attrib['class'])
+                if cssClass:
+                    child.attrib['class'] = cssClass
                 managedNumberOfChars += child.text_content() and len(child.text_content()) or 0
                 subchildren = child.getchildren()
                 if subchildren:
