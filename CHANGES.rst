@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.4.9 (unreleased)
+0.4.9 (2015-04-21)
 ------------------
 
 - In xhtml.addClassToLastChildren, do not define an empty class attribute.  Indeed, not 
