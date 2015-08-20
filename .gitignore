@@ -17,3 +17,4 @@ src/*
 !src/imio
 var/
 .coverage
+share/
