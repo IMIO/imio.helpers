@@ -4,7 +4,11 @@ Changelog
 0.4.10 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Add get_environment method and test.
+  [bsuttor]
+  
+- is_develop_envrionment method is true if global environment variable 'ENV' is equal to 'dev'.
+  [bsuttor]
 
 
 0.4.9 (2015-04-21)
