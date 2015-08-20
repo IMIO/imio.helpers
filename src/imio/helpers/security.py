@@ -13,11 +13,20 @@ def is_develop_environment():
     """
     TRUISMS = ['yes', 'y', 'true', 'on']
     var = os.getenv('IS_DEV_ENV', 'false')
+
     if var.lower() in TRUISMS:
+        return True
+    elif get_environment() == 'dev':
         return True
     else:
         return False
 
+def get_environment():
+    """
+        Get value of ENV environment variable. Value should be : dev, staging, preprod or prod.
+    """
+    env = os.getenv('ENV', 'prod')
+    return env.lower()
 
 def generate_password(length=10, digits=3, upper=2, lower=1, special=1, readable=True):
     """
