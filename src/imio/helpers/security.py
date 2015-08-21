@@ -21,12 +21,14 @@ def is_develop_environment():
     else:
         return False
 
+
 def get_environment():
     """
         Get value of ENV environment variable. Value should be : dev, staging, preprod or prod.
     """
     env = os.getenv('ENV', 'prod')
     return env.lower()
+
 
 def generate_password(length=10, digits=3, upper=2, lower=1, special=1, readable=True):
     """
@@ -39,7 +41,7 @@ def generate_password(length=10, digits=3, upper=2, lower=1, special=1, readable
     uppercase = string.uppercase.translate(None, "O")
     # string.punctuation contains !"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~
     specials = '!#$%&*+-<=>?@'
-    #letters = "{0:s}{1:s}".format(lowercase, uppercase)
+    # letters = "{0:s}{1:s}".format(lowercase, uppercase)
     letters = "{0:s}".format(lowercase)
 
     password = list(
