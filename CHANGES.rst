@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.4.10 (unreleased)
+0.4.10 (2015-08-21)
 -------------------
 
 - Add get_environment method and test.
