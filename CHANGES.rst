@@ -6,15 +6,15 @@ Changelog
 
 - Add get_environment method and test.
   [bsuttor]
-  
-- is_develop_envrionment method is true if global environment variable 'ENV' is equal to 'dev'.
+
+- is_develop_environment method is true if global environment variable 'ENV' is equal to 'dev'.
   [bsuttor]
 
 
 0.4.9 (2015-04-21)
 ------------------
 
-- In xhtml.addClassToLastChildren, do not define an empty class attribute.  Indeed, not 
+- In xhtml.addClassToLastChildren, do not define an empty class attribute.  Indeed, not
   managed tags were decorated with a 'class=""' attribute, this is no more the case.
   [gbastien]
 
