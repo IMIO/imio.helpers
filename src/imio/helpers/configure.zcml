@@ -6,7 +6,5 @@
     i18n_domain="imio.helpers">
 
     <five:registerPackage package="." initialize=".initialize" />
-    
-    <include package="plone.api" />
 
 </configure>

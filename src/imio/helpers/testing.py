@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 """Base module for unittesting."""
-
-from plone.app.robotframework.testing import AUTOLOGIN_LIBRARY_FIXTURE
 from plone.app.testing import FunctionalTesting
 from plone.app.testing import IntegrationTesting
 from plone.app.testing import login
@@ -61,16 +59,6 @@ INTEGRATION = IntegrationTesting(
 FUNCTIONAL = FunctionalTesting(
     bases=(FIXTURE,),
     name="FUNCTIONAL"
-)
-
-
-ACCEPTANCE = FunctionalTesting(
-    bases=(
-        FIXTURE,
-        AUTOLOGIN_LIBRARY_FIXTURE,
-        z2.ZSERVER_FIXTURE
-    ),
-    name="ACCEPTANCE"
 )
 
 

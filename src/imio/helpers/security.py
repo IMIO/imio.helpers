@@ -5,12 +5,15 @@ import string
 from itertools import chain
 from time import time
 from random import seed, choice, sample
+import logging
+logger = logging.getLogger("imio.helpers")
 
 
 def is_develop_environment():
     """
         Test if the environment variable named IS_DEV_ENV is added by the buildout and get the value
     """
+    logger.info('IS_DEV_ENV is deprecated, please use ENV variable.')
     TRUISMS = ['yes', 'y', 'true', 'on']
     var = os.getenv('IS_DEV_ENV', 'false')
 
@@ -24,7 +27,8 @@ def is_develop_environment():
 
 def get_environment():
     """
-        Get value of ENV environment variable. Value should be : dev, staging, preprod or prod.
+        Get value of ENV environment variable.
+        Value should be : dev, staging, preprod or prod.
     """
     env = os.getenv('ENV', 'prod')
     return env.lower()
@@ -32,8 +36,8 @@ def get_environment():
 
 def generate_password(length=10, digits=3, upper=2, lower=1, special=1, readable=True):
     """
-        Create a random password with the specified length and minimum numbers of
-        digit, upper and lower case letters, special characters.
+        Create a random password with the specified length and minimum numbers
+        of digit, upper and lower case letters, special characters.
     """
     seed(time())
 
