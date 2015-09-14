@@ -1,11 +1,7 @@
 [report]
+include =
+    src/imio/*
 omit =
-    /home/*/.buildout/eggs/*
-    /home/*/srv/zinstances/cache/eggs/*
-    /usr/*
-    bin/test
-    buildout-cache/eggs/*
-    parts/*
-    devel/*
+    */test*
     src/imio/__init__.py
-    src/imio/helpers/tests/__init__.py
+    src/imio/helpers/__init__.py
