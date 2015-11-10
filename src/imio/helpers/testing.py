@@ -12,7 +12,7 @@ from plone.testing import z2
 
 import imio.helpers
 
-import unittest2 as unittest
+import unittest
 
 
 class PloneWithHelpersLayer(PloneSandboxLayer):
