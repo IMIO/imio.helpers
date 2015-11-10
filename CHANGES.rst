@@ -4,7 +4,8 @@ Changelog
 0.4.11 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Added 'cache.cleanRamCache' method that will invalidateAll ram.cache.
+  [gbastien]
 
 
 0.4.10 (2015-08-21)
@@ -16,7 +17,7 @@ Changelog
   [bsuttor]
 - Added 'cache' module with helper methods 'cleanVocabularyCacheFor' that will clean
   instance.memoize cache defined on a named vocabulary and 'cleanRamCacheFor' that
-  will clean ram.cache defined on a given method
+  will clean ram.cache defined on a given method.
   [gbastien]
 
 

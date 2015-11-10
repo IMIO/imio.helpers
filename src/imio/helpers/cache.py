@@ -27,6 +27,13 @@ def cleanVocabularyCacheFor(vocabulary=None):
             getattr(vocab, Memojito.propname).clear()
 
 
+def cleanRamCache():
+    """Clean the entire ram.cache."""
+    cache_chooser = getUtility(ICacheChooser)
+    thecache = cache_chooser('')
+    thecache.ramcache.invalidateAll()
+
+
 def cleanRamCacheFor(methodId, obj=None):
     """Clean ram.cache for given p_methodId."""
     cache_chooser = getUtility(ICacheChooser)
