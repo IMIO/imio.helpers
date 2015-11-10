@@ -42,6 +42,7 @@ setup(
     zip_safe=False,
     install_requires=[
         'plone.api',
+        'plone.dexterity',
         'setuptools',
     ],
     extras_require={
