@@ -1,7 +1,7 @@
 exclude .mr.developer.cfg
 graft src/imio
 graft buildout.d
-graft docs/
+graft docs
 include *.cfg *.rst *.in
 include *.py
 include .coveragerc
