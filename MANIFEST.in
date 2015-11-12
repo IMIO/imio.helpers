@@ -1,12 +1,13 @@
 exclude .mr.developer.cfg
 graft src/imio
 graft buildout.d
-graft docs/
+graft docs
 include *.cfg *.rst *.in
 include *.py
 include .coveragerc
 include .travis.yml
 include Makefile
+exclude .installed.cfg
 global-exclude *.pyc
 recursive-include docs *.GPL
 recursive-include docs *.rst

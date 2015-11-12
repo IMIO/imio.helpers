@@ -9,6 +9,7 @@
 bin/
 buildout-cache/
 develop-eggs/
+htmlcov/
 include/
 lib/
 local/

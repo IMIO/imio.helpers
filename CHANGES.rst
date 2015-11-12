@@ -1,7 +1,13 @@
 Changelog
 =========
 
-0.4.11 (unreleased)
+0.4.12 (unreleased)
+-------------------
+
+- Nothing changed yet.
+
+
+0.4.11 (2015-11-12)
 -------------------
 
 - Added 'cache.cleanRamCache' method that will invalidateAll ram.cache.
