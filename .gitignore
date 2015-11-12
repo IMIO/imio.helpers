@@ -17,5 +17,4 @@ src/*
 !src/imio
 var/
 .coverage
-.installed.cfg
 share/
