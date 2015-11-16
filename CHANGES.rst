@@ -4,7 +4,9 @@ Changelog
 0.4.12 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Added test when an uid (path) is no more in the portal_catalog,
+  it does not break catalog.addOrUpdateColumns.
+  [gbastien]
 
 
 0.4.11 (2015-11-12)

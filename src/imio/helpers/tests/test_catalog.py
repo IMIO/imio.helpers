@@ -91,6 +91,19 @@ class TestCatalogModule(IntegrationTestCase):
             obj = brain.getObject()
             self.assertTrue(obj.UID()[::-1] == brain.reversedUID)
 
+    def test_addOrUpdateColumnsUnexistingUid(self):
+        """
+        In case we update the catalog and an uid is still in catalog but object
+        does not exist anymore, it does not fail and simply print a message
+        in the Zope log.
+        """
+        # insert an unexisting uid and addOrUpdateColumns
+        catalog = self.portal.portal_catalog
+        catalog._catalog.uids.insert('/plone/unknown', 123456789)
+        self.assertTrue('/plone/unknown' in catalog._catalog.uids.keys())
+        addOrUpdateColumns(self.portal, ('new_metadata', ))
+        self.assertIsNone(addOrUpdateColumns(self.portal, ('Title', )))
+
     def test_addOrUpdateZCTextIndex(self):
         """
         While adding a ZCTextIndex, optional 'extra' record can be passed.

@@ -30,8 +30,8 @@ def addOrUpdateIndexes(portal, indexInfos={}):
             needToDeleteIndex = False
             # if other indexType or changing 'extra' record of a 'ZCTextIndex', remove the index
             if oldType != indexType or \
-               (indexType == 'ZCTextIndex' and
-               (storedIndex.lexicon_id != extra.lexicon_id or storedIndex._index_type != extra.index_type)):
+               (indexType == 'ZCTextIndex' and (storedIndex.lexicon_id != extra.lexicon_id or
+                                                storedIndex._index_type != extra.index_type)):
                 needToDeleteIndex = True
             if needToDeleteIndex:
                 catalog.delIndex(indexName)
