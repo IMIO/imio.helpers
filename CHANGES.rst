@@ -7,6 +7,9 @@ Changelog
 - Added test when an uid (path) is no more in the portal_catalog,
   it does not break catalog.addOrUpdateColumns.
   [gbastien]
+- In xhtml.xhtmlContentIsEmpty, do no more consider tag children in _isEmpty,
+  a tag rendering nothing (text_content().strip() is empty) will be considered empty.
+  [gbastien]
 
 
 0.4.11 (2015-11-12)

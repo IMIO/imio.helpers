@@ -21,8 +21,7 @@ def xhtmlContentIsEmpty(xhtmlContent, tagWithAttributeIsNotEmpty=True):
 
     def _isEmpty(child):
         return not bool(child.text_content().strip()) and \
-            not bool(tagWithAttributeIsNotEmpty and child.attrib) and \
-            not bool(child.getchildren())
+            not bool(tagWithAttributeIsNotEmpty and child.attrib)
 
     if tree.tag == 'special_tag':
         if tree.getchildren():
@@ -48,7 +47,8 @@ def removeBlanks(xhtmlContent):
         if xhtmlContentIsEmpty(el):
             el.getparent().remove(el)
     # only return children of the <special_tag>
-    return ''.join([lxml.html.tostring(x, encoding='utf-8', pretty_print=True, method='xml') for x in tree.iterchildren()])
+    return ''.join([lxml.html.tostring(x, encoding='utf-8', pretty_print=True, method='xml')
+                    for x in tree.iterchildren()])
 
 
 def addClassToLastChildren(xhtmlContent,
@@ -158,4 +158,5 @@ def markEmptyTags(xhtmlContent, markingClass='highlightBlankRow', tagTitle='', o
         # add a title to the tag if necessary
         if tagTitle:
             child.attrib['title'] = tagTitle
-    return ''.join([lxml.html.tostring(x, encoding='utf-8', pretty_print=True, method='xml') for x in tree.iterchildren()])
+    return ''.join([lxml.html.tostring(x, encoding='utf-8', pretty_print=True, method='xml')
+                    for x in tree.iterchildren()])
