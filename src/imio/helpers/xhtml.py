@@ -20,8 +20,11 @@ def xhtmlContentIsEmpty(xhtmlContent, tagWithAttributeIsNotEmpty=True):
         tree = xhtmlContent
 
     def _isEmpty(child):
+        # consider that child as children except for some tag type
+        childAsChildren = [subchild for subchild in child.getchildren() if subchild.tag not in ('br', )]
         return not bool(child.text_content().strip()) and \
-            not bool(tagWithAttributeIsNotEmpty and child.attrib)
+            not bool(tagWithAttributeIsNotEmpty and child.attrib) and \
+            not bool(childAsChildren)
 
     if tree.tag == 'special_tag':
         if tree.getchildren():
