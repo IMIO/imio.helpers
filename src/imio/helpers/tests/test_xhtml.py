@@ -58,7 +58,10 @@ class TestXHTMLModule(IntegrationTestCase):
         self.assertTrue(not xhtmlContentIsEmpty('<p><ul><li> </li><li>&nbsp;</li></ul></p>'))
         # tree with some kind of children are considered empty
         self.assertTrue(xhtmlContentIsEmpty('<p><br /></p>'))
+        self.assertTrue(xhtmlContentIsEmpty('<p><br /><br /></p>'))
         self.assertTrue(xhtmlContentIsEmpty('<p>&nbsp;<br /></p>'))
+        self.assertTrue(xhtmlContentIsEmpty('<p></p>\n\n'))
+        self.assertTrue(xhtmlContentIsEmpty('<p><br />\n&nbsp;</p>\n'))
 
         # other content
         self.assertTrue(not xhtmlContentIsEmpty("Some text without any tag"))
