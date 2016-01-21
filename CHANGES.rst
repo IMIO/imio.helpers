@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.4.12 (unreleased)
+0.4.12 (2016-01-21)
 -------------------
 
 - Added test when an uid (path) is no more in the portal_catalog,
