@@ -206,3 +206,9 @@ class TestXHTMLModule(IntegrationTestCase):
         # if an empty tag already have a class, the marking class is appended to it
         self.assertTrue(markEmptyTags("<p class='existingClass'></p>") ==
                         '<p class="highlightBlankRow existingClass"/>\n')
+
+        # we may mark Unicode as well as UTF-8 xhtmlContent
+        self.assertEquals(markEmptyTags('<p>UTF-8 string with special chars: \xc3\xa9</p>'),
+                          '<p>UTF-8 string with special chars: \xc3\xa9</p>\n')
+        self.assertEquals(markEmptyTags(u'<p>Unicode string with special chars: \xe9</p>'),
+                          '<p>Unicode string with special chars: \xc3\xa9</p>\n')

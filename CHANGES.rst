@@ -4,7 +4,9 @@ Changelog
 0.4.13 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Use safe_unicode() instead of unicode(), especially in xhtml.markEmptyTags
+  to avoid UnicideDecode errors.
+  [gbastien]
 
 
 0.4.12 (2016-01-21)

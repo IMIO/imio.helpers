@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import lxml.html
 import types
+from Products.CMFPlone.utils import safe_unicode
 
 
 def xhtmlContentIsEmpty(xhtmlContent, tagWithAttributeIsNotEmpty=True):
@@ -15,7 +16,7 @@ def xhtmlContentIsEmpty(xhtmlContent, tagWithAttributeIsNotEmpty=True):
 
     if isStr:
         xhtmlContent = "<special_tag>%s</special_tag>" % xhtmlContent
-        tree = lxml.html.fromstring(unicode(xhtmlContent, 'utf-8'))
+        tree = lxml.html.fromstring(safe_unicode(xhtmlContent))
     else:
         tree = xhtmlContent
 
@@ -44,7 +45,7 @@ def removeBlanks(xhtmlContent):
     # surround xhtmlContent with a special tag so we are sure that tree is always
     # a list of children of this special tag
     xhtmlContent = "<special_tag>%s</special_tag>" % xhtmlContent
-    tree = lxml.html.fromstring(unicode(xhtmlContent, 'utf-8'))
+    tree = lxml.html.fromstring(safe_unicode(xhtmlContent))
     for el in tree.getchildren():
         # el can be a subtree, like <ul><li>...</li></ul> we must consider entire rendering of it
         if xhtmlContentIsEmpty(el):
@@ -82,7 +83,7 @@ def addClassToLastChildren(xhtmlContent,
 
     # surround xhtmlContent with a special tag so we are sure that tree is always
     # a list of children of this special tag
-    tree = lxml.html.fromstring(unicode("<special_tag>%s</special_tag>" % xhtmlContent.strip(), 'utf-8'))
+    tree = lxml.html.fromstring(safe_unicode("<special_tag>%s</special_tag>" % xhtmlContent.strip()))
     children = tree.getchildren()
     if not children:
         return xhtmlContent
@@ -143,7 +144,7 @@ def markEmptyTags(xhtmlContent, markingClass='highlightBlankRow', tagTitle='', o
     # surround xhtmlContent with a special tag so we are sure that tree is always
     # a list of children of this special tag
     xhtmlContent = "<special_tag>%s</special_tag>" % xhtmlContent
-    tree = lxml.html.fromstring(unicode(xhtmlContent, 'utf-8'))
+    tree = lxml.html.fromstring(safe_unicode(xhtmlContent))
     childrenToMark = []
     # find children to mark, aka empty tags taking into account p_onlyAtTheEnd
     for child in tree.getchildren():
