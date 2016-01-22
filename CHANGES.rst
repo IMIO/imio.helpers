@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.4.13 (unreleased)
+0.4.13 (2016-01-22)
 -------------------
 
 - Use safe_unicode() instead of unicode(), especially in xhtml.markEmptyTags
