@@ -4,7 +4,9 @@ Changelog
 0.4.14 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Removed initialize() call from __init__, no need to be considered
+  as a Zope2 product.
+  [gbastien]
 
 
 0.4.13 (2016-01-22)
