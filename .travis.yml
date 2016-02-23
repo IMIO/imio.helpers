@@ -3,6 +3,10 @@ language: python
 python:
   - 2.7
 
+before_install:
+  - sudo wget https://launchpad.net/~ubuntu-bugs-auftrags-killer/+archive/ubuntu/muelli/+files/zint_2.4.1ubuntu1_amd64.deb
+  - sudo dpkg -i zint_2.4.1ubuntu1_amd64.deb
+
 install:
   - mkdir -p buildout-cache/{eggs,downloads}
   - python bootstrap.py -c travis.cfg
