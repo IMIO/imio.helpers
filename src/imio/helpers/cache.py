@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 import logging
+from datetime import datetime
 from zope.component import getAllUtilitiesRegisteredFor
 from zope.component import getUtility
 from zope.component import queryUtility
 from zope.schema.interfaces import IVocabularyFactory
+from plone import api
 from plone.memoize.instance import Memojito
 from plone.memoize.interfaces import ICacheChooser
 
@@ -39,3 +41,28 @@ def cleanRamCacheFor(methodId, obj=None):
     cache_chooser = getUtility(ICacheChooser)
     thecache = cache_chooser(methodId)
     thecache.ramcache.invalidate(methodId)
+
+
+def get_cachekey_volatile(name):
+    """Helper for using a volatile corresponding to p_name
+       to be used as cachekey stored in a volatile.
+       If it exists, we return the value, either we store datetime.now()."""
+    portal = api.portal.get()
+    plone_utils = api.portal.get_tool('plone_utils')
+    normalized_name = plone_utils.normalizeString(name)
+    volatile_name = '_v_{0}'.format(normalized_name)
+    date = getattr(portal, volatile_name, None)
+    if not date:
+        date = datetime.now()
+        setattr(portal, volatile_name, date)
+    return date
+
+
+def invalidate_cachekey_volatile_for(name):
+    """ """
+    portal = api.portal.get()
+    plone_utils = api.portal.get_tool('plone_utils')
+    normalized_name = plone_utils.normalizeString(name)
+    volatile_name = '_v_{0}'.format(normalized_name)
+    if hasattr(portal, volatile_name):
+        delattr(portal, volatile_name)

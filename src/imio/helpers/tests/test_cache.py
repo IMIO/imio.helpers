@@ -1,13 +1,18 @@
 # -*- coding: utf-8 -*-
 
+from datetime import datetime
+from zope.component import queryUtility
+from zope.schema.interfaces import IVocabularyFactory
+from plone import api
+from plone.memoize import ram
+from plone.memoize.instance import Memojito
+
 from imio.helpers.cache import cleanVocabularyCacheFor
 from imio.helpers.cache import cleanRamCache
 from imio.helpers.cache import cleanRamCacheFor
+from imio.helpers.cache import get_cachekey_volatile
+from imio.helpers.cache import invalidate_cachekey_volatile_for
 from imio.helpers.testing import IntegrationTestCase
-from zope.component import queryUtility
-from zope.schema.interfaces import IVocabularyFactory
-from plone.memoize import ram
-from plone.memoize.instance import Memojito
 
 memPropName = Memojito.propname
 
@@ -103,3 +108,38 @@ class TestCacheModule(IntegrationTestCase):
         # now clean cache, it will returns 'b'
         cleanRamCacheFor('imio.helpers.tests.test_cache.ramCachedMethod')
         self.assertEquals(ramCachedMethod(self.portal, param='1'), 'b')
+
+    def test_get_cachekey_volatile(self):
+        """Helper method that adds a volatile on the portal storing current date."""
+        method_name = 'My method'
+        plone_utils = api.portal.get_tool('plone_utils')
+        normalized_name = plone_utils.normalizeString(method_name)
+        volatile_name = '_v_{0}'.format(normalized_name)
+        self.assertIsNone(getattr(self.portal, volatile_name, None))
+        # calling the method will set the volatile on the portal
+        date = get_cachekey_volatile(method_name)
+        self.assertTrue(isinstance(date, datetime))
+        self.assertTrue(isinstance(getattr(self.portal, volatile_name), datetime))
+        # calling it again will still return same date
+        self.assertEquals(date, get_cachekey_volatile(method_name))
+        # volatiles are not removed by tearDown, remove it now to avoid
+        # test isolation issues with test test_invalidate_cachekey_volatile_for
+        invalidate_cachekey_volatile_for(method_name)
+
+    def test_invalidate_cachekey_volatile_for(self):
+        """Helper method that will invalidate a given volatile."""
+        method_name = 'My method'
+        plone_utils = api.portal.get_tool('plone_utils')
+        normalized_name = plone_utils.normalizeString(method_name)
+        volatile_name = '_v_{0}'.format(normalized_name)
+        self.assertIsNone(getattr(self.portal, volatile_name, None))
+        # calling the method if volatile does not exist does not break
+        invalidate_cachekey_volatile_for(method_name)
+        # set it now
+        first_date = get_cachekey_volatile(method_name)
+        self.assertTrue(isinstance(first_date, datetime))
+        invalidate_cachekey_volatile_for(method_name)
+        self.assertIsNone(getattr(self.portal, volatile_name, None))
+        # if get_cachekey_volatile is called and volatile does not exist, it is created with datetime.now()
+        second_date = get_cachekey_volatile(method_name)
+        self.assertTrue(first_date < second_date)

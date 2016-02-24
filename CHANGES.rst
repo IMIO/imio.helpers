@@ -4,7 +4,14 @@ Changelog
 0.4.14 (unreleased)
 -------------------
 
-- Add a function to generate a barcode with zint : #13100
+- Added methods cache.get_cachekey_volatile and
+  cache.invalidate_cachekey_volatile_for to be used with methods using
+  decorator @ram.cache.  This is meant for long living cached methods that are
+  invalidated manually. get_cachekey_volatile will be used in the method
+  cachekey and invalidate_cachekey_volatile_for will be used to invalidate the
+  cachekey.
+  [gbastien]
+- Add a function to generate a barcode with zint : #13100.
   [mpeeters]
 - Removed initialize() call from __init__, no need to be considered
   as a Zope2 product.
