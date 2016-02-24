@@ -4,6 +4,8 @@ Changelog
 0.4.14 (unreleased)
 -------------------
 
+- Add a function to generate a barcode with zint : #13100
+  [mpeeters]
 - Removed initialize() call from __init__, no need to be considered
   as a Zope2 product.
   [gbastien]
