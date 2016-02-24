@@ -6,6 +6,7 @@ from zope.component import getUtility
 from zope.component import queryUtility
 from zope.schema.interfaces import IVocabularyFactory
 from plone import api
+from plone.i18n.normalizer import IIDNormalizer
 from plone.memoize.instance import Memojito
 from plone.memoize.interfaces import ICacheChooser
 
@@ -48,8 +49,9 @@ def get_cachekey_volatile(name):
        to be used as cachekey stored in a volatile.
        If it exists, we return the value, either we store datetime.now()."""
     portal = api.portal.get()
-    plone_utils = api.portal.get_tool('plone_utils')
-    normalized_name = plone_utils.normalizeString(name)
+    # use max_length of 200 to avoid cropped names that could lead to
+    # having 2 names beginning with same part using same volatile...
+    normalized_name = queryUtility(IIDNormalizer).normalize(name, max_length=200)
     volatile_name = '_v_{0}'.format(normalized_name)
     date = getattr(portal, volatile_name, None)
     if not date:
@@ -61,8 +63,7 @@ def get_cachekey_volatile(name):
 def invalidate_cachekey_volatile_for(name):
     """ """
     portal = api.portal.get()
-    plone_utils = api.portal.get_tool('plone_utils')
-    normalized_name = plone_utils.normalizeString(name)
+    normalized_name = queryUtility(IIDNormalizer).normalize(name, max_length=200)
     volatile_name = '_v_{0}'.format(normalized_name)
     if hasattr(portal, volatile_name):
         delattr(portal, volatile_name)
