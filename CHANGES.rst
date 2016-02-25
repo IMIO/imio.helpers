@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.4.14 (unreleased)
+0.4.14 (2016-02-25)
 -------------------
 
 - Added methods cache.get_cachekey_volatile and
