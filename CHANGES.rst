@@ -4,7 +4,9 @@ Changelog
 0.4.15 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Added helper to be able to easily test appy.pod rendering by loading a full
+  HTML content to any content specifying the field_name.
+  [gbastien]
 
 
 0.4.14 (2016-02-25)
