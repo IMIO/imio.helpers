@@ -37,6 +37,31 @@
 
 <p>&nbsp;</p>
 
+<p><u><strong>Retrait en début de ligne :</strong></u></p>
+
+<p>Mon texte <b>sans retrait</b></p>
+<p>&nbsp;</p>
+<p style="margin-left:40px">Mon texte <b>avec retrait</b> Mon texte avec retraitMon texte avec retraitMon texte avec retraitMon texte avec retraitMon texte avec retraitMon texte avec retraitMon texte avec retraitMon texte avec retraitMon texte avec retraitMon texte avec retraitMon texte avec retraitMon texte avec retraitMon texte avec retraitMon texte avec retraitMon texte avec retraitMon texte avec retraitMon texte avec retraitMon texte avec retraitMon texte avec retraitMon texte avec retrait</p>
+<p>&nbsp;</p>
+<p style="text-indent: 40px;">Mon texte <b>utilisant text-indent</b>, seule la première ligne du paragraphe est impactée par le retrait,par le retrait,par le retrait,par le retrait,par le retrait,par le retrait,par le retrait,par le retrait,par le retrait,par le retrait,par le retrait,par le retrait,par le retrait,par le retrait,par le retrait,par le retrait,par le retrait,par le retrait,par le retrait,par le retrait,par le retrait</p>
+<p>&nbsp;</p>
+
+<p><u><strong>Alignement du texte :</strong></u></p>
+
+<p>Paragraphe <b>sans alignement</b></p>
+
+<p>Paragraphe <b>aligné à gauche</b></p>
+
+<p style="text-align:right">Paragraphe <b>aligné à droite</b></p>
+
+<p style="text-align:center">Paragraphe <b>centré</b></p>
+
+<p style="text-align:justify">Long paragraphe <b>justifié</b> Long paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifié</p>
+
+<p style="text-align:justify">&nbsp;</p>
+
+<p>&nbsp;</p>
+
 <p><u><strong>Bloc de texte gardé sur la même page (fonctionne si le style "pmParaKeepWithNext" est défini dans le modèle ODT):</strong></u></p>
 
 <p class="pmParaKeepWithNext">Ce bloc de texte ne sera pas coupé à l'impression (ajouter saut de ligne au dessus de ce texte dans le document généré pour vérifier)</p>
@@ -83,9 +108,8 @@
 
 <ul>
 	<li>puce normale;</li>
-	<li>
-	<p>puce contenue dans un &lt;p&gt;;</p>
-
+	<li><p>puce contenue dans un &lt;p&gt;;</p></li>
+	<li><p><s>puce barrée contenue dans un &lt;p&gt;;</s></p>
 	<ul>
 		<li>
 		<p>sous-puce;</p>
@@ -117,9 +141,9 @@
 <p><u><strong>Numérotation classique :</strong></u></p>
 
 <ol>
-	<li>Texte texte <strong>texte</strong>;</li>
-	<li>Texte texte <u>texte</u>;</li>
-	<li>Texte <strong><em><u><s>texte</s></u></em></strong> texte;</li>
+	<li>Texte texte <strong>gras</strong>;</li>
+	<li>Texte texte <u>souligné</u>;</li>
+	<li>Texte <strong><em><u><s>gras/italique/souligné/barré</s></u></em></strong> texte;</li>
 	<li>Texte texte texte;</li>
 	<li>Texte texte texte;</li>
 </ol>
@@ -147,7 +171,7 @@
 <p><u><strong>Numérotation chiffres et lettres :</strong></u></p>
 
 <ol>
-	<li>Texte <s><strong>gras souligné</strong></s>;</li>
+	<li>Texte <s><strong>gras barré</strong></s>;</li>
 	<li>Texte texte text;
 	<ol start="1" style="list-style-type:lower-alpha">
 		<li>sous-puce lettre minuscule, Texte texte text;</li>
@@ -158,7 +182,7 @@
 	<li>Texte texte text;</li>
 	<li>Texte texte text;
 	<ol start="1" style="list-style-type:upper-alpha">
-		<li>sous-puce lettre MAJUSCULE, Texte texte text;</li>
+		<li>sous-puce lettre <b>MAJUSCULE utilisant un "b" au lieu d'un "strong" pour le gras</b>, Texte texte text;</li>
 		<li>Texte texte text;</li>
 	</ol>
 	</li>
@@ -173,7 +197,7 @@
 	<li>Texte texte text;</li>
 </ol>
 
-<p>Du texte inséré entre la liste puis...</p>
+<p style="margin-left:40px">Du texte inséré entre la liste puis...</p>
 
 <ol start="4">
 	<li>On recommence à 4;</li>
@@ -453,23 +477,27 @@
 
 <p>&nbsp;</p>
 
-<p><u><strong>Tableau avec alignement vertical :</strong></u></p>
+<p><u><strong>Tableau avec alignement vertical et horizontal :</strong></u></p>
 
 <table border="1" cellpadding="1" cellspacing="1" style="width:500px">
 	<tbody>
 		<tr>
-			<td style="vertical-align:top">Texte haut</td>
-			<td>Texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte</td>
+			<td style="vertical-align:top">Texte vertical haut</td>
+			<td style="text-align:center"><b>Texte centré</b> texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte</td>
 		</tr>
 		<tr>
 			<td style="vertical-align:bottom">
 			<p>Texte bas</p>
 			</td>
-			<td>Texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte</td>
+			<td style="text-align:right"><b>Texte à droite</b> texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte</td>
 		</tr>
 		<tr>
 			<td style="vertical-align:middle">Texte centré</td>
-			<td>Texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte</td>
+			<td style="text-align:justify;"><b>Texte justifié</b> texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte</td>
+		</tr>
+		<tr>
+			<td>Comportement par défaut</td>
+			<td><b>Texte par défaut</b> texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte</td>
 		</tr>
 	</tbody>
 </table>
@@ -496,6 +524,18 @@
 
 <p>&nbsp;</p>
 
+<p><u><strong>&gt;&gt;&gt;&gt;&gt; Images &lt;&lt;&lt;&lt;&lt; : </strong></u></p>
+
+<p>Cette image devrait être affichée dans le document généré, trop large elle est adaptée au document</p>
+
+<p><img alt="" src="http://localhost:8081/mc30b/Members/dfin/mymeetings/meeting-config-college/123/logo_imio.png" style="height:78px; width:639px" title="logo.png" /></p>
+
+<p>Une petite image est affichée correctement</p>
+
+<p><img alt="" src="http://localhost:8081/mc30b/Members/dfin/mymeetings/meeting-config-college/123/contact.png" style="height:291px; width:148px" title="contact.png" /></p>
+
+<p>&nbsp;</p>
+
 <p><u><strong>&gt;&gt;&gt;&gt;&gt; Cas spéciaux &lt;&lt;&lt;&lt;&lt; : </strong></u></p>
 
 <p><u><strong>Balise &lt;pre&gt; :</strong></u></p>
@@ -519,38 +559,3 @@
 <p>Mon texte avec du code et du code encore</p>
 
 <p>&nbsp;</p>
-
-<p><u><strong>Retrait en début de ligne :</strong></u></p>
-
-<p>Mon texte sans retrait</p>
-<p>&nbsp;</p>
-<p style="margin-left:40px">Mon texte avec retrait Mon texte avec retraitMon texte avec retraitMon texte avec retraitMon texte avec retraitMon texte avec retraitMon texte avec retraitMon texte avec retraitMon texte avec retraitMon texte avec retraitMon texte avec retraitMon texte avec retraitMon texte avec retraitMon texte avec retraitMon texte avec retraitMon texte avec retraitMon texte avec retraitMon texte avec retraitMon texte avec retraitMon texte avec retraitMon texte avec retrait</p>
-<p>&nbsp;</p>
-<p style="text-indent: 40px;">Mon texte utilisant text-indent, seule la première ligne du paragraphe est impactée par le retrait,par le retrait,par le retrait,par le retrait,par le retrait,par le retrait,par le retrait,par le retrait,par le retrait,par le retrait,par le retrait,par le retrait,par le retrait,par le retrait,par le retrait,par le retrait,par le retrait,par le retrait,par le retrait,par le retrait,par le retrait</p>
-<p>&nbsp;</p>
-
-<p><u><strong>Alignement du texte :</strong></u></p>
-
-<p>Paragraphe sans alignement</p>
-
-<p>Paragraphe aligné à gauche</p>
-
-<p style="text-align:right">Paragraphe aligné à droite</p>
-
-<p style="text-align:center">Paragraphe centré</p>
-
-<p style="text-align:justify">Long paragraphe justifié Long paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifié</p>
-
-<p style="text-align:justify">&nbsp;</p>
-
-<p style="text-align:justify"><u><strong>Texte avec images :</strong></u></p>
-
-<p style="text-align:justify">Cette image devrait être affichée dans le document généré, trop large elle est adaptée au document</p>
-
-<p style="text-align:justify"><img alt="" src="http://localhost:8081/mc30b/Members/dfin/mymeetings/meeting-config-college/123/logo_imio.png" style="height:78px; width:639px" title="logo.png" /></p>
-
-<p style="text-align:justify">Une petite image est affichée correctement</p>
-
-<p style="text-align:justify"><img alt="" src="http://localhost:8081/mc30b/Members/dfin/mymeetings/meeting-config-college/123/contact.png" style="height:291px; width:148px" title="contact.png" /></p>
-
-<p style="text-align:justify">&nbsp;</p>
