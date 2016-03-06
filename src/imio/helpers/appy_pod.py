@@ -2,6 +2,8 @@ from os import path
 from Products.Five.browser import BrowserView
 from plone import api
 from plone.dexterity.interfaces import IDexterityContent
+from plone.app.textfield.value import RichTextValue
+from plone.app.textfield import RichText
 
 
 class AppyPodSampleHTML(BrowserView):
@@ -15,7 +17,13 @@ class AppyPodSampleHTML(BrowserView):
         filled = False
         if IDexterityContent.providedBy(self.context):
             # dexterity
-            pass
+            portal_types = api.portal.get_tool('portal_types')
+            fti = portal_types[self.context.portal_type]
+            schema = fti.lookupSchema()
+            field = schema.get(field_name)
+            if field and isinstance(field, RichText):
+                setattr(self.context, field_name, RichTextValue(data.read()))
+                filled = True
         else:
             # Archetypes
             field = self.context.getField(field_name)
