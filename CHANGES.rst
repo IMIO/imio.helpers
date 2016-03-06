@@ -5,7 +5,7 @@ Changelog
 -------------------
 
 - Added helper to be able to easily test appy.pod rendering by loading a full
-  HTML content to any content specifying the field_name.
+  HTML content to any content (AT or DX) by specifying a RichText field_name.
   [gbastien]
 
 
