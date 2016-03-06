@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Base module for unittesting."""
+from plone.app.testing import applyProfile
 from plone.app.testing import FunctionalTesting
 from plone.app.testing import IntegrationTesting
 from plone.app.testing import login
@@ -30,6 +31,8 @@ class PloneWithHelpersLayer(PloneSandboxLayer):
 
     def setUpPloneSite(self, portal):
         """Set up Plone."""
+        # Install into Plone site using portal_setup
+        applyProfile(portal, 'imio.helpers:testing')
 
         # Login and create some test content
         setRoles(portal, TEST_USER_ID, ['Manager'])

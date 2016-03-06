@@ -48,6 +48,7 @@ setup(
     extras_require={
         'test': [
             'plone.app.testing',
+            'plone.app.dexterity',
         ],
     },
     entry_points="""
