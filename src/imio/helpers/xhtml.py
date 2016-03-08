@@ -199,13 +199,13 @@ def imagesToPath(context, xhtmlContent):
             img_src = img_src.replace(portal_url, '')
             try:
                 # get the image but remove leading '/'
-                imageObj = portal.restrictedTraverse(img_src[1:])
+                imageObj = portal.unrestrictedTraverse(img_src[1:])
             except (KeyError, AttributeError):
                 continue
         # relative path
         else:
             try:
-                imageObj = context.restrictedTraverse(img_src)
+                imageObj = context.unrestrictedTraverse(img_src)
             except (KeyError, AttributeError):
                 continue
         # maybe we have a ImageScale instead of the real Image object?
@@ -218,5 +218,9 @@ def imagesToPath(context, xhtmlContent):
         # change img src only if a blob_path was found
         if blob_path:
             img.attrib['src'] = blob_path
-    return ''.join([lxml.html.tostring(x, encoding='utf-8', pretty_print=True, method='xml')
-                    for x in tree.iterchildren()])
+
+    # use encoding to 'ascii' so HTML entities are translated to something readable
+    return ''.join([lxml.html.tostring(x,
+                                       encoding='ascii',
+                                       pretty_print=True,
+                                       method='xml') for x in tree.iterchildren()])
