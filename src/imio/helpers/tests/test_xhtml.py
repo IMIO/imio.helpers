@@ -305,3 +305,9 @@ class TestXHTMLModule(IntegrationTestCase):
         # if text does not contain images, it is returned as is
         text = '<p>Text without images.</p>'
         self.assertEquals(imagesToPath(doc, text), text)
+
+        # image outside any other tag
+        text = '<img src="http://nohost/plone/img/image_preview"/><img src="../img/image_preview"/>'
+        expected = text.replace("http://nohost/plone/img/image_preview", img_blob_path)
+        expected = expected.replace("../img/image_preview", img_blob_path)
+        self.assertEquals(imagesToPath(doc2, text).replace('\n', ''), expected.replace('\n', ''))
