@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
+from os import path
 
 from imio.helpers.testing import IntegrationTestCase
 from imio.helpers.xhtml import addClassToLastChildren
+from imio.helpers.xhtml import imagesToPath
 from imio.helpers.xhtml import markEmptyTags
 from imio.helpers.xhtml import removeBlanks
 from imio.helpers.xhtml import xhtmlContentIsEmpty
@@ -212,3 +214,94 @@ class TestXHTMLModule(IntegrationTestCase):
                           '<p>UTF-8 string with special chars: \xc3\xa9</p>\n')
         self.assertEquals(markEmptyTags(u'<p>Unicode string with special chars: \xe9</p>'),
                           '<p>Unicode string with special chars: \xc3\xa9</p>\n')
+
+    def test_imagesToPath(self):
+        """
+          Test that images src contained in a XHTML content are correctly changed to
+          the blob file system absolute path.
+        """
+        # create a document and an image
+        docId = self.portal.invokeFactory('Document', id='doc', title='Document')
+        doc = getattr(self.portal, docId)
+        img_without_blob_id = self.portal.invokeFactory('Image', id='img_without_blob', title='Image')
+        img_without_blob = getattr(self.portal, img_without_blob_id)
+        # no blob
+        self.assertEquals(img_without_blob.get_size(), 0)
+        file_path = path.join(path.dirname(__file__), 'dot.gif')
+        data = open(file_path, 'r')
+        img = self.portal.invokeFactory('Image', id='img', title='Image', file=data.read())
+        img = getattr(self.portal, img)
+        # has a blob
+        self.assertEquals(img.get_size(), 873)
+        img_blob_path = img.getBlobWrapper().blob._p_blob_committed
+        # folder with doc2 to test relative path
+        subfolderId = self.portal.invokeFactory('Folder', id='subfolder', title='Folder')
+        subfolder = getattr(self.portal, subfolderId)
+        doc2Id = subfolder.invokeFactory('Document', id='doc2', title='Document')
+        doc2 = getattr(subfolder, doc2Id)
+
+        # we do not setText because the mutator is overrided to use mxTidy
+        # to prettify the HTML
+        # test with internal image, absolute path
+        text = '<p>Image absolute path <img src="http://nohost/plone/img"/> end of text.</p>'
+        expected = text.replace("http://nohost/plone/img", img_blob_path)
+        self.assertEquals(imagesToPath(doc, text).strip(), expected)
+        # if we use an image having no blob, nothing is changed
+        text = '<p>Image absolute path <img src="http://nohost/plone/img_without_blob"/> end of text.</p>'
+        self.assertEquals(imagesToPath(doc, text).strip(), text)
+
+        # test with internal image, relative path
+        text = '<p>Image relative path <img src="../img" alt="Image" title="Image"/> end of text.</p>'
+        expected = text.replace("../img", img_blob_path)
+        self.assertEquals(imagesToPath(doc2, text).strip(), expected)
+        # if we use an image having no blob, nothing is changed
+        text = '<p>Image relative path <img src="../img_without_blob" alt="Image" title="Image"/> end of text.</p>'
+        self.assertEquals(imagesToPath(doc2, text).strip(), text)
+
+        # test with src to an ImageScale instead the full image
+        text = '<p>Link to ImageScale absolute path <img src="http://nohost/plone/img/image_preview"/> '\
+               'and relative path <img src="../img/image_preview"/>.</p>'
+        expected = text.replace("http://nohost/plone/img/image_preview", img_blob_path)
+        expected = expected.replace("../img/image_preview", img_blob_path)
+        self.assertEquals(imagesToPath(doc2, text).strip(), expected)
+
+        # test with src to image that is not an image, src will be to doc
+        text = '<p>Src image to doc absolute path <img src="http://nohost/plone/doc"/> '\
+               'and relative path <img src="../doc"/>.</p>'
+        # left as is
+        self.assertEquals(imagesToPath(doc2, text).strip(), text)
+
+        # external image, absolute_path
+        # nothing changed
+        text = '<p>Image absolute path <img src="http://www.othersite.com/image.png"/> end of text.</p>'
+        self.assertEquals(imagesToPath(doc, text).strip(), text)
+
+        # image that does not exist anymore, absolute and relative path
+        text = '<p>Removed image absolute path <img src="http://nohost/plone/removed_img"/> '\
+               'and relative path <img src="../removed_img"/>.</p>'
+        # left as is
+        self.assertEquals(imagesToPath(doc, text).strip(), text)
+
+        # more complex case with html sublevels, relative and absolute path images
+        text = """<p>Image absolute path <img src="http://nohost/plone/img"/> end of text.</p>
+<div>
+  <p>Image absolute path2 same img <img src="http://nohost/plone/img"/> end of text.</p>
+</div>
+<p>Image absolute path <img src="http://www.othersite.com/image.png"/> end of text.</p>
+<div>
+  <p>
+    <strong>Image relative path <img src="../img" alt="Image" title="Image"/> end of text.</strong>
+  </p>
+</div>
+<p>Removed image absolute path <img src="http://nohost/plone/removed_img" alt="Image" title="Image"/> end of text.</p>
+<p>Removed image relative path <img src="../removed_img" alt="Image" title="Image"/> end of text.</p>"""
+        expected = text.replace("http://nohost/plone/img", img_blob_path)
+        expected = expected.replace("../img", img_blob_path)
+        self.assertEquals(imagesToPath(doc2, text).replace('\n', ''), expected.replace('\n', ''))
+
+        # does not break if xhtmlContent is empty
+        self.assertEquals(imagesToPath(doc, ''), '')
+
+        # if text does not contain images, it is returned as is
+        text = '<p>Text without images.</p>'
+        self.assertEquals(imagesToPath(doc, text), text)

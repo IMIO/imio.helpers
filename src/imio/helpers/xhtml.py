@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 import lxml.html
 import types
+from Acquisition import aq_base
+from plone import api
 from Products.CMFPlone.utils import safe_unicode
+from plone.app.imaging.scale import ImageScale
 
 
 def xhtmlContentIsEmpty(xhtmlContent, tagWithAttributeIsNotEmpty=True):
@@ -162,5 +165,58 @@ def markEmptyTags(xhtmlContent, markingClass='highlightBlankRow', tagTitle='', o
         # add a title to the tag if necessary
         if tagTitle:
             child.attrib['title'] = tagTitle
+    return ''.join([lxml.html.tostring(x, encoding='utf-8', pretty_print=True, method='xml')
+                    for x in tree.iterchildren()])
+
+
+def imagesToPath(context, xhtmlContent):
+    '''Turn <img> source contained in given p_xhtmlContent to a FileSystem absolute path
+       to the .blob binary stored on the server.  This is usefull when generating documents
+       with XHTML containing images that are private, LibreOffice is not able to access these
+       images using the HTTP request.
+       <img src='http://mysite/myfolder/myimage.png' /> becomes <img src='/absolute/path/to/blobstorage/myfile.blob'/>,
+       external images are left unchanged.'''
+    if not xhtmlContent or not xhtmlContent.strip():
+        return xhtmlContent
+
+    specialXhtmlContent = "<special_tag>%s</special_tag>" % xhtmlContent
+    tree = lxml.html.fromstring(safe_unicode(specialXhtmlContent))
+    imgs = tree.findall('.//img')
+    if not imgs:
+        return xhtmlContent
+    portal = api.portal.get()
+    portal_url = portal.absolute_url()
+    for img in imgs:
+        # check if it is a local or an external image
+        img_src = img.attrib['src']
+        if img_src.startswith('http') and not img_src.startswith(portal_url):
+            continue
+        # here, we have an image contained in the portal
+        # either absolute path (http://...) or relative (../images/myimage.png)
+        imageObj = None
+        # absolute path
+        if img_src.startswith(portal_url):
+            img_src = img_src.replace(portal_url, '')
+            try:
+                # get the image but remove leading '/'
+                imageObj = portal.restrictedTraverse(img_src[1:])
+            except (KeyError, AttributeError):
+                continue
+        # relative path
+        else:
+            try:
+                imageObj = context.restrictedTraverse(img_src)
+            except (KeyError, AttributeError):
+                continue
+        # maybe we have a ImageScale instead of the real Image object?
+        if isinstance(imageObj, ImageScale):
+            imageObj = imageObj.aq_inner.aq_parent
+        blob_path = None
+        # be defensinve in case this is a wrong <img> with a src to someting else than an image...
+        if hasattr(aq_base(imageObj), 'getBlobWrapper') and imageObj.get_size():
+            blob_path = imageObj.getBlobWrapper().blob._p_blob_committed
+        # change img src only if a blob_path was found
+        if blob_path:
+            img.attrib['src'] = blob_path
     return ''.join([lxml.html.tostring(x, encoding='utf-8', pretty_print=True, method='xml')
                     for x in tree.iterchildren()])

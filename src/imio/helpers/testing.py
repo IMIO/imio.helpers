@@ -27,7 +27,6 @@ class PloneWithHelpersLayer(PloneSandboxLayer):
             package=imio.helpers,
             name='testing.zcml'
         )
-        z2.installProduct(app, 'imio.helpers')
 
     def setUpPloneSite(self, portal):
         """Set up Plone."""

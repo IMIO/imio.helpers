@@ -7,6 +7,10 @@ Changelog
 - Added helper to be able to easily test appy.pod rendering by loading a full
   HTML content to any content (AT or DX) by specifying a RichText field_name.
   [gbastien]
+- Added method xhtml.imagesToPath that turns the src of images used in a xhtml
+  content from an 'http' or equivalent path to the absolute path on the FileSystem
+  to the .blob image file.
+  [gbastien]
 
 
 0.4.14 (2016-02-25)
