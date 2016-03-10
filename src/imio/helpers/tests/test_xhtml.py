@@ -6,6 +6,7 @@ from imio.helpers.xhtml import addClassToLastChildren
 from imio.helpers.xhtml import imagesToPath
 from imio.helpers.xhtml import markEmptyTags
 from imio.helpers.xhtml import removeBlanks
+from imio.helpers.xhtml import storeExternalImagesLocally
 from imio.helpers.xhtml import xhtmlContentIsEmpty
 
 
@@ -311,3 +312,24 @@ class TestXHTMLModule(IntegrationTestCase):
         expected = text.replace("http://nohost/plone/img/image_preview", img_blob_path)
         expected = expected.replace("../img/image_preview", img_blob_path)
         self.assertEquals(imagesToPath(doc2, text).replace('\n', ''), expected.replace('\n', ''))
+
+    def test_storeExternalImagesLocally(self):
+        """
+          Test that images src contained in a XHTML that reference external images is
+          updated correctly and external image is stored locally.
+        """
+        # create a document and an image
+        docId = self.portal.invokeFactory('Document', id='doc', title='Document')
+        doc = getattr(self.portal, docId)
+        file_path = path.join(path.dirname(__file__), 'dot.gif')
+        data = open(file_path, 'r')
+        img = self.portal.invokeFactory('Image', id='img', title='Image', file=data.read())
+        img = getattr(self.portal, img)
+
+        # does not break if xhtmlContent is empty
+        self.assertEquals(storeExternalImagesLocally(doc, ''), '')
+        self.assertEquals(storeExternalImagesLocally(doc, '<p>&nbsp;</p>'), '<p>&nbsp;</p>')
+        # not changed if only contains local images, using relative or absolute path
+        text = '<p>Image absolute path <img src="http://nohost/plone/img"/> '\
+               'and relative path <img src="../img"/>.</p>'
+        self.assertEquals(storeExternalImagesLocally(doc, text), text)

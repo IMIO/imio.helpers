@@ -11,6 +11,10 @@ Changelog
   content from an 'http' or equivalent path to the absolute path on the FileSystem
   to the .blob image file.
   [gbastien]
+- Added method xhtml.storeExternalImagesLocally that will ensure that externally
+  referenced images are downloaded, stored locally and xhtmlContent is adapted
+  accordingly.
+  [gbastien]
 
 
 0.4.14 (2016-02-25)
