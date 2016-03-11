@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 import cgi
 import lxml.html
+import os
 import types
 import urllib
+from os import path
 from Acquisition import aq_base
 from zope.container.interfaces import INameChooser
 from plone import api
@@ -257,7 +259,11 @@ def storeExternalImagesLocally(context, xhtmlContent, imagePortalType='Image'):
         if not img_src.startswith('http') or img_src.startswith(portal_url):
             continue
         # right, we have an external image, download it, stores it in context and update img_src
-        downloaded_img_path, downloaded_img_infos = urllib.urlretrieve(img_src)
+        try:
+            downloaded_img_path, downloaded_img_infos = urllib.urlretrieve(img_src)
+        except IOError:
+            # url not existing
+            continue
         if not downloaded_img_infos.maintype == 'image':
             continue
         changed = True
@@ -267,7 +273,10 @@ def storeExternalImagesLocally(context, xhtmlContent, imagePortalType='Image'):
         name = name_chooser.chooseName(filename, context)
         f = open(downloaded_img_path, 'r')
         new_img_id = context.invokeFactory(imagePortalType, id=name, title=name, file=f.read())
+        # close and delete temporary file
         f.close()
+        if path.exists(downloaded_img_path):
+            os.remove(downloaded_img_path)
         new_img = getattr(context, new_img_id)
         img.attrib['src'] = new_img.absolute_url()
 
