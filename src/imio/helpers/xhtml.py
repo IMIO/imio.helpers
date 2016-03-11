@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
+import cgi
 import lxml.html
+import os
 import types
+import urllib
+from os import path
 from Acquisition import aq_base
+from zope.container.interfaces import INameChooser
 from plone import api
 from Products.CMFPlone.utils import safe_unicode
 from plone.app.imaging.scale import ImageScale
@@ -222,5 +227,63 @@ def imagesToPath(context, xhtmlContent):
     # use encoding to 'ascii' so HTML entities are translated to something readable
     return ''.join([lxml.html.tostring(x,
                                        encoding='ascii',
+                                       pretty_print=True,
+                                       method='xml') for x in tree.iterchildren()])
+
+
+def storeExternalImagesLocally(context, xhtmlContent, imagePortalType='Image'):
+    """If external images are found in the given p_xhtmlContent,
+       we download it and stored it in p_context, this way we ensure that it will
+       always be available in case the external site/external image disappear."""
+    if not xhtmlContent or not xhtmlContent.strip():
+        return xhtmlContent
+
+    specialXhtmlContent = "<special_tag>%s</special_tag>" % xhtmlContent
+    tree = lxml.html.fromstring(safe_unicode(specialXhtmlContent))
+    imgs = tree.findall('.//img')
+    if not imgs:
+        return xhtmlContent
+    portal = api.portal.get()
+    portal_url = portal.absolute_url()
+    # adapter to generate a valid id, it needs a container, so it will be context or it's parent
+    try:
+        name_chooser = INameChooser(context)
+    except TypeError:
+        parent = context.getParentNode()
+        name_chooser = INameChooser(parent)
+    # return received xhtmlContent if nothing was changed
+    changed = False
+    for img in imgs:
+        img_src = img.attrib['src']
+        # a relative path or path is in the portal_url, we pass
+        if not img_src.startswith('http') or img_src.startswith(portal_url):
+            continue
+        # right, we have an external image, download it, stores it in context and update img_src
+        try:
+            downloaded_img_path, downloaded_img_infos = urllib.urlretrieve(img_src)
+        except IOError:
+            # url not existing
+            continue
+        if not downloaded_img_infos.maintype == 'image':
+            continue
+        changed = True
+        # retrieve filename
+        disp_value, disp_params = cgi.parse_header(downloaded_img_infos.getheader('Content-Disposition'))
+        filename = disp_params.get('filename', 'image')
+        name = name_chooser.chooseName(filename, context)
+        f = open(downloaded_img_path, 'r')
+        new_img_id = context.invokeFactory(imagePortalType, id=name, title=name, file=f.read())
+        # close and delete temporary file
+        f.close()
+        if path.exists(downloaded_img_path):
+            os.remove(downloaded_img_path)
+        new_img = getattr(context, new_img_id)
+        img.attrib['src'] = new_img.absolute_url()
+
+    if not changed:
+        return xhtmlContent
+
+    return ''.join([lxml.html.tostring(x,
+                                       encoding='utf-8',
                                        pretty_print=True,
                                        method='xml') for x in tree.iterchildren()])

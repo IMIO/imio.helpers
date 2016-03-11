@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 from os import path
 
+from Products.ATContentTypes.interfaces import IImageContent
+
 from imio.helpers.testing import IntegrationTestCase
 from imio.helpers.xhtml import addClassToLastChildren
 from imio.helpers.xhtml import imagesToPath
 from imio.helpers.xhtml import markEmptyTags
 from imio.helpers.xhtml import removeBlanks
+from imio.helpers.xhtml import storeExternalImagesLocally
 from imio.helpers.xhtml import xhtmlContentIsEmpty
 
 
@@ -311,3 +314,50 @@ class TestXHTMLModule(IntegrationTestCase):
         expected = text.replace("http://nohost/plone/img/image_preview", img_blob_path)
         expected = expected.replace("../img/image_preview", img_blob_path)
         self.assertEquals(imagesToPath(doc2, text).replace('\n', ''), expected.replace('\n', ''))
+
+    def test_storeExternalImagesLocally(self):
+        """
+          Test that images src contained in a XHTML that reference external images is
+          updated correctly and external image is stored locally.
+        """
+        # create a document and an image
+        docId = self.portal.invokeFactory('Document', id='doc', title='Document')
+        doc = getattr(self.portal, docId)
+        file_path = path.join(path.dirname(__file__), 'dot.gif')
+        data = open(file_path, 'r')
+        img = self.portal.invokeFactory('Image', id='img', title='Image', file=data.read())
+        img = getattr(self.portal, img)
+
+        # does not break if xhtmlContent is empty
+        self.assertEquals(storeExternalImagesLocally(doc, ''), '')
+        self.assertEquals(storeExternalImagesLocally(doc, '<p>&nbsp;</p>'), '<p>&nbsp;</p>')
+        # not changed if only contains local images, using relative or absolute path
+        text = '<p>Image absolute path <img src="http://nohost/plone/img"/> '\
+               'and relative path <img src="../img"/>.</p>'
+        self.assertEquals(storeExternalImagesLocally(doc, text), text)
+
+        # link to unexisting external image, site exists but not image (error 404) nothing changed
+        text = '<p>Unexisting external image <img src="http://www.imio.be/unexistingimage.png"/></p>.'
+        self.assertEquals(storeExternalImagesLocally(doc, text), text)
+
+        # link to unexisting site, nothing changed
+        text = '<p>Unexisting external site <img src="http://www.unexistingsite.be/unexistingimage.png"/>.</p>'
+        self.assertEquals(storeExternalImagesLocally(doc, text), text)
+
+        # working example
+        text = '<p>Working external image <img src="http://www.imio.be/contact.png"/>.</p>'
+        # image object does not exist for now
+        self.assertFalse('contact.png' in self.portal.objectIds())
+        self.assertEquals(storeExternalImagesLocally(doc, text),
+                          '<p>Working external image <img src="http://nohost/plone/contact.png"/>.</p>\n')
+        contact = self.portal.get('contact.png')
+        self.assertTrue(IImageContent.providedBy(contact))
+
+        # working example with a Folder, this test case where we have a container
+        # using RichText field, in this case the Image is stored in the Folder, not next to it
+        text = '<p>Working external image <img src="http://www.imio.be/mascotte-presentation.jpg"/>.</p>'
+        expected = '<p>Working external image <img src="http://nohost/plone/folder/mascotte-presentation.jpg"/>.</p>\n'
+        self.assertFalse('mascotte-presentation.jpg' in self.portal.folder.objectIds())
+        self.assertEquals(storeExternalImagesLocally(self.portal.folder, text), expected)
+        mascotte = self.portal.folder.get('mascotte-presentation.jpg')
+        self.assertTrue(IImageContent.providedBy(mascotte))
