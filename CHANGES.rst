@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.4.16 (unreleased)
+0.4.16 (2016-03-14)
 -------------------
 
 - Bugfix in xhtml.storeExternalImagesLocally if downloaded external image has
