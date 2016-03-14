@@ -4,7 +4,9 @@ Changelog
 0.4.16 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Bugfix in xhtml.storeExternalImagesLocally if downloaded external image has
+  no 'Content-Disposition' header.
+  [gbastien]
 
 
 0.4.15 (2016-03-14)
