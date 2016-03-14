@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.4.15 (unreleased)
+0.4.15 (2016-03-14)
 -------------------
 
 - Added helper to be able to easily test appy.pod rendering by loading a full
