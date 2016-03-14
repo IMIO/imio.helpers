@@ -268,8 +268,15 @@ def storeExternalImagesLocally(context, xhtmlContent, imagePortalType='Image'):
             continue
         changed = True
         # retrieve filename
-        disp_value, disp_params = cgi.parse_header(downloaded_img_infos.getheader('Content-Disposition'))
-        filename = disp_params.get('filename', 'image')
+        filename = 'image'
+        disposition = downloaded_img_infos.getheader('Content-Disposition')
+        # get real filename from 'Content-Disposition' if available
+        if disposition:
+            disp_value, disp_params = cgi.parse_header(disposition)
+            filename = disp_params.get('filename', 'image')
+        # if no 'Content-Disposition', at least try to get correct file extension
+        elif hasattr(downloaded_img_infos, 'subtype'):
+            filename = '{0}.{1}'.format(filename, downloaded_img_infos.subtype)
         name = name_chooser.chooseName(filename, context)
         f = open(downloaded_img_path, 'r')
         new_img_id = context.invokeFactory(imagePortalType, id=name, title=name, file=f.read())

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import urllib
 from os import path
 
 from Products.ATContentTypes.interfaces import IImageContent
@@ -346,6 +347,9 @@ class TestXHTMLModule(IntegrationTestCase):
 
         # working example
         text = '<p>Working external image <img src="http://www.imio.be/contact.png"/>.</p>'
+        # we have Content-Dispsition header
+        downloaded_img_path, downloaded_img_infos = urllib.urlretrieve('http://www.imio.be/contact.png')
+        self.assertTrue(downloaded_img_infos.getheader('Content-Disposition'))
         # image object does not exist for now
         self.assertFalse('contact.png' in self.portal.objectIds())
         self.assertEquals(storeExternalImagesLocally(doc, text),
@@ -361,3 +365,13 @@ class TestXHTMLModule(IntegrationTestCase):
         self.assertEquals(storeExternalImagesLocally(self.portal.folder, text), expected)
         mascotte = self.portal.folder.get('mascotte-presentation.jpg')
         self.assertTrue(IImageContent.providedBy(mascotte))
+
+        # link to external image without Content-Disposition
+        # it is downloaded nevertheless but used filename will be 'image-1'
+        text = '<p>External site <img src="http://www.imio.be/logo.png"/>.</p>'
+        expected = '<p>External site <img src="http://nohost/plone/folder/image-1.png"/>.</p>\n'
+        downloaded_img_path, downloaded_img_infos = urllib.urlretrieve('http://www.imio.be/logo.png')
+        self.assertIsNone(downloaded_img_infos.getheader('Content-Disposition'))
+        self.assertEquals(storeExternalImagesLocally(self.portal.folder, text), expected)
+        logo = self.portal.folder.get('image-1.png')
+        self.assertTrue(IImageContent.providedBy(logo))
