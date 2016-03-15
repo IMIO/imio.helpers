@@ -4,7 +4,10 @@ Changelog
 0.4.17 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Added constant CLASS_TO_LAST_CHILDREN_NUMBER_OF_CHARS_DEFAULT to define the
+  default number of characters to take into account while marking last tags
+  in xhtml.addClassToLastChildren.  This way it can be used in other packages.
+  [gbastien]
 
 
 0.4.16 (2016-03-14)

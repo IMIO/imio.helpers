@@ -11,6 +11,8 @@ from plone import api
 from Products.CMFPlone.utils import safe_unicode
 from plone.app.imaging.scale import ImageScale
 
+CLASS_TO_LAST_CHILDREN_NUMBER_OF_CHARS_DEFAULT = 60
+
 
 def xhtmlContentIsEmpty(xhtmlContent, tagWithAttributeIsNotEmpty=True):
     '''This method checks if given p_xhtmlContent will produce someting on rendering.
@@ -80,7 +82,7 @@ def addClassToLastChildren(xhtmlContent,
                                        'sup': '',
                                        'ul': '',
                                        'li': 'podItemKeepWithNext'},
-                           numberOfChars=60):
+                           numberOfChars=CLASS_TO_LAST_CHILDREN_NUMBER_OF_CHARS_DEFAULT):
     '''This method will add a class attribute adding class correspondig to tag given in p_classNames
        to the last tags of given p_xhtmlContent.
        It only consider given p_classNames keys which are text formatting tags and will define the class
