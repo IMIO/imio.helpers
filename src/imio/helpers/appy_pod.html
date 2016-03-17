@@ -227,6 +227,18 @@
 
 <p>&nbsp;</p>
 
+<p style="color: #0000FF;"><u><strong>Puces contenant structure complexe :</strong></u></p>
+
+<ul>
+  <li><div><p>Texte contenu dans un li/div/p</p></div></li>
+  <li><p><u><b>Texte contenu dans un li/p/u/b</b></u></p></li>
+  <ul>
+    <li><div><p>Texte contenu dans un li/div/p</p></div></li>
+  </ul>
+</ul>
+
+<p>&nbsp;</p>
+
 <p style="color: #0000FF;"><u><strong>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; TABLEAUX &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt; :</strong></u></p>
 
 <p>Les tableaux &gt;= 500px sont affichés en 100% dans le document produit.</p>
@@ -273,11 +285,11 @@
 <table border="1" cellpadding="1" cellspacing="1" style="width:17cm">
 	<tbody>
 		<tr>
-			<td colspan="4" rowspan="1" style="background-color:rgb(255, 255, 255)">Utilisation de "colspan"</td>
+			<td colspan="4" rowspan="1" style="background-color:rgb(255, 255, 255)">Utilisation de <b>"colspan"</b></td>
 			<td colspan="5" rowspan="1" style="background-color:rgb(255, 255, 255)">&nbsp;</td>
 		</tr>
 		<tr>
-			<td colspan="2" style="background-color:rgb(204, 204, 204); text-align:center; vertical-align:middle">Couleur de fond RGB, text centré, utilisation de "rowspan"</td>
+			<td colspan="2" style="background-color:rgb(204, 204, 204); text-align:center; vertical-align:middle">Couleur de fond RGB, text centré, utilisation de <b>"rowspan"</b></td>
 			<td colspan="2" style="background-color:rgb(204, 204, 204); text-align:center; vertical-align:middle"><u>Souligné</u></td>
 			<td colspan="2" style="background-color:rgb(204, 204, 204); text-align:center; vertical-align:middle"><strong>DUREE PAR<br />
 			GROUPE</strong></td>
@@ -880,7 +892,17 @@
 		</tr>
 		<tr>
 			<td style="background-color:#eb9eb9;">
-			<p style="color: #205c90;">Dans un &lt;p&gt; fond en # et texte bleu</p>
+			<p style="color: #205c90;">Dans un &lt;p&gt; fond en # et texte bleu, le &lt;p&gt; étant supprimé, le style color n'est pas gardé et le texte rendu n'est pas bleu</p>
+			</td>
+		</tr>
+		<tr>
+			<td style="background-color:#eb9eb9;">
+			<span style="color: #205c90;">Dans un &lt;span&gt; fond en # et texte bleu, le &lt;span&gt; est gardé mais les styles pas...</span>
+			</td>
+		</tr>
+		<tr>
+			<td style="background-color:#eb9eb9; color: #205c90;">
+			Dans un &lt;td&gt; fond en # et texte bleu, les styles définis sur le &lt;td&gt; sont gardés
 			</td>
 		</tr>
 		<tr>
