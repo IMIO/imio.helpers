@@ -316,6 +316,17 @@ class TestXHTMLModule(IntegrationTestCase):
         expected = expected.replace("../img/image_preview", img_blob_path)
         self.assertEquals(imagesToPath(doc2, text).replace('\n', ''), expected.replace('\n', ''))
 
+        # using resolveuid and absolute path and relative path
+        text = '<img src="resolveuid/{0}/image_preview" alt="Image" title="Image"/>' \
+               '<img src="resolveuid/{0}" alt="Image" title="Image"/>' \
+               '<img src="http://nohost/plone/img/image_preview"/>' \
+               '<img src="../img/image_preview"/>'.format(img.UID())
+        expected = text.replace("resolveuid/{0}/image_preview".format(img.UID()), img_blob_path)
+        expected = expected.replace("resolveuid/{0}".format(img.UID()), img_blob_path)
+        expected = expected.replace("http://nohost/plone/img/image_preview", img_blob_path)
+        expected = expected.replace("../img/image_preview", img_blob_path)
+        self.assertEquals(imagesToPath(doc2, text).replace('\n', ''), expected.replace('\n', ''))
+
     def test_storeExternalImagesLocally(self):
         """
           Test that images src contained in a XHTML that reference external images is

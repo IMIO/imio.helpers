@@ -10,6 +10,7 @@ from zope.container.interfaces import INameChooser
 from plone import api
 from Products.CMFPlone.utils import safe_unicode
 from plone.app.imaging.scale import ImageScale
+from plone.outputfilters.filters.resolveuid_and_caption import ResolveUIDAndCaptionFilter
 
 CLASS_TO_LAST_CHILDREN_NUMBER_OF_CHARS_DEFAULT = 60
 
@@ -181,16 +182,28 @@ def imagesToPath(context, xhtmlContent):
        to the .blob binary stored on the server.  This is usefull when generating documents
        with XHTML containing images that are private, LibreOffice is not able to access these
        images using the HTTP request.
-       <img src='http://mysite/myfolder/myimage.png' /> becomes <img src='/absolute/path/to/blobstorage/myfile.blob'/>,
-       external images are left unchanged.'''
-    if not xhtmlContent or not xhtmlContent.strip():
-        return xhtmlContent
+       <img src='http://mysite/myfolder/myimage.png' /> becomes
+       <img src='/absolute/path/to/blobstorage/myfile.blob'/>,
+       external images are left unchanged.
+       The image_scale is not kept, so :
+       <img src='http://mysite/myfolder/myimage.png/image_preview' /> becomes
+       <img src='/absolute/path/to/blobstorage/myfile.blob'/>.'''
+    # keep original xhtmlContent in case we need to return it without changes
+    originalXhtmlContent = xhtmlContent
 
-    specialXhtmlContent = "<special_tag>%s</special_tag>" % xhtmlContent
-    tree = lxml.html.fromstring(safe_unicode(specialXhtmlContent))
+    if not originalXhtmlContent or not originalXhtmlContent.strip():
+        return originalXhtmlContent
+
+    # if using resolveuid, turn src to real image path
+    if 'resolveuid' in xhtmlContent:
+        xhtmlContent = ResolveUIDAndCaptionFilter()(xhtmlContent)
+
+    xhtmlContent = "<special_tag>%s</special_tag>" % xhtmlContent
+    tree = lxml.html.fromstring(safe_unicode(xhtmlContent))
     imgs = tree.findall('.//img')
     if not imgs:
-        return xhtmlContent
+        return originalXhtmlContent
+
     portal = api.portal.get()
     portal_url = portal.absolute_url()
     for img in imgs:

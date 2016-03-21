@@ -8,6 +8,8 @@ Changelog
   default number of characters to take into account while marking last tags
   in xhtml.addClassToLastChildren.  This way it can be used in other packages.
   [gbastien]
+- Fixed xhtml.imagesToPath to handle image src using 'resolveuid' correctly.
+  [gbastien]
 
 
 0.4.16 (2016-03-14)
