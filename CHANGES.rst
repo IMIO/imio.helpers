@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.4.17 (unreleased)
+0.4.17 (2016-03-22)
 -------------------
 
 - Added constant CLASS_TO_LAST_CHILDREN_NUMBER_OF_CHARS_DEFAULT to define the
