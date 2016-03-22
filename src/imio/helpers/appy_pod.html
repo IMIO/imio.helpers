@@ -1,20 +1,48 @@
-<p class="highlight">ATTENTION, SI VOUS MODIFIEZ CE POINT, CERTAINES BALISES PEUVENT DISPARAITRE EN FONCTION DE LA CONFIGURATION DE CKEDITOR (PS: ce texte utilise la class CSS "highlight")</p>
+<p class="highlight-red">ATTENTION, SI VOUS MODIFIEZ CE POINT, CERTAINES BALISES PEUVENT DISPARAITRE EN FONCTION DE LA CONFIGURATION DE CKEDITOR (PS: ce texte utilise la class CSS "highlight-red")</p>
+<p>&nbsp;</p>
+<p class="highlight-red">Idéalement utiliser un modèle dont le style par défaut a été redéfini, ceci permet de tester qu'un paragraphe utilisant un style est rendu avec le même style (Poice et taille de police) qu'un paragraphe sans style</p>
+<p>&nbsp;</p>
 
 <p style="color: #0000FF;"><u><strong>&gt;&gt;&gt;&gt;&gt; TEXTE &lt;&lt;&lt;&lt;&lt; :</strong></u></p>
 
 <p>Du texte avec du <strong>gras</strong>, de l'<em>italique</em>, du <u>souligné</u>, du <s>barré</s> puis les variantes dans des puces :</p>
+<p>&nbsp;</p>
 
+<p style="color: #0000FF;"><u><strong>Un paragraphe utilisant un style ou n'en utilisant pas est rendu avec la même police/taille de police :</strong></u></p>
+
+<p>Du texte n'utilisant aucun style...</p>
+<p style="margin-left: 25px;">Du texte utilisant un style ajoutant un décalage margin-left:25px...</p>
+
+<p>&nbsp;</p>
+
+<p style="color: #0000FF;"><u><strong>Utilisation des tags pour la mise en forme :</strong></u></p>
 <ul>
 	<li><s><em>italique barré</em></s>;</li>
 	<li><em><strong>italique gras</strong></em>;</li>
 	<li><u><em>italique souligné</em></u>;</li>
 	<li><s><strong>gras barré</strong></s>;</li>
-	<li><u><strong>gras souligné</strong></u>;</li>
-	<li><u><strong>gras souligné</strong></u>;</li>
+	<li><u><strong>gras souligné</strong></u>;</li> 
+	<li><u><b>gras souligné</b></u>;</li>
 	<li><s><em><strong>gras italique barré</strong></em></s>;</li>
 	<li><u><em><strong>gras italique souligné</strong></em></u>;</li>
 	<li><u><s><strong>gras barré souligné</strong></s></u>;</li>
 	<li><s><u><em><strong>gras italique barré souligné</strong></em></u></s>.</li>
+</ul>
+
+<p>&nbsp;</p>
+
+<p style="color: #0000FF;"><u><strong>Utilisation de CSS pour la mise en forme :</strong></u></p>
+
+<ul>
+	<li style="font-style: italic; text-decoration: line-through;">italique barré;</li>
+	<li style="font-style: italic; font-weight: bold;">italique gras;</li>
+	<li style="font-style: italic; text-decoration: underline;">italique souligné;</li>
+	<li style="font-weight: bold; text-decoration: line-through;">gras barré;</li>
+	<li style="font-weight: bold; text-decoration: underline;">gras souligné;</li>
+	<li style="font-weight: bold; font-style: italic; text-decoration: line-through;">gras italique barré;</li>
+	<li style="font-weight: bold; font-style: italic; text-decoration: underline;">gras italique souligné;</li>
+	<li style="font-weight: bold; text-decoration: line-through; text-decoration: underline;">gras barré souligné;</li>
+	<li style="font-weight: bold; font-style: italic; text-decoration: line-through; text-decoration: underline;">gras italique barré souligné.</li>
 </ul>
 
 <p>&nbsp;</p>
@@ -80,9 +108,11 @@
 
 <p>&nbsp;</p>
 
-<p style="color: #0000FF;"><u><strong>Retrait en début de ligne négatif (-1cm) :</strong></u></p>
+<p style="color: #0000FF;"><u><strong>Retrait en début de ligne négatif :</strong></u></p>
 
-<p style="margin-left:-1cm">Mon texte avec retrait de -1cm;</p>
+<p style="margin-left:-1cm">Mon texte avec retrait de margin-left:-1cm;</p>
+
+<p style="margin-left:-.75pt">Mon texte avec retrait de margin-left:-.75pt;</p>
 
 <p>&nbsp;</p>
 
@@ -203,7 +233,7 @@
 	<li>Texte texte text;</li>
 </ol>
 
-<p style="margin-left:40px">Du texte inséré entre la liste puis...</p>
+<p style="margin-left:40px"><b>Du texte inséré dans la liste (avec un margin-left sur le &lt;p&gt;) puis...</b></p>
 
 <ol start="4">
 	<li>On recommence à 4;</li>
@@ -495,27 +525,27 @@
 
 <p>&nbsp;</p>
 
-<p style="color: #0000FF;"><u><strong>Tableau avec nombreuses colonnes et taille de texte réduite :</strong></u></p>
+<p style="color: #0000FF;"><u><strong>Tableau avec nombreuses colonnes, taille de texte réduite, cellspacing="0", headers du tableau en gras en utilisant "font-weight: bold" :</strong></u></p>
 
-<table border="0">
+<table cellspacing="0">
 	<tbody>
 		<tr>
-			<th><span style="font-size:10px">Température</span></th>
-			<th colspan="2"><span style="font-size:9px">Janvier</span></th>
-			<th colspan="2"><span style="font-size:9px">Février</span></th>
-			<th colspan="2"><span style="font-size:9px">Mars</span></th>
-			<th colspan="2"><span style="font-size:9px">Avril</span></th>
-			<th colspan="2"><span style="font-size:9px">Mai</span></th>
-			<th colspan="2"><span style="font-size:9px">Juin</span></th>
-			<th colspan="2"><span style="font-size:9px">Juillet</span></th>
-			<th colspan="2"><span style="font-size:9px">Août</span></th>
-			<th colspan="2"><span style="font-size:9px">Septembre</span></th>
-			<th colspan="2"><span style="font-size:9px">Octobre</span></th>
-			<th colspan="2"><span style="font-size:9px">Novembre</span></th>
-			<th colspan="2"><span style="font-size:9px">Décembre</span></th>
+			<th><span style="font-size:10px; font-weight: bold;">Température</span></th>
+			<th colspan="2"><span style="font-size:9px; font-weight: bold;">Janvier</span></th>
+			<th colspan="2"><span style="font-size:9px; font-weight: bold;">Février</span></th>
+			<th colspan="2"><span style="font-size:9px; font-weight: bold;">Mars</span></th>
+			<th colspan="2"><span style="font-size:9px; font-weight: bold;">Avril</span></th>
+			<th colspan="2"><span style="font-size:9px; font-weight: bold;">Mai</span></th>
+			<th colspan="2"><span style="font-size:9px; font-weight: bold;">Juin</span></th>
+			<th colspan="2"><span style="font-size:9px; font-weight: bold;">Juillet</span></th>
+			<th colspan="2"><span style="font-size:9px; font-weight: bold;">Août</span></th>
+			<th colspan="2"><span style="font-size:9px; font-weight: bold;">Septembre</span></th>
+			<th colspan="2"><span style="font-size:9px; font-weight: bold;">Octobre</span></th>
+			<th colspan="2"><span style="font-size:9px; font-weight: bold;">Novembre</span></th>
+			<th colspan="2"><span style="font-size:9px; font-weight: bold;">Décembre</span></th>
 		</tr>
 		<tr>
-			<td rowspan="5"><span style="font-size:10px">Les cinq mois les plus chauds</span></td>
+			<td rowspan="5"><span style="font-size:10px; font-weight: bold;">Les cinq mois les plus chauds</span></td>
 			<td><span style="font-size:8px">1975</span></td>
 			<td><span style="font-size:8px">6.3</span></td>
 			<td><span style="font-size:8px">1990</span></td>
@@ -673,7 +703,7 @@
 			<td>&nbsp;</td>
 		</tr>
 		<tr>
-			<td><span style="font-size:10px">normales</span></td>
+			<td><span style="font-size:10px; font-weight: bold;">normales</span></td>
 			<td>&nbsp;</td>
 			<td><span style="font-size:9px">2.5</span></td>
 			<td>&nbsp;</td>
@@ -727,7 +757,7 @@
 			<td>&nbsp;</td>
 		</tr>
 		<tr>
-			<td rowspan="5"><span style="font-size:10px">Les cinq mois les plus froids</span></td>
+			<td rowspan="5"><span style="font-size:10px; font-weight: bold;">Les cinq mois les plus froids</span></td>
 			<td><span style="font-size:8px">1985</span></td>
 			<td><span style="font-size:8px">-2.8</span></td>
 			<td><span style="font-size:8px">1947</span></td>
@@ -881,6 +911,10 @@
 			<td style="text-align:justify;"><b>Texte justifié</b> texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte</td>
 		</tr>
 		<tr>
+			<td><p style="text-align:right;">Texte aligné à droite, style appliqué sur un p dans le td</p></td>
+			<td><p style="text-align:center;">Texte centré, style appliqué sur un p dans le td</p></td>
+		</tr>
+		<tr>
 			<td>Comportement par défaut</td>
 			<td><b>Texte par défaut</b> texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte</td>
 		</tr>
@@ -922,22 +956,54 @@
 <p style="color: #0000FF;"><u><strong>Tableau une seule colonne utilisé comme titre :</strong></u></p>
 
 <table cellspacing="1" cellpadding="1" border="1" style="width:400px">
-  <tbody>
-    <tr><td>
-			<p>A.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Description de la fonction</p>
+	<tbody>
+		<tr>
+			<td>
+				<p>A.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Description de la fonction</p>
 			</td>
 		</tr>
-  </tbody>
+	</tbody>
 </table>
 
 <p>&nbsp;</p>
 
 <p style="color: #0000FF;"><u><strong>Tableau sans colonne de 1024px de large (non rendu) :</strong></u></p>
 
-<!--table cellspacing="0" cellpadding="0" border="0" style="width:1024px">
+<table cellspacing="0" cellpadding="0" border="0" style="width:1024px">
 	<tbody>
 	</tbody>
-</table-->
+</table>
+
+<p>&nbsp;</p>
+
+<p style="color: #0000FF;"><u><strong>Tableau sans bordures (border="0") :</strong></u></p>
+
+<table cellspacing="0" border="0" style="width:500px">
+	<tbody>
+		<tr>
+			<td>
+				<p>Texte 1.1;</p>
+			</td>
+			<td>
+				<p>Texte 1.2;</p>
+			</td>
+			<td>
+				<p>Texte 1.3;</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>Texte 2.1;</p>
+			</td>
+			<td>
+				<p>Texte 2.2;</p>
+			</td>
+			<td>
+				<p>Texte 2.3;</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
 
 <p>&nbsp;</p>
 
