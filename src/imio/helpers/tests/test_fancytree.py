@@ -16,6 +16,9 @@ class RenderFancyTreeExample(BaseRenderFancyTree):
         self.context = context
         self.request = request
 
+    def index(self):
+        return "index"
+
     def get_query(self):
         path = '/'.join(self.context.getPhysicalPath())
         return {
@@ -26,10 +29,33 @@ class RenderFancyTreeExample(BaseRenderFancyTree):
                 ),
         }
 
+    def redirect_url(self, uid):
+        return uid
+
 
 class TestBaseRenderFancyTree(IntegrationTestCase):
 
     """Test BaseRenderFancyTree view."""
+
+    def test_redirect_url(self):
+        view = BaseRenderFancyTree(self.portal, self.portal.REQUEST)
+        with self.assertRaises(NotImplementedError):
+            view.redirect_url('some_uid')
+
+    def test_get_query(self):
+        view = BaseRenderFancyTree(self.portal, self.portal.REQUEST)
+        with self.assertRaises(NotImplementedError):
+            view.get_query()
+
+    def test_call(self):
+        view = RenderFancyTreeExample(self.portal, self.portal.REQUEST)
+        self.assertEqual(view(), "index")
+
+        request = self.portal.REQUEST
+        request.method = 'POST'
+        request['uid'] = 'myuid'
+        self.assertEqual(view(), '')
+        self.assertEqual(view.request.response.headers['location'], 'myuid')
 
     def test_get_data(self):
         """Test get_data method."""

@@ -23,10 +23,6 @@ class BaseRenderFancyTree(BrowserView):  #pylint: disable=R0921
 
         return self.index()
 
-    def get_query(self):
-        """Get the query."""
-        raise NotImplementedError
-
     def folder_tree_to_fancytree(self, folder_tree):
         """Transform folder tree to a dict that will be used by fancy tree."""
         fancytree_data = []
@@ -58,6 +54,10 @@ class BaseRenderFancyTree(BrowserView):  #pylint: disable=R0921
         strategy.rootPath = '/'.join(portal.getPhysicalPath())
         folder_tree = buildFolderTree(portal, None, query, strategy)
         return json.dumps(self.folder_tree_to_fancytree(folder_tree))
+
+    def get_query(self):
+        """Get the query."""
+        raise NotImplementedError
 
     def redirect_url(self, uid):
         """Redirect url."""
