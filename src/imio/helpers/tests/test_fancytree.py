@@ -37,6 +37,10 @@ class TestBaseRenderFancyTree(IntegrationTestCase):
 
     """Test BaseRenderFancyTree view."""
 
+    def test_label(self):
+        view = BaseRenderFancyTree(self.portal, self.portal.REQUEST)
+        self.assertEqual(view.label(), 'Plone site')
+
     def test_redirect_url(self):
         view = BaseRenderFancyTree(self.portal, self.portal.REQUEST)
         with self.assertRaises(NotImplementedError):

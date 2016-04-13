@@ -15,6 +15,9 @@ class BaseRenderFancyTree(BrowserView):  #pylint: disable=R0921
 
     index = ViewPageTemplateFile('fancytree.pt')
 
+    def label(self):
+        return self.context.Title()
+
     def __call__(self):
         if self.request.method == 'POST':
             uid = self.request.get('uid')

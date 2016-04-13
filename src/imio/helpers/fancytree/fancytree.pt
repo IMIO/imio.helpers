@@ -14,6 +14,7 @@
 </head>
 <body>
     <div metal:fill-slot="main">
+      <h1 tal:content="view/label"></h1>
       <form id="tree-form" method="post" action="">
         <div>
           <div id="tree" tal:attributes="data-nodes view/get_data;" />
@@ -21,6 +22,7 @@
         <p>
           <input name="uid" type="hidden" value="" />
           <input type="submit" tal:attributes="value view/get_action_name" />
+          <input name="form.buttons.cancel" type="button" value="Cancel" i18n:attributes="value" i18n:domain="plone" />
         </p>
       </form>
     </div>
