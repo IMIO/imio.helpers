@@ -14,7 +14,7 @@
 </head>
 <body>
     <div metal:fill-slot="main">
-      <form method="post" action="">
+      <form id="tree-form" method="post" action="">
         <div>
           <div id="tree" tal:attributes="data-nodes view/get_data;" />
         </div>
