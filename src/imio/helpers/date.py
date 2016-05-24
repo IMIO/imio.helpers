@@ -76,10 +76,10 @@ def wordizeDate(date, context=None, long_format=False):
         #do not display 'zero' in the date like : eleven hour zero...
         #see http://dev.communesplone.org/trac/ticket/1553
         if converted_minutes and not minutes in ['0', '00',]:
-            converted_time = " %s %s %s %s" % (translate(msgid="at", domain="CPEtatCivil", context=context, default=u"à"), converted_hour, hour_word, converted_minutes)
+            converted_time = " %s %s %s %s" % (u"à", converted_hour, hour_word, converted_minutes)
         else:
             #remove the minutes, especially useless spaces if there are no minutes
-            converted_time = " %s %s %s" % (translate(msgid="at", domain="CPEtatCivil", context=context, default=u"à"), converted_hour, hour_word)
+            converted_time = " %s %s %s" % (u"à", converted_hour, hour_word)
     return converted_date.encode('utf-8') + converted_time.encode('utf-8')
 
 def int2word(n):
