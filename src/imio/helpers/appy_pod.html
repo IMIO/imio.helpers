@@ -2,6 +2,8 @@
 <p>&nbsp;</p>
 <p class="highlight-red">Idéalement utiliser un modèle dont le style par défaut a été redéfini, ceci permet de tester qu'un paragraphe utilisant un style est rendu avec le même style (Poice et taille de police) qu'un paragraphe sans style</p>
 <p>&nbsp;</p>
+<p class="highlight-red">Pour tester l'utilisation du style "Signature" il faut également le redéfinir dans le modèle et lui adjoindre par exemple une couleur de fond</p>
+<p>&nbsp;</p>
 
 <p style="color: #0000FF;"><u><strong>&gt;&gt;&gt;&gt;&gt; TEXTE &lt;&lt;&lt;&lt;&lt; :</strong></u></p>
 
@@ -17,16 +19,16 @@
 
 <p style="color: #0000FF;"><u><strong>Utilisation des tags pour la mise en forme :</strong></u></p>
 <ul>
-	<li><s><em>italique barré</em></s>;</li>
-	<li><em><strong>italique gras</strong></em>;</li>
-	<li><u><em>italique souligné</em></u>;</li>
-	<li><s><strong>gras barré</strong></s>;</li>
-	<li><u><strong>gras souligné</strong></u>;</li> 
-	<li><u><b>gras souligné</b></u>;</li>
-	<li><s><em><strong>gras italique barré</strong></em></s>;</li>
-	<li><u><em><strong>gras italique souligné</strong></em></u>;</li>
-	<li><u><s><strong>gras barré souligné</strong></s></u>;</li>
-	<li><s><u><em><strong>gras italique barré souligné</strong></em></u></s>.</li>
+    <li><s><em>italique barré</em></s>;</li>
+    <li><em><strong>italique gras</strong></em>;</li>
+    <li><u><em>italique souligné</em></u>;</li>
+    <li><s><strong>gras barré</strong></s>;</li>
+    <li><u><strong>gras souligné</strong></u>;</li> 
+    <li><u><b>gras souligné</b></u>;</li>
+    <li><s><em><strong>gras italique barré</strong></em></s>;</li>
+    <li><u><em><strong>gras italique souligné</strong></em></u>;</li>
+    <li><u><s><strong>gras barré souligné</strong></s></u>;</li>
+    <li><s><u><em><strong>gras italique barré souligné</strong></em></u></s>.</li>
 </ul>
 
 <p>&nbsp;</p>
@@ -34,15 +36,24 @@
 <p style="color: #0000FF;"><u><strong>Utilisation de CSS pour la mise en forme :</strong></u></p>
 
 <ul>
-	<li style="font-style: italic; text-decoration: line-through;">italique barré;</li>
-	<li style="font-style: italic; font-weight: bold;">italique gras;</li>
-	<li style="font-style: italic; text-decoration: underline;">italique souligné;</li>
-	<li style="font-weight: bold; text-decoration: line-through;">gras barré;</li>
-	<li style="font-weight: bold; text-decoration: underline;">gras souligné;</li>
-	<li style="font-weight: bold; font-style: italic; text-decoration: line-through;">gras italique barré;</li>
-	<li style="font-weight: bold; font-style: italic; text-decoration: underline;">gras italique souligné;</li>
-	<li style="font-weight: bold; text-decoration: line-through; text-decoration: underline;">gras barré souligné;</li>
-	<li style="font-weight: bold; font-style: italic; text-decoration: line-through; text-decoration: underline;">gras italique barré souligné.</li>
+    <li style="font-style: italic; text-decoration: line-through;">italique barré;</li>
+    <li style="font-style: italic; font-weight: bold;">italique gras;</li>
+    <li style="font-style: italic; text-decoration: underline;">italique souligné;</li>
+    <li style="font-weight: bold; text-decoration: line-through;">gras barré;</li>
+    <li style="font-weight: bold; text-decoration: underline;">gras souligné;</li>
+    <li style="font-weight: bold; font-style: italic; text-decoration: line-through;">gras italique barré;</li>
+    <li style="font-weight: bold; font-style: italic; text-decoration: underline;">gras italique souligné;</li>
+    <li style="font-weight: bold; text-decoration: line-through; text-decoration: underline;">gras barré souligné;</li>
+    <li style="font-weight: bold; font-style: italic; text-decoration: line-through; text-decoration: underline;">gras italique barré souligné.</li>
+</ul>
+
+<p>&nbsp;</p>
+
+<p style="color: #0000FF;"><u><strong>Style défini sur un p contenu dans un li est transféré sur le li et gardé:</strong></u></p>
+
+<ul>
+    <li><p style="font-style: italic; font-weight: bold;">attribut "style" italique gras;</p></li>
+    <li><p class="Signature">attribut "class" utilisant "Signature", un style par défaut de LibreOffice.</p></li>
 </ul>
 
 <p>&nbsp;</p>
@@ -143,31 +154,31 @@
 <p style="color: #0000FF;"><u><strong>&gt;&gt;&gt;&gt;&gt; PUCES CLASSIQUES &lt;&lt;&lt;&lt;&lt; :</strong></u></p>
 
 <ul>
-	<li>puce normale;</li>
-	<li><p>puce contenue dans un &lt;p&gt;;</p></li>
-	<li><p><s>puce barrée contenue dans un &lt;p&gt;;</s></p>
-	<ul>
-		<li>
-		<p>sous-puce;</p>
-		</li>
-		<li>
-		<p><u>sous-puce soulignée</u>;</p>
-		</li>
-		<li>
-		<p><s>sous-puce barrée</s>;</p>
+    <li>puce normale;</li>
+    <li><p>puce contenue dans un &lt;p&gt;;</p></li>
+    <li><p><s>puce barrée contenue dans un &lt;p&gt;;</s></p>
+    <ul>
+        <li>
+        <p>sous-puce;</p>
+        </li>
+        <li>
+        <p><u>sous-puce soulignée</u>;</p>
+        </li>
+        <li>
+        <p><s>sous-puce barrée</s>;</p>
 
-		<ul>
-			<li>
-			<p><strong>sous-sous-puce gras</strong>;</p>
-			</li>
-			<li>
-			<p>sous-sous-puce;</p>
-			</li>
-		</ul>
-		</li>
-	</ul>
-	</li>
-	<li>les <strong>puces</strong> avec <u>formattage</u> sont <em>testées</em> ci-dessus;</li>
+        <ul>
+            <li>
+            <p><strong>sous-sous-puce gras</strong>;</p>
+            </li>
+            <li>
+            <p>sous-sous-puce;</p>
+            </li>
+        </ul>
+        </li>
+    </ul>
+    </li>
+    <li>les <strong>puces</strong> avec <u>formattage</u> sont <em>testées</em> ci-dessus;</li>
 </ul>
 
 <p>&nbsp;</p>
@@ -177,88 +188,88 @@
 <p style="color: #0000FF;"><u><strong>Numérotation classique :</strong></u></p>
 
 <ol>
-	<li>Texte texte <strong>gras</strong>;</li>
-	<li>Texte texte <u>souligné</u>;</li>
-	<li>Texte <strong><em><u><s>gras/italique/souligné/barré</s></u></em></strong> texte;</li>
-	<li>Texte texte texte;</li>
-	<li>Texte texte texte;</li>
+    <li>Texte texte <strong>gras</strong>;</li>
+    <li>Texte texte <u>souligné</u>;</li>
+    <li>Texte <strong><em><u><s>gras/italique/souligné/barré</s></u></em></strong> texte;</li>
+    <li>Texte texte texte;</li>
+    <li>Texte texte texte;</li>
 </ol>
 
 <p style="color: #0000FF;"><u><strong>Avec sous-numérotation :</strong></u></p>
 
 <ol>
-	<li>Texte texte texte;</li>
-	<li>Texte <em>italique</em> texte;
-	<ol>
-		<li>Texte <u>souligné</u>;</li>
-		<li>
-		<p>Texte <strong>gras</strong> texte dans un &lt;p&gt;;</p>
-		</li>
-		<li>
-		<p><s>Texte texte texte dans un &lt;p&gt; et barré</s>;</p>
-		</li>
-	</ol>
-	</li>
-	<li>Texte texte texte;</li>
-	<li>Texte texte texte;</li>
-	<li>Texte texte texte;</li>
+    <li>Texte texte texte;</li>
+    <li>Texte <em>italique</em> texte;
+    <ol>
+        <li>Texte <u>souligné</u>;</li>
+        <li>
+        <p>Texte <strong>gras</strong> texte dans un &lt;p&gt;;</p>
+        </li>
+        <li>
+        <p><s>Texte texte texte dans un &lt;p&gt; et barré</s>;</p>
+        </li>
+    </ol>
+    </li>
+    <li>Texte texte texte;</li>
+    <li>Texte texte texte;</li>
+    <li>Texte texte texte;</li>
 </ol>
 
 <p style="color: #0000FF;"><u><strong>Numérotation chiffres et lettres :</strong></u></p>
 
 <ol>
-	<li>Texte <s><strong>gras barré</strong></s>;</li>
-	<li>Texte texte text;
-	<ol start="1" style="list-style-type:lower-alpha">
-		<li>sous-puce lettre minuscule, Texte texte text;</li>
-		<li>Texte texte text;</li>
-		<li>Texte texte text;</li>
-	</ol>
-	</li>
-	<li>Texte texte text;</li>
-	<li>Texte texte text;
-	<ol start="1" style="list-style-type:upper-alpha">
-		<li>sous-puce lettre <b>MAJUSCULE utilisant un "b" au lieu d'un "strong" pour le gras</b>, Texte texte text;</li>
-		<li>Texte texte text;</li>
-	</ol>
-	</li>
-	<li>Texte texte text;</li>
+    <li>Texte <s><strong>gras barré</strong></s>;</li>
+    <li>Texte texte text;
+    <ol start="1" style="list-style-type:lower-alpha">
+        <li>sous-puce lettre minuscule, Texte texte text;</li>
+        <li>Texte texte text;</li>
+        <li>Texte texte text;</li>
+    </ol>
+    </li>
+    <li>Texte texte text;</li>
+    <li>Texte texte text;
+    <ol start="1" style="list-style-type:upper-alpha">
+        <li>sous-puce lettre <b>MAJUSCULE utilisant un "b" au lieu d'un "strong" pour le gras</b>, Texte texte text;</li>
+        <li>Texte texte text;</li>
+    </ol>
+    </li>
+    <li>Texte texte text;</li>
 </ol>
 
 <p style="color: #0000FF;"><u><strong>Renumérotation :</strong></u></p>
 
 <ol>
-	<li>Texte texte text;</li>
-	<li>Texte texte text;</li>
-	<li>Texte texte text;</li>
+    <li>Texte texte text;</li>
+    <li>Texte texte text;</li>
+    <li>Texte texte text;</li>
 </ol>
 
 <p style="margin-left:40px"><b>Du texte inséré dans la liste (avec un margin-left sur le &lt;p&gt;) puis...</b></p>
 
 <ol start="4">
-	<li>On recommence à 4;</li>
-	<li>Texte texte text;
-	<ol>
-		<li>Texte texte texte;</li>
-		<li>Texte texte texte;</li>
-		<li>Texte texte texte;</li>
-	</ol>
-	</li>
-	<li>Texte texte text;</li>
+    <li>On recommence à 4;</li>
+    <li>Texte texte text;
+    <ol>
+        <li>Texte texte texte;</li>
+        <li>Texte texte texte;</li>
+        <li>Texte texte texte;</li>
+    </ol>
+    </li>
+    <li>Texte texte text;</li>
 </ol>
 
 <p style="color: #0000FF;"><u><strong>Puces numérotées et classiques :</strong></u></p>
 
 <ol>
-	<li>Texte texte texte;</li>
-	<li>Texte texte texte;
-	<ul>
-		<li>Texte texte texte;</li>
-		<li>Texte texte texte;</li>
-	</ul>
-	</li>
-	<li>Texte texte texte;</li>
-	<li>Texte texte texte;</li>
+    <li>Texte texte texte;</li>
+    <li>Texte texte texte;
+    <ul>
+        <li>Texte texte texte;</li>
+        <li>Texte texte texte;</li>
+    </ul>
+    </li>
+    <li>Texte texte texte;</li>
+    <li>Texte texte texte;</li>
 </ol>
 
 <p>&nbsp;</p>
@@ -282,20 +293,20 @@
 <p style="color: #0000FF;"><u><strong>Tableau de 250px :</strong></u></p>
 
 <table border="1" cellpadding="1" cellspacing="1" style="width:250px">
-	<tbody>
-		<tr>
-			<td>1</td>
-			<td>Texte texte texte texte texte texte texte texte <s><strong>gras barré</strong></s> texte texte texte texte texte texte</td>
-		</tr>
-		<tr>
-			<td>2</td>
-			<td>Texte texte texte texte texte texte texte <em><strong>gras italique</strong></em> texte texte texte texte texte texte texte</td>
-		</tr>
-		<tr>
-			<td>3</td>
-			<td>Texte texte texte texte texte texte texte <em>italique</em> <strong>gras</strong> <s>barré</s> texte texte texte texte texte texte</td>
-		</tr>
-	</tbody>
+    <tbody>
+        <tr>
+            <td>1</td>
+            <td>Texte texte texte texte texte texte texte texte <s><strong>gras barré</strong></s> texte texte texte texte texte texte</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>Texte texte texte texte texte texte texte <em><strong>gras italique</strong></em> texte texte texte texte texte texte texte</td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>Texte texte texte texte texte texte texte <em>italique</em> <strong>gras</strong> <s>barré</s> texte texte texte texte texte texte</td>
+        </tr>
+    </tbody>
 </table>
 
 <p>&nbsp;</p>
@@ -305,589 +316,589 @@
 <p>Couleur de fond en rgb(), en #123123 et en HTML color.</p>
 
 <table border="1" cellpadding="1" cellspacing="1" style="height:78px; width:17cm">
-	<tbody>
-		<tr>
-			<td style="text-align:center; vertical-align:middle"><strong>TEXTE CENTRE ET GRAS</strong></td>
-		</tr>
-		<tr>
-			<td style="text-align:center; vertical-align:middle">Né(e) le&nbsp;: ..., Etat civil&nbsp;: ...</td>
-		</tr>
-		<tr>
-			<td style="text-align:center; vertical-align:middle"><u><strong>CENTRE, GRAS ET SOULIGNE</strong></u></td>
-		</tr>
-	</tbody>
+    <tbody>
+        <tr>
+            <td style="text-align:center; vertical-align:middle"><strong>TEXTE CENTRE ET GRAS</strong></td>
+        </tr>
+        <tr>
+            <td style="text-align:center; vertical-align:middle">Né(e) le&nbsp;: ..., Etat civil&nbsp;: ...</td>
+        </tr>
+        <tr>
+            <td style="text-align:center; vertical-align:middle"><u><strong>CENTRE, GRAS ET SOULIGNE</strong></u></td>
+        </tr>
+    </tbody>
 </table>
 
 <table border="1" cellpadding="1" cellspacing="1" style="width:17cm">
-	<tbody>
-		<tr>
-			<td colspan="4" rowspan="1" style="background-color:rgb(255, 255, 255)">Utilisation de <b>"colspan"</b></td>
-			<td colspan="5" rowspan="1" style="background-color:rgb(255, 255, 255)">&nbsp;</td>
-		</tr>
-		<tr>
-			<td colspan="2" style="background-color:rgb(204, 204, 204); text-align:center; vertical-align:middle">Couleur de fond RGB, text centré, utilisation de <b>"rowspan"</b></td>
-			<td colspan="2" style="background-color:rgb(204, 204, 204); text-align:center; vertical-align:middle"><u>Souligné</u></td>
-			<td colspan="2" style="background-color:rgb(204, 204, 204); text-align:center; vertical-align:middle"><strong>DUREE PAR<br />
-			GROUPE</strong></td>
-			<td style="background-color:rgb(204, 204, 204); text-align:center; vertical-align:middle"><strong>Coef-<br />
-			ficient</strong></td>
-			<td colspan="2" style="background-color:rgb(204, 204, 204); text-align:center; vertical-align:middle"><strong>VALORISATION<br />
-			BAREMIQUE</strong></td>
-		</tr>
-		<tr>
-			<td style="background-color:#ee3ee3; text-align:center; vertical-align:middle">Couleur fond hexa</td>
-			<td style="background-color:red; text-align:center; vertical-align:middle">Couleur fond HTML color</td>
-			<td style="background-color:rgb(204, 204, 204); text-align:center; vertical-align:middle">du</td>
-			<td style="background-color:rgb(204, 204, 204); text-align:center; vertical-align:middle">au</td>
-			<td style="background-color:rgb(204, 204, 204); text-align:center; vertical-align:middle"><strong>ANS</strong></td>
-			<td style="background-color:rgb(204, 204, 204); text-align:center; vertical-align:middle; font-size: 12px;"><strong>MOIS</strong></td>
-			<td style="background-color:rgb(204, 204, 204); text-align:center; vertical-align:middle">&nbsp;</td>
-			<td style="background-color:rgb(204, 204, 204); text-align:center; vertical-align:middle"><strong>ANS</strong></td>
-			<td style="background-color:rgb(204, 204, 204); text-align:center; vertical-align:middle; font-size: 12px;"><strong>MOIS</strong></td>
-		</tr>
-		<tr>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td><strong>TOTAL: </strong></td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td colspan="7" rowspan="1" style="background-color:rgb(204, 204, 204); text-align:right; vertical-align:middle">Texte...</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td colspan="7" rowspan="1" style="background-color:rgb(204, 204, 204); text-align:right; vertical-align:middle">Augmentation les ...</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-		</tr>
-	</tbody>
+    <tbody>
+        <tr>
+            <td colspan="4" rowspan="1" style="background-color:rgb(255, 255, 255)">Utilisation de <b>"colspan"</b></td>
+            <td colspan="5" rowspan="1" style="background-color:rgb(255, 255, 255)">&nbsp;</td>
+        </tr>
+        <tr>
+            <td colspan="2" style="background-color:rgb(204, 204, 204); text-align:center; vertical-align:middle">Couleur de fond RGB, text centré, utilisation de <b>"rowspan"</b></td>
+            <td colspan="2" style="background-color:rgb(204, 204, 204); text-align:center; vertical-align:middle"><u>Souligné</u></td>
+            <td colspan="2" style="background-color:rgb(204, 204, 204); text-align:center; vertical-align:middle"><strong>DUREE PAR<br />
+            GROUPE</strong></td>
+            <td style="background-color:rgb(204, 204, 204); text-align:center; vertical-align:middle"><strong>Coef-<br />
+            ficient</strong></td>
+            <td colspan="2" style="background-color:rgb(204, 204, 204); text-align:center; vertical-align:middle"><strong>VALORISATION<br />
+            BAREMIQUE</strong></td>
+        </tr>
+        <tr>
+            <td style="background-color:#ee3ee3; text-align:center; vertical-align:middle">Couleur fond hexa</td>
+            <td style="background-color:red; text-align:center; vertical-align:middle">Couleur fond HTML color</td>
+            <td style="background-color:rgb(204, 204, 204); text-align:center; vertical-align:middle">du</td>
+            <td style="background-color:rgb(204, 204, 204); text-align:center; vertical-align:middle">au</td>
+            <td style="background-color:rgb(204, 204, 204); text-align:center; vertical-align:middle"><strong>ANS</strong></td>
+            <td style="background-color:rgb(204, 204, 204); text-align:center; vertical-align:middle; font-size: 12px;"><strong>MOIS</strong></td>
+            <td style="background-color:rgb(204, 204, 204); text-align:center; vertical-align:middle">&nbsp;</td>
+            <td style="background-color:rgb(204, 204, 204); text-align:center; vertical-align:middle"><strong>ANS</strong></td>
+            <td style="background-color:rgb(204, 204, 204); text-align:center; vertical-align:middle; font-size: 12px;"><strong>MOIS</strong></td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td><strong>TOTAL: </strong></td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td colspan="7" rowspan="1" style="background-color:rgb(204, 204, 204); text-align:right; vertical-align:middle">Texte...</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td colspan="7" rowspan="1" style="background-color:rgb(204, 204, 204); text-align:right; vertical-align:middle">Augmentation les ...</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+    </tbody>
 </table>
 
 <p>&nbsp;</p>
 
-<p style="color: #0000FF;"><u><strong>Tableau avec nombreuses colonnes, taille de texte réduite, cellspacing="0", headers du tableau en gras en utilisant "font-weight: bold" :</strong></u></p>
+<p style="color: #0000FF;"><u><strong>Tableau avec nombreuses colonnes, taille de texte réduite en utilisant "font-size: 9px" et "font-size: 8px", cellspacing="0", headers du tableau en gras en utilisant "font-weight: bold" :</strong></u></p>
 
 <table cellspacing="0" border="1">
-	<tbody>
-		<tr>
-			<th><span style="font-size:10px; font-weight: bold;">Température</span></th>
-			<th colspan="2"><span style="font-size:9px; font-weight: bold;">Janvier</span></th>
-			<th colspan="2"><span style="font-size:9px; font-weight: bold;">Février</span></th>
-			<th colspan="2"><span style="font-size:9px; font-weight: bold;">Mars</span></th>
-			<th colspan="2"><span style="font-size:9px; font-weight: bold;">Avril</span></th>
-			<th colspan="2"><span style="font-size:9px; font-weight: bold;">Mai</span></th>
-			<th colspan="2"><span style="font-size:9px; font-weight: bold;">Juin</span></th>
-			<th colspan="2"><span style="font-size:9px; font-weight: bold;">Juillet</span></th>
-			<th colspan="2"><span style="font-size:9px; font-weight: bold;">Août</span></th>
-			<th colspan="2"><span style="font-size:9px; font-weight: bold;">Septembre</span></th>
-			<th colspan="2"><span style="font-size:9px; font-weight: bold;">Octobre</span></th>
-			<th colspan="2"><span style="font-size:9px; font-weight: bold;">Novembre</span></th>
-			<th colspan="2"><span style="font-size:9px; font-weight: bold;">Décembre</span></th>
-		</tr>
-		<tr>
-			<td rowspan="5"><span style="font-size:10px; font-weight: bold;">Les cinq mois les plus chauds</span></td>
-			<td><span style="font-size:8px">1975</span></td>
-			<td><span style="font-size:8px">6.3</span></td>
-			<td><span style="font-size:8px">1990</span></td>
-			<td><span style="font-size:8px">7.9</span></td>
-			<td><span style="font-size:8px">1991</span></td>
-			<td><span style="font-size:8px">9.5</span></td>
-			<td><span style="font-size:8px">1987</span></td>
-			<td><span style="font-size:8px">11.9</span></td>
-			<td><span style="font-size:8px">1947</span></td>
-			<td><span style="font-size:8px">15.8</span></td>
-			<td><span style="font-size:8px">1976</span></td>
-			<td><span style="font-size:8px">19.3</span></td>
-			<td><span style="font-size:8px">1994</span></td>
-			<td><span style="font-size:8px">21.8</span></td>
-			<td><span style="font-size:8px">1997</span></td>
-			<td><span style="font-size:8px">21.2</span></td>
-			<td><span style="font-size:8px">1949</span></td>
-			<td><span style="font-size:8px">17.7</span></td>
-			<td><span style="font-size:8px">1921</span></td>
-			<td><span style="font-size:8px">14.0</span></td>
-			<td><span style="font-size:8px">1994</span></td>
-			<td><span style="font-size:8px">10.4</span></td>
-			<td><span style="font-size:8px">1934</span></td>
-			<td><span style="font-size:8px">7.5</span></td>
-		</tr>
-		<tr>
-			<td><span style="font-size:8px">1921</span></td>
-			<td><span style="font-size:8px">6.2</span></td>
-			<td><span style="font-size:8px">1926</span></td>
-			<td><span style="font-size:8px">7.6</span></td>
-			<td><span style="font-size:8px">1957</span></td>
-			<td><span style="font-size:8px">9.5</span></td>
-			<td><span style="font-size:8px">1993</span></td>
-			<td><span style="font-size:8px">11.8</span></td>
-			<td><span style="font-size:8px">1989</span></td>
-			<td><span style="font-size:8px">15.8</span></td>
-			<td><span style="font-size:8px">1950</span></td>
-			<td><span style="font-size:8px">18.1</span></td>
-			<td><span style="font-size:8px">1983</span></td>
-			<td><span style="font-size:8px">21.2</span></td>
-			<td><span style="font-size:8px">1911</span></td>
-			<td><span style="font-size:8px">20.9</span></td>
-			<td><span style="font-size:8px">1999</span></td>
-			<td><span style="font-size:8px">17.7</span></td>
-			<td><span style="font-size:8px">1995</span></td>
-			<td><span style="font-size:8px">13.7</span></td>
-			<td><span style="font-size:8px">1984</span></td>
-			<td><span style="font-size:8px">9.4</span></td>
-			<td><span style="font-size:8px">1974</span></td>
-			<td><span style="font-size:8px">7.0</span></td>
-		</tr>
-		<tr>
-			<td><span style="font-size:8px">1988</span></td>
-			<td><span style="font-size:8px">6.2</span></td>
-			<td><span style="font-size:8px">1961</span></td>
-			<td><span style="font-size:8px">7.2</span></td>
-			<td><span style="font-size:8px">1989</span></td>
-			<td><span style="font-size:8px">9.1</span></td>
-			<td><span style="font-size:8px">1961</span></td>
-			<td><span style="font-size:8px">11.7</span></td>
-			<td><span style="font-size:8px">1992</span></td>
-			<td><span style="font-size:8px">15.7</span></td>
-			<td><span style="font-size:8px">1970</span></td>
-			<td><span style="font-size:8px">17.9</span></td>
-			<td><span style="font-size:8px">1995</span></td>
-			<td><span style="font-size:8px">20.9</span></td>
-			<td><span style="font-size:8px">1995</span></td>
-			<td><span style="font-size:8px">20.4</span></td>
-			<td><span style="font-size:8px">1961</span></td>
-			<td><span style="font-size:8px">17.3</span></td>
-			<td><span style="font-size:8px">1989</span></td>
-			<td><span style="font-size:8px">12.7</span></td>
-			<td><span style="font-size:8px">1938</span></td>
-			<td><span style="font-size:8px">9.0</span></td>
-			<td><span style="font-size:8px">1988</span></td>
-			<td><span style="font-size:8px">6.9</span></td>
-		</tr>
-		<tr>
-			<td><span style="font-size:8px">1916</span></td>
-			<td><span style="font-size:8px">6.1</span></td>
-			<td><span style="font-size:8px">1995</span></td>
-			<td><span style="font-size:8px">6.8</span></td>
-			<td><span style="font-size:8px">1981</span></td>
-			<td><span style="font-size:8px">9.1</span></td>
-			<td><span style="font-size:8px">1952</span></td>
-			<td><span style="font-size:8px">11.5</span></td>
-			<td><span style="font-size:8px">1998</span></td>
-			<td><span style="font-size:8px">15.6</span></td>
-			<td><span style="font-size:8px">1947</span></td>
-			<td><span style="font-size:8px">17.8</span></td>
-			<td><span style="font-size:8px">1976</span></td>
-			<td><span style="font-size:8px">20.0</span></td>
-			<td><span style="font-size:8px">1947</span></td>
-			<td><span style="font-size:8px">20.4</span></td>
-			<td><span style="font-size:8px">1947</span></td>
-			<td><span style="font-size:8px">17.0</span></td>
-			<td><span style="font-size:8px">1990</span></td>
-			<td><span style="font-size:8px">12.6</span></td>
-			<td><span style="font-size:8px">1963</span></td>
-			<td><span style="font-size:8px">8.8</span></td>
-			<td><span style="font-size:8px">1915</span></td>
-			<td><span style="font-size:8px">6.3</span></td>
-		</tr>
-		<tr>
-			<td><span style="font-size:8px">1983</span></td>
-			<td><span style="font-size:8px">5.9</span></td>
-			<td><span style="font-size:8px">1966</span></td>
-			<td><span style="font-size:8px">6.6</span></td>
-			<td><span style="font-size:8px">1990</span></td>
-			<td><span style="font-size:8px">8.7</span></td>
-			<td><span style="font-size:8px">1949</span></td>
-			<td><span style="font-size:8px">11.2</span></td>
-			<td><span style="font-size:8px">1917</span></td>
-			<td><span style="font-size:8px">15.5</span></td>
-			<td><span style="font-size:8px">1986</span></td>
-			<td><span style="font-size:8px">17.5</span></td>
-			<td><span style="font-size:8px">1999</span></td>
-			<td><span style="font-size:8px">19.7</span></td>
-			<td><span style="font-size:8px">1990</span></td>
-			<td><span style="font-size:8px">19.7</span></td>
-			<td><span style="font-size:8px">1982</span></td>
-			<td><span style="font-size:8px">16.9</span></td>
-			<td><span style="font-size:8px">1969</span></td>
-			<td><span style="font-size:8px">12.6</span></td>
-			<td><span style="font-size:8px">1913</span></td>
-			<td><span style="font-size:8px">8.7</span></td>
-			<td><span style="font-size:8px">1918</span></td>
-			<td><span style="font-size:8px">6.3</span></td>
-		</tr>
-		<tr>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td><span style="font-size:10px; font-weight: bold;">normales</span></td>
-			<td>&nbsp;</td>
-			<td><span style="font-size:9px">2.5</span></td>
-			<td>&nbsp;</td>
-			<td><span style="font-size:9px">3.0</span></td>
-			<td>&nbsp;</td>
-			<td><span style="font-size:9px">5.9</span></td>
-			<td>&nbsp;</td>
-			<td><span style="font-size:9px">8.7</span></td>
-			<td>&nbsp;</td>
-			<td><span style="font-size:9px">12.8</span></td>
-			<td>&nbsp;</td>
-			<td><span style="font-size:9px">15.3</span></td>
-			<td>&nbsp;</td>
-			<td><span style="font-size:9px">17.0</span></td>
-			<td>&nbsp;</td>
-			<td><span style="font-size:9px">16.9</span></td>
-			<td>&nbsp;</td>
-			<td><span style="font-size:9px">14.4</span></td>
-			<td>&nbsp;</td>
-			<td><span style="font-size:9px">10.3</span></td>
-			<td>&nbsp;</td>
-			<td><span style="font-size:9px">5.8</span></td>
-			<td>&nbsp;</td>
-			<td><span style="font-size:9px">3.3</span></td>
-		</tr>
-		<tr>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td rowspan="5"><span style="font-size:10px; font-weight: bold;">Les cinq mois les plus froids</span></td>
-			<td><span style="font-size:8px">1985</span></td>
-			<td><span style="font-size:8px">-2.8</span></td>
-			<td><span style="font-size:8px">1947</span></td>
-			<td><span style="font-size:8px">-3.2</span></td>
-			<td><span style="font-size:8px">1971</span></td>
-			<td><span style="font-size:8px">3.2</span></td>
-			<td><span style="font-size:8px">1908</span></td>
-			<td><span style="font-size:8px">6.2</span></td>
-			<td><span style="font-size:8px">1984</span></td>
-			<td><span style="font-size:8px">10.4</span></td>
-			<td><span style="font-size:8px">1991</span></td>
-			<td><span style="font-size:8px">13.2</span></td>
-			<td><span style="font-size:8px">1965</span></td>
-			<td><span style="font-size:8px">14.4</span></td>
-			<td><span style="font-size:8px">1941</span></td>
-			<td><span style="font-size:8px">15.0</span></td>
-			<td><span style="font-size:8px">1986</span></td>
-			<td><span style="font-size:8px">11.7</span></td>
-			<td><span style="font-size:8px">1992</span></td>
-			<td><span style="font-size:8px">7.8</span></td>
-			<td><span style="font-size:8px">1993</span></td>
-			<td><span style="font-size:8px">2.8</span></td>
-			<td><span style="font-size:8px">1963</span></td>
-			<td><span style="font-size:8px">-0.5</span></td>
-		</tr>
-		<tr>
-			<td><span style="font-size:8px">1987</span></td>
-			<td><span style="font-size:8px">-2.8</span></td>
-			<td><span style="font-size:8px">1986</span></td>
-			<td><span style="font-size:8px">-3.2</span></td>
-			<td><span style="font-size:8px">1987</span></td>
-			<td><span style="font-size:8px">3.1</span></td>
-			<td><span style="font-size:8px">1970</span></td>
-			<td><span style="font-size:8px">6.2</span></td>
-			<td><span style="font-size:8px">1991</span></td>
-			<td><span style="font-size:8px">10.4</span></td>
-			<td><span style="font-size:8px">1909</span></td>
-			<td><span style="font-size:8px">13.1</span></td>
-			<td><span style="font-size:8px">1913</span></td>
-			<td><span style="font-size:8px">14.3</span></td>
-			<td><span style="font-size:8px">1956</span></td>
-			<td><span style="font-size:8px">14.4</span></td>
-			<td><span style="font-size:8px">1931</span></td>
-			<td><span style="font-size:8px">11.6</span></td>
-			<td><span style="font-size:8px">1919</span></td>
-			<td><span style="font-size:8px">7.1</span></td>
-			<td><span style="font-size:8px">1915</span></td>
-			<td><span style="font-size:8px">2.7</span></td>
-			<td><span style="font-size:8px">1969</span></td>
-			<td><span style="font-size:8px">-0.5</span></td>
-		</tr>
-		<tr>
-			<td><span style="font-size:8px">1942</span></td>
-			<td><span style="font-size:8px">-3.6</span></td>
-			<td><span style="font-size:8px">1942</span></td>
-			<td><span style="font-size:8px">-3.5</span></td>
-			<td><span style="font-size:8px">1955</span></td>
-			<td><span style="font-size:8px">2.7</span></td>
-			<td><span style="font-size:8px">1929</span></td>
-			<td><span style="font-size:8px">6.0</span></td>
-			<td><span style="font-size:8px">1962</span></td>
-			<td><span style="font-size:8px">10.2</span></td>
-			<td><span style="font-size:8px">1956</span></td>
-			<td><span style="font-size:8px">12.6</span></td>
-			<td><span style="font-size:8px">1909</span></td>
-			<td><span style="font-size:8px">14.2</span></td>
-			<td><span style="font-size:8px">1920</span></td>
-			<td><span style="font-size:8px">14.3</span></td>
-			<td><span style="font-size:8px">1925</span></td>
-			<td><span style="font-size:8px">11.5</span></td>
-			<td><span style="font-size:8px">1974</span></td>
-			<td><span style="font-size:8px">6.8</span></td>
-			<td><span style="font-size:8px">1925</span></td>
-			<td><span style="font-size:8px">2.7</span></td>
-			<td><span style="font-size:8px">1927</span></td>
-			<td><span style="font-size:8px">-0.6</span></td>
-		</tr>
-		<tr>
-			<td><span style="font-size:8px">1940</span></td>
-			<td><span style="font-size:8px">-4.2</span></td>
-			<td><span style="font-size:8px">1929</span></td>
-			<td><span style="font-size:8px">-3.6</span></td>
-			<td><span style="font-size:8px">1962</span></td>
-			<td><span style="font-size:8px">2.7</span></td>
-			<td><span style="font-size:8px">1903</span></td>
-			<td><span style="font-size:8px">5.3</span></td>
-			<td><span style="font-size:8px">1941</span></td>
-			<td><span style="font-size:8px">9.8</span></td>
-			<td><span style="font-size:8px">1916</span></td>
-			<td><span style="font-size:8px">12.2</span></td>
-			<td><span style="font-size:8px">1907</span></td>
-			<td><span style="font-size:8px">13.6</span></td>
-			<td><span style="font-size:8px">1924</span></td>
-			<td><span style="font-size:8px">14.2</span></td>
-			<td><span style="font-size:8px">1952</span></td>
-			<td><span style="font-size:8px">11.2</span></td>
-			<td><span style="font-size:8px">1922</span></td>
-			<td><span style="font-size:8px">6.5</span></td>
-			<td><span style="font-size:8px">1919</span></td>
-			<td><span style="font-size:8px">2.5</span></td>
-			<td><span style="font-size:8px">1950</span></td>
-			<td><span style="font-size:8px">-1.2</span></td>
-		</tr>
-		<tr>
-			<td><span style="font-size:8px">1963</span></td>
-			<td><span style="font-size:8px">-4.6</span></td>
-			<td><span style="font-size:8px">1956</span></td>
-			<td><span style="font-size:8px">-6.1</span></td>
-			<td><span style="font-size:8px">1917</span></td>
-			<td><span style="font-size:8px">2.5</span></td>
-			<td><span style="font-size:8px">1917</span></td>
-			<td><span style="font-size:8px">4.6</span></td>
-			<td><span style="font-size:8px">1902</span></td>
-			<td><span style="font-size:8px">8.5</span></td>
-			<td><span style="font-size:8px">1923</span></td>
-			<td><span style="font-size:8px">11.5</span></td>
-			<td><span style="font-size:8px">1919</span></td>
-			<td><span style="font-size:8px">13.5</span></td>
-			<td><span style="font-size:8px">1912</span></td>
-			<td><span style="font-size:8px">13.8</span></td>
-			<td><span style="font-size:8px">1912</span></td>
-			<td><span style="font-size:8px">10.7</span></td>
-			<td><span style="font-size:8px">1905</span></td>
-			<td><span style="font-size:8px">5.9</span></td>
-			<td><span style="font-size:8px">1921</span></td>
-			<td><span style="font-size:8px">1.8</span></td>
-			<td><span style="font-size:8px">1933</span></td>
-			<td><span style="font-size:8px">-2.7</span></td>
-		</tr>
-	</tbody>
+    <tbody>
+        <tr>
+            <th><span style="font-size:10px; font-weight: bold;">Température</span></th>
+            <th colspan="2"><span style="font-size:9px; font-weight: bold;">Janvier</span></th>
+            <th colspan="2"><span style="font-size:9px; font-weight: bold;">Février</span></th>
+            <th colspan="2"><span style="font-size:9px; font-weight: bold;">Mars</span></th>
+            <th colspan="2"><span style="font-size:9px; font-weight: bold;">Avril</span></th>
+            <th colspan="2"><span style="font-size:9px; font-weight: bold;">Mai</span></th>
+            <th colspan="2"><span style="font-size:9px; font-weight: bold;">Juin</span></th>
+            <th colspan="2"><span style="font-size:9px; font-weight: bold;">Juillet</span></th>
+            <th colspan="2"><span style="font-size:9px; font-weight: bold;">Août</span></th>
+            <th colspan="2"><span style="font-size:9px; font-weight: bold;">Septembre</span></th>
+            <th colspan="2"><span style="font-size:9px; font-weight: bold;">Octobre</span></th>
+            <th colspan="2"><span style="font-size:9px; font-weight: bold;">Novembre</span></th>
+            <th colspan="2"><span style="font-size:9px; font-weight: bold;">Décembre</span></th>
+        </tr>
+        <tr>
+            <td rowspan="5"><span style="font-size:10px; font-weight: bold;">Les cinq mois les plus chauds</span></td>
+            <td><span style="font-size:8px">1975</span></td>
+            <td><span style="font-size:8px">6.3</span></td>
+            <td><span style="font-size:8px">1990</span></td>
+            <td><span style="font-size:8px">7.9</span></td>
+            <td><span style="font-size:8px">1991</span></td>
+            <td><span style="font-size:8px">9.5</span></td>
+            <td><span style="font-size:8px">1987</span></td>
+            <td><span style="font-size:8px">11.9</span></td>
+            <td><span style="font-size:8px">1947</span></td>
+            <td><span style="font-size:8px">15.8</span></td>
+            <td><span style="font-size:8px">1976</span></td>
+            <td><span style="font-size:8px">19.3</span></td>
+            <td><span style="font-size:8px">1994</span></td>
+            <td><span style="font-size:8px">21.8</span></td>
+            <td><span style="font-size:8px">1997</span></td>
+            <td><span style="font-size:8px">21.2</span></td>
+            <td><span style="font-size:8px">1949</span></td>
+            <td><span style="font-size:8px">17.7</span></td>
+            <td><span style="font-size:8px">1921</span></td>
+            <td><span style="font-size:8px">14.0</span></td>
+            <td><span style="font-size:8px">1994</span></td>
+            <td><span style="font-size:8px">10.4</span></td>
+            <td><span style="font-size:8px">1934</span></td>
+            <td><span style="font-size:8px">7.5</span></td>
+        </tr>
+        <tr>
+            <td><span style="font-size:8px">1921</span></td>
+            <td><span style="font-size:8px">6.2</span></td>
+            <td><span style="font-size:8px">1926</span></td>
+            <td><span style="font-size:8px">7.6</span></td>
+            <td><span style="font-size:8px">1957</span></td>
+            <td><span style="font-size:8px">9.5</span></td>
+            <td><span style="font-size:8px">1993</span></td>
+            <td><span style="font-size:8px">11.8</span></td>
+            <td><span style="font-size:8px">1989</span></td>
+            <td><span style="font-size:8px">15.8</span></td>
+            <td><span style="font-size:8px">1950</span></td>
+            <td><span style="font-size:8px">18.1</span></td>
+            <td><span style="font-size:8px">1983</span></td>
+            <td><span style="font-size:8px">21.2</span></td>
+            <td><span style="font-size:8px">1911</span></td>
+            <td><span style="font-size:8px">20.9</span></td>
+            <td><span style="font-size:8px">1999</span></td>
+            <td><span style="font-size:8px">17.7</span></td>
+            <td><span style="font-size:8px">1995</span></td>
+            <td><span style="font-size:8px">13.7</span></td>
+            <td><span style="font-size:8px">1984</span></td>
+            <td><span style="font-size:8px">9.4</span></td>
+            <td><span style="font-size:8px">1974</span></td>
+            <td><span style="font-size:8px">7.0</span></td>
+        </tr>
+        <tr>
+            <td><span style="font-size:8px">1988</span></td>
+            <td><span style="font-size:8px">6.2</span></td>
+            <td><span style="font-size:8px">1961</span></td>
+            <td><span style="font-size:8px">7.2</span></td>
+            <td><span style="font-size:8px">1989</span></td>
+            <td><span style="font-size:8px">9.1</span></td>
+            <td><span style="font-size:8px">1961</span></td>
+            <td><span style="font-size:8px">11.7</span></td>
+            <td><span style="font-size:8px">1992</span></td>
+            <td><span style="font-size:8px">15.7</span></td>
+            <td><span style="font-size:8px">1970</span></td>
+            <td><span style="font-size:8px">17.9</span></td>
+            <td><span style="font-size:8px">1995</span></td>
+            <td><span style="font-size:8px">20.9</span></td>
+            <td><span style="font-size:8px">1995</span></td>
+            <td><span style="font-size:8px">20.4</span></td>
+            <td><span style="font-size:8px">1961</span></td>
+            <td><span style="font-size:8px">17.3</span></td>
+            <td><span style="font-size:8px">1989</span></td>
+            <td><span style="font-size:8px">12.7</span></td>
+            <td><span style="font-size:8px">1938</span></td>
+            <td><span style="font-size:8px">9.0</span></td>
+            <td><span style="font-size:8px">1988</span></td>
+            <td><span style="font-size:8px">6.9</span></td>
+        </tr>
+        <tr>
+            <td><span style="font-size:8px">1916</span></td>
+            <td><span style="font-size:8px">6.1</span></td>
+            <td><span style="font-size:8px">1995</span></td>
+            <td><span style="font-size:8px">6.8</span></td>
+            <td><span style="font-size:8px">1981</span></td>
+            <td><span style="font-size:8px">9.1</span></td>
+            <td><span style="font-size:8px">1952</span></td>
+            <td><span style="font-size:8px">11.5</span></td>
+            <td><span style="font-size:8px">1998</span></td>
+            <td><span style="font-size:8px">15.6</span></td>
+            <td><span style="font-size:8px">1947</span></td>
+            <td><span style="font-size:8px">17.8</span></td>
+            <td><span style="font-size:8px">1976</span></td>
+            <td><span style="font-size:8px">20.0</span></td>
+            <td><span style="font-size:8px">1947</span></td>
+            <td><span style="font-size:8px">20.4</span></td>
+            <td><span style="font-size:8px">1947</span></td>
+            <td><span style="font-size:8px">17.0</span></td>
+            <td><span style="font-size:8px">1990</span></td>
+            <td><span style="font-size:8px">12.6</span></td>
+            <td><span style="font-size:8px">1963</span></td>
+            <td><span style="font-size:8px">8.8</span></td>
+            <td><span style="font-size:8px">1915</span></td>
+            <td><span style="font-size:8px">6.3</span></td>
+        </tr>
+        <tr>
+            <td><span style="font-size:8px">1983</span></td>
+            <td><span style="font-size:8px">5.9</span></td>
+            <td><span style="font-size:8px">1966</span></td>
+            <td><span style="font-size:8px">6.6</span></td>
+            <td><span style="font-size:8px">1990</span></td>
+            <td><span style="font-size:8px">8.7</span></td>
+            <td><span style="font-size:8px">1949</span></td>
+            <td><span style="font-size:8px">11.2</span></td>
+            <td><span style="font-size:8px">1917</span></td>
+            <td><span style="font-size:8px">15.5</span></td>
+            <td><span style="font-size:8px">1986</span></td>
+            <td><span style="font-size:8px">17.5</span></td>
+            <td><span style="font-size:8px">1999</span></td>
+            <td><span style="font-size:8px">19.7</span></td>
+            <td><span style="font-size:8px">1990</span></td>
+            <td><span style="font-size:8px">19.7</span></td>
+            <td><span style="font-size:8px">1982</span></td>
+            <td><span style="font-size:8px">16.9</span></td>
+            <td><span style="font-size:8px">1969</span></td>
+            <td><span style="font-size:8px">12.6</span></td>
+            <td><span style="font-size:8px">1913</span></td>
+            <td><span style="font-size:8px">8.7</span></td>
+            <td><span style="font-size:8px">1918</span></td>
+            <td><span style="font-size:8px">6.3</span></td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td><span style="font-size:10px; font-weight: bold;">normales</span></td>
+            <td>&nbsp;</td>
+            <td><span style="font-size:9px">2.5</span></td>
+            <td>&nbsp;</td>
+            <td><span style="font-size:9px">3.0</span></td>
+            <td>&nbsp;</td>
+            <td><span style="font-size:9px">5.9</span></td>
+            <td>&nbsp;</td>
+            <td><span style="font-size:9px">8.7</span></td>
+            <td>&nbsp;</td>
+            <td><span style="font-size:9px">12.8</span></td>
+            <td>&nbsp;</td>
+            <td><span style="font-size:9px">15.3</span></td>
+            <td>&nbsp;</td>
+            <td><span style="font-size:9px">17.0</span></td>
+            <td>&nbsp;</td>
+            <td><span style="font-size:9px">16.9</span></td>
+            <td>&nbsp;</td>
+            <td><span style="font-size:9px">14.4</span></td>
+            <td>&nbsp;</td>
+            <td><span style="font-size:9px">10.3</span></td>
+            <td>&nbsp;</td>
+            <td><span style="font-size:9px">5.8</span></td>
+            <td>&nbsp;</td>
+            <td><span style="font-size:9px">3.3</span></td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td rowspan="5"><span style="font-size:10px; font-weight: bold;">Les cinq mois les plus froids</span></td>
+            <td><span style="font-size:8px">1985</span></td>
+            <td><span style="font-size:8px">-2.8</span></td>
+            <td><span style="font-size:8px">1947</span></td>
+            <td><span style="font-size:8px">-3.2</span></td>
+            <td><span style="font-size:8px">1971</span></td>
+            <td><span style="font-size:8px">3.2</span></td>
+            <td><span style="font-size:8px">1908</span></td>
+            <td><span style="font-size:8px">6.2</span></td>
+            <td><span style="font-size:8px">1984</span></td>
+            <td><span style="font-size:8px">10.4</span></td>
+            <td><span style="font-size:8px">1991</span></td>
+            <td><span style="font-size:8px">13.2</span></td>
+            <td><span style="font-size:8px">1965</span></td>
+            <td><span style="font-size:8px">14.4</span></td>
+            <td><span style="font-size:8px">1941</span></td>
+            <td><span style="font-size:8px">15.0</span></td>
+            <td><span style="font-size:8px">1986</span></td>
+            <td><span style="font-size:8px">11.7</span></td>
+            <td><span style="font-size:8px">1992</span></td>
+            <td><span style="font-size:8px">7.8</span></td>
+            <td><span style="font-size:8px">1993</span></td>
+            <td><span style="font-size:8px">2.8</span></td>
+            <td><span style="font-size:8px">1963</span></td>
+            <td><span style="font-size:8px">-0.5</span></td>
+        </tr>
+        <tr>
+            <td><span style="font-size:8px">1987</span></td>
+            <td><span style="font-size:8px">-2.8</span></td>
+            <td><span style="font-size:8px">1986</span></td>
+            <td><span style="font-size:8px">-3.2</span></td>
+            <td><span style="font-size:8px">1987</span></td>
+            <td><span style="font-size:8px">3.1</span></td>
+            <td><span style="font-size:8px">1970</span></td>
+            <td><span style="font-size:8px">6.2</span></td>
+            <td><span style="font-size:8px">1991</span></td>
+            <td><span style="font-size:8px">10.4</span></td>
+            <td><span style="font-size:8px">1909</span></td>
+            <td><span style="font-size:8px">13.1</span></td>
+            <td><span style="font-size:8px">1913</span></td>
+            <td><span style="font-size:8px">14.3</span></td>
+            <td><span style="font-size:8px">1956</span></td>
+            <td><span style="font-size:8px">14.4</span></td>
+            <td><span style="font-size:8px">1931</span></td>
+            <td><span style="font-size:8px">11.6</span></td>
+            <td><span style="font-size:8px">1919</span></td>
+            <td><span style="font-size:8px">7.1</span></td>
+            <td><span style="font-size:8px">1915</span></td>
+            <td><span style="font-size:8px">2.7</span></td>
+            <td><span style="font-size:8px">1969</span></td>
+            <td><span style="font-size:8px">-0.5</span></td>
+        </tr>
+        <tr>
+            <td><span style="font-size:8px">1942</span></td>
+            <td><span style="font-size:8px">-3.6</span></td>
+            <td><span style="font-size:8px">1942</span></td>
+            <td><span style="font-size:8px">-3.5</span></td>
+            <td><span style="font-size:8px">1955</span></td>
+            <td><span style="font-size:8px">2.7</span></td>
+            <td><span style="font-size:8px">1929</span></td>
+            <td><span style="font-size:8px">6.0</span></td>
+            <td><span style="font-size:8px">1962</span></td>
+            <td><span style="font-size:8px">10.2</span></td>
+            <td><span style="font-size:8px">1956</span></td>
+            <td><span style="font-size:8px">12.6</span></td>
+            <td><span style="font-size:8px">1909</span></td>
+            <td><span style="font-size:8px">14.2</span></td>
+            <td><span style="font-size:8px">1920</span></td>
+            <td><span style="font-size:8px">14.3</span></td>
+            <td><span style="font-size:8px">1925</span></td>
+            <td><span style="font-size:8px">11.5</span></td>
+            <td><span style="font-size:8px">1974</span></td>
+            <td><span style="font-size:8px">6.8</span></td>
+            <td><span style="font-size:8px">1925</span></td>
+            <td><span style="font-size:8px">2.7</span></td>
+            <td><span style="font-size:8px">1927</span></td>
+            <td><span style="font-size:8px">-0.6</span></td>
+        </tr>
+        <tr>
+            <td><span style="font-size:8px">1940</span></td>
+            <td><span style="font-size:8px">-4.2</span></td>
+            <td><span style="font-size:8px">1929</span></td>
+            <td><span style="font-size:8px">-3.6</span></td>
+            <td><span style="font-size:8px">1962</span></td>
+            <td><span style="font-size:8px">2.7</span></td>
+            <td><span style="font-size:8px">1903</span></td>
+            <td><span style="font-size:8px">5.3</span></td>
+            <td><span style="font-size:8px">1941</span></td>
+            <td><span style="font-size:8px">9.8</span></td>
+            <td><span style="font-size:8px">1916</span></td>
+            <td><span style="font-size:8px">12.2</span></td>
+            <td><span style="font-size:8px">1907</span></td>
+            <td><span style="font-size:8px">13.6</span></td>
+            <td><span style="font-size:8px">1924</span></td>
+            <td><span style="font-size:8px">14.2</span></td>
+            <td><span style="font-size:8px">1952</span></td>
+            <td><span style="font-size:8px">11.2</span></td>
+            <td><span style="font-size:8px">1922</span></td>
+            <td><span style="font-size:8px">6.5</span></td>
+            <td><span style="font-size:8px">1919</span></td>
+            <td><span style="font-size:8px">2.5</span></td>
+            <td><span style="font-size:8px">1950</span></td>
+            <td><span style="font-size:8px">-1.2</span></td>
+        </tr>
+        <tr>
+            <td><span style="font-size:8px">1963</span></td>
+            <td><span style="font-size:8px">-4.6</span></td>
+            <td><span style="font-size:8px">1956</span></td>
+            <td><span style="font-size:8px">-6.1</span></td>
+            <td><span style="font-size:8px">1917</span></td>
+            <td><span style="font-size:8px">2.5</span></td>
+            <td><span style="font-size:8px">1917</span></td>
+            <td><span style="font-size:8px">4.6</span></td>
+            <td><span style="font-size:8px">1902</span></td>
+            <td><span style="font-size:8px">8.5</span></td>
+            <td><span style="font-size:8px">1923</span></td>
+            <td><span style="font-size:8px">11.5</span></td>
+            <td><span style="font-size:8px">1919</span></td>
+            <td><span style="font-size:8px">13.5</span></td>
+            <td><span style="font-size:8px">1912</span></td>
+            <td><span style="font-size:8px">13.8</span></td>
+            <td><span style="font-size:8px">1912</span></td>
+            <td><span style="font-size:8px">10.7</span></td>
+            <td><span style="font-size:8px">1905</span></td>
+            <td><span style="font-size:8px">5.9</span></td>
+            <td><span style="font-size:8px">1921</span></td>
+            <td><span style="font-size:8px">1.8</span></td>
+            <td><span style="font-size:8px">1933</span></td>
+            <td><span style="font-size:8px">-2.7</span></td>
+        </tr>
+    </tbody>
 </table>
 
 <p>&nbsp;</p>
@@ -895,199 +906,199 @@
 <p style="color: #0000FF;"><u><strong>Tableau avec largeur fixée à 1000px et 4ème cellule fixée à 200px, mal rendu dans Oo5 :</strong></u></p>
 
 <table cellpadding="0" cellspacing="0" border="1" style="width:1000px">
-	<thead>
-		<tr>
-			<th>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</th>
-			<th>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</th>
-			<th>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</th>
-			<th style="width: 200px;">
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</th>
-			<th>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td>
-			<p>lignes de textes dans des &lt;p&gt différents, <b>saut de ligne gardé</b></p>
-			<p>seconde ligne dans un &lt;p&gt</p>
-			<p>troisième ligne dans un &lt;p&gt;</p>
-			</td>
-			<td>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</td>
-			<td>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</td>
-			<td>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</td>
-			<td>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</td>
-		</tr>
-		<tr>
-			<td>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</td>
-			<td>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</td>
-			<td>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</td>
-			<td>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</td>
-			<td>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</td>
-		</tr>
-		<tr>
-			<td>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</td>
-			<td>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</td>
-			<td>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</td>
-			<td>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</td>
-			<td>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</td>
-		</tr>
-		<tr>
-			<td>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</td>
-			<td>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</td>
-			<td>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</td>
-			<td>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</td>
-			<td>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</td>
-		</tr>
-		<tr>
-			<td>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</td>
-			<td>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</td>
-			<td>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</td>
-			<td>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</td>
-			<td>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</td>
-		</tr>
-		<tr>
-			<td>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</td>
-			<td>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</td>
-			<td>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</td>
-			<td>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</td>
-			<td>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</td>
-		</tr>
-		<tr>
-			<td>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</td>
-			<td>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</td>
-			<td>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</td>
-			<td>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</td>
-			<td>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</td>
-		</tr>
-		<tr>
-			<td>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</td>
-			<td>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</td>
-			<td>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</td>
-			<td>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</td>
-			<td>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</td>
-		</tr>
-		<tr>
-			<td>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</td>
-			<td>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</td>
-			<td>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</td>
-			<td>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</td>
-			<td>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</td>
-		</tr>
-		<tr>
-			<td>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</td>
-			<td>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</td>
-			<td>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</td>
-			<td>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</td>
-			<td>
-			<p>Text Text Text Text Text Text Text Text Text Text</p>
-			</td>
-		</tr>
-	</tbody>
+    <thead>
+        <tr>
+            <th>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </th>
+            <th>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </th>
+            <th>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </th>
+            <th style="width: 200px;">
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </th>
+            <th>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+            <p>lignes de textes dans des &lt;p&gt différents, <b>saut de ligne gardé</b></p>
+            <p>seconde ligne dans un &lt;p&gt</p>
+            <p>troisième ligne dans un &lt;p&gt;</p>
+            </td>
+            <td>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </td>
+            <td>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </td>
+            <td>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </td>
+            <td>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </td>
+            <td>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </td>
+            <td>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </td>
+            <td>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </td>
+            <td>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </td>
+            <td>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </td>
+            <td>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </td>
+            <td>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </td>
+            <td>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </td>
+            <td>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </td>
+            <td>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </td>
+            <td>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </td>
+            <td>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </td>
+            <td>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </td>
+            <td>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </td>
+            <td>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </td>
+            <td>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </td>
+            <td>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </td>
+            <td>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </td>
+            <td>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </td>
+            <td>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </td>
+            <td>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </td>
+            <td>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </td>
+            <td>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </td>
+            <td>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </td>
+            <td>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </td>
+            <td>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </td>
+            <td>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </td>
+            <td>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </td>
+            <td>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </td>
+            <td>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </td>
+            <td>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </td>
+            <td>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </td>
+            <td>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </td>
+            <td>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </td>
+            <td>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </td>
+            <td>
+            <p>Text Text Text Text Text Text Text Text Text Text</p>
+            </td>
+        </tr>
+    </tbody>
 </table>
 
 <p>&nbsp;</p>
@@ -1095,30 +1106,30 @@
 <p style="color: #0000FF;"><u><strong>Tableau avec alignement vertical et horizontal :</strong></u></p>
 
 <table border="1" cellpadding="1" cellspacing="1" style="width:500px">
-	<tbody>
-		<tr>
-			<td style="vertical-align:top">Texte vertical haut</td>
-			<td style="text-align:center"><b>Texte centré</b> texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte</td>
-		</tr>
-		<tr>
-			<td style="vertical-align:bottom">
-			<p>Texte bas</p>
-			</td>
-			<td style="text-align:right"><b>Texte à droite</b> texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte</td>
-		</tr>
-		<tr>
-			<td style="vertical-align:middle">Texte centré</td>
-			<td style="text-align:justify;"><b>Texte justifié</b> texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte</td>
-		</tr>
-		<tr>
-			<td><p style="text-align:right;">Texte aligné à droite, style appliqué sur un p dans le td</p></td>
-			<td><p style="text-align:center;">Texte centré, style appliqué sur un p dans le td</p></td>
-		</tr>
-		<tr>
-			<td>Comportement par défaut</td>
-			<td><b>Texte par défaut</b> texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte</td>
-		</tr>
-	</tbody>
+    <tbody>
+        <tr>
+            <td style="vertical-align:top">Texte vertical haut</td>
+            <td style="text-align:center"><b>Texte centré</b> texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte</td>
+        </tr>
+        <tr>
+            <td style="vertical-align:bottom">
+            <p>Texte bas</p>
+            </td>
+            <td style="text-align:right"><b>Texte à droite</b> texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte</td>
+        </tr>
+        <tr>
+            <td style="vertical-align:middle">Texte centré</td>
+            <td style="text-align:justify;"><b>Texte justifié</b> texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte</td>
+        </tr>
+        <tr>
+            <td><p style="text-align:right;">Texte aligné à droite, style appliqué sur un p dans le td</p></td>
+            <td><p style="text-align:center;">Texte centré, style appliqué sur un p dans le td</p></td>
+        </tr>
+        <tr>
+            <td>Comportement par défaut</td>
+            <td><b>Texte par défaut</b> texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte texte</td>
+        </tr>
+    </tbody>
 </table>
 
 <p>&nbsp;</p>
@@ -1126,29 +1137,29 @@
 <p style="color: #0000FF;"><u><strong>Tableau une seule colonne avec couleurs de fond et couleur de texte :</strong></u></p>
 
 <table border="1" cellpadding="1" cellspacing="1" style="width:500px">
-	<tbody>
-		<tr>
-			<td style="background-color:rgb(255, 204, 51); color:rgb(84, 194, 33);">Fond en RVB et texte vert</td>
-		</tr>
-		<tr>
-			<td style="background-color:#eb9eb9;">
-			<p style="color: #205c90;">Dans un &lt;p&gt; fond en # et texte bleu, le &lt;p&gt; étant supprimé, le style color n'est pas gardé et le texte rendu n'est pas bleu</p>
-			</td>
-		</tr>
-		<tr>
-			<td style="background-color:#eb9eb9;">
-			<span style="color: #205c90;">Dans un &lt;span&gt; fond en # et texte bleu, le &lt;span&gt; est gardé mais les styles pas...</span>
-			</td>
-		</tr>
-		<tr>
-			<td style="background-color:#eb9eb9; color: #205c90;">
-			Dans un &lt;td&gt; fond en # et texte bleu, les styles définis sur le &lt;td&gt; sont gardés
-			</td>
-		</tr>
-		<tr>
-			<td style="background-color:green; color: darkgrey;">Fond en HTML color et texte gris</td>
-		</tr>
-	</tbody>
+    <tbody>
+        <tr>
+            <td style="background-color:rgb(255, 204, 51); color:rgb(84, 194, 33);">Fond en RVB et texte vert</td>
+        </tr>
+        <tr>
+            <td style="background-color:#eb9eb9;">
+            <p style="color: #205c90;">Dans un &lt;p&gt; fond en # et texte bleu, le &lt;p&gt; étant supprimé, le style color n'est pas gardé et le texte rendu n'est pas bleu</p>
+            </td>
+        </tr>
+        <tr>
+            <td style="background-color:#eb9eb9;">
+            <span style="color: #205c90;">Dans un &lt;span&gt; fond en # et texte bleu, le &lt;span&gt; est gardé mais les styles pas...</span>
+            </td>
+        </tr>
+        <tr>
+            <td style="background-color:#eb9eb9; color: #205c90;">
+            Dans un &lt;td&gt; fond en # et texte bleu, les styles définis sur le &lt;td&gt; sont gardés
+            </td>
+        </tr>
+        <tr>
+            <td style="background-color:green; color: darkgrey;">Fond en HTML color et texte gris</td>
+        </tr>
+    </tbody>
 </table>
 
 <p>&nbsp;</p>
@@ -1156,13 +1167,13 @@
 <p style="color: #0000FF;"><u><strong>Tableau une seule colonne utilisé comme titre :</strong></u></p>
 
 <table cellspacing="1" cellpadding="1" border="1" style="width:400px">
-	<tbody>
-		<tr>
-			<td>
-				<p>A.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Description de la fonction</p>
-			</td>
-		</tr>
-	</tbody>
+    <tbody>
+        <tr>
+            <td>
+                <p>A.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Description de la fonction</p>
+            </td>
+        </tr>
+    </tbody>
 </table>
 
 <p>&nbsp;</p>
@@ -1170,8 +1181,8 @@
 <p style="color: #0000FF;"><u><strong>Tableau sans colonne de 1024px de large (non rendu) :</strong></u></p>
 
 <table cellspacing="0" cellpadding="0" border="1" style="width:1024px">
-	<tbody>
-	</tbody>
+    <tbody>
+    </tbody>
 </table>
 
 <p>&nbsp;</p>
@@ -1179,61 +1190,73 @@
 <p style="color: #0000FF;"><u><strong>Tableau sans bordures (border="0") :</strong></u></p>
 
 <table cellspacing="0" border="0" style="width:500px">
-	<tbody>
-		<tr>
-			<td>
-				<p>Texte 1.1;</p>
-			</td>
-			<td>
-				<p>Texte 1.2;</p>
-			</td>
-			<td>
-				<p>Texte 1.3;</p>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<p>Texte 2.1;</p>
-			</td>
-			<td>
-				<p>Texte 2.2;</p>
-			</td>
-			<td>
-				<p>Texte 2.3;</p>
-			</td>
-		</tr>
-	</tbody>
+<tbody>
+    <tr>
+        <td>
+            <p>Texte 1.1;</p>
+        </td>
+        <td>
+            <p>Texte 1.2;</p>
+        </td>
+        <td>
+            <p>Texte 1.3;</p>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <p>Texte 2.1;</p>
+        </td>
+        <td>
+            <p>Texte 2.2;</p>
+        </td>
+        <td>
+            <p>Texte 2.3;</p>
+        </td>
+    </tr>
+    </tbody>
 </table>
 
 <p>&nbsp;</p>
 
 <p style="color: #0000FF;"><u><strong>Tableau structure complexe table/td/div/p :</strong></u></p>
 
-<!--table border="1" cellspacing="0" cellpadding="0" style="width:100%">
-	<tbody>
-		<tr>
-			<td>
-				<div>
-					<p>Texte contenu dans un td/div/p</p>
-				</div>
-			</td>
-		</tr>
-	</tbody>
-</table-->
+<table border="1" cellspacing="0" cellpadding="0" style="width:100%">
+  <tbody>
+    <tr>
+      <td>
+        <div>
+          <p>Texte contenu dans un td/div/p</p>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 <p>&nbsp;</p>
 
 <p style="color: #0000FF;"><u><strong>Tableau utilisant des colspan sur la première ligne "inutilement" :</strong></u></p>
 
-<!--table border="1">
-	<tbody>
-		<tr>
-			<td colspan="2">Texte</td>
-			<td colspan="2">Texte</td>
-		</tr>
+<table border="1">
+  <tbody>
+    <tr>
+      <td colspan="2">Texte</td>
+      <td colspan="2">Texte</td>
+    </tr>
+  </tbody>
+</table>
 
-	</tbody>
-</table-->
+<p>&nbsp;</p>
+
+<p style="color: #0000FF;"><u><strong>Tableau style défini sur un p contenu dans un td est transféré sur le td et gardé:</strong></u></p>
+
+<table border="1">
+  <tbody>
+    <tr>
+      <td><p style="font-weight: bold;">Texte utilisant attribut "style" gras;</p></td>
+      <td><p class="Signature">Texte utilisant attribut "class" la classe par défaut "Signature".</p></td>
+    </tr>
+  </tbody>
+</table>
 
 <p>&nbsp;</p>
 
@@ -1247,11 +1270,21 @@
 
 <p><img alt="" src="http://www.imio.be/contact.png" style="height:291px; width:148px" title="contact.png" /></p>
 
-<p>&nbsp;</p>
+<p>Une image redimesionnée dans l'éditeur est rendue redimensionnée</p>
+
+<p><img alt="" src="http://www.imio.be/contact.png" style="height:150px; width:75px" title="contact.png" /></p>
+
+<p>Image non trouvée externe</p>
+
+<p><img alt="" src="http://www.imio.be/unexisting_image.png" title="unexisting_image.png" /></p>
+
+<p>Image non trouvée interne</p>
+
+<p><img alt="" src="unexisting_image.png" title="unexisting_image.png" /></p>
 
 <p>Une image utilisant un chemin de type file:/// ne casse pas la génération</p>
 
-<p><!--img src="file:///C:/Users/username/images/mon_image.png" style="height:100px; width:50px" title="mon_image.png" /--></p>
+<p><img src="file:///C:/Users/username/images/mon_image.png" title="mon_image.png" /></p>
 
 <p>&nbsp;</p>
 
