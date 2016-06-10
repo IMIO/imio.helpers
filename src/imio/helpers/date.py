@@ -5,8 +5,9 @@ from zope.i18n import translate
 
 
 MONTHIDS = {1:  'month_jan', 2:  'month_feb', 3:  'month_mar', 4:  'month_apr',
-             5:  'month_may', 6:  'month_jun', 7:  'month_jul', 8:  'month_aug',
-             9:  'month_sep', 10: 'month_oct', 11: 'month_nov', 12: 'month_dec'}
+            5:  'month_may', 6:  'month_jun', 7:  'month_jul', 8:  'month_aug',
+            9:  'month_sep', 10: 'month_oct', 11: 'month_nov', 12: 'month_dec'}
+
 
 def formatDate(date, month_name=True, context=None, long_format=False):
     """
@@ -16,14 +17,14 @@ def formatDate(date, month_name=True, context=None, long_format=False):
       Note that we force european format...
     """
     if date == "now":
-        #we want the current date, calculate it
+        # we want the current date, calculate it
         date = DateTime()
 
     if long_format:
         hour = ' (%H:%M)'
     else:
         hour = ''
-    #check if we need to return the month name
+    # check if we need to return the month name
     if month_name:
         month = date.month()
         translated_month = translate(msgid=MONTHIDS[month],
@@ -31,11 +32,11 @@ def formatDate(date, month_name=True, context=None, long_format=False):
                                      context=context,
                                      default=MONTHIDS[month],
                                      target_language='fr')
-        #use mOntH here to avoid strftime translating the month...
+        # use mOntH here to avoid strftime translating the month...
         res = date.strftime('%e mOntH %Y' + hour)
-        #replace '01 ' by '1er '
+        # replace '01 ' by '1er '
         res = res.replace('01 ', '1er ')
-        #... now that we have mOntH in the string, we can easily replace it
+        # ... now that we have mOntH in the string, we can easily replace it
         res = res.replace('mOntH', translated_month.lower())
         return res.strip()
     else:
@@ -53,11 +54,11 @@ def wordizeDate(date, context=None, long_format=False):
 
     splitted_date = date.strftime("%Y/%m/%d").split('/')
     date_time = ""
-    #check if we have a time
+    # check if we have a time
     if len(str(date).split(' ')) > 1:
         date_time = str(date).split(' ')[1]
 
-    #work on the date
+    # work on the date
     day_to_convert = int(splitted_date[2])
     if day_to_convert == 1:
         converted_day = "premier"
@@ -70,7 +71,7 @@ def wordizeDate(date, context=None, long_format=False):
 
     converted_time = ""
     if long_format and date_time:
-        #work on the hour
+        # work on the hour
         splitted_time = date_time.split(':')
         hour = splitted_time[0]
         minutes = splitted_time[1]
@@ -82,47 +83,46 @@ def wordizeDate(date, context=None, long_format=False):
             hour_word = "heure"
         else:
             hour_word = "heures"
-        #do not display 'zero' in the date like : eleven hour zero...
-        #see http://dev.communesplone.org/trac/ticket/1553
-        if converted_minutes and not minutes in ['0', '00',]:
+        # do not display 'zero' in the date like : eleven hour zero...
+        # see http://dev.communesplone.org/trac/ticket/1553
+        if converted_minutes and not minutes in ['0', '00', ]:
             converted_time = u" {} {} {} {}".format(u"à",
                                                     converted_hour,
                                                     hour_word,
                                                     converted_minutes)
         else:
-            #remove the minutes, especially useless spaces if there are no minutes
+            # remove the minutes, especially useless spaces if there are no minutes
             converted_time = u" {} {} {}".format(u"à",
                                                  converted_hour,
                                                  hour_word)
     return converted_date.encode('utf-8') + converted_time.encode('utf-8')
 
 def int2word(n):
-    """
-      Convert an integer number into a string of french word
-      Based on the http://www.daniweb.com/code/snippet609.html
-      code that convert into english words...
-    """
-    ############# globals ################
-    ONES = ["", "un ","deux ","trois ","quatre ", "cinq ",
-    "six ","sept ","huit ","neuf "]
-    TENS = ["dix ","onze ","douze ","treize ", "quatorze ",
-    "quinze ","seize ","dix-sept ","dix-huit ","dix-neuf "]
-    TWENTIES = ["","","vingt ","trente ","quarante ",
-    "cinquante ","soixante ","septante ","quatre-vingt ","nonante "]
-    THOUSANDS = ["","mille ","million ", "milliard ", "billiard ",
-    "trilliard ", "quadrilliard ", "quintillard ", "sextilliard", "septilliard ",
-    "octilliard ", "nonilliard ", u"décillion ", u"décilliard ", u"unodécillion ",
-    u"unodécilliard ", u"duodécillion ", u"duodécilliard "]
+    """Convert an integer number into a string of french word
+    based on the http://www.daniweb.com/code/snippet609.html
+    code that convert into english words..."""
 
-    #quickly manage if n is < 10
+    ONES = ["", "un ", "deux ", "trois ", "quatre ", "cinq ",
+            "six ", "sept ", "huit ", "neuf "]
+    TENS = ["dix ", "onze ", "douze ", "treize ", "quatorze ",
+            "quinze ", "seize ", "dix-sept ", "dix-huit ", "dix-neuf "]
+    TWENTIES = ["", "", "vingt ", "trente ", "quarante ", "cinquante ",
+                "soixante ", "septante ", "quatre-vingt ", "nonante "]
+    THOUSANDS = ["", "mille ", "million ", "milliard ", "billiard ",
+                 "trilliard ", "quadrilliard ", "quintillard ",
+                 "sextilliard", "septilliard ", "octilliard ", "nonilliard ",
+                 u"décillion ", u"décilliard ", u"unodécillion ",
+                 u"unodécilliard ", u"duodécillion ", u"duodécilliard "]
+
+    # quickly manage if n is < 10
     if n < 10:
-        ONES = [u"zéro ","un ","deux ","trois ","quatre ", "cinq ", "six ","sept ","huit ","neuf "]
+        ONES = [u"zéro ", "un ", "deux ", "trois ", "quatre ",
+                "cinq ", "six ", "sept ", "huit ", "neuf "]
         return ONES[n].strip()
 
     # break the number into groups of 3 digits using slicing
     # each group representing hundred, thousand, million, billion, ...
     n3 = []
-    r1 = ""
     # create numeric string
     ns = str(n)
     for k in range(3, 60, 3):
@@ -139,22 +139,20 @@ def int2word(n):
             elif q >= -2:
                 n3.append(int(r[:1]))
 
-    r1 = r
-
     # break each group of 3 digits into
     # ONES, TENS/TWENTIES, hundreds
     # and form a string
     nw = ""
     for i, x in enumerate(n3):
         b1 = x % 10
-        b2 = (x % 100)//10
-        b3 = (x % 1000)//100
+        b2 = (x % 100) // 10
+        b3 = (x % 1000) // 100
         if x == 0:
-            continue # skip
+            continue  # skip
         else:
             t = THOUSANDS[i]
         if b2 == 0:
-            #cas du 'mille' qui n'est pas 'un mille'
+            # cas du 'mille' qui n'est pas 'un mille'
             if b1 == 1 and i == 1:
                 nw = t + nw
             else:
@@ -163,14 +161,14 @@ def int2word(n):
             nw = TENS[b1] + t + nw
         elif b2 > 1:
             extra = ""
-            if b1==1:
+            if b1 == 1:
                 nw = TWENTIES[b2] + "et un " + t + nw
-            elif b1>1:
+            elif b1 > 1:
                 nw = TWENTIES[b2][:-1] + "-" + ONES[b1] + t + nw
             else:
                 nw = TWENTIES[b2] + extra + ONES[b1] + t + nw
         if b3 > 0:
-            if b3>1:
+            if b3 > 1:
                 nw = ONES[b3] + "cent " + nw
             else:
                 nw = "cent " + nw
