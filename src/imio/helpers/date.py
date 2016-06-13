@@ -111,7 +111,7 @@ def int2word(n):
                 "soixante ", "septante ", "quatre-vingt ", "nonante "]
     THOUSANDS = ["", "mille ", "million ", "milliard ", "billiard ",
                  "trilliard ", "quadrilliard ", "quintillard ",
-                 "sextilliard", "septilliard ", "octilliard ", "nonilliard ",
+                 "sextilliard ", "septilliard ", "octilliard ", "nonilliard ",
                  u"décillion ", u"décilliard ", u"unodécillion ",
                  u"unodécilliard ", u"duodécillion ", u"duodécilliard "]
 
