@@ -1,20 +1,19 @@
 # -*- coding: utf-8 -*-
 from DateTime import DateTime
-from imio.helpers.testing import IntegrationTestCase
 from zope.i18n import translate
 
 
-MONTHIDS = {1:  'month_jan', 2:  'month_feb', 3:  'month_mar', 4:  'month_apr',
-            5:  'month_may', 6:  'month_jun', 7:  'month_jul', 8:  'month_aug',
-            9:  'month_sep', 10: 'month_oct', 11: 'month_nov', 12: 'month_dec'}
+MONTHIDS = {1: 'month_jan', 2: 'month_feb', 3: 'month_mar', 4: 'month_apr',
+            5: 'month_may', 6: 'month_jun', 7: 'month_jul', 8: 'month_aug',
+            9: 'month_sep', 10: 'month_oct', 11: 'month_nov', 12: 'month_dec'}
 
 
 def formatDate(date, month_name=True, context=None, long_format=False):
     """
       Format the given date.  This is usefull for formatting dates
       in the pod templates
-      long_format : we want the hour with it
-      mont_name : we want the name of the month instead of the number
+      long_format:we want the hour with it
+      mont_name:we want the name of the month instead of the number
       Note that we force european format...
     """
     if date == "now":
@@ -46,6 +45,7 @@ def formatDate(date, month_name=True, context=None, long_format=False):
                                         hour)
     else:
         return u'{0}/{1}/{2}{3}'.format(day, month, year, hour)
+
 
 def wordizeDate(date, context=None, long_format=False):
     """
@@ -90,7 +90,7 @@ def wordizeDate(date, context=None, long_format=False):
             hour_word = "heures"
         # do not display 'zero' in the date like : eleven hour zero...
         # see http://dev.communesplone.org/trac/ticket/1553
-        if converted_minutes and not minutes in ['0', '00', ]:
+        if converted_minutes and minutes not in ['0', '00', ]:
             converted_time = u" {} {} {} {}".format(u"à",
                                                     converted_hour,
                                                     hour_word,
@@ -102,6 +102,7 @@ def wordizeDate(date, context=None, long_format=False):
                                                  converted_hour,
                                                  hour_word)
     return converted_date.encode('utf-8') + converted_time.encode('utf-8')
+
 
 def int2word(n):
     """Convert an integer number into a string of french word

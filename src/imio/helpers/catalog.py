@@ -69,7 +69,7 @@ def addOrUpdateColumns(portal, columns=()):
     addedColumns = []
     for column in columns:
         # Only add it if not already existing
-        if not column in catalog.schema():
+        if column not in catalog.schema():
             addedColumns.append(column)
             catalog.addColumn(column)
             logger.info('Added metadata "%s"...' % column)

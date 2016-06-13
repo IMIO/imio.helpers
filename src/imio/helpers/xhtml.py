@@ -112,7 +112,7 @@ def addClassToLastChildren(xhtmlContent,
         numberOfChildren = len(children)
         while stillNeedToAdaptPreviousChild and i <= numberOfChildren:
             child = children[-i]
-            if not child.tag in tags and not child.getchildren():
+            if child.tag not in tags and not child.getchildren():
                 stillNeedToAdaptPreviousChild = False
             else:
                 # check if tag did not already have a class attribute

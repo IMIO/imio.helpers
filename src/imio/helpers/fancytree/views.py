@@ -9,7 +9,7 @@ from plone.app.layout.navigation.navtree import buildFolderTree
 from plone.app.layout.navigation.navtree import NavtreeStrategyBase
 
 
-class BaseRenderFancyTree(BrowserView):  #pylint: disable=R0921
+class BaseRenderFancyTree(BrowserView):  # pylint: disable=R0921
 
     """Base view that displays a fancytree from a catalog query."""
 

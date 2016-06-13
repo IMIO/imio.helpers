@@ -5,6 +5,7 @@ from imio.helpers.date import int2word
 from imio.helpers.date import wordizeDate
 from imio.helpers.testing import IntegrationTestCase
 
+
 class TestDateModule(IntegrationTestCase):
     """
     Test all helper methods of date module.
@@ -41,9 +42,9 @@ class TestDateModule(IntegrationTestCase):
         self.assertEqual(int2word(220), "deux cent vingt")
         self.assertEqual(int2word(1000100), "un million cent")
         self.assertEqual(int2word(123456789876543212345678987654321),
-                         "cent vingt-trois octilliard quatre cent cinquante-six "\
-                         "septilliard sept cent quatre-vingt-neuf sextilliard huit "\
-                         "cent septante-six quintillard cinq cent quarante-trois "\
-                         "quadrilliard deux cent douze trilliard trois cent quarante-cinq "\
-                         "billiard six cent septante-huit milliard neuf cent quatre-vingt-sept "\
+                         "cent vingt-trois octilliard quatre cent cinquante-six "
+                         "septilliard sept cent quatre-vingt-neuf sextilliard huit "
+                         "cent septante-six quintillard cinq cent quarante-trois "
+                         "quadrilliard deux cent douze trilliard trois cent quarante-cinq "
+                         "billiard six cent septante-huit milliard neuf cent quatre-vingt-sept "
                          "million six cent cinquante-quatre mille trois cent vingt et un")

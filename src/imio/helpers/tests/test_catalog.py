@@ -21,7 +21,7 @@ class TestCatalogModule(IntegrationTestCase):
         Moreover existing objects will be updated.
         """
         # for now reversedUID index does not exist...
-        self.assertTrue(not 'reversedUID' in self.catalog.indexes())
+        self.assertTrue('reversedUID' not in self.catalog.indexes())
         # add a document prior to adding the index
         priorDocument = api.content.create(type='Document',
                                            id='prior-document',
@@ -53,7 +53,7 @@ class TestCatalogModule(IntegrationTestCase):
         Moreover existing objects will be updated.
         """
         # for now reversedUID metadata does not exist...
-        self.assertTrue(not 'reversedUID' in self.catalog.schema())
+        self.assertTrue('reversedUID' not in self.catalog.schema())
         # add a document prior to adding the index
         api.content.create(type='Document',
                            id='prior-document',
@@ -75,14 +75,14 @@ class TestCatalogModule(IntegrationTestCase):
         Moreover existing objects will be updated.
         """
         # for now reversedUID metadata does not exist...
-        self.assertTrue(not 'reversedUID' in self.catalog.schema())
+        self.assertTrue('reversedUID' not in self.catalog.schema())
         # add a document prior to adding the index
         api.content.create(type='Document',
                            id='prior-document',
                            container=self.portal)
         addOrUpdateColumns(self.portal, ('reversedUID', ))
         # no corresponding index exists
-        self.assertTrue(not 'reversedUID' in self.catalog.indexes())
+        self.assertTrue('reversedUID' not in self.catalog.indexes())
         # the metadata was actually added
         self.assertTrue('reversedUID' in self.catalog.schema())
         # and existing objects were updated
@@ -138,7 +138,7 @@ class TestCatalogModule(IntegrationTestCase):
         self.assertTrue('Description' in self.catalog.indexes())
         self.assertTrue('Description' in self.catalog.schema())
         removeIndexes(self.portal, indexes=('Description', ))
-        self.assertTrue(not 'Description' in self.catalog.indexes())
+        self.assertTrue('Description' not in self.catalog.indexes())
         # the metadata with same name still exists
         self.assertTrue('Description' in self.catalog.schema())
         # if we try to remove an unexisting index, it does not fail
@@ -153,7 +153,7 @@ class TestCatalogModule(IntegrationTestCase):
         self.assertTrue('Description' in self.catalog.schema())
         self.assertTrue('Description' in self.catalog.indexes())
         removeColumns(self.portal, columns=('Description', ))
-        self.assertTrue(not 'Description' in self.catalog.schema())
+        self.assertTrue('Description' not in self.catalog.schema())
         # the index with same name still exists
         self.assertTrue('Description' in self.catalog.indexes())
         # if we try to remove an unexisting column, it does not fail
