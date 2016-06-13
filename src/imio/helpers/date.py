@@ -20,8 +20,12 @@ def formatDate(date, month_name=True, context=None, long_format=False):
         # we want the current date, calculate it
         date = DateTime()
 
+    day = date.dd()
+    year = str(date.year())
+    month = date.mm()
+
     if long_format:
-        hour = ' (%H:%M)'
+        hour = date.strftime(' (%H:%M)')
     else:
         hour = ''
     # check if we need to return the month name
@@ -32,15 +36,12 @@ def formatDate(date, month_name=True, context=None, long_format=False):
                                      context=context,
                                      default=MONTHIDS[month],
                                      target_language='fr')
-        # use mOntH here to avoid strftime translating the month...
-        res = date.strftime('%e mOntH %Y' + hour)
         # replace '01 ' by '1er '
-        res = res.replace('01 ', '1er ')
-        # ... now that we have mOntH in the string, we can easily replace it
-        res = res.replace('mOntH', translated_month.lower())
-        return res.strip()
+        if date.day() in [1, 01]:
+            day = '1er'
+        return u'{0} {1} {2}{3}'.format(day, translated_month.lower(), year, hour)
     else:
-        return date.strftime("%d/%m/%Y" + hour)
+        return u'{0}/{1}/{2}{3}'.format(day, month, year, hour)
 
 def wordizeDate(date, context=None, long_format=False):
     """
