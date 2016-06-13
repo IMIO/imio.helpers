@@ -11,7 +11,8 @@ MONTHIDS = {1:  'month_jan', 2:  'month_feb', 3:  'month_mar', 4:  'month_apr',
 
 def formatDate(date, month_name=True, context=None, long_format=False):
     """
-      Format the given date.  This is usefull for formatting dates in the pod templates
+      Format the given date.  This is usefull for formatting dates
+      in the pod templates
       long_format : we want the hour with it
       mont_name : we want the name of the month instead of the number
       Note that we force european format...
@@ -39,7 +40,10 @@ def formatDate(date, month_name=True, context=None, long_format=False):
         # replace '01 ' by '1er '
         if date.day() == 1:
             day = '1er'
-        return u'{0} {1} {2}{3}'.format(day, translated_month.lower(), year, hour)
+        return u'{0} {1} {2}{3}'.format(day,
+                                        translated_month.lower(),
+                                        year,
+                                        hour)
     else:
         return u'{0}/{1}/{2}{3}'.format(day, month, year, hour)
 
@@ -92,7 +96,8 @@ def wordizeDate(date, context=None, long_format=False):
                                                     hour_word,
                                                     converted_minutes)
         else:
-            # remove the minutes, especially useless spaces if there are no minutes
+            # remove the minutes, especially useless spaces if there
+            # are no minutes
             converted_time = u" {} {} {}".format(u"à",
                                                  converted_hour,
                                                  hour_word)
