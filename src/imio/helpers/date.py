@@ -37,7 +37,7 @@ def formatDate(date, month_name=True, context=None, long_format=False):
                                      default=MONTHIDS[month],
                                      target_language='fr')
         # replace '01 ' by '1er '
-        if date.day() in [1, 01]:
+        if date.day() == 1:
             day = '1er'
         return u'{0} {1} {2}{3}'.format(day, translated_month.lower(), year, hour)
     else:

@@ -22,8 +22,8 @@ class TestDateModule(IntegrationTestCase):
 
     def test_formatDate(self):
         self.assertEqual(formatDate("now", month_name=False), DateTime().strftime("%d/%m/%Y"))
-        self.assertEqual(formatDate(DateTime(2,1,1,1,1), month_name=True, long_format=True), u'1er janvier 2002 (01:01)')
-        self.assertEqual(formatDate(DateTime(1,1,1,1,1), month_name=True, long_format=True), u'1er janvier 2001 (01:01)')
+        self.assertEqual(formatDate(DateTime(2, 1, 1, 1, 1), month_name=True, long_format=True), u'1er janvier 2002 (01:01)')
+        self.assertEqual(formatDate(DateTime(1, 1, 1, 1, 1), month_name=True, long_format=True), u'1er janvier 2001 (01:01)')
 
 
     def test_int2word(self):
