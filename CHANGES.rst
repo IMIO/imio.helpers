@@ -6,6 +6,10 @@ Changelog
 
 - Use by default scale=2 instead of scale=4 when generating barcode.
   [gbastien]
+- Added methods int2word, wordizeDate and formatDate aiming to transform
+  numbers into french translation, date with only numbers into date in full
+  and to format dates (with hours, with month name in full, ...).
+  [DieKatze]
 
 
 0.4.17 (2016-03-22)
