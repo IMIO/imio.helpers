@@ -4,7 +4,8 @@ Changelog
 0.4.18 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Use by default scale=2 instead of scale=4 when generating barcode.
+  [gbastien]
 
 
 0.4.17 (2016-03-22)

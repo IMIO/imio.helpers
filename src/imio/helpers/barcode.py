@@ -4,7 +4,7 @@ import cStringIO
 import subprocess
 
 
-def generate_barcode(data, executable='zint', barcode=92, scale=4):
+def generate_barcode(data, executable='zint', barcode=92, scale=2):
     """Generate a barcode with zint in StringIO and return it"""
     output = cStringIO.StringIO()
     command = [
