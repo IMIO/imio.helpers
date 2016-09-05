@@ -1,0 +1,38 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:plone="http://namespaces.plone.org/plone"
+    i18n_domain="imio.helpers">
+
+    <!-- Publish static files -->
+    <browser:resourceDirectory
+      name="imio.helpers"
+      directory="static"
+      />
+
+    <!-- The view rendering imio-folder-listing -->
+    <browser:page
+        for="plone.dexterity.interfaces.IDexterityContainer"
+        class="imio.helpers.browser.views.ContainerFolderListingView"
+        name="imio-folder-listing"
+        template="folder_listing.pt"
+        permission="zope2.View"
+        />
+
+    <!-- The view rendering the table displayed in imio-folder-listing, aka imio-folder-listing-table -->
+    <browser:page
+        for="plone.dexterity.interfaces.IDexterityContainer"
+        class="imio.helpers.browser.views.ContainerFolderListingView"
+        name="imio-folder-listing-table"
+        template="folder_listing_table.pt"
+        permission="zope2.View" />
+
+    <!-- The jQuery/ajax table refresh view that refresh imio-folder-listing-table -->
+    <browser:page
+        for="plone.dexterity.interfaces.IDexterityContainer"
+        class="imio.helpers.browser.views.ContainerFolderListingView"
+        name="get_imio_folder_listing"
+        attribute="update_table"
+        permission="zope2.View" />
+
+</configure>

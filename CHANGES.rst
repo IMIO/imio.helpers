@@ -4,7 +4,12 @@ Changelog
 0.4.19 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Added default views for Dexterity content and container that display
+  fields in a table with widget label and the left and widget value on
+  the right.  The view for container also includes an asynchronous
+  folder_listing that lists contained elements.
+  Taken from imio.project.core
+  [gbastien]
 
 
 0.4.18 (2016-06-17)

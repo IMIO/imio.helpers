@@ -1,0 +1,17 @@
+<metal:folder_listing define-macro="folder_listing" i18n:domain="imio.helpers">
+
+    <script type="text/javascript"
+            tal:define="portal_url context/@@plone_portal_state/portal_url;"
+            tal:attributes="src string:${portal_url}/++resource++imio.helpers/listings.js">
+    </script>
+
+    <fieldset id="imio-helpers-folder-listing-fieldset">
+        <legend i18n:translate="legend_folder_listing">Contents</legend>
+
+        <tal:block define="folder_listing_table context/@@imio-folder-listing-table/index;">
+            <tal:content replace="structure folder_listing_table" />
+        </tal:block>
+
+    </fieldset>
+
+</metal:folder_listing>
