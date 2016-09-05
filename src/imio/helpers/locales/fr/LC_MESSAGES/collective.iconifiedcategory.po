@@ -1,0 +1,142 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2016-08-25 14:48+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+"Language-Code: en\n"
+"Language-Name: English\n"
+"Preferred-Encodings: utf-8 latin1\n"
+"Domain: DOMAIN\n"
+
+#: ../content/categorygroup.py:22
+msgid "Activate the \"confidential\" option"
+msgstr "Activer l'option \"confidentiel\""
+
+#: ../content/categorygroup.py:28
+msgid "Activate the \"to be printed\" option"
+msgstr "Activer l'option \"à imprimer\""
+
+#: ../browser/tabview.py:121
+msgid "Author"
+msgstr "Auteur"
+
+msgid "Can not be printed"
+msgstr "Ne peut pas être imprimer"
+
+#: ../browser/templates/categorized-child-viewlet.pt:9
+#: ../browser/templates/categorized-tab-view.pt:5
+#: ../profiles/default/actions.xml
+msgid "Categorized elements"
+msgstr "Eléments catégorisés"
+
+#: ../behaviors/iconifiedcategorization.py:34
+#: ../browser/tabview.py:112
+#: ../profiles/default/types/ContentCategory.xml
+msgid "Category"
+msgstr "Catégorie"
+
+#: ../profiles/default/types/ContentCategoryConfiguration.xml
+msgid "CategoryConfiguration"
+msgstr "Catégorie Configuration"
+
+#: ../profiles/default/types/ContentCategoryGroup.xml
+msgid "CategoryGroup"
+msgstr "Groupe de catégorie"
+
+#: ../browser/tabview.py:213
+#: ../content/base.py:29
+msgid "Confidential"
+msgstr "Confidentiel"
+
+#: ../browser/tabview.py:129
+msgid "Creation date"
+msgstr "Date de création"
+
+#: ../behaviors/iconifiedcategorization.py:45
+msgid "Default title"
+msgstr "Titre par défaut"
+
+#: ../browser/tabview.py:244
+#: ../browser/templates/categorized-child-infos-viewlet.pt:31
+msgid "Download"
+msgstr "Télécharger"
+
+#: ../browser/tabview.py:238
+msgid "Edit"
+msgstr "Éditer"
+
+#: ../browser/actionview.py:46
+msgid "Error during process"
+msgstr "Une erreur est survenue"
+
+#: ../browser/tabview.py:153
+msgid "Filesize"
+msgstr "Taille du fichier"
+
+#: ../content/category.py:25
+msgid "Icon"
+msgstr "Icône"
+
+#: ../browser/tabview.py:140
+msgid "Last modification"
+msgstr "Dernière modification"
+
+msgid "Must be printed"
+msgstr "Doit être imprimé"
+
+msgid "Not confidential"
+msgstr "Non confidentiel"
+
+#: ../content/base.py:24
+msgid "Predefined title"
+msgstr "Titre prédéfini"
+
+msgid "Should not be printed"
+msgstr "Ne doit pas être imprimé"
+
+#: ../profiles/default/types/ContentSubcategory.xml
+msgid "Subcategory"
+msgstr "Sous-catégorie"
+
+#: ../content/events.py:49
+msgid "The annex that you just added has a large size and could be difficult to download by users wanting to view it!"
+msgstr "L'annexe que vous venez d'ajouter pourrait poser des problèmes aux utilisateurs souhaitant la consulter à cause de sa grande taille."
+
+#: ../content/events.py:85
+msgid "This category or one of is subcategory are used by another object and cannot be deleted"
+msgstr "Cette catégorie ou l'une des sous-catégorie est utilisée par un autre objet et ne peut dès lors être supprimée"
+
+#: ../content/events.py:96
+msgid "This subcategory is used by another object and cannot be deleted"
+msgstr "Cette catégorie est utilisée par un autre objet et ne peut dès lors être supprimée"
+
+#: ../browser/tabview.py:87
+#: ../content/base.py:19
+msgid "Title"
+msgstr "Titre"
+
+#: ../browser/tabview.py:198
+#: ../content/base.py:35
+msgid "To be printed"
+msgstr "A imprimer"
+
+#: ../browser/tabview.py:250
+#: ../browser/templates/categorized-child-infos-viewlet.pt:38
+msgid "View"
+msgstr "Voir"
+
+#. Default: "Annex size is huge, it could be difficult to be downloaded!"
+msgid "help_warn_filesize"
+msgstr "Attention, cet élément pourrait prendre du temps à être téléchargé en raison de sa taille élevée!"
+
+#. Default: "<span class='discreet iconified_category_no_element'>No element to display.</span>"
+#: ../browser/tabview.py:80
+msgid "no_element_to_display"
+msgstr "<span class='discreet iconified_category_no_element'>Aucun élément à afficher.</span>"
+
