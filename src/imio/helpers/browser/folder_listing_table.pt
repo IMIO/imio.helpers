@@ -8,7 +8,7 @@
         <th class='header_title' i18n:translate="">Title</th>
         <th class='header_description' i18n:translate="">Description</th>
         <th class='header_state' i18n:translate="">State</th>
-        <th class='header_creator' i18n:translate="">Creator</th>
+        <th class='header_author' i18n:translate="">Author</th>
     </tr>
     <tr tal:repeat="renderedElement batch">
         <tal:defines define="obj python: renderedElement.context;
