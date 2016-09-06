@@ -12,6 +12,7 @@ from plone.memoize.interfaces import ICacheChooser
 
 
 logger = logging.getLogger('imio.helpers:cache')
+VOLATILE_NAME_MAX_LENGTH = 200
 
 
 def cleanVocabularyCacheFor(vocabulary=None):
@@ -49,9 +50,10 @@ def get_cachekey_volatile(name):
        to be used as cachekey stored in a volatile.
        If it exists, we return the value, either we store datetime.now()."""
     portal = api.portal.get()
-    # use max_length of 200 to avoid cropped names that could lead to
-    # having 2 names beginning with same part using same volatile...
-    normalized_name = queryUtility(IIDNormalizer).normalize(name, max_length=200)
+    # use max_length of VOLATILE_NAME_MAX_LENGTH to avoid cropped names
+    # that could lead to having 2 names beginning with same part using same volatile...
+    normalized_name = queryUtility(IIDNormalizer).normalize(
+        name, max_length=VOLATILE_NAME_MAX_LENGTH)
     volatile_name = '_v_{0}'.format(normalized_name)
     date = getattr(portal, volatile_name, None)
     if not date:
@@ -63,7 +65,8 @@ def get_cachekey_volatile(name):
 def invalidate_cachekey_volatile_for(name):
     """ """
     portal = api.portal.get()
-    normalized_name = queryUtility(IIDNormalizer).normalize(name, max_length=200)
+    normalized_name = queryUtility(IIDNormalizer).normalize(
+        name, max_length=VOLATILE_NAME_MAX_LENGTH)
     volatile_name = '_v_{0}'.format(normalized_name)
     if hasattr(portal, volatile_name):
         delattr(portal, volatile_name)
