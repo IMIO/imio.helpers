@@ -1,6 +1,11 @@
 # -*- coding: utf-8 -*-
 
+import os
+
 from plone import api
+from plone.app.textfield.value import RichTextValue
+from plone.namedfile.file import NamedBlobImage
+
 from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.CMFPlone.utils import safe_unicode
 
@@ -8,18 +13,18 @@ import logging
 logger = logging.getLogger('imo.helpers.content')
 
 """
-Exemple config object
+Exemple config object (* = is mandatory)
 [
     {
     'cid': 1,  # configuration id
-    'cont': cid or 'path',  # container: can be cid or previous created object or relative path
-    'typ': portal type,  # portal_type
+*   'cont': cid or 'path',  # container: can be cid or previous created object or relative path
+*   'type': portal type,  # portal_type
     'id': 'toto',  # if not set in dic, id will be generated from title
-    'title': 'Toto',
+*   'title': 'Toto',
     'trans': ['transition1', 'transition2']  # if set, we will try to apply the different transitions
     'attrs': {}  # dictionnary of other attributes
-    'functions': []  # list of functions that will be called with obj as first parameter
-    'extra': {}  # extra kwargs passed to each function
+    'functions': [lead_image]  # list of functions that will be called with obj as first parameter
+    'extra': {'lead_image': {}}}  # extra kwargs passed to each function
     }
 ]
 """
@@ -58,6 +63,18 @@ def transitions(obj, transitions):
             logger.warn("Cannot apply transition '%s' on obj '%s'" % (tr, obj))
 
 
+def lead_image(obj, filepath='', img_obj=None):
+    """
+        Add a lead image
+    """
+    if filepath:
+        filename = os.path.basename(filepath)
+        namedblobimage = NamedBlobImage(data=open(filepath, 'r').read(), filename=safe_unicode(filename))
+    elif img_obj:
+        namedblobimage = img_obj.image
+    setattr(obj, 'image', namedblobimage)
+
+
 def create(conf, cids={}):
     """
         Create objects following configuration
@@ -74,12 +91,23 @@ def create(conf, cids={}):
         if not parent:
             logger.error("Dict nb %d: cannot find container %s (cid=%d)" % (i, container, dic['cid']))
             continue
-        obj = get_object(parent='/'.join(parent.getPhysicalPath()), type=dic['typ'], title=dic.get('title', ''),
+        obj = get_object(parent='/'.join(parent.getPhysicalPath()), type=dic['type'], title=dic.get('title', ''),
                          id=dic.get('id', ''))
         if not obj:
-            obj = api.content.create(container=parent, type=dic['typ'], title=safe_unicode(dic['title']),
+            obj = api.content.create(container=parent, type=dic['type'], title=safe_unicode(dic['title']),
                                      id=dic.get('id', None), safe_id=bool(dic.get('id', '')),
                                      **dic.get('attrs', {}))
-        cids[dic['cid']] = obj
+        if 'cid' in dic:
+            cids[dic['cid']] = obj
         transitions(obj, dic['trans'])
+        for fct in dic.get('functions', []):
+            params = dic.get('extra', {}).get(fct.__name__, {})
+            fct(obj, **params)
     return cids
+
+
+def richtextval(text):
+    """
+        Return a RichTextValue to be stored in IRichText field
+    """
+    return RichTextValue(raw=safe_unicode(text), mimeType='text/html', outputMimeType='text/html', encoding='utf-8')
