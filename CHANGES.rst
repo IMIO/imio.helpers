@@ -4,6 +4,9 @@ Changelog
 0.4.19 (unreleased)
 -------------------
 
+- Added utils method to create content from a dictionary, to get object following criterias,
+  to apply multiple transitions
+  [sgeulette]
 - Added default views for Dexterity content and container that display
   fields in a table with widget label and the left and widget value on
   the right.  The view for container also includes an asynchronous
