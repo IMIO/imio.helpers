@@ -69,7 +69,7 @@ def create(conf, cids={}, globl=False):
             [
                 {
                 'cid': 1,  # configuration id
-            *   'cont': cid or 'path',  # container: can be cid or previous created object or relative path
+            *   'cont': cid or 'path',  # container: can be cid of previous created object or relative path
             *   'type': portal type,  # portal_type
                 'id': 'toto',  # if not set in dic, id will be generated from title
             *   'title': 'Toto',
