@@ -12,23 +12,6 @@ from Products.CMFPlone.utils import safe_unicode
 import logging
 logger = logging.getLogger('imo.helpers.content')
 
-"""
-Exemple config object (* = is mandatory)
-[
-    {
-    'cid': 1,  # configuration id
-*   'cont': cid or 'path',  # container: can be cid or previous created object or relative path
-*   'type': portal type,  # portal_type
-    'id': 'toto',  # if not set in dic, id will be generated from title
-*   'title': 'Toto',
-    'trans': ['transition1', 'transition2']  # if set, we will try to apply the different transitions
-    'attrs': {}  # dictionnary of other attributes
-    'functions': [lead_image]  # list of functions that will be called with obj as first parameter
-    'extra': {'lead_image': {}}}  # extra kwargs passed to each function
-    }
-]
-"""
-
 
 def get_object(parent='', id='', title='', type='', path=''):
     pc = api.portal.get_tool('portal_catalog')
@@ -63,9 +46,9 @@ def transitions(obj, transitions):
             logger.warn("Cannot apply transition '%s' on obj '%s'" % (tr, obj))
 
 
-def lead_image(obj, filepath='', img_obj=None):
+def add_image(obj, filepath='', img_obj=None):
     """
-        Add a lead image
+        Add a lead image or an image on object
     """
     if filepath:
         filename = os.path.basename(filepath)
@@ -74,20 +57,49 @@ def lead_image(obj, filepath='', img_obj=None):
         namedblobimage = img_obj.image
     setattr(obj, 'image', namedblobimage)
 
+# Define a global variable to can be used in create function, following globl param
+cids_g = {}
 
-def create(conf, cids={}):
+
+def create(conf, cids={}, globl=False):
     """
-        Create objects following configuration
+        Create objects following configuration.
+        :param conf: list of dict. A dict is an object to create
+            Example (* = is mandatory)
+            [
+                {
+                'cid': 1,  # configuration id
+            *   'cont': cid or 'path',  # container: can be cid or previous created object or relative path
+            *   'type': portal type,  # portal_type
+                'id': 'toto',  # if not set in dic, id will be generated from title
+            *   'title': 'Toto',
+                'trans': ['transition1', 'transition2']  # if set, we will try to apply the different transitions
+                'attrs': {}  # dictionnary of other attributes
+                'functions': [add_image]  # list of functions that will be called with obj as first parameter
+                'extra': {'add_image': {}}}  # extra kwargs passed to each function
+                }
+            ]
+        :param cids: dict containing as key a 'cid' and as value 'an object'
+        :param globl: indicate if cid => object relations will be globally used for this call
     """
+    cids_l = {}
+    if globl:
+        cids_l = cids_g
+    cids_l.update(cids)
+
     portal = api.portal.getSite()
     ppath = '/'.join(portal.getPhysicalPath())
 
     for i, dic in enumerate(conf):
         container = dic['cont']
         if isinstance(container, int):
-            parent = cids.get(container, None)
+            parent = cids_l.get(container, None)
         elif isinstance(container, str):
-            parent = get_object(path='%s/%s' % (ppath, (container.startswith('/') and container[1:] or container)))
+            container = container.strip('/ ')
+            if container:
+                parent = get_object(path='%s/%s' % (ppath, container))
+            else:
+                parent = portal
         if not parent:
             logger.error("Dict nb %d: cannot find container %s (cid=%d)" % (i, container, dic['cid']))
             continue
@@ -98,12 +110,12 @@ def create(conf, cids={}):
                                      id=dic.get('id', None), safe_id=bool(dic.get('id', '')),
                                      **dic.get('attrs', {}))
         if 'cid' in dic:
-            cids[dic['cid']] = obj
+            cids_l[dic['cid']] = obj
         transitions(obj, dic['trans'])
         for fct in dic.get('functions', []):
             params = dic.get('extra', {}).get(fct.__name__, {})
             fct(obj, **params)
-    return cids
+    return cids_l
 
 
 def richtextval(text):
