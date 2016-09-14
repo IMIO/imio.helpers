@@ -75,8 +75,9 @@ def create(conf, cids={}, globl=False):
             *   'title': 'Toto',
                 'trans': ['transition1', 'transition2']  # if set, we will try to apply the different transitions
                 'attrs': {}  # dictionnary of other attributes
-                'functions': [(add_image, kwargs)]  # list of functions that will be called with obj as first parameter.
-                                                    # kwargs is passed to function too.
+                'functions': [(add_image, args, kwargs)]  # list of functions/methods called on created obj.
+                                                          # args is a list of positional params.
+                                                          # kwargs is a dict of named params.
                 }
             ]
         :param cids: dict containing as key a 'cid' and as value 'an object'
@@ -119,8 +120,8 @@ def create(conf, cids={}, globl=False):
         if 'cid' in dic:
             cids_l[dic['cid']] = obj
         transitions(obj, dic['trans'])
-        for fct, params in dic.get('functions', []):
-            fct(obj, **params)
+        for fct, args, kwargs in dic.get('functions', []):
+            fct(obj, *args, **kwargs)
     return cids_l
 
 
