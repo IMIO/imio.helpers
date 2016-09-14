@@ -63,9 +63,9 @@ cids_g = {}
 
 def create(conf, cids={}, globl=False):
     """
-        Create objects following configuration.
+    Create objects following configuration.
         :param conf: list of dict. A dict is an object to create
-            Example (* = is mandatory)
+            Description (* = is mandatory)
             [
                 {
                 'cid': 1,  # configuration id
@@ -75,12 +75,19 @@ def create(conf, cids={}, globl=False):
             *   'title': 'Toto',
                 'trans': ['transition1', 'transition2']  # if set, we will try to apply the different transitions
                 'attrs': {}  # dictionnary of other attributes
-                'functions': [add_image]  # list of functions that will be called with obj as first parameter
-                'extra': {'add_image': {}}}  # extra kwargs passed to each function
+                'functions': [(add_image, kwargs)]  # list of functions that will be called with obj as first parameter.
+                                                    # kwargs is passed to function too.
                 }
             ]
         :param cids: dict containing as key a 'cid' and as value 'an object'
         :param globl: indicate if cid => object relations will be globally used for this call
+
+        :return cids dict
+
+    Example:
+        create([{'cid': 1, 'cont': 0, 'title': 'Welcome',
+                 'attrs': {'text': richtextval('<h1>Welcome</h1>')}}],
+                 cids={0: portal})
     """
     cids_l = {}
     if globl:
@@ -112,8 +119,7 @@ def create(conf, cids={}, globl=False):
         if 'cid' in dic:
             cids_l[dic['cid']] = obj
         transitions(obj, dic['trans'])
-        for fct in dic.get('functions', []):
-            params = dic.get('extra', {}).get(fct.__name__, {})
+        for fct, params in dic.get('functions', []):
             fct(obj, **params)
     return cids_l
 
