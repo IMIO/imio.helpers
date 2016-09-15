@@ -100,6 +100,7 @@ def create(conf, cids={}, globl=False):
 
     for i, dic in enumerate(conf):
         container = dic['cont']
+        cid = dic.get('cid', '')
         if isinstance(container, int):
             parent = cids_l.get(container, None)
         elif isinstance(container, str):
@@ -109,7 +110,7 @@ def create(conf, cids={}, globl=False):
             else:
                 parent = portal
         if not parent:
-            logger.error("Dict nb %d: cannot find container %s (cid=%d)" % (i, container, dic['cid']))
+            logger.error("Dict nb %s: cannot find container %s)" % ((cid and '%s (cid=%s)' % (i, cid) or i), container))
             continue
         obj = get_object(parent='/'.join(parent.getPhysicalPath()), type=dic['type'], title=dic.get('title', ''),
                          id=dic.get('id', ''))
@@ -117,9 +118,9 @@ def create(conf, cids={}, globl=False):
             obj = api.content.create(container=parent, type=dic['type'], title=safe_unicode(dic['title']),
                                      id=dic.get('id', None), safe_id=bool(dic.get('id', '')),
                                      **dic.get('attrs', {}))
-        if 'cid' in dic:
-            cids_l[dic['cid']] = obj
-        transitions(obj, dic['trans'])
+        if cid:
+            cids_l[cid] = obj
+        transitions(obj, dic.get('trans', []))
         for fct, args, kwargs in dic.get('functions', []):
             fct(obj, *args, **kwargs)
     return cids_l
