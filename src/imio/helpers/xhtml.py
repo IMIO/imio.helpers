@@ -49,7 +49,7 @@ def xhtmlContentIsEmpty(xhtmlContent, tagWithAttributeIsNotEmpty=True):
     return _isEmpty(tree)
 
 
-def removeBlanks(xhtmlContent):
+def removeBlanks(xhtmlContent, pretty_print=False):
     '''This method will remove any blank line in p_xhtmlContent.'''
     if not xhtmlContent or not xhtmlContent.strip():
         return xhtmlContent
@@ -62,7 +62,10 @@ def removeBlanks(xhtmlContent):
         if xhtmlContentIsEmpty(el):
             el.getparent().remove(el)
     # only return children of the <special_tag>
-    return ''.join([lxml.html.tostring(x, encoding='utf-8', pretty_print=True, method='xml')
+    return ''.join([lxml.html.tostring(x,
+                                       encoding='utf-8',
+                                       pretty_print=pretty_print,
+                                       method='xml')
                     for x in tree.iterchildren()])
 
 
@@ -83,7 +86,8 @@ def addClassToLastChildren(xhtmlContent,
                                        'sup': '',
                                        'ul': '',
                                        'li': 'podItemKeepWithNext'},
-                           numberOfChars=CLASS_TO_LAST_CHILDREN_NUMBER_OF_CHARS_DEFAULT):
+                           numberOfChars=CLASS_TO_LAST_CHILDREN_NUMBER_OF_CHARS_DEFAULT,
+                           pretty_print=False):
     '''This method will add a class attribute adding class correspondig to tag given in p_classNames
        to the last tags of given p_xhtmlContent.
        It only consider given p_classNames keys which are text formatting tags and will define the class
@@ -140,12 +144,17 @@ def addClassToLastChildren(xhtmlContent,
     # use encoding to 'ascii' so HTML entities are translated to something readable
     res = ''.join([lxml.html.tostring(x,
                                       encoding='ascii',
-                                      pretty_print=True,
+                                      pretty_print=pretty_print,
                                       method='xml') for x in tree.iterchildren()])
     return res
 
 
-def markEmptyTags(xhtmlContent, markingClass='highlightBlankRow', tagTitle='', onlyAtTheEnd=False, tags=('p', 'div', )):
+def markEmptyTags(xhtmlContent,
+                  markingClass='highlightBlankRow',
+                  tagTitle='',
+                  onlyAtTheEnd=False,
+                  tags=('p', 'div', ),
+                  pretty_print=False):
     '''This will add a CSS class p_markingClass to tags of the given p_xhtmlContent
        that are empty.  If p_onlyAtTheEnd is True, it will only mark empty rows that are
        ending the XHTML content.'''
@@ -173,11 +182,14 @@ def markEmptyTags(xhtmlContent, markingClass='highlightBlankRow', tagTitle='', o
         # add a title to the tag if necessary
         if tagTitle:
             child.attrib['title'] = tagTitle
-    return ''.join([lxml.html.tostring(x, encoding='utf-8', pretty_print=True, method='xml')
+    return ''.join([lxml.html.tostring(x,
+                                       encoding='utf-8',
+                                       pretty_print=pretty_print,
+                                       method='xml')
                     for x in tree.iterchildren()])
 
 
-def imagesToPath(context, xhtmlContent):
+def imagesToPath(context, xhtmlContent, pretty_print=False):
     '''Turn <img> source contained in given p_xhtmlContent to a FileSystem absolute path
        to the .blob binary stored on the server.  This is usefull when generating documents
        with XHTML containing images that are private, LibreOffice is not able to access these
@@ -242,11 +254,11 @@ def imagesToPath(context, xhtmlContent):
     # use encoding to 'ascii' so HTML entities are translated to something readable
     return ''.join([lxml.html.tostring(x,
                                        encoding='ascii',
-                                       pretty_print=True,
+                                       pretty_print=pretty_print,
                                        method='xml') for x in tree.iterchildren()])
 
 
-def storeExternalImagesLocally(context, xhtmlContent, imagePortalType='Image'):
+def storeExternalImagesLocally(context, xhtmlContent, imagePortalType='Image', pretty_print=False):
     """If external images are found in the given p_xhtmlContent,
        we download it and stored it in p_context, this way we ensure that it will
        always be available in case the external site/external image disappear."""
@@ -307,5 +319,5 @@ def storeExternalImagesLocally(context, xhtmlContent, imagePortalType='Image'):
 
     return ''.join([lxml.html.tostring(x,
                                        encoding='utf-8',
-                                       pretty_print=True,
+                                       pretty_print=pretty_print,
                                        method='xml') for x in tree.iterchildren()])

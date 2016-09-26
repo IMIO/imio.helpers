@@ -4,8 +4,12 @@ Changelog
 0.4.19 (unreleased)
 -------------------
 
-- Added methods to create content from a dictionary, to get object following criterias,
-  to apply multiple transitions, to create a RichTextValue object
+- Do not pretty_print HTML returned by lxml.html.tostring or it can leads to
+  weird behaviors like extra blank space in case we have nested <span> tags.
+  'pretty_print' is now a parameter to relevant methods and is False by default
+  [gbastien]
+- Added methods to create content from a dictionary, to get object following
+  criterias, to apply multiple transitions, to create a RichTextValue object
   [sgeulette]
 - Added default views for Dexterity content and container that display
   fields in a table with widget label and the left and widget value on
