@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.4.19 (unreleased)
+0.4.19 (2016-09-26)
 -------------------
 
 - Do not pretty_print HTML returned by lxml.html.tostring or it can leads to
