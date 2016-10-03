@@ -4,7 +4,11 @@ Changelog
 0.4.20 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Added 'path' module with method 'path_to_package' that will return the absolute
+  FS path to a given package.  An extra 'filepart' can be provided to complete the
+  returned path.  This is useful to get a template in a 'browser/template' folder
+  for example.
+  [gbastien]
 
 
 0.4.19 (2016-09-26)
