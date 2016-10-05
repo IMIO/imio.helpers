@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.4.20 (unreleased)
+0.4.20 (2016-10-05)
 -------------------
 
 - Added 'path' module with method 'path_to_package' that will return the absolute
