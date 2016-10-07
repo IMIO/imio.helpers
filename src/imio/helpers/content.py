@@ -4,7 +4,7 @@ import os
 
 from plone import api
 from plone.app.textfield.value import RichTextValue
-from plone.namedfile.file import NamedBlobImage
+from plone.namedfile.file import NamedBlobFile, NamedBlobImage
 
 from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.CMFPlone.utils import safe_unicode
@@ -46,16 +46,29 @@ def transitions(obj, transitions):
             logger.warn("Cannot apply transition '%s' on obj '%s'" % (tr, obj))
 
 
-def add_image(obj, filepath='', img_obj=None):
+def add_image(obj, attr='image', filepath='', img_obj=None):
     """
-        Add a lead image or an image on object
+        Add a lead image or an image on dexterity object
     """
     if filepath:
         filename = os.path.basename(filepath)
         namedblobimage = NamedBlobImage(data=open(filepath, 'r').read(), filename=safe_unicode(filename))
     elif img_obj:
         namedblobimage = img_obj.image
-    setattr(obj, 'image', namedblobimage)
+    setattr(obj, attr, namedblobimage)
+
+
+def add_file(obj, attr='file', filepath='', file_obj=None, contentType=''):
+    """
+        Add a blob file on dexterity object
+    """
+    if filepath:
+        filename = os.path.basename(filepath)
+        namedblobfile = NamedBlobFile(data=open(filepath, 'r').read(), filename=safe_unicode(filename),
+                                      contentType=contentType)
+    elif file_obj:
+        namedblobfile = file_obj.file
+    setattr(obj, attr, namedblobfile)
 
 # Define a global variable to can be used in create function, following globl param
 cids_g = {}
@@ -86,7 +99,7 @@ def create(conf, cids={}, globl=False):
         :return cids dict
 
     Example:
-        create([{'cid': 1, 'cont': 0, 'title': 'Welcome',
+        create([{'cid': 1, 'cont': 0, 'title': 'Welcome', 'type': 'mytype',
                  'attrs': {'text': richtextval('<h1>Welcome</h1>')}}],
                  cids={0: portal})
     """
@@ -116,13 +129,13 @@ def create(conf, cids={}, globl=False):
                          id=dic.get('id', ''))
         if not obj:
             obj = api.content.create(container=parent, type=dic['type'], title=safe_unicode(dic['title']),
-                                     id=dic.get('id', None), safe_id=bool(dic.get('id', '')),
+                                     id=dic.get('id', None), safe_id=not bool(dic.get('id', '')),
                                      **dic.get('attrs', {}))
+            for fct, args, kwargs in dic.get('functions', []):
+                fct(obj, *args, **kwargs)
         if cid:
             cids_l[cid] = obj
         transitions(obj, dic.get('trans', []))
-        for fct, args, kwargs in dic.get('functions', []):
-            fct(obj, *args, **kwargs)
     return cids_l
 
 

@@ -4,8 +4,8 @@ Changelog
 0.4.21 (unreleased)
 -------------------
 
-- Nothing changed yet.
-
+- Can add a file to an object.
+  [sgeulette]
 
 0.4.20 (2016-10-05)
 -------------------
