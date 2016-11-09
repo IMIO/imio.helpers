@@ -7,7 +7,7 @@
 
 <p style="color: #0000FF;"><u><strong>&gt;&gt;&gt;&gt;&gt; TEXTE &lt;&lt;&lt;&lt;&lt; :</strong></u></p>
 
-<p>Du texte avec du <strong>gras</strong>, de l'<em>italique</em>, du <u>souligné</u>, du <s>barré</s> puis les variantes dans des puces :</p>
+<p>Du texte avec du <strong>gras</strong>, de l'<em>italique</em>, du <u>souligné</u>, du <s>barré</s>, du <strong><u>gras souligné</u></strong> :</p>
 <p>&nbsp;</p>
 
 <p style="color: #0000FF;"><u><strong>Un paragraphe utilisant un style ou n'en utilisant pas est rendu avec la même police/taille de police :</strong></u></p>
@@ -23,7 +23,7 @@
     <li><em><strong>italique gras</strong></em>;</li>
     <li><u><em>italique souligné</em></u>;</li>
     <li><s><strong>gras barré</strong></s>;</li>
-    <li><u><strong>gras souligné</strong></u>;</li> 
+    <li><u><strong>gras souligné, NE FONCTIONNE PAS AVEC LIBREOFFICE4 EN WORD, TESTER EN LIBREOFFICE5</strong></u>;</li> 
     <li><u><b>gras souligné</b></u>;</li>
     <li><s><em><strong>gras italique barré</strong></em></s>;</li>
     <li><u><em><strong>gras italique souligné</strong></em></u>;</li>
@@ -1270,7 +1270,19 @@
 
 <p><img alt="" src="http://www.imio.be/contact.png" style="height:291px; width:148px" title="contact.png" /></p>
 
-<p>Une image redimesionnée dans l'éditeur est rendue redimensionnée</p>
+<p>Image affichée sans width/height renseignés</p>
+
+<p><img alt="" src="http://www.imio.be/contact.png" title="contact.png" /></p>
+
+<p>Image utilisant un style="float: right;" (casse la génération en 0.9.4)</p>
+
+<!--p><img alt="" src="http://www.imio.be/contact.png" style="float: right;" title="contact.png" /></p-->
+
+<p>Image redimensionnée (plus petite) via les attributs "width=150px" et "height=75px", pas via "style='width:...; height:...;"</p>
+
+<p><img alt="" src="http://www.imio.be/contact.png" height="150px" width="75px" title="contact.png" /></p>
+
+<p>Une image redimensionnée dans l'éditeur est rendue redimensionnée</p>
 
 <p><img alt="" src="http://www.imio.be/contact.png" style="height:150px; width:75px" title="contact.png" /></p>
 
