@@ -55,10 +55,13 @@ def get_cachekey_volatile(name):
     normalized_name = queryUtility(IIDNormalizer).normalize(
         name, max_length=VOLATILE_NAME_MAX_LENGTH)
     volatile_name = '_v_{0}'.format(normalized_name)
-    date = getattr(portal, volatile_name, None)
+    if not hasattr(portal, '_v_cache_keys'):
+        portal._v_cache_keys = {}
+    volatiles = portal._v_cache_keys
+    date = volatiles.get(volatile_name)
     if not date:
         date = datetime.now()
-        setattr(portal, volatile_name, date)
+        volatiles[volatile_name] = date
     return date
 
 
@@ -68,5 +71,6 @@ def invalidate_cachekey_volatile_for(name):
     normalized_name = queryUtility(IIDNormalizer).normalize(
         name, max_length=VOLATILE_NAME_MAX_LENGTH)
     volatile_name = '_v_{0}'.format(normalized_name)
-    if hasattr(portal, volatile_name):
-        delattr(portal, volatile_name)
+    volatiles = getattr(portal, '_v_cache_keys', {})
+    if volatile_name in volatiles:
+        del volatiles[volatile_name]

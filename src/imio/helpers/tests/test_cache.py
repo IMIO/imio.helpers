@@ -119,7 +119,8 @@ class TestCacheModule(IntegrationTestCase):
         # calling the method will set the volatile on the portal
         date = get_cachekey_volatile(method_name)
         self.assertTrue(isinstance(date, datetime))
-        self.assertTrue(isinstance(getattr(self.portal, volatile_name), datetime))
+        volatiles = getattr(self.portal, '_v_cache_keys', {})
+        self.assertTrue(isinstance(volatiles.get(volatile_name), datetime))
         # calling it again will still return same date
         self.assertEquals(date, get_cachekey_volatile(method_name))
         # volatiles are not removed by tearDown, remove it now to avoid
