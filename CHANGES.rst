@@ -4,6 +4,13 @@ Changelog
 0.4.21 (unreleased)
 -------------------
 
+- Add @volatile_cache_without_parameters and
+  @volatile_cache_with_parameters decorators
+  [mpeeters]
+
+- Store the volatile keys on a dictionary on the portal
+  [mpeeters]
+
 - Can add a file to an object.
   [sgeulette]
 
