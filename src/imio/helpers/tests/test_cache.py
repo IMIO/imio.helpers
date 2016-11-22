@@ -7,11 +7,14 @@ from plone import api
 from plone.memoize import ram
 from plone.memoize.instance import Memojito
 
-from imio.helpers.cache import cleanVocabularyCacheFor
 from imio.helpers.cache import cleanRamCache
 from imio.helpers.cache import cleanRamCacheFor
+from imio.helpers.cache import cleanVocabularyCacheFor
+from imio.helpers.cache import generate_key
 from imio.helpers.cache import get_cachekey_volatile
 from imio.helpers.cache import invalidate_cachekey_volatile_for
+from imio.helpers.cache import volatile_cache_with_parameters
+from imio.helpers.cache import volatile_cache_without_parameters
 from imio.helpers.testing import IntegrationTestCase
 
 memPropName = Memojito.propname
@@ -26,6 +29,16 @@ def ramCachedMethod_cachekey(method, portal, param):
 def ramCachedMethod(portal, param):
     """ """
     return portal.REQUEST.get('ramcached', None)
+
+
+@volatile_cache_without_parameters
+def volatile_without_parameters_cached(portal):
+    return portal.REQUEST.get('volatile_without_parameters_cached', None)
+
+
+@volatile_cache_with_parameters
+def volatile_with_parameters_cached(portal, param):
+    return portal.REQUEST.get('volatile_with_parameters_cached', None)
 
 
 class TestCacheModule(IntegrationTestCase):
@@ -144,3 +157,50 @@ class TestCacheModule(IntegrationTestCase):
         # if get_cachekey_volatile is called and volatile does not exist, it is created with datetime.now()
         second_date = get_cachekey_volatile(method_name)
         self.assertTrue(first_date < second_date)
+
+    def test_volatile_cache_without_parameters(self):
+        """Helper cache @volatile_cache_without_parameters"""
+        generate_key(volatile_without_parameters_cached)
+        self.portal.REQUEST.set('volatile_without_parameters_cached', 'a')
+        self.assertEqual('a', volatile_without_parameters_cached(self.portal))
+        self.portal.REQUEST.set('volatile_without_parameters_cached', 'b')
+        self.assertEqual('a', volatile_without_parameters_cached(self.portal))
+        # Test invalidation
+        invalidate_cachekey_volatile_for(
+            generate_key(volatile_without_parameters_cached),
+        )
+        self.assertEqual('b', volatile_without_parameters_cached(self.portal))
+
+    def test_volatile_cache_with_parameters(self):
+        """Helper cache @volatile_cache_with_parameters"""
+        self.portal.REQUEST.set('volatile_with_parameters_cached', 'a')
+        self.assertEqual(
+            'a',
+            volatile_with_parameters_cached(self.portal, 'a'),
+        )
+        self.portal.REQUEST.set('volatile_with_parameters_cached', 'b')
+        self.assertEqual(
+            'a',
+            volatile_with_parameters_cached(self.portal, 'a'),
+        )
+        self.assertEqual(
+            'b',
+            volatile_with_parameters_cached(self.portal, 'b'),
+        )
+        self.portal.REQUEST.set('volatile_with_parameters_cached', 'c')
+        self.assertEqual(
+            'b',
+            volatile_with_parameters_cached(self.portal, 'b'),
+        )
+        # Test invalidation
+        invalidate_cachekey_volatile_for(
+            generate_key(volatile_with_parameters_cached),
+        )
+        self.assertEqual(
+            'c',
+            volatile_with_parameters_cached(self.portal, 'a'),
+        )
+        self.assertEqual(
+            'c',
+            volatile_with_parameters_cached(self.portal, 'b'),
+        )

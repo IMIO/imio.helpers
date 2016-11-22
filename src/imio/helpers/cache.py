@@ -6,6 +6,7 @@ from zope.component import getUtility
 from zope.component import queryUtility
 from zope.schema.interfaces import IVocabularyFactory
 from plone import api
+from plone.memoize import ram
 from plone.i18n.normalizer import IIDNormalizer
 from plone.memoize.instance import Memojito
 from plone.memoize.interfaces import ICacheChooser
@@ -74,3 +75,58 @@ def invalidate_cachekey_volatile_for(name):
     volatiles = getattr(portal, '_v_cache_keys', {})
     if volatile_name in volatiles:
         del volatiles[volatile_name]
+
+
+def _generate_params_key(*args, **kwargs):
+    items = []
+    for item in kwargs.items():
+        elements = []
+        for i in item:
+            if isinstance(i, list):
+                i = tuple(i)
+            elements.append(i)
+        items.append(tuple(elements))
+    return (args, frozenset(items))
+
+
+def generate_key(func):
+    """Return the complete path for a function e.g. module.function"""
+    if hasattr(func, '_cache_key'):
+        return func._cache_key
+    path = [func.__module__]
+    if hasattr(func, 'im_class'):
+        path.append(func.im_class.__name__)
+    path.append(func.__name__)
+    return '.'.join(path)
+
+
+def volatile_cache_with_parameters(func):
+
+    def get_key(func, *args, **kwargs):
+        return (
+            get_cachekey_volatile(generate_key(func)),
+            _generate_params_key(*args, **kwargs),
+        )
+
+    def cache(get_key):
+        return ram.cache(get_key)
+
+    replacement = cache(get_key)(func)
+    replacement._cache_key = generate_key(func)
+    return replacement
+
+
+def volatile_cache_without_parameters(func):
+
+    def get_key(func, *args, **kwargs):
+        return (
+            get_cachekey_volatile(generate_key(func)),
+            (),
+        )
+
+    def cache(get_key):
+        return ram.cache(get_key)
+
+    replacement = cache(get_key)(func)
+    replacement._cache_key = generate_key(func)
+    return replacement
