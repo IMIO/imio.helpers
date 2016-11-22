@@ -7,6 +7,7 @@ from plone import api
 from plone.memoize import ram
 from plone.memoize.instance import Memojito
 
+from imio.helpers.cache import _generate_params_key
 from imio.helpers.cache import cleanRamCache
 from imio.helpers.cache import cleanRamCacheFor
 from imio.helpers.cache import cleanVocabularyCacheFor
@@ -157,6 +158,34 @@ class TestCacheModule(IntegrationTestCase):
         # if get_cachekey_volatile is called and volatile does not exist, it is created with datetime.now()
         second_date = get_cachekey_volatile(method_name)
         self.assertTrue(first_date < second_date)
+
+    def test_generate_params_key(self):
+        """Test _generate_params_key function"""
+        self.assertEqual(
+            ((1, ), frozenset([('a', 2)])),
+            _generate_params_key(1, a=2),
+        )
+        self.assertEqual(
+            ((1, 2), frozenset([('a', 2), ('b', ())])),
+            _generate_params_key(1, 2, a=2, b=[]),
+        )
+
+    def test_generate_key(self):
+        """Test generate_key function"""
+        self.assertEqual(
+            'imio.helpers.cache.generate_key',
+            generate_key(generate_key),
+        )
+
+        class Foo(object):
+
+            def bar(self):
+                pass
+
+        self.assertEqual(
+            'imio.helpers.tests.test_cache.Foo.bar',
+            generate_key(Foo.bar),
+        )
 
     def test_volatile_cache_without_parameters(self):
         """Helper cache @volatile_cache_without_parameters"""
