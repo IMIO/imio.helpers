@@ -7,12 +7,15 @@ Changelog
 - Add @volatile_cache_without_parameters and
   @volatile_cache_with_parameters decorators
   [mpeeters]
-
 - Store the volatile keys on a dictionary on the portal
   [mpeeters]
-
 - Can add a file to an object.
   [sgeulette]
+- Added case in 'appy_pod_sample' to check when style attribute is used to 
+  define italic/bold/underline/strike directly on <li> or on <li> containing 
+  <p> or <span>.
+  [gbastien]
+
 
 0.4.20 (2016-10-05)
 -------------------
