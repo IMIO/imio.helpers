@@ -5,6 +5,7 @@ from os import path
 from Products.ATContentTypes.interfaces import IImageContent
 
 from imio.helpers.testing import IntegrationTestCase
+from imio.helpers.xhtml import addClassToContent
 from imio.helpers.xhtml import addClassToLastChildren
 from imio.helpers.xhtml import imagesToPath
 from imio.helpers.xhtml import markEmptyTags
@@ -82,6 +83,41 @@ class TestXHTMLModule(IntegrationTestCase):
         self.assertTrue(not xhtmlContentIsEmpty('<table><tr><td>Some text to keep</td><td>&nbsp;</td></tr></table>'))
         self.assertTrue(not xhtmlContentIsEmpty('<p><img src="my_image_path.png"/></p>'))
 
+    def test_addClassToContent(self):
+        """
+          This will add a CSS class to every CONTENT_TAGS find in the given xhtmlContent.
+        """
+        self.assertEqual(addClassToContent('<p>My text</p>', css_class='sample'),
+                         '<p class="sample">My text</p>')
+        self.assertEqual(addClassToContent('', css_class='sample'), '')
+        self.assertEqual(addClassToContent(None, css_class='sample'), None)
+        self.assertEqual(addClassToContent('text', css_class='sample'), 'text')
+        # if tag is not handled, it does not change anything, by default, tags 'p' and 'li' are handled
+        self.assertEqual(addClassToContent('<unhandled_tag>My text with tag not handled</unhandled_tag>',
+                                           css_class='sample'),
+                         '<unhandled_tag>My text with tag not handled</unhandled_tag>')
+        # handled tag
+        self.assertEqual(addClassToContent('<p>My text</p>', css_class='sample'),
+                         '<p class="sample">My text</p>')
+        # already existing class
+        self.assertEqual(addClassToContent('<p class="another">My text</p>', css_class='sample'),
+                         '<p class="sample another">My text</p>')
+        self.assertEqual(addClassToContent(
+            '<p>My text</p>'
+            '<p class="class1 class2">My text</p>'
+            '<p>My text</p>'
+            '<p class="class3">My text</p>'
+            '<unhandled_tag>My text</unhandled_tag>'
+            '<span>My text</span>'
+            '<p>My text</p>', css_class='sample'),
+            '<p class="sample">My text</p>'
+            '<p class="sample class1 class2">My text</p>'
+            '<p class="sample">My text</p>'
+            '<p class="sample class3">My text</p>'
+            '<unhandled_tag>My text</unhandled_tag>'
+            '<span class="sample">My text</span>'
+            '<p class="sample">My text</p>')
+
     def test_addClassToLastChildren(self):
         """
           Test if adding a class to last x tags of a given XHTML content works.
@@ -115,10 +151,12 @@ class TestXHTMLModule(IntegrationTestCase):
             '<p class="pmParaKeepWithNext">33 characters text line text line</p>')
         # tags with children
         self.assertEqual(addClassToLastChildren(
-            '<p>First untouched paragraph</p><p><strong>Strong text Strong text Strong text Strong text</strong> '
+            '<p>First untouched paragraph</p>'
+            '<p><strong>Strong text Strong text Strong text Strong text</strong> '
             'Paragraph text Paragraph text Paragraph text</p>'),
-            '<p>First untouched paragraph</p><p class="pmParaKeepWithNext"><strong>Strong text Strong text Strong '
-            'text Strong text</strong> Paragraph text Paragraph text Paragraph text</p>')
+            '<p>First untouched paragraph</p>'
+            '<p class="pmParaKeepWithNext"><strong>Strong text Strong text Strong text Strong text</strong> '
+            'Paragraph text Paragraph text Paragraph text</p>')
         # test mixing different handled tags like 'li' and 'p'
         self.assertEqual(addClassToLastChildren(
             '<p>13 chars line</p><ul><li>Line 1</li><li>Line 2</li><li>33 characters text line text line</li></ul>'
@@ -177,7 +215,7 @@ class TestXHTMLModule(IntegrationTestCase):
         # pretty, then the result is pretty also
         self.assertEqual(addClassToLastChildren(
             '<p>text</p>\n<img src="image.png"/>\n<p>text</p>\n'),
-            '<p>text</p>\n<img src="image.png"/>\n<p class="pmParaKeepWithNext">text</p>')
+            '<p>text</p>\n<img src="image.png"/>\n<p class="pmParaKeepWithNext">text</p>\n')
 
     def test_markEmptyTags(self):
         """

@@ -13,6 +13,9 @@ from plone.app.imaging.scale import ImageScale
 from plone.outputfilters.filters.resolveuid_and_caption import ResolveUIDAndCaptionFilter
 
 CLASS_TO_LAST_CHILDREN_NUMBER_OF_CHARS_DEFAULT = 60
+# Xhtml tags that may contain content
+CONTENT_TAGS = ('p', 'div', 'strong', 'span', 'strike', 'i', 'em', 'u',
+                'small', 'mark', 'del', 'ins', 'sub', 'sup', 'ul', 'li')
 
 
 def xhtmlContentIsEmpty(xhtmlContent, tagWithAttributeIsNotEmpty=True):
@@ -20,6 +23,7 @@ def xhtmlContentIsEmpty(xhtmlContent, tagWithAttributeIsNotEmpty=True):
        p_xhtmlContent can either be a string or already a lxml.html element.
        If p_tagWithAttributeIsNotEmpty is True, a tag without text but with an attribute will
        be considered not empty.'''
+
     # first check if xhtmlContent is not simply None or so
     isStr = isinstance(xhtmlContent, types.StringType) or isinstance(xhtmlContent, types.NoneType)
     if isStr and (not xhtmlContent or not xhtmlContent.strip()):
@@ -51,12 +55,10 @@ def xhtmlContentIsEmpty(xhtmlContent, tagWithAttributeIsNotEmpty=True):
 
 def removeBlanks(xhtmlContent, pretty_print=False):
     '''This method will remove any blank line in p_xhtmlContent.'''
-    if not xhtmlContent or not xhtmlContent.strip():
+    tree = _turnToLxmlTree(xhtmlContent)
+    if not isinstance(tree, lxml.html.HtmlElement):
         return xhtmlContent
-    # surround xhtmlContent with a special tag so we are sure that tree is always
-    # a list of children of this special tag
-    xhtmlContent = "<special_tag>%s</special_tag>" % xhtmlContent
-    tree = lxml.html.fromstring(safe_unicode(xhtmlContent))
+
     for el in tree.getchildren():
         # el can be a subtree, like <ul><li>...</li></ul> we must consider entire rendering of it
         if xhtmlContentIsEmpty(el):
@@ -67,6 +69,46 @@ def removeBlanks(xhtmlContent, pretty_print=False):
                                        pretty_print=pretty_print,
                                        method='xml')
                     for x in tree.iterchildren()])
+
+
+def _turnToLxmlTree(xhtmlContent):
+    if not xhtmlContent or not xhtmlContent.strip():
+        return xhtmlContent
+
+    # surround xhtmlContent with a special tag so we are sure that tree is always
+    # a list of children of this special tag
+    tree = lxml.html.fromstring(safe_unicode("<special_tag>%s</special_tag>" % xhtmlContent))
+    children = tree.getchildren()
+    if not children:
+        return xhtmlContent
+    return tree
+
+
+def addClassToContent(xhtmlContent, css_class, pretty_print=False):
+    """Add css class attribute p_css_class to every CONTENT_TAGS of p_xhtmlContent."""
+    if isinstance(xhtmlContent, lxml.html.HtmlElement):
+        children = [xhtmlContent]
+    else:
+        tree = _turnToLxmlTree(xhtmlContent)
+        if not isinstance(tree, lxml.html.HtmlElement):
+            return xhtmlContent
+        children = tree.getchildren()
+
+    for child in children:
+        if child.tag in CONTENT_TAGS:
+            exisingCssClass = child.attrib.get('class', '')
+            if exisingCssClass:
+                cssClass = '{0} {1}'.format(css_class, exisingCssClass)
+            else:
+                cssClass = css_class
+            child.attrib['class'] = cssClass
+
+    # use encoding to 'ascii' so HTML entities are translated to something readable
+    res = ''.join([lxml.html.tostring(x,
+                                      encoding='ascii',
+                                      pretty_print=pretty_print,
+                                      method='xml') for x in children])
+    return res
 
 
 def addClassToLastChildren(xhtmlContent,
@@ -93,40 +135,29 @@ def addClassToLastChildren(xhtmlContent,
        It only consider given p_classNames keys which are text formatting tags and will define the class
        on last tags until it contains given p_numberOfChars number of characters.
     '''
-    if not xhtmlContent or not xhtmlContent.strip():
+    tree = _turnToLxmlTree(xhtmlContent)
+    if not isinstance(tree, lxml.html.HtmlElement):
         return xhtmlContent
 
-    # surround xhtmlContent with a special tag so we are sure that tree is always
-    # a list of children of this special tag
-    tree = lxml.html.fromstring(safe_unicode("<special_tag>%s</special_tag>" % xhtmlContent.strip()))
     children = tree.getchildren()
-    if not children:
-        return xhtmlContent
-
-    tags = classNames.keys()
 
     def adaptTree(children, managedNumberOfChars=0):
         """
           Recursive method that walk the children and subchildren and adapt what necessary.
         """
         # apply style on last element until we reached necessary numberOfChars or we encounter
-        # a tag not in p_tags or we do not have a tag...
+        # a tag not in CONTENT_TAGS or we do not have a tag...
         i = 1
         stillNeedToAdaptPreviousChild = True
         numberOfChildren = len(children)
         while stillNeedToAdaptPreviousChild and i <= numberOfChildren:
             child = children[-i]
-            if child.tag not in tags and not child.getchildren():
+            if child.tag not in CONTENT_TAGS and not child.getchildren():
                 stillNeedToAdaptPreviousChild = False
             else:
-                # check if tag did not already have a class attribute
-                # in this case, we append classNames[child.tag] to existing classes
-                # and only if there is a classNames[child.tag]
                 cssClass = classNames.get(child.tag, '')
-                if 'class' in child.attrib:
-                    cssClass = '{0} {1}'.format(cssClass, child.attrib['class'])
                 if cssClass:
-                    child.attrib['class'] = cssClass
+                    addClassToContent(child, cssClass)
                 managedNumberOfChars += child.text_content() and len(child.text_content()) or 0
                 subchildren = child.getchildren()
                 if subchildren:
@@ -158,13 +189,10 @@ def markEmptyTags(xhtmlContent,
     '''This will add a CSS class p_markingClass to tags of the given p_xhtmlContent
        that are empty.  If p_onlyAtTheEnd is True, it will only mark empty rows that are
        ending the XHTML content.'''
-    if not xhtmlContent or not xhtmlContent.strip():
+    tree = _turnToLxmlTree(xhtmlContent)
+    if not isinstance(tree, lxml.html.HtmlElement):
         return xhtmlContent
 
-    # surround xhtmlContent with a special tag so we are sure that tree is always
-    # a list of children of this special tag
-    xhtmlContent = "<special_tag>%s</special_tag>" % xhtmlContent
-    tree = lxml.html.fromstring(safe_unicode(xhtmlContent))
     childrenToMark = []
     # find children to mark, aka empty tags taking into account p_onlyAtTheEnd
     for child in tree.getchildren():
@@ -262,11 +290,10 @@ def storeExternalImagesLocally(context, xhtmlContent, imagePortalType='Image', p
     """If external images are found in the given p_xhtmlContent,
        we download it and stored it in p_context, this way we ensure that it will
        always be available in case the external site/external image disappear."""
-    if not xhtmlContent or not xhtmlContent.strip():
+    tree = _turnToLxmlTree(xhtmlContent)
+    if not isinstance(tree, lxml.html.HtmlElement):
         return xhtmlContent
 
-    specialXhtmlContent = "<special_tag>%s</special_tag>" % xhtmlContent
-    tree = lxml.html.fromstring(safe_unicode(specialXhtmlContent))
     imgs = tree.findall('.//img')
     if not imgs:
         return xhtmlContent

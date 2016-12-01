@@ -4,6 +4,9 @@ Changelog
 0.4.21 (unreleased)
 -------------------
 
+- Added method xhtml.addClassToContent that gives the ability to add a CSS class
+  to the CONTENT_TAGS (<p>, <strong>, ...) of a given xhtmlContent.
+  [gbastien]
 - Add @volatile_cache_without_parameters and
   @volatile_cache_with_parameters decorators
   [mpeeters]
