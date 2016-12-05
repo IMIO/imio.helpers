@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.4.21 (unreleased)
+0.4.21 (2016-12-05)
 -------------------
 
 - Added method xhtml.addClassToContent that gives the ability to add a CSS class
