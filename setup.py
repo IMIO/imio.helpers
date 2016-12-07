@@ -50,6 +50,10 @@ setup(
             'plone.app.testing',
             'plone.app.dexterity',
         ],
+        'pdf': [
+            'pyPdf',
+            'reportlab',
+        ],
     },
     entry_points="""
     [z3c.autoinclude.plugin]
