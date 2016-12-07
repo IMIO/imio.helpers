@@ -4,7 +4,9 @@ Changelog
 0.4.22 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Added some more usecase to test appy.pod rendering : 'text-decoration: none;',
+  complex and reallife table examples, ...
+  [gbastien] 
 
 
 0.4.21 (2016-12-05)
