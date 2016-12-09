@@ -13,11 +13,11 @@ def is_develop_environment():
     """
         Test if the environment variable named IS_DEV_ENV is added by the buildout and get the value
     """
-    logger.info('IS_DEV_ENV is deprecated, please use ENV variable.')
     TRUISMS = ['yes', 'y', 'true', 'on']
     var = os.getenv('IS_DEV_ENV', 'false')
 
     if var.lower() in TRUISMS:
+        logger.info('IS_DEV_ENV is deprecated, please use ENV variable.')
         return True
     elif get_environment() == 'dev':
         return True
