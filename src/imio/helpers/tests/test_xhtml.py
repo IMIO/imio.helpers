@@ -10,6 +10,7 @@ from imio.helpers.xhtml import addClassToLastChildren
 from imio.helpers.xhtml import imagesToPath
 from imio.helpers.xhtml import markEmptyTags
 from imio.helpers.xhtml import removeBlanks
+from imio.helpers.xhtml import removeCssClasses
 from imio.helpers.xhtml import storeExternalImagesLocally
 from imio.helpers.xhtml import xhtmlContentIsEmpty
 
@@ -260,6 +261,55 @@ class TestXHTMLModule(IntegrationTestCase):
         # pretty, then the result is pretty also
         self.assertEqual(markEmptyTags(u'<p>Unicode string with special chars: \xe9</p>\n'),
                          '<p>Unicode string with special chars: \xc3\xa9</p>\n')
+
+    def test_removeCssClasses(self):
+        """
+          Test if given CSS classes are removed from entire xhtmlContent.
+        """
+        self.assertEqual(removeCssClasses(''), '')
+        self.assertEqual(removeCssClasses('', css_classes=['my_class']), '')
+        self.assertEqual(removeCssClasses(None), None)
+        self.assertEqual(removeCssClasses(None, css_classes=['my_class']), None)
+        self.assertEqual(removeCssClasses('<p></p>', css_classes=['my_class']), '<p/>')
+        self.assertEqual(removeCssClasses('<p>Text</p>', css_classes=['my_class']), '<p>Text</p>')
+        self.assertEqual(removeCssClasses('<p class="another_class">Text</p>', css_classes=['my_class']),
+                         '<p class="another_class">Text</p>')
+        self.assertEqual(removeCssClasses('<p class="my_class">Text</p>', css_classes=['my_class']),
+                         '<p>Text</p>')
+        self.assertEqual(removeCssClasses('<p><span class="my_class">Text</span></p>', css_classes=['my_class']),
+                         '<p><span>Text</span></p>')
+        self.assertEqual(removeCssClasses(
+            '<p>'
+            '<span class="my_class">Text</span>'
+            '<span class="another_class">Text</span>'
+            '<span class="my_class">Text</span>'
+            '</p>',
+            css_classes=['my_class']),
+            '<p>'
+            '<span>Text</span>'
+            '<span class="another_class">Text</span>'
+            '<span>Text</span>'
+            '</p>')
+        self.assertEqual(removeCssClasses(
+            '<ul>'
+            '<li class="another_class">Text</li>'
+            '<li class="my_class">Text</li>'
+            '</ul>',
+            css_classes=['my_class']),
+            '<ul>'
+            '<li class="another_class">Text</li>'
+            '<li>Text</li>'
+            '</ul>')
+        self.assertEqual(removeCssClasses(
+            '<ul>'
+            '<li class="another_class"><span class="my_class">Text</span></li>'
+            '<li class="my_class">Text</li>'
+            '</ul>',
+            css_classes=['my_class']),
+            '<ul>'
+            '<li class="another_class"><span>Text</span></li>'
+            '<li>Text</li>'
+            '</ul>')
 
     def test_imagesToPath(self):
         """

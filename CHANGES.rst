@@ -7,7 +7,9 @@ Changelog
 - Added some more usecase to test appy.pod rendering : 'text-decoration: none;',
   complex and reallife table examples, ...
   [gbastien] 
-
+- Added method xhtml.removeCssClasses to be able to remove some specific Css
+  classes from a given xhtmlContent.
+  [gbastien]
 
 0.4.21 (2016-12-05)
 -------------------

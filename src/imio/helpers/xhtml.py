@@ -217,6 +217,27 @@ def markEmptyTags(xhtmlContent,
                     for x in tree.iterchildren()])
 
 
+def removeCssClasses(xhtmlContent,
+                     css_classes=[],
+                     pretty_print=False):
+    ''' '''
+    tree = _turnToLxmlTree(xhtmlContent)
+    if not isinstance(tree, lxml.html.HtmlElement):
+        return xhtmlContent
+
+    for content_tag in CONTENT_TAGS:
+        tags = tree.findall('.//{0}'.format(content_tag))
+        for tag in tags:
+            if 'class' in tag.attrib and tag.attrib['class'].strip() in css_classes:
+                del tag.attrib['class']
+
+    return ''.join([lxml.html.tostring(x,
+                                       encoding='utf-8',
+                                       pretty_print=pretty_print,
+                                       method='xml')
+                    for x in tree.iterchildren()])
+
+
 def imagesToPath(context, xhtmlContent, pretty_print=False):
     '''Turn <img> source contained in given p_xhtmlContent to a FileSystem absolute path
        to the .blob binary stored on the server.  This is usefull when generating documents
