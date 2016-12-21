@@ -4,7 +4,7 @@ Changelog
 0.4.22 (unreleased)
 -------------------
 
-- Added some more usecase to test appy.pod rendering : 'text-decoration: none;',
+- Added more usecases to test appy.pod rendering : 'text-decoration: none;',
   complex and reallife table examples, ...
   [gbastien] 
 - Added method xhtml.removeCssClasses to be able to remove some specific Css
