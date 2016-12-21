@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.4.22 (unreleased)
+0.4.22 (2016-12-21)
 -------------------
 
 - Added more usecases to test appy.pod rendering : 'text-decoration: none;',
