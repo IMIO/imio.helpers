@@ -32,6 +32,20 @@
 </ul>
 
 <p>&nbsp;</p>
+<p>sans liste :</p>
+
+<p><s><em>italique barré</em></s>;</p>
+<p><em><strong>italique gras</strong></em>;</p>
+<p><u><em>italique souligné</em></u>;</p>
+<p><s><strong>gras barré</strong></s>;</p>
+<p><u><strong>gras souligné, NE FONCTIONNE PAS AVEC LIBREOFFICE4 EN WORD, TESTER EN LIBREOFFICE5</strong></u>;</p> 
+<p><u><b>gras souligné</b></u>;</p>
+<p><s><em><strong>gras italique barré</strong></em></s>;</p>
+<p><u><em><strong>gras italique souligné</strong></em></u>;</p>
+<p><u><s><strong>gras barré souligné</strong></s></u>;</p>
+<p><s><u><em><strong>gras italique barré souligné</strong></em></u></s>.</p>
+
+<p>&nbsp;</p>
 
 <p style="color: #0000FF;"><u><strong>Utilisation de CSS pour la mise en forme :</strong></u></p>
 
@@ -49,6 +63,21 @@ style directement sur &lt;li style=...&gt;
     <li style="font-weight: bold; font-style: italic; text-decoration: line-through underline;">gras italique barré souligné;</li>
     <li style="text-decoration: none;">utilisation de 'text-decoration: none'.</li>
 </ul>
+
+<p>&nbsp;</p>
+<p>sans liste :</p>
+
+<p style="font-style: italic; text-decoration: line-through;">italique barré;</p>
+<p style="font-style: italic; font-weight: bold;">italique gras;</p>
+<p style="font-style: italic; text-decoration: underline;">italique souligné;</p>
+<p style="font-weight: bold; text-decoration: line-through;">gras barré;</p>
+<p style="font-weight: bold; text-decoration: underline;">gras souligné;</p>
+<p style="font-weight: bold; font-style: italic; text-decoration: line-through;">gras italique barré;</p>
+<p style="font-weight: bold; font-style: italic; text-decoration: underline;">gras italique souligné;</p>
+<p style="font-weight: bold; text-decoration: line-through underline;">gras barré souligné;</p>
+<p style="font-weight: bold; font-style: italic; text-decoration: line-through underline;">gras italique barré souligné;</p>
+<p style="text-decoration: none;">utilisation de 'text-decoration: none'.</p>
+
 <p>&nbsp;</p>
 style sur &lt;p&gt; dans &lt;li&gt;
 <ul>
@@ -130,21 +159,21 @@ style sur &lt;span&gt; dans &lt;li&gt;
 
 <p>&nbsp;</p>
 
-<p style="color: #0000FF;"><u><strong>Bloc de texte gardé sur la même page (fonctionne si le style "pmParaKeepWithNext" est défini dans le modèle ODT) :</strong></u></p>
+<p style="color: #0000FF;"><u><strong>Bloc de texte gardé sur la même page (utilise le style "ParaKWN" défini par défaut dans une Pod template) :</strong></u></p>
 
-<p class="pmParaKeepWithNext">Ce bloc de texte ne sera pas coupé à l'impression (ajouter saut de ligne au dessus de ce texte dans le document généré pour vérifier)</p>
+<p class="ParaKWN">Ce bloc de texte ne sera pas coupé à l'impression (ajouter saut de ligne au dessus de ce texte dans le document généré pour vérifier)</p>
 
-<p class="pmParaKeepWithNext">Ce bloc de texte ne sera pas coupé à l'impression (ajouter saut de ligne au dessus de ce texte dans le document généré pour vérifier)</p>
+<p class="ParaKWN">Ce bloc de texte ne sera pas coupé à l'impression (ajouter saut de ligne au dessus de ce texte dans le document généré pour vérifier)</p>
 
-<p class="pmParaKeepWithNext">Ce bloc de texte ne sera pas coupé à l'impression (ajouter saut de ligne au dessus de ce texte dans le document généré pour vérifier)</p>
+<p class="ParaKWN">Ce bloc de texte ne sera pas coupé à l'impression (ajouter saut de ligne au dessus de ce texte dans le document généré pour vérifier)</p>
 
-<p class="pmParaKeepWithNext">Ce bloc de texte ne sera pas coupé à l'impression (ajouter saut de ligne au dessus de ce texte dans le document généré pour vérifier)</p>
+<p class="ParaKWN">Ce bloc de texte ne sera pas coupé à l'impression (ajouter saut de ligne au dessus de ce texte dans le document généré pour vérifier)</p>
 
-<p class="pmParaKeepWithNext">Ce bloc de texte ne sera pas coupé à l'impression (ajouter saut de ligne au dessus de ce texte dans le document généré pour vérifier)</p>
+<p class="ParaKWN">Ce bloc de texte ne sera pas coupé à l'impression (ajouter saut de ligne au dessus de ce texte dans le document généré pour vérifier)</p>
 
-<p class="pmParaKeepWithNext">Ce bloc de texte ne sera pas coupé à l'impression (ajouter saut de ligne au dessus de ce texte dans le document généré pour vérifier)</p>
+<p class="ParaKWN">Ce bloc de texte ne sera pas coupé à l'impression (ajouter saut de ligne au dessus de ce texte dans le document généré pour vérifier)</p>
 
-<p class="pmParaKeepWithNext">Ce bloc de texte ne sera pas coupé à l'impression (ajouter saut de ligne au dessus de ce texte dans le document généré pour vérifier)</p>
+<p class="ParaKWN">Ce bloc de texte ne sera pas coupé à l'impression (ajouter saut de ligne au dessus de ce texte dans le document généré pour vérifier)</p>
 
 <p>&nbsp;</p>
 
@@ -335,9 +364,7 @@ style sur &lt;span&gt; dans &lt;li&gt;
 
 <p>&nbsp;</p>
 
-<p>&nbsp;</p>
-
-<p style="color: #0000FF;"><u><strong>Puces utilisant du margin-left pour gérer le décallage :</strong></u></p>
+<p style="color: #0000FF;"><u><strong>Puces utilisant du margin-left pour gérer le décalage :</strong></u></p>
 
 <p class="mltdelibe">Nous testons la numérotations des points et ss-point:</p>
 
@@ -2528,6 +2555,23 @@ style sur &lt;span&gt; dans &lt;li&gt;
 <p>Une image utilisant un chemin de type file:/// ne casse pas la génération</p>
 
 <p><img src="file:///C:/Users/username/images/mon_image.png" title="mon_image.png" /></p>
+
+<p>Une image dans un tableau (dans un &lt;p&gt; puis dans le &lt;td&gt;) est correctement rendue</p>
+
+<table>
+    <tr>
+        <td>
+            <p>
+                <img alt="" src="http://www.imio.be/contact.png" style="height:291px; width:148px" title="contact.png" />
+            </p>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <img alt="" src="http://www.imio.be/contact.png" style="height:291px; width:148px" title="contact.png" />
+        </td>
+    </tr>
+</table>
 
 <p>&nbsp;</p>
 
