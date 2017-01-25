@@ -19,4 +19,5 @@ class TestingVocabulary(object):
             res.append(SimpleTerm(value, value, value))
         return SimpleVocabulary(res)
 
+
 TestingVocabularyFactory = TestingVocabulary()

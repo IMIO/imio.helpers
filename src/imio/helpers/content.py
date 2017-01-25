@@ -70,6 +70,7 @@ def add_file(obj, attr='file', filepath='', file_obj=None, contentType=''):
         namedblobfile = file_obj.file
     setattr(obj, attr, namedblobfile)
 
+
 # Define a global variable to can be used in create function, following globl param
 cids_g = {}
 

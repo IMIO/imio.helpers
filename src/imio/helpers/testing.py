@@ -47,6 +47,7 @@ class PloneWithHelpersLayer(PloneSandboxLayer):
         """Tear down Zope."""
         z2.uninstallProduct(app, 'imio.helpers')
 
+
 FIXTURE = PloneWithHelpersLayer(
     name="FIXTURE"
 )
