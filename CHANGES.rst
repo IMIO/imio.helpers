@@ -4,7 +4,9 @@ Changelog
 0.4.23 (unreleased)
 -------------------
 
-- Added content module test. Improved get_object method.
+- Added content module test.
+  [sgeulette]
+- Improved get_object, add_image, add_file methods
   [sgeulette]
 
 0.4.22 (2016-12-21)

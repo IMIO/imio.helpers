@@ -70,28 +70,35 @@ def transitions(obj, transitions):
             logger.warn("Cannot apply transition '%s' on obj '%s'" % (tr, obj))
 
 
-def add_image(obj, attr='image', filepath='', img_obj=None):
+def add_image(obj, attr='image', filepath='', img_obj=None, obj_attr=None, contentType=''):
     """
         Add a lead image or an image on dexterity object
     """
     if filepath:
         filename = os.path.basename(filepath)
-        namedblobimage = NamedBlobImage(data=open(filepath, 'r').read(), filename=safe_unicode(filename))
+        fh = open(filepath, 'r')
+        namedblobimage = NamedBlobImage(data=fh.read(), filename=safe_unicode(filename), contentType=contentType)
+        fh.close()
     elif img_obj:
-        namedblobimage = img_obj.image
+        if not obj_attr:
+            obj_attr = attr
+        namedblobimage = getattr(img_obj, obj_attr)
     setattr(obj, attr, namedblobimage)
 
 
-def add_file(obj, attr='file', filepath='', file_obj=None, contentType=''):
+def add_file(obj, attr='file', filepath='', file_obj=None, obj_attr=None, contentType=''):
     """
         Add a blob file on dexterity object
     """
     if filepath:
         filename = os.path.basename(filepath)
-        namedblobfile = NamedBlobFile(data=open(filepath, 'r').read(), filename=safe_unicode(filename),
-                                      contentType=contentType)
+        fh = open(filepath, 'r')
+        namedblobfile = NamedBlobFile(data=fh.read(), filename=safe_unicode(filename), contentType=contentType)
+        fh.close()
     elif file_obj:
-        namedblobfile = file_obj.file
+        if not obj_attr:
+            obj_attr = attr
+        namedblobfile = getattr(file_obj, obj_attr)
     setattr(obj, attr, namedblobfile)
 
 
