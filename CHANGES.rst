@@ -4,15 +4,15 @@ Changelog
 0.4.23 (unreleased)
 -------------------
 
-- Nothing changed yet.
-
+- Added content module test. Improved get_object method.
+  [sgeulette]
 
 0.4.22 (2016-12-21)
 -------------------
 
 - Added more usecases to test appy.pod rendering : 'text-decoration: none;',
   complex and reallife table examples, ...
-  [gbastien] 
+  [gbastien]
 - Added method xhtml.removeCssClasses to be able to remove some specific Css
   classes from a given xhtmlContent.
   [gbastien]
@@ -30,8 +30,8 @@ Changelog
   [mpeeters]
 - Can add a file to an object.
   [sgeulette]
-- Added case in 'appy_pod_sample' to check when style attribute is used to 
-  define italic/bold/underline/strike directly on <li> or on <li> containing 
+- Added case in 'appy_pod_sample' to check when style attribute is used to
+  define italic/bold/underline/strike directly on <li> or on <li> containing
   <p> or <span>.
   [gbastien]
 

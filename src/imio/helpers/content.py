@@ -13,20 +13,44 @@ import logging
 logger = logging.getLogger('imo.helpers.content')
 
 
-def get_object(parent='', id='', title='', type='', path=''):
-    pc = api.portal.get_tool('portal_catalog')
+def get_object(parent='', id='', title='', type='', obj_path=''):
+    """
+    Find an object following parameters
+    :param id: searched id.
+    :type id: string
+
+    :param type: searched portal type.
+    :type type: string
+
+    :param title: searched title.
+    :type title: string
+
+    :param obj_path: searched relative path.
+    :type obj_path: string
+
+    :param parent: object parent (can be the object or the relative path).
+    :type type: object or string
+
+    :returns: Content object
+    """
+    portal = api.portal.getSite()
+    ppath = '/'.join(portal.getPhysicalPath())
+    pc = portal.portal_catalog
     params = {}
-    if path:
-        params['path'] = {'query': path, 'depth': 0}
+    if obj_path:
+        params['path'] = {'query': '%s/%s' % (ppath, obj_path.strip('/')), 'depth': 0}
     elif parent:
-        params['path'] = {'query': parent, 'depth': 1}
+        if isinstance(parent, str):
+            params['path'] = {'query': '%s/%s' % (ppath, parent.strip('/')), 'depth': 1}
+        else:
+            params['path'] = {'query': '/'.join(parent.getPhysicalPath()), 'depth': 1}
     if id:
         params['id'] = id
     if title:
         params['Title'] = title
     if type:
         params['portal_type'] = type
-    brains = pc(**params)
+    brains = pc.unrestrictedSearchResults(**params)
     if brains:
         return brains[0].getObject()
     return None
@@ -109,24 +133,17 @@ def create(conf, cids={}, globl=False):
         cids_l = cids_g
     cids_l.update(cids)
 
-    portal = api.portal.getSite()
-    ppath = '/'.join(portal.getPhysicalPath())
-
     for i, dic in enumerate(conf):
         container = dic['cont']
         cid = dic.get('cid', '')
         if isinstance(container, int):
             parent = cids_l.get(container, None)
         elif isinstance(container, str):
-            container = container.strip('/ ')
-            if container:
-                parent = get_object(path='%s/%s' % (ppath, container))
-            else:
-                parent = portal
+            parent = get_object(obj_path=container)
         if not parent:
             logger.error("Dict nb %s: cannot find container %s)" % ((cid and '%s (cid=%s)' % (i, cid) or i), container))
             continue
-        obj = get_object(parent='/'.join(parent.getPhysicalPath()), type=dic['type'], title=dic.get('title', ''),
+        obj = get_object(parent=parent, type=dic['type'], title=dic.get('title'),
                          id=dic.get('id', ''))
         if not obj:
             obj = api.content.create(container=parent, type=dic['type'], title=safe_unicode(dic['title']),
