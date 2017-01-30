@@ -134,7 +134,8 @@ def create(conf, cids={}, globl=False, pos=False, clean_globl=False):
 
     Example:
         create([{'cid': 1, 'cont': 0, 'title': 'Welcome', 'type': 'mytype',
-                 'attrs': {'text': richtextval('<h1>Welcome</h1>')}}],
+                 'attrs': {'text': richtextval('<h1>Welcome</h1>')},
+                 'functions': [(add_file, [], {'filepath': 'xxx'})]}],
                  cids={0: portal})
     """
     cids_l = {}
