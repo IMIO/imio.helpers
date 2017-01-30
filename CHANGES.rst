@@ -6,7 +6,7 @@ Changelog
 
 - Added content module test.
   [sgeulette]
-- Improved get_object, add_image, add_file methods
+- Improved get_object, add_image, add_file, create methods
   [sgeulette]
 
 0.4.22 (2016-12-21)

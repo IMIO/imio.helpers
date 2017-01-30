@@ -68,3 +68,49 @@ class TestContentModule(IntegrationTestCase):
         obj1 = api.content.create(container=self.portal.folder, id='tt1', type='testingtype')
         add_file(obj1, file_obj=obj)
         self.assertEqual(obj.file, obj1.file)  # same file object
+
+    def test_create(self):
+        # no parameter
+        conf = [{'cid': 1, 'cont': '/folder', 'type': 'Document', 'id': 'doc1', 'title': 'Doc1'}]
+        ret = create(conf)
+        self.assertIn(1, ret)
+        self.assertIn('doc1', self.portal.folder.objectIds())
+        # cids & globl parameters
+        conf = [{'cid': 2, 'cont': '/folder', 'type': 'Folder', 'id': 'folder1', 'title': 'Folder1'}]
+        ret = create(conf, cids=ret, globl=True)
+        self.assertListEqual([1, 2], ret.keys())
+        self.assertIn('folder1', self.portal.folder.objectIds())
+        # bad cid format
+        conf = [{'cid': 0, 'cont': '/folder', 'type': 'Folder', 'id': 'folder2', 'title': 'Folder2'}]
+        with self.assertRaises(ValueError) as cm:
+            create(conf)
+        self.assertEqual(cm.exception.message, "Dict nb 0: cid '0' must be an integer > 0")
+        conf = [{'cid': 'bad', 'cont': '/folder', 'type': 'Folder', 'id': 'folder2', 'title': 'Folder2'}]
+        with self.assertRaises(ValueError) as cm:
+            create(conf)
+        self.assertEqual(cm.exception.message, "Dict nb 0: cid 'bad' must be an integer > 0")
+        # bad container
+        conf = [{'cid': 3, 'cont': '/badfolder', 'type': 'Folder', 'id': 'folder2', 'title': 'Folder2'}]
+        with self.assertRaises(ValueError) as cm:
+            create(conf)
+        self.assertEqual(cm.exception.message, "Dict nb 0 (cid=3): cannot find container '/badfolder')")
+        conf = [{'cid': 3, 'cont': 10, 'type': 'Folder', 'id': 'folder2', 'title': 'Folder2'}]
+        with self.assertRaises(ValueError) as cm:
+            create(conf)
+        self.assertEqual(cm.exception.message, "Dict nb 0 (cid=3): cannot find container '10')")
+        # cid container
+        conf = [{'cid': 3, 'cont': 2, 'type': 'Document', 'id': 'doc1', 'title': 'Doc1'}]
+        ret = create(conf, globl=True)
+        self.assertIn(3, ret)
+        self.assertIn('doc1', self.portal.folder.folder1.objectIds())
+        # clean globl
+        conf = [{'cid': 4, 'cont': 2, 'type': 'Document', 'id': 'doc2', 'title': 'Doc2'}]
+        with self.assertRaises(ValueError) as cm:
+            create(conf, globl=True, clean_globl=True)
+        self.assertEqual(cm.exception.message, "Dict nb 0 (cid=4): cannot find container '2')")
+        # pos param
+        conf = [{'cid': 4, 'cont': 10, 'type': 'Document', 'id': 'doc2', 'title': 'The first element'}]
+        ret = create(conf, cids={10: self.portal.folder}, pos=True)
+        self.assertIn(4, ret)
+        self.assertIn('doc2', self.portal.folder.objectIds())
+        self.assertEquals(self.portal.folder.getObjectPosition('doc2'),  0)

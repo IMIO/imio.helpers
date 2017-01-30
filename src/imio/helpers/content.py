@@ -106,14 +106,14 @@ def add_file(obj, attr='file', filepath='', file_obj=None, obj_attr=None, conten
 cids_g = {}
 
 
-def create(conf, cids={}, globl=False):
+def create(conf, cids={}, globl=False, pos=False, clean_globl=False):
     """
     Create objects following configuration.
         :param conf: list of dict. A dict is an object to create
             Description (* = is mandatory)
             [
                 {
-                'cid': 1,  # configuration id
+                'cid': 1,  # configuration id, integer > 0 !
             *   'cont': cid or 'path',  # container: can be cid of previous created object or relative path
             *   'type': portal type,  # portal_type
                 'id': 'toto',  # if not set in dic, id will be generated from title
@@ -126,7 +126,9 @@ def create(conf, cids={}, globl=False):
                 }
             ]
         :param cids: dict containing as key a 'cid' and as value 'an object'
-        :param globl: indicate if cid => object relations will be globally used for this call
+        :param globl: indicate if cid - object relations will be globally used for this call (default: False)
+        :param pos: set created objects at list position. (default: True)
+        :param clean_globl: clean global dic
 
         :return cids dict
 
@@ -136,20 +138,28 @@ def create(conf, cids={}, globl=False):
                  cids={0: portal})
     """
     cids_l = {}
+    if clean_globl:
+        global cids_g
+        cids_g = {}
     if globl:
         cids_l = cids_g
     cids_l.update(cids)
 
     for i, dic in enumerate(conf):
         container = dic['cont']
-        cid = dic.get('cid', '')
+        if 'cid' in dic:
+            cid = dic['cid']
+            if not isinstance(cid, int) or not cid > 0:
+                raise ValueError("Dict nb %s: cid '%s' must be an integer > 0" % (i, cid))
+        else:
+            cid = 0
         if isinstance(container, int):
             parent = cids_l.get(container, None)
         elif isinstance(container, str):
             parent = get_object(obj_path=container)
         if not parent:
-            logger.error("Dict nb %s: cannot find container %s)" % ((cid and '%s (cid=%s)' % (i, cid) or i), container))
-            continue
+            raise ValueError("Dict nb %s: cannot find container '%s')" % ((cid and '%s (cid=%s)' % (i, cid) or i),
+                             container))
         obj = get_object(parent=parent, type=dic['type'], title=dic.get('title'),
                          id=dic.get('id', ''))
         if not obj:
@@ -161,6 +171,9 @@ def create(conf, cids={}, globl=False):
         if cid:
             cids_l[cid] = obj
         transitions(obj, dic.get('trans', []))
+        # set at right position
+        if pos and parent.getObjectPosition(obj.getId()) != i:
+            parent.moveObjectToPosition(obj.getId(), i)
     return cids_l
 
 
