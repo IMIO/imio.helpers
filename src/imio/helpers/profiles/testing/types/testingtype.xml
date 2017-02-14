@@ -33,6 +33,11 @@
            &lt;title&gt;Text&lt;/title&gt;
            &lt;required&gt;False&lt;/required&gt;
          &lt;/field&gt;
+         &lt;field name="enabled" type="zope.schema.Bool"&gt;
+           &lt;description/&gt;
+           &lt;title&gt;Enabled&lt;/title&gt;
+           &lt;required&gt;False&lt;/required&gt;
+         &lt;/field&gt;
        &lt;/schema&gt;
      &lt;/model&gt;
  </property>

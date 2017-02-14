@@ -2,9 +2,15 @@
 
 import os
 from plone import api
+from zope.schema._bootstrapinterfaces import WrongType
 
 from imio.helpers.testing import IntegrationTestCase
-from imio.helpers.content import add_file, add_image, create, get_object, richtextval, transitions
+from imio.helpers.content import add_file
+from imio.helpers.content import add_image
+from imio.helpers.content import create
+from imio.helpers.content import get_object
+from imio.helpers.content import transitions
+from imio.helpers.content import validate_fields
 
 
 class TestContentModule(IntegrationTestCase):
@@ -114,3 +120,16 @@ class TestContentModule(IntegrationTestCase):
         self.assertIn(4, ret)
         self.assertIn('doc2', self.portal.folder.objectIds())
         self.assertEquals(self.portal.folder.getObjectPosition('doc2'),  0)
+
+    def test_validate_fields(self):
+        """ """
+        obj = api.content.create(container=self.portal.folder,
+                                 id='tt',
+                                 type='testingtype',
+                                 enabled='Should be a boolean')
+        self.assertEqual(validate_fields(obj),
+                         [WrongType('Should be a boolean', bool, 'enabled')])
+        obj.enabled = False
+        self.assertFalse(validate_fields(obj))
+        obj.enabled = True
+        self.assertFalse(validate_fields(obj))

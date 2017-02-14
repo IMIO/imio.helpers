@@ -8,6 +8,9 @@ Changelog
   [sgeulette]
 - Improved get_object, add_image, add_file, create methods
   [sgeulette]
+- Added content.validate_fields that will validate fields of
+  a given dexterity obj.
+  [gbastien]
 
 0.4.22 (2016-12-21)
 -------------------

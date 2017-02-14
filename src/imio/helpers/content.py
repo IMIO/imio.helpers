@@ -183,3 +183,20 @@ def richtextval(text):
         Return a RichTextValue to be stored in IRichText field
     """
     return RichTextValue(raw=safe_unicode(text), mimeType='text/html', outputMimeType='text/html', encoding='utf-8')
+
+
+def validate_fields(obj):
+    """
+       Validates every fields of given p_obj.
+    """
+    portal_types = api.portal.get_tool('portal_types')
+    fti = portal_types[obj.portal_type]
+    schema = fti.lookupSchema()
+    errors = []
+    for field_name in schema:
+        field = schema.get(field_name)
+        try:
+            field._validate(getattr(obj, field_name))
+        except Exception, exc:
+            errors.append(exc)
+    return errors
