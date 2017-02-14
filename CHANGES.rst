@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.4.23 (unreleased)
+0.4.23 (2017-02-14)
 -------------------
 
 - Added content module test.
