@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.4.24 (unreleased)
+0.4.24 (2017-02-14)
 -------------------
 
 - In content.validate_fields, initialize field by calling bind(obj) so
