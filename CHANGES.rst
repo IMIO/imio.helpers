@@ -4,8 +4,9 @@ Changelog
 0.4.24 (unreleased)
 -------------------
 
-- Nothing changed yet.
-
+- In content.validate_fields, initialize field by calling bind(obj) so
+  necessary things like vocabularies are available.
+  [gbastien]
 
 0.4.23 (2017-02-14)
 -------------------

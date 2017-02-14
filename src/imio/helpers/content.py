@@ -194,7 +194,7 @@ def validate_fields(obj):
     schema = fti.lookupSchema()
     errors = []
     for field_name in schema:
-        field = schema.get(field_name)
+        field = schema.get(field_name).bind(obj)
         try:
             field._validate(getattr(obj, field_name))
         except Exception, exc:
