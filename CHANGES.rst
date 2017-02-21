@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.4.25 (unreleased)
+0.4.25 (2017-02-21)
 -------------------
 
 - Use same class names than appy.pod regarding the 'keep with next'
