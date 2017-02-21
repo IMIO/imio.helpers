@@ -124,7 +124,7 @@ class TestXHTMLModule(IntegrationTestCase):
           Test if adding a class to last x tags of a given XHTML content works.
           By default, this method receives following parameters :
           - xhtmlContent;
-          - classNames={'p': 'pmParaKeepWithNext',
+          - classNames={'p': 'ParaKWN',
                        'li': 'podItemKeepWithNext'};
           - tags=('p', 'li', );
           - numberOfChars=60.
@@ -137,42 +137,47 @@ class TestXHTMLModule(IntegrationTestCase):
                          '<unhandled_tag>My text with tag not handled</unhandled_tag>')
         # now test with a single small handled tag, text size is lower than numberOfChars
         self.assertEqual(addClassToLastChildren('<p>My small text</p>'),
-                         '<p class="pmParaKeepWithNext">My small text</p>')
+                         '<p class="ParaKWN">My small text</p>')
         # existing class attribute is kept
         self.assertEqual(addClassToLastChildren('<p class="myclass">My small text</p>'),
-                         '<p class="pmParaKeepWithNext myclass">My small text</p>')
+                         '<p class="ParaKWN myclass">My small text</p>')
         # test that if text is smaller than numberOfChars, several last tags are adapted
         self.assertEqual(addClassToLastChildren('<p>My small text</p><p>My small text</p>'),
-                         '<p class="pmParaKeepWithNext">My small text</p>'
-                         '<p class="pmParaKeepWithNext">My small text</p>')
+                         '<p class="ParaKWN">My small text</p>'
+                         '<p class="ParaKWN">My small text</p>')
         # large text, only relevant tags are adapted until numberOfChars is rechead
         self.assertEqual(addClassToLastChildren(
             '<p>13 chars line</p><p>33 characters text line text line</p><p>33 characters text line text line</p>'),
-            '<p>13 chars line</p><p class="pmParaKeepWithNext">33 characters text line text line</p>'
-            '<p class="pmParaKeepWithNext">33 characters text line text line</p>')
+            '<p>13 chars line</p><p class="ParaKWN">33 characters text line text line</p>'
+            '<p class="ParaKWN">33 characters text line text line</p>')
         # tags with children
         self.assertEqual(addClassToLastChildren(
             '<p>First untouched paragraph</p>'
             '<p><strong>Strong text Strong text Strong text Strong text</strong> '
             'Paragraph text Paragraph text Paragraph text</p>'),
             '<p>First untouched paragraph</p>'
-            '<p class="pmParaKeepWithNext"><strong>Strong text Strong text Strong text Strong text</strong> '
+            '<p class="ParaKWN"><strong>Strong text Strong text Strong text Strong text</strong> '
             'Paragraph text Paragraph text Paragraph text</p>')
-        # test mixing different handled tags like 'li' and 'p'
+        # test mixing different handled tags like 'ul', 'li' and 'p'
         self.assertEqual(addClassToLastChildren(
             '<p>13 chars line</p><ul><li>Line 1</li><li>Line 2</li><li>33 characters text line text line</li></ul>'
             '<p>33 characters text line text line</p>'),
-            '<p>13 chars line</p><ul><li>Line 1</li><li>Line 2</li><li class="podItemKeepWithNext">33 '
-            'characters text line text line</li></ul><p class="pmParaKeepWithNext">33 '
+            '<p>13 chars line</p><ul class="podBulletItemKeepWithNext">'
+            '<li>Line 1</li><li>Line 2</li><li class="podItemKeepWithNext">33 '
+            'characters text line text line</li></ul><p class="ParaKWN">33 '
             'characters text line text line</p>')
+        # style is also applied on <ol>
+        self.assertEqual(addClassToLastChildren(
+            '<ol><li>Line 1</li><li>Line 2</li></ol>'),
+            '<ol><li class="podItemKeepWithNext">Line 1</li><li class="podItemKeepWithNext">Line 2</li></ol>')
         # as soon as an unhandled tag is discover, adaptation stops
         self.assertEqual(addClassToLastChildren(
             '<p>13 chars line</p><img src="image.png"/><p>13 chars line</p>'),
-            '<p>13 chars line</p><img src="image.png"/><p class="pmParaKeepWithNext">13 chars line</p>')
+            '<p>13 chars line</p><img src="image.png"/><p class="ParaKWN">13 chars line</p>')
         # test with sub tags
         self.assertEqual(addClassToLastChildren(
             '<p>Text</p><p><u><strong>dsdklm</strong></u></p>'),
-            '<p class="pmParaKeepWithNext">Text</p><p class="pmParaKeepWithNext"><u><strong>dsdklm</strong></u></p>')
+            '<p class="ParaKWN">Text</p><p class="ParaKWN"><u><strong>dsdklm</strong></u></p>')
         # test every available tags
         self.assertEqual(addClassToLastChildren(
             '<p>Text</p>'
@@ -189,34 +194,34 @@ class TestXHTMLModule(IntegrationTestCase):
             '<p><sub>Sub</sub></p>'
             '<p><sup>Sup</sup></p>',
             numberOfChars=85),
-            '<p class="pmParaKeepWithNext">Text</p>'
-            '<p class="pmParaKeepWithNext"><strong>Strong</strong></p>'
-            '<p class="pmParaKeepWithNext"><span>Span</span></p>'
-            '<p class="pmParaKeepWithNext"><strike>Strike</strike></p>'
-            '<p class="pmParaKeepWithNext"><i>I</i></p>'
-            '<p class="pmParaKeepWithNext"><em>Em</em></p>'
-            '<p class="pmParaKeepWithNext"><u>U</u></p>'
-            '<p class="pmParaKeepWithNext"><small>Small</small></p>'
-            '<p class="pmParaKeepWithNext"><mark>Mark</mark></p>'
-            '<p class="pmParaKeepWithNext"><del>Del</del></p>'
-            '<p class="pmParaKeepWithNext"><ins>Ins</ins></p>'
-            '<p class="pmParaKeepWithNext"><sub>Sub</sub></p>'
-            '<p class="pmParaKeepWithNext"><sup>Sup</sup></p>')
+            '<p class="ParaKWN">Text</p>'
+            '<p class="ParaKWN"><strong>Strong</strong></p>'
+            '<p class="ParaKWN"><span>Span</span></p>'
+            '<p class="ParaKWN"><strike>Strike</strike></p>'
+            '<p class="ParaKWN"><i>I</i></p>'
+            '<p class="ParaKWN"><em>Em</em></p>'
+            '<p class="ParaKWN"><u>U</u></p>'
+            '<p class="ParaKWN"><small>Small</small></p>'
+            '<p class="ParaKWN"><mark>Mark</mark></p>'
+            '<p class="ParaKWN"><del>Del</del></p>'
+            '<p class="ParaKWN"><ins>Ins</ins></p>'
+            '<p class="ParaKWN"><sub>Sub</sub></p>'
+            '<p class="ParaKWN"><sup>Sup</sup></p>')
         # does not break with unknown sub tags
         self.assertEqual(addClassToLastChildren(
             '<p><unknown><tagtag>Text</tagtag></unknown></p>'),
-            '<p class="pmParaKeepWithNext"><unknown><tagtag>Text</tagtag></unknown></p>')
+            '<p class="ParaKWN"><unknown><tagtag>Text</tagtag></unknown></p>')
         # special characters are transformed to HTML entities
         text = "<p>Some spécial charaçters &eacute;</p><p>&nbsp;</p>"
         self.assertEqual(
             addClassToLastChildren(text),
-            '<p class="pmParaKeepWithNext">Some sp&#233;cial chara&#231;ters &#233;</p>'
-            '<p class="pmParaKeepWithNext">&#160;</p>')
+            '<p class="ParaKWN">Some sp&#233;cial chara&#231;ters &#233;</p>'
+            '<p class="ParaKWN">&#160;</p>')
         # result is not prettyfied (pretty_print=False) but if source was
         # pretty, then the result is pretty also
         self.assertEqual(addClassToLastChildren(
             '<p>text</p>\n<img src="image.png"/>\n<p>text</p>\n'),
-            '<p>text</p>\n<img src="image.png"/>\n<p class="pmParaKeepWithNext">text</p>\n')
+            '<p>text</p>\n<img src="image.png"/>\n<p class="ParaKWN">text</p>\n')
 
     def test_markEmptyTags(self):
         """

@@ -112,8 +112,8 @@ def addClassToContent(xhtmlContent, css_class, pretty_print=False):
 
 
 def addClassToLastChildren(xhtmlContent,
-                           classNames={'p': 'pmParaKeepWithNext',
-                                       'div': 'pmParaKeepWithNext',
+                           classNames={'p': 'ParaKWN',
+                                       'div': 'ParaKWN',
                                        'strong': '',
                                        'span': '',
                                        'strike': '',
@@ -126,7 +126,8 @@ def addClassToLastChildren(xhtmlContent,
                                        'ins': '',
                                        'sub': '',
                                        'sup': '',
-                                       'ul': '',
+                                       'ol': 'podNumberItemKeepWithNext',
+                                       'ul': 'podBulletItemKeepWithNext',
                                        'li': 'podItemKeepWithNext'},
                            numberOfChars=CLASS_TO_LAST_CHILDREN_NUMBER_OF_CHARS_DEFAULT,
                            pretty_print=False):
