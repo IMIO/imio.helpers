@@ -12,7 +12,7 @@ from Products.CMFPlone.utils import safe_unicode
 from plone.app.imaging.scale import ImageScale
 from plone.outputfilters.filters.resolveuid_and_caption import ResolveUIDAndCaptionFilter
 
-CLASS_TO_LAST_CHILDREN_NUMBER_OF_CHARS_DEFAULT = 60
+CLASS_TO_LAST_CHILDREN_NUMBER_OF_CHARS_DEFAULT = 240
 # Xhtml tags that may contain content
 CONTENT_TAGS = ('p', 'div', 'strong', 'span', 'strike', 'i', 'em', 'u',
                 'small', 'mark', 'del', 'ins', 'sub', 'sup', 'ul', 'li')

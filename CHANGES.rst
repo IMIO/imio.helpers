@@ -4,8 +4,8 @@ Changelog
 0.4.26 (unreleased)
 -------------------
 
-- Nothing changed yet.
-
+- Set CLASS_TO_LAST_CHILDREN_NUMBER_OF_CHARS_DEFAULT = 240.
+  [gbastien]
 
 0.4.25 (2017-02-21)
 -------------------

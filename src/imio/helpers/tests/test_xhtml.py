@@ -127,7 +127,7 @@ class TestXHTMLModule(IntegrationTestCase):
           - classNames={'p': 'ParaKWN',
                        'li': 'podItemKeepWithNext'};
           - tags=('p', 'li', );
-          - numberOfChars=60.
+          - numberOfChars=180.
         """
         self.assertEqual(addClassToLastChildren(''), '')
         self.assertEqual(addClassToLastChildren(None), None)
@@ -147,21 +147,24 @@ class TestXHTMLModule(IntegrationTestCase):
                          '<p class="ParaKWN">My small text</p>')
         # large text, only relevant tags are adapted until numberOfChars is rechead
         self.assertEqual(addClassToLastChildren(
-            '<p>13 chars line</p><p>33 characters text line text line</p><p>33 characters text line text line</p>'),
+            '<p>13 chars line</p><p>33 characters text line text line</p><p>33 characters text line text line</p>',
+            numberOfChars=60),
             '<p>13 chars line</p><p class="ParaKWN">33 characters text line text line</p>'
             '<p class="ParaKWN">33 characters text line text line</p>')
         # tags with children
         self.assertEqual(addClassToLastChildren(
             '<p>First untouched paragraph</p>'
             '<p><strong>Strong text Strong text Strong text Strong text</strong> '
-            'Paragraph text Paragraph text Paragraph text</p>'),
+            'Paragraph text Paragraph text Paragraph text</p>',
+            numberOfChars=60),
             '<p>First untouched paragraph</p>'
             '<p class="ParaKWN"><strong>Strong text Strong text Strong text Strong text</strong> '
             'Paragraph text Paragraph text Paragraph text</p>')
         # test mixing different handled tags like 'ul', 'li' and 'p'
         self.assertEqual(addClassToLastChildren(
             '<p>13 chars line</p><ul><li>Line 1</li><li>Line 2</li><li>33 characters text line text line</li></ul>'
-            '<p>33 characters text line text line</p>'),
+            '<p>33 characters text line text line</p>',
+            numberOfChars=60),
             '<p>13 chars line</p><ul class="podBulletItemKeepWithNext">'
             '<li>Line 1</li><li>Line 2</li><li class="podItemKeepWithNext">33 '
             'characters text line text line</li></ul><p class="ParaKWN">33 '
