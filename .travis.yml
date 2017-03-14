@@ -12,7 +12,7 @@ before_install:
 
 install:
   - mkdir -p buildout-cache/{eggs,downloads}
-  - python bootstrap.py -c travis.cfg
+  - python bootstrap.py --version=2.5.3 -c travis.cfg
   - bin/buildout -c travis.cfg -Nqt 5
 
 script:
