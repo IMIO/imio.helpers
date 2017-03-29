@@ -37,7 +37,9 @@ def get_object(parent='', id='', title='', type='', obj_path=''):
     ppath = '/'.join(portal.getPhysicalPath())
     pc = portal.portal_catalog
     params = {}
-    if obj_path:
+    if obj_path == '/':
+        return portal
+    elif obj_path:
         params['path'] = {'query': '%s/%s' % (ppath, obj_path.strip('/')), 'depth': 0}
     elif parent:
         if isinstance(parent, str):
