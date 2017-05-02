@@ -34,6 +34,8 @@ class TestContentModule(IntegrationTestCase):
         self.assertEqual(obj, get_object(obj_path='/folder/mydoc/'))
         self.assertEqual(obj, get_object(obj_path='folder/mydoc'))
         self.assertEqual(obj, get_object(obj_path='/folder/mydoc', parent='folder'))
+        self.assertEqual(self.portal, get_object(obj_path='/'))
+
         # Give id
         self.assertEqual(obj, get_object(id='mydoc'))
         # Give title

@@ -4,7 +4,8 @@ Changelog
 0.4.27 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Return portal when obj_path is / on create content.
+  [bsuttor]
 
 
 0.4.26 (2017-03-14)
