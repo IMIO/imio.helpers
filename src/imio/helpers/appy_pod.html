@@ -506,6 +506,64 @@ style sur &lt;span&gt; dans &lt;li&gt;
 
 <p>&nbsp;</p>
 
+<p style="color: #0000FF;"><u><strong>Texte collé à la bordure lorsque cellspacing ou cellpadding utilsé dans appy.pod 0.9.7 :</strong></u></p>
+
+<p>Sans cellspacing/cellpadding</p>
+<table>
+    <tbody>
+        <tr>
+            <td>1</td>
+            <td>Texte texte texte texte texte texte texte texte <s><strong>gras barré</strong></s> texte texte texte texte texte texte</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>Texte texte texte texte texte texte texte <em><strong>gras italique</strong></em> texte texte texte texte texte texte texte</td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>Texte texte texte texte texte texte texte <em>italique</em> <strong>gras</strong> <s>barré</s> texte texte texte texte texte texte</td>
+        </tr>
+    </tbody>
+</table>
+
+<p>Avec cellspacing/cellpadding à "1"</p>
+<table cellpadding="1" cellspacing="1">
+    <tbody>
+        <tr>
+            <td>1</td>
+            <td>Texte texte texte texte texte texte texte texte <s><strong>gras barré</strong></s> texte texte texte texte texte texte</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>Texte texte texte texte texte texte texte <em><strong>gras italique</strong></em> texte texte texte texte texte texte texte</td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>Texte texte texte texte texte texte texte <em>italique</em> <strong>gras</strong> <s>barré</s> texte texte texte texte texte texte</td>
+        </tr>
+    </tbody>
+</table>
+
+<p>Avec cellspacing/cellpadding à "0"</p>
+<table cellpadding="0" cellspacing="0">
+    <tbody>
+        <tr>
+            <td>1</td>
+            <td>Texte texte texte texte texte texte texte texte <s><strong>gras barré</strong></s> texte texte texte texte texte texte</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>Texte texte texte texte texte texte texte <em><strong>gras italique</strong></em> texte texte texte texte texte texte texte</td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>Texte texte texte texte texte texte texte <em>italique</em> <strong>gras</strong> <s>barré</s> texte texte texte texte texte texte</td>
+        </tr>
+    </tbody>
+</table>
+
+<p>&nbsp;</p>
+
 <p style="color: #0000FF;"><u><strong>Tableau complexe de 17cm de large :</strong></u></p>
 
 <p>Couleur de fond en rgb(), en #123123 et en HTML color.</p>
