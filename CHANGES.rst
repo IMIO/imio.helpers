@@ -6,7 +6,9 @@ Changelog
 
 - Return portal when obj_path is / on create content.
   [bsuttor]
-
+- Added case for appy.pod that show complex HTML structure failing
+  in appy.pod 0.9.7.
+  [gbastien]
 
 0.4.26 (2017-03-14)
 -------------------
