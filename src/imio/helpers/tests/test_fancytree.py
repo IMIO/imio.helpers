@@ -12,21 +12,16 @@ class RenderFancyTreeExample(BaseRenderFancyTree):
 
     """Fancy tree view with dummy get_query implementation for tests purpose."""
 
-    def __init__(self, context, request):
-        self.context = context
-        self.request = request
-
     def index(self):
         return "index"
 
     def get_query(self):
-        path = '/'.join(self.context.getPhysicalPath())
         return {
-            'path': {'query': path, 'depth': -1},
+            'path': {'query': self.root_path, 'depth': -1},
             'portal_type': (
                 'Folder',
                 'Document',
-                ),
+            ),
         }
 
     def redirect_url(self, uid):
@@ -76,7 +71,6 @@ class TestBaseRenderFancyTree(IntegrationTestCase):
         mydoc2 = api.content.create(
             container=myfolder, type='Document',
             id='mydoc2', title="My other document")
-
         output = view.get_data()
         expected = json.dumps([
             {

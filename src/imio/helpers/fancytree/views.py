@@ -14,6 +14,13 @@ class BaseRenderFancyTree(BrowserView):  # pylint: disable=R0921
     """Base view that displays a fancytree from a catalog query."""
 
     index = ViewPageTemplateFile('fancytree.pt')
+    root = '/'  # must begin with slash
+
+    def __init__(self, context, request):
+        self.context = context
+        self.request = request
+        self.portal = api.portal.get()
+        self.root_path = '/'.join(self.portal.getPhysicalPath()) + (self.root.lstrip('/') and self.root or '')
 
     def label(self):
         return self.context.Title()
@@ -51,11 +58,10 @@ class BaseRenderFancyTree(BrowserView):  # pylint: disable=R0921
 
     def get_data(self):
         """Get json data to render the fancy tree."""
-        portal = api.portal.get()
         query = self.get_query()
         strategy = NavtreeStrategyBase()
-        strategy.rootPath = '/'.join(portal.getPhysicalPath())
-        folder_tree = buildFolderTree(portal, None, query, strategy)
+        strategy.rootPath = self.root_path
+        folder_tree = buildFolderTree(self.portal, None, query, strategy)
         return json.dumps(self.folder_tree_to_fancytree(folder_tree))
 
     def get_query(self):

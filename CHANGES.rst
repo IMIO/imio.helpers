@@ -9,6 +9,8 @@ Changelog
 - Added case for appy.pod that show complex HTML structure failing
   in appy.pod 0.9.7.
   [gbastien]
+- Added root attribute in fancytree
+  [sgeulette]
 
 0.4.26 (2017-03-14)
 -------------------
