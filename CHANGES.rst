@@ -11,6 +11,8 @@ Changelog
   [gbastien]
 - Added root attribute in fancytree
   [sgeulette]
+- Changed barcode generation options, following zint 2.6
+  [sgeulette]
 
 0.4.26 (2017-03-14)
 -------------------

@@ -10,3 +10,11 @@ imio.helpers
 ====================
 
 Various helper methods for development.
+
+
+Requirements
+------------
+
+The barcode generation method uses zint tool (https://sourceforge.net/projects/zint/).
+
+You have to install zint version >= 2.6.0.
