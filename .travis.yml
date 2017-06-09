@@ -10,7 +10,7 @@ before_install:
   - sudo apt-get install libpng12-dev cmake libqt4-dev libqt5widgets5 qttools5-dev
   - sudo wget https://10gbps-io.dl.sourceforge.net/project/zint/zint/2.6.0/zint-2.6.0.src.tar.gz
   - sudo tar xvzf zint-2.6.0.src.tar.gz
-  - sudo cd zint-2.6.0/build
+  - cd zint-2.6.0/build
   - sudo cmake ..
   - sudo make
   - sudo make install
