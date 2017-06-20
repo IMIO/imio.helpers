@@ -172,7 +172,12 @@ style sur &lt;span&gt; dans &lt;li&gt;
 
 <p style="text-align:justify">Long paragraphe <b>justifié</b> Long paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifiéLong paragraphe justifié</p>
 
-<p style="text-align:justify">&nbsp;</p>
+<p>&nbsp;</p>
+
+<p style="color: #0000FF;"><u><strong>Alignement du texte, utilisation des valeurs start/end plante dans appy <= 0.9.8 :</strong></u></p>
+
+<!--p style="text-align:start;">Utilisation de text-align:start;</p>
+<p style="text-align:end;">Utilisation de text-align:end;</p-->
 
 <p>&nbsp;</p>
 
@@ -271,6 +276,7 @@ style sur &lt;span&gt; dans &lt;li&gt;
     <li>Texte texte texte;</li>
     <li>Texte texte texte;</li>
 </ol>
+<p>&nbsp;</p>
 
 <p style="color: #0000FF;"><u><strong>Avec sous-numérotation :</strong></u></p>
 
@@ -309,6 +315,7 @@ style sur &lt;span&gt; dans &lt;li&gt;
         </ol>
     <li>Texte texte texte;</li>
 </ol>
+<p>&nbsp;</p>
 
 <p style="color: #0000FF;"><u><strong>Numérotation chiffres et lettres :</strong></u></p>
 
@@ -330,6 +337,22 @@ style sur &lt;span&gt; dans &lt;li&gt;
     </li>
     <li>Texte texte text;</li>
 </ol>
+<p>&nbsp;</p>
+
+<p style="color: #0000FF;"><u><strong>Listes numérotées imbriquées sans valeur pour &lt;li&gt; non rendu en appy.pod <=0.9.8:</strong></u></p>
+
+<ol>
+    <li>
+    <ol>
+        <li>
+        <ol>
+            <li><em><u>Contrôles des revenus</u></em></li>
+        </ol>
+        </li>
+    </ol>
+    </li>
+</ol>
+<p>&nbsp;</p>
 
 <p style="color: #0000FF;"><u><strong>Renumérotation :</strong></u></p>
 
@@ -338,6 +361,7 @@ style sur &lt;span&gt; dans &lt;li&gt;
     <li>Texte texte text;</li>
     <li>Texte texte text;</li>
 </ol>
+<p>&nbsp;</p>
 
 <p style="margin-left:40px"><b>Du texte inséré dans la liste (avec un margin-left sur le &lt;p&gt;) puis...</b></p>
 
@@ -352,6 +376,7 @@ style sur &lt;span&gt; dans &lt;li&gt;
     </li>
     <li>Texte texte text;</li>
 </ol>
+<p>&nbsp;</p>
 
 <p style="color: #0000FF;"><u><strong>Puces numérotées et classiques :</strong></u></p>
 
@@ -558,6 +583,20 @@ style sur &lt;span&gt; dans &lt;li&gt;
         <tr>
             <td>3</td>
             <td>Texte texte texte texte texte texte texte <em>italique</em> <strong>gras</strong> <s>barré</s> texte texte texte texte texte texte</td>
+        </tr>
+    </tbody>
+</table>
+
+<p>&nbsp;</p>
+
+<p style="color: #0000FF;"><u><strong>Bordure définie sur &lt;td&gt; utilisant 1px, plante appy.pod <= 0.9.8 :</strong></u></p>
+
+<table>
+    <tbody>
+        <tr>
+            <td> <!-- style="border:1px solid #000000"-->
+            <p>1</p>
+            </td>
         </tr>
     </tbody>
 </table>
