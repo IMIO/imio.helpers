@@ -3,6 +3,10 @@ language: python
 sudo: required
 dist: trusty
 
+cache:
+  directories:
+    - buildout-cache
+
 python:
   - 2.7
 
@@ -14,6 +18,7 @@ before_install:
 install:
   - mkdir -p buildout-cache/{eggs,downloads}
   - python bootstrap.py --version=2.5.3 -c travis.cfg
+  - bin/buildout -c travis.cfg -N annotate
   - bin/buildout -c travis.cfg -Nqt 5
 
 script:
