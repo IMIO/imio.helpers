@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.4.27 (unreleased)
+0.4.27 (2017-06-30)
 -------------------
 
 - Return portal when obj_path is / on create content.
