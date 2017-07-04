@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.4.28 (unreleased)
+0.4.28 (2017-07-04)
 -------------------
 
 - Added method to create NamedBlobFile or NamedBlobImage.
