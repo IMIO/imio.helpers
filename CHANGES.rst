@@ -4,8 +4,8 @@ Changelog
 0.4.28 (unreleased)
 -------------------
 
-- Nothing changed yet.
-
+- Added method to create NamedBlobFile or NamedBlobImage.
+  [sgeulette]
 
 0.4.27 (2017-06-30)
 -------------------
