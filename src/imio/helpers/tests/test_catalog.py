@@ -5,9 +5,13 @@ from plone import api
 from imio.helpers.testing import IntegrationTestCase
 from imio.helpers.catalog import addOrUpdateIndexes
 from imio.helpers.catalog import addOrUpdateColumns
+from imio.helpers.catalog import get_intid
 from imio.helpers.catalog import removeIndexes
 from imio.helpers.catalog import removeColumns
 from imio.helpers.catalog import ZCTextIndexInfo
+from plone.app.testing import applyProfile
+from zope.component import getUtility
+from zope.intid.interfaces import IIntIds
 
 
 class TestCatalogModule(IntegrationTestCase):
@@ -158,3 +162,16 @@ class TestCatalogModule(IntegrationTestCase):
         self.assertTrue('Description' in self.catalog.indexes())
         # if we try to remove an unexisting column, it does not fail
         removeColumns(self.portal, columns=('Description', ))
+
+    def test_get_intid(self):
+        obj = api.content.create(container=self.portal.folder, id='tt', type='testingtype')
+        applyProfile(self.portal, 'plone.app.intid:default')
+        intids = getUtility(IIntIds)
+        obj_id = intids.getId(obj)
+        self.assertEqual(get_intid(obj), obj_id)
+        self.assertEqual(get_intid(obj, intids=intids), obj_id)
+        intids.unregister(obj)
+        self.assertEqual(get_intid(obj, intids=intids, create=False), 1)
+        new_id = get_intid(obj, intids=intids)
+        self.assertNotEqual(new_id, obj_id)
+        self.assertNotEqual(new_id, 1)

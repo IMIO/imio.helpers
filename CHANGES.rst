@@ -4,8 +4,8 @@ Changelog
 0.4.29 (unreleased)
 -------------------
 
-- Nothing changed yet.
-
+- Get intid value or create it if not found.
+  [sgeulette]
 
 0.4.28 (2017-07-04)
 -------------------

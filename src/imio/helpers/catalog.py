@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from Products.CMFCore.utils import getToolByName
 import logging
+from zope.component import getUtility
+from zope.intid.interfaces import IIntIds
 
 logger = logging.getLogger('imio.helpers:catalog')
 
@@ -98,3 +100,16 @@ def removeColumns(portal, columns=()):
             logger.info('Removed column "%s"...' % column)
         else:
             logger.info('Trying to remove an unexisting column with name "%s"...' % column)
+
+
+def get_intid(obj, intids=None, create=True):
+    """ Get intid value or create it if not found """
+    if not intids:
+        intids = getUtility(IIntIds)
+    try:
+        return intids.getId(obj)
+    except KeyError:
+        logger.warn("Missing intid for %s" % obj.absolute_url())
+        if create:
+            return intids.register(obj)
+    return 1
