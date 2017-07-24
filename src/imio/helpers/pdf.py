@@ -31,7 +31,8 @@ class BarcodeStamp(object):
                  barcode_value,
                  x=0,
                  y=0,
-                 tmp_path='/tmp'):
+                 tmp_path='/tmp',
+                 scale=4):
         self.filepath = filepath
         self.output = StringIO()
         self.uuid = uuid.uuid4()
@@ -40,6 +41,7 @@ class BarcodeStamp(object):
         self.x = x
         self.y = y
         self.tmp_path = tmp_path
+        self.scale = scale
 
     def _path(self, extension, suffix=''):
         filename = '{name}{suffix}.{ext}'.format(
@@ -57,7 +59,7 @@ class BarcodeStamp(object):
 
     def _create_barcode(self):
         path = self._path('png')
-        barcode_io = barcode.generate_barcode(self.barcode_value, scale=4)
+        barcode_io = barcode.generate_barcode(self.barcode_value, scale=self.scale)
         f = open(path, 'w')
         f.write(barcode_io.getvalue())
         f.close()

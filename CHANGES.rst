@@ -6,6 +6,10 @@ Changelog
 
 - Get intid value or create it if not found.
   [sgeulette]
+- Added possibility to pass 'scale' value to pdf.BarcodeStamp.
+  [gbastien]
+- More appy.pod usecase : not rendered sub bullets with no parent bullet.
+  [gbastien]
 
 0.4.28 (2017-07-04)
 -------------------
