@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.4.29 (unreleased)
+0.4.29 (2017-07-25)
 -------------------
 
 - Get intid value or create it if not found.
