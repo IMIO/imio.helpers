@@ -5,6 +5,7 @@
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
     i18n_domain="imio.helpers">
 
+    <include package="plone.app.intid" />
     <include package=".browser" />
     <include package=".fancytree" />
     <i18n:registerTranslations directory="locales" />
