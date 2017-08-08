@@ -212,3 +212,12 @@ def validate_fields(obj):
         except Exception, exc:
             errors.append(exc)
     return errors
+
+
+def safe_encode(value, encoding='utf-8'):
+    """
+        Converts a value to encoding, only when it is not already encoded.
+    """
+    if isinstance(value, unicode):
+        return value.encode(encoding)
+    return value

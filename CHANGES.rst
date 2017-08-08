@@ -4,8 +4,8 @@ Changelog
 0.4.30 (unreleased)
 -------------------
 
-- Nothing changed yet.
-
+- Added method to safe encode string.
+  [sgeulette]
 
 0.4.29 (2017-07-25)
 -------------------

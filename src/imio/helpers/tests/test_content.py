@@ -9,6 +9,7 @@ from imio.helpers.content import add_file
 from imio.helpers.content import add_image
 from imio.helpers.content import create
 from imio.helpers.content import get_object
+from imio.helpers.content import safe_encode
 from imio.helpers.content import transitions
 from imio.helpers.content import validate_fields
 
@@ -135,3 +136,9 @@ class TestContentModule(IntegrationTestCase):
         self.assertFalse(validate_fields(obj))
         obj.enabled = True
         self.assertFalse(validate_fields(obj))
+
+    def test_safe_encode(self):
+        self.assertEqual(safe_encode('héhé'), 'héhé')
+        self.assertEqual(safe_encode(u'héhé'), 'héhé')
+        self.assertEqual(safe_encode(u'héhé', encoding='utf8'), 'héhé')
+        self.assertEqual(safe_encode('héhé', encoding='whatelse'), 'héhé')
