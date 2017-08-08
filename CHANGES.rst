@@ -6,6 +6,8 @@ Changelog
 
 - Added method to safe encode string.
   [sgeulette]
+- appy.pod usecase : table using width of 0px.
+  [gbastien]
 
 0.4.29 (2017-07-25)
 -------------------
