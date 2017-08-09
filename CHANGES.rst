@@ -8,6 +8,12 @@ Changelog
   [sgeulette]
 - appy.pod usecase : table using width of 0px.
   [gbastien]
+- In `content.validate_fields`, added special bypass to avoid failing
+  validation for `Choice` field that is `required=False` and for which given
+  value is None. Validation fails because None not in vocabulary but it is
+  nevertheless a correct value as it is managed by the widget while added thru
+  the UI.
+  [gbastien]
 
 0.4.29 (2017-07-25)
 -------------------

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+from zope.schema._field import Choice
 
 from plone import api
 from plone.app.textfield.value import RichTextValue
@@ -207,9 +208,13 @@ def validate_fields(obj):
     errors = []
     for field_name in schema:
         field = schema.get(field_name).bind(obj)
+        value = getattr(obj, field_name)
         try:
-            field._validate(getattr(obj, field_name))
+            field._validate(value)
         except Exception, exc:
+            # bypass for Choice field not required, accept a None value
+            if isinstance(field, Choice) and not field.required and value is None:
+                continue
             errors.append(exc)
     return errors
 
