@@ -14,6 +14,11 @@ Changelog
   nevertheless a correct value as it is managed by the widget while added thru
   the UI.
   [gbastien]
+- Added JS fix to be able to print `<fieldset>` on several pages in Firefox,
+  see https://bugzilla.mozilla.org/show_bug.cgi?id=471015.
+  This makes it necessary to add a default profile to add the JS resource 
+  `++resource++imio.helpers/helpers.js`.
+  [gbastien]
 
 0.4.29 (2017-07-25)
 -------------------

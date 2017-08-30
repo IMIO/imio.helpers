@@ -22,4 +22,12 @@
         for="plone.dexterity.interfaces.IDexterityContainer"
     />
 
+    <genericsetup:registerProfile
+        name="default"
+        title="imio.helpers default"
+        directory="profiles/default"
+        description="imio.helpers"
+        provides="Products.GenericSetup.interfaces.EXTENSION"
+        />
+
 </configure>
