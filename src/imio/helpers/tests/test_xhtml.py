@@ -11,7 +11,7 @@ from imio.helpers.xhtml import imagesToPath
 from imio.helpers.xhtml import markEmptyTags
 from imio.helpers.xhtml import removeBlanks
 from imio.helpers.xhtml import removeCssClasses
-from imio.helpers.xhtml import storeExternalImagesLocally
+from imio.helpers.xhtml import storeImagesLocally
 from imio.helpers.xhtml import xhtmlContentIsEmpty
 
 
@@ -347,11 +347,11 @@ class TestXHTMLModule(IntegrationTestCase):
         # we do not setText because the mutator is overrided to use mxTidy
         # to prettify the HTML
         # test with internal image, absolute path
-        text = '<p>Image absolute path <img src="http://nohost/plone/img"/> end of text.</p>'
-        expected = text.replace("http://nohost/plone/img", img_blob_path)
+        text = '<p>Image absolute path <img src="{0}/img"/> end of text.</p>'.format(self.portal_url)
+        expected = text.replace("{0}/img".format(self.portal_url), img_blob_path)
         self.assertEqual(imagesToPath(doc, text).strip(), expected)
         # if we use an image having no blob, nothing is changed
-        text = '<p>Image absolute path <img src="http://nohost/plone/img_without_blob"/> end of text.</p>'
+        text = '<p>Image absolute path <img src="{0}/img_without_blob"/> end of text.</p>'.format(self.portal_url)
         self.assertEqual(imagesToPath(doc, text).strip(), text)
 
         # test with internal image, relative path
@@ -363,15 +363,15 @@ class TestXHTMLModule(IntegrationTestCase):
         self.assertEqual(imagesToPath(doc2, text).strip(), text)
 
         # test with src to an ImageScale instead the full image
-        text = '<p>Link to ImageScale absolute path <img src="http://nohost/plone/img/image_preview"/> '\
-               'and relative path <img src="../img/image_preview"/>.</p>'
-        expected = text.replace("http://nohost/plone/img/image_preview", img_blob_path)
+        text = '<p>Link to ImageScale absolute path <img src="{0}/img/image_preview"/> '\
+               'and relative path <img src="../img/image_preview"/>.</p>'.format(self.portal_url)
+        expected = text.replace("{0}/img/image_preview".format(self.portal_url), img_blob_path)
         expected = expected.replace("../img/image_preview", img_blob_path)
         self.assertEqual(imagesToPath(doc2, text).strip(), expected)
 
         # test with src to image that is not an image, src will be to doc
-        text = '<p>Src image to doc absolute path <img src="http://nohost/plone/doc"/> '\
-               'and relative path <img src="../doc"/>.</p>'
+        text = '<p>Src image to doc absolute path <img src="{0}/doc"/> '\
+               'and relative path <img src="../doc"/>.</p>'.format(self.portal_url)
         # left as is
         self.assertEqual(imagesToPath(doc2, text).strip(), text)
 
@@ -381,15 +381,15 @@ class TestXHTMLModule(IntegrationTestCase):
         self.assertEqual(imagesToPath(doc, text).strip(), text)
 
         # image that does not exist anymore, absolute and relative path
-        text = '<p>Removed image absolute path <img src="http://nohost/plone/removed_img"/> '\
-               'and relative path <img src="../removed_img"/>.</p>'
+        text = '<p>Removed image absolute path <img src="{0}/removed_img"/> '\
+               'and relative path <img src="../removed_img"/>.</p>'.format(self.portal_url)
         # left as is
         self.assertEqual(imagesToPath(doc, text).strip(), text)
 
         # more complex case with html sublevels, relative and absolute path images
-        text = """<p>Image absolute path <img src="http://nohost/plone/img"/> end of text.</p>
+        text = """<p>Image absolute path <img src="{0}/img"/> end of text.</p>
 <div>
-  <p>Image absolute path2 same img <img src="http://nohost/plone/img"/> end of text.</p>
+  <p>Image absolute path2 same img <img src="{0}/img"/> end of text.</p>
 </div>
 <p>Image absolute path <img src="http://www.othersite.com/image.png"/> end of text.</p>
 <div>
@@ -397,9 +397,10 @@ class TestXHTMLModule(IntegrationTestCase):
     <strong>Image relative path <img src="../img" alt="Image" title="Image"/> end of text.</strong>
   </p>
 </div>
-<p>Removed image absolute path <img src="http://nohost/plone/removed_img" alt="Image" title="Image"/> end of text.</p>
-<p>Removed image relative path <img src="../removed_img" alt="Image" title="Image"/> end of text.</p>"""
-        expected = text.replace("http://nohost/plone/img", img_blob_path)
+<p>Removed image absolute path <img src="{0}/removed_img" alt="Image" title="Image"/> end of text.</p>
+<p>Removed image relative path <img src="../removed_img" alt="Image" title="Image"/> end of text.</p>""".\
+            format(self.portal_url)
+        expected = text.replace("{0}/img".format(self.portal_url), img_blob_path)
         expected = expected.replace("../img", img_blob_path)
         self.assertEqual(imagesToPath(doc2, text).replace('\n', ''), expected.replace('\n', ''))
 
@@ -411,19 +412,19 @@ class TestXHTMLModule(IntegrationTestCase):
         self.assertEqual(imagesToPath(doc, text), text)
 
         # image outside any other tag
-        text = '<img src="http://nohost/plone/img/image_preview"/><img src="../img/image_preview"/>'
-        expected = text.replace("http://nohost/plone/img/image_preview", img_blob_path)
+        text = '<img src="{0}/img/image_preview"/><img src="../img/image_preview"/>'.format(self.portal_url)
+        expected = text.replace("{0}/img/image_preview".format(self.portal_url), img_blob_path)
         expected = expected.replace("../img/image_preview", img_blob_path)
         self.assertEqual(imagesToPath(doc2, text).replace('\n', ''), expected.replace('\n', ''))
 
         # using resolveuid and absolute path and relative path
         text = '<img src="resolveuid/{0}/image_preview" alt="Image" title="Image"/>' \
                '<img src="resolveuid/{0}" alt="Image" title="Image"/>' \
-               '<img src="http://nohost/plone/img/image_preview"/>' \
-               '<img src="../img/image_preview"/>'.format(img.UID())
+               '<img src="{1}/img/image_preview"/>' \
+               '<img src="../img/image_preview"/>'.format(img.UID(), self.portal_url)
         expected = text.replace("resolveuid/{0}/image_preview".format(img.UID()), img_blob_path)
         expected = expected.replace("resolveuid/{0}".format(img.UID()), img_blob_path)
-        expected = expected.replace("http://nohost/plone/img/image_preview", img_blob_path)
+        expected = expected.replace("{0}/img/image_preview".format(self.portal_url), img_blob_path)
         expected = expected.replace("../img/image_preview", img_blob_path)
         self.assertEqual(imagesToPath(doc2, text).replace('\n', ''), expected.replace('\n', ''))
 
@@ -438,23 +439,24 @@ class TestXHTMLModule(IntegrationTestCase):
         file_path = path.join(path.dirname(__file__), 'dot.gif')
         data = open(file_path, 'r')
         img = self.portal.invokeFactory('Image', id='img', title='Image', file=data.read())
+        data.close()
         img = getattr(self.portal, img)
 
         # does not break if xhtmlContent is empty
-        self.assertEqual(storeExternalImagesLocally(doc, ''), '')
-        self.assertEqual(storeExternalImagesLocally(doc, '<p>&nbsp;</p>'), '<p>&nbsp;</p>')
+        self.assertEqual(storeImagesLocally(doc, ''), '')
+        self.assertEqual(storeImagesLocally(doc, '<p>&nbsp;</p>'), '<p>&nbsp;</p>')
         # not changed if only contains local images, using relative or absolute path
-        text = '<p>Image absolute path <img src="http://nohost/plone/img"/> '\
-               'and relative path <img src="../img"/>.</p>'
-        self.assertEqual(storeExternalImagesLocally(doc, text), text)
+        text = '<p>Image absolute path <img src="/img"/> and relative path <img src="../img"/>.</p>'.\
+            format(self.portal_url)
+        self.assertEqual(storeImagesLocally(doc, text), text)
 
         # link to unexisting external image, site exists but not image (error 404) nothing changed
         text = '<p>Unexisting external image <img src="http://www.imio.be/unexistingimage.png"/></p>.'
-        self.assertEqual(storeExternalImagesLocally(doc, text), text)
+        self.assertEqual(storeImagesLocally(doc, text), text)
 
         # link to unexisting site, nothing changed
         text = '<p>Unexisting external site <img src="http://www.unexistingsite.be/unexistingimage.png"/>.</p>'
-        self.assertEqual(storeExternalImagesLocally(doc, text), text)
+        self.assertEqual(storeImagesLocally(doc, text), text)
 
         # working example
         text = '<p>Working external image <img src="http://www.imio.be/contact.png"/>.</p>'
@@ -463,26 +465,59 @@ class TestXHTMLModule(IntegrationTestCase):
         self.assertTrue(downloaded_img_infos.getheader('Content-Disposition'))
         # image object does not exist for now
         self.assertFalse('contact.png' in self.portal.objectIds())
-        self.assertEqual(storeExternalImagesLocally(doc, text),
-                         '<p>Working external image <img src="http://nohost/plone/contact.png"/>.</p>')
+        self.assertEqual(
+            storeImagesLocally(doc, text),
+            '<p>Working external image <img src="{0}/contact.png"/>.</p>'.format(self.portal_url))
         contact = self.portal.get('contact.png')
         self.assertTrue(IImageContent.providedBy(contact))
 
         # working example with a Folder, this test case where we have a container
         # using RichText field, in this case the Image is stored in the Folder, not next to it
         text = '<p>Working external image <img src="http://www.imio.be/mascotte-presentation.jpg"/>.</p>'
-        expected = '<p>Working external image <img src="http://nohost/plone/folder/mascotte-presentation.jpg"/>.</p>'
+        expected = '<p>Working external image <img src="{0}/folder/mascotte-presentation.jpg"/>.</p>'.\
+            format(self.portal_url)
         self.assertFalse('mascotte-presentation.jpg' in self.portal.folder.objectIds())
-        self.assertEqual(storeExternalImagesLocally(self.portal.folder, text), expected)
+        self.assertEqual(storeImagesLocally(self.portal.folder, text), expected)
         mascotte = self.portal.folder.get('mascotte-presentation.jpg')
         self.assertTrue(IImageContent.providedBy(mascotte))
 
         # link to external image without Content-Disposition
         # it is downloaded nevertheless but used filename will be 'image-1'
         text = '<p>External site <img src="http://www.imio.be/logo.png"/>.</p>'
-        expected = '<p>External site <img src="http://nohost/plone/folder/image-1.png"/>.</p>'
+        expected = '<p>External site <img src="{0}/folder/image-1.png"/>.</p>'.format(self.portal_url)
         downloaded_img_path, downloaded_img_infos = urllib.urlretrieve('http://www.imio.be/logo.png')
         self.assertIsNone(downloaded_img_infos.getheader('Content-Disposition'))
-        self.assertEqual(storeExternalImagesLocally(self.portal.folder, text), expected)
+        self.assertEqual(storeImagesLocally(self.portal.folder, text), expected)
         logo = self.portal.folder.get('image-1.png')
         self.assertTrue(IImageContent.providedBy(logo))
+
+    def test_storeInternalImagesLocally(self):
+        """
+          Test that images src contained in a XHTML that reference internal images stored
+          in another context are stored in current context.
+        """
+        file_path = path.join(path.dirname(__file__), 'dot.gif')
+        data = open(file_path, 'r')
+        img = self.portal.invokeFactory('Image', id='dot.gif', title='Image', file=data.read())
+        data.close()
+        img = getattr(self.portal, img)
+        text = '<p>Internal image <img src="{0}/dot.gif"/>.</p>'.format(self.portal_url)
+        expected = '<p>Internal image <img src="{0}/folder/dot.gif"/>.</p>'.format(self.portal_url)
+        # image was created in folder
+        self.assertEqual(
+            storeImagesLocally(self.portal.folder, text),
+            expected)
+        image = self.portal.folder.get('dot.gif')
+        self.assertTrue(IImageContent.providedBy(image))
+
+        # nothing changed if image already stored to context
+        self.assertEqual(
+            storeImagesLocally(self.portal.folder, expected),
+            expected)
+
+        # now check when internal image does not exist
+        text = '<p>Internal image <img src="{0}/unknown.gif"/>.</p>'.format(self.portal_url)
+        # in case an internal image is not found, nothing is done
+        self.assertEqual(
+            storeImagesLocally(self.portal.folder, text),
+            text)

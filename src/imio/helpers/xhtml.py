@@ -308,41 +308,46 @@ def imagesToPath(context, xhtmlContent, pretty_print=False):
                                        method='xml') for x in tree.iterchildren()])
 
 
-def storeExternalImagesLocally(context, xhtmlContent, imagePortalType='Image', pretty_print=False):
-    """If external images are found in the given p_xhtmlContent,
+def storeImagesLocally(context,
+                       xhtmlContent,
+                       imagePortalType='Image',
+                       store_external_images=True,
+                       store_internal_images=True,
+                       pretty_print=False):
+    """If images are found in the given p_xhtmlContent,
        we download it and stored it in p_context, this way we ensure that it will
-       always be available in case the external site/external image disappear."""
-    tree = _turnToLxmlTree(xhtmlContent)
-    if not isinstance(tree, lxml.html.HtmlElement):
-        return xhtmlContent
+       always be available in case the external/internal image image disappear.
+       If p_store_external_images is True, we retrieve external image and store it
+       in p_context, if p_store_internal_images is True, we do the same for internal
+       images."""
 
-    imgs = tree.findall('.//img')
-    if not imgs:
-        return xhtmlContent
-    portal = api.portal.get()
-    portal_url = portal.absolute_url()
-    # adapter to generate a valid id, it needs a container, so it will be context or it's parent
-    try:
-        name_chooser = INameChooser(context)
-    except TypeError:
-        parent = context.getParentNode()
-        name_chooser = INameChooser(parent)
-    # return received xhtmlContent if nothing was changed
-    changed = False
-    for img in imgs:
-        img_src = img.attrib['src']
-        # a relative path or path is in the portal_url, we pass
-        if not img_src.startswith('http') or img_src.startswith(portal_url):
-            continue
+    def _handle_internal_image(img_src):
+        """ """
+        # get image from URL
+        img_path = img_src.replace(portal_url, '')
+        img_path = img_path.lstrip('/')
+        img_path = path.join(portal.absolute_url_path(), img_path)
+        # right, traverse to image
+        try:
+            imageObj = portal.unrestrictedTraverse(img_path)
+        except KeyError:
+            # wrong img_path
+            return None, None
+        filename = imageObj.getId()
+        data = imageObj.getBlobWrapper().data
+        return filename, data
+
+    def _handle_external_image(img_src):
+        """ """
         # right, we have an external image, download it, stores it in context and update img_src
         try:
             downloaded_img_path, downloaded_img_infos = urllib.urlretrieve(img_src)
         except IOError:
             # url not existing
-            continue
+            return None, None
         if not downloaded_img_infos.maintype == 'image':
-            continue
-        changed = True
+            return None, None
+
         # retrieve filename
         filename = 'image'
         disposition = downloaded_img_infos.getheader('Content-Disposition')
@@ -353,13 +358,55 @@ def storeExternalImagesLocally(context, xhtmlContent, imagePortalType='Image', p
         # if no 'Content-Disposition', at least try to get correct file extension
         elif hasattr(downloaded_img_infos, 'subtype'):
             filename = '{0}.{1}'.format(filename, downloaded_img_infos.subtype)
-        name = name_chooser.chooseName(filename, context)
         f = open(downloaded_img_path, 'r')
-        new_img_id = context.invokeFactory(imagePortalType, id=name, title=name, file=f.read())
-        # close and delete temporary file
+        data = f.read()
         f.close()
+        # close and delete temporary file
         if path.exists(downloaded_img_path):
             os.remove(downloaded_img_path)
+        return filename, data
+
+    tree = _turnToLxmlTree(xhtmlContent)
+    if not isinstance(tree, lxml.html.HtmlElement):
+        return xhtmlContent
+
+    imgs = tree.findall('.//img')
+    if not imgs:
+        return xhtmlContent
+    portal = api.portal.get()
+    portal_url = portal.absolute_url()
+    context_url = context.absolute_url()
+    # adapter to generate a valid id, it needs a container, so it will be context or it's parent
+    try:
+        name_chooser = INameChooser(context)
+    except TypeError:
+        parent = context.getParentNode()
+        name_chooser = INameChooser(parent)
+    # return received xhtmlContent if nothing was changed
+    changed = False
+    for img in imgs:
+        img_src = img.attrib['src']
+        # we only handle http stored images
+        if not img_src.startswith('http'):
+            continue
+        filename = data = None
+        # external images
+        if store_external_images and not img_src.startswith(portal_url):
+            filename, data = _handle_external_image(img_src)
+
+        # image in portal but not already stored incontext
+        if store_internal_images and \
+           img_src.startswith(portal_url) and \
+           not img_src.startswith(context_url):
+            filename, data = _handle_internal_image(img_src)
+
+        if not filename:
+            continue
+        changed = True
+
+        # create image
+        name = name_chooser.chooseName(filename, context)
+        new_img_id = context.invokeFactory(imagePortalType, id=name, title=name, file=data)
         new_img = getattr(context, new_img_id)
         img.attrib['src'] = new_img.absolute_url()
 

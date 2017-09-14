@@ -4,8 +4,11 @@ Changelog
 0.6 (unreleased)
 ----------------
 
-- Nothing changed yet.
-
+- Changed method `xhtml.storeExternalImagesLocally` to
+  `xhtml.storeImagesLocally`, it handles now external and internal images
+  retrieval so an image stored in the portal is also created in given context
+  when necessary.
+  [gbastien]
 
 0.5 (2017-08-30)
 ----------------

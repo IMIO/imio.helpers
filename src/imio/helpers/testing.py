@@ -73,4 +73,5 @@ class IntegrationTestCase(unittest.TestCase):
     def setUp(self):
         super(IntegrationTestCase, self).setUp()
         self.portal = self.layer['portal']
+        self.portal_url = self.portal.absolute_url()
         self.catalog = self.portal.portal_catalog
