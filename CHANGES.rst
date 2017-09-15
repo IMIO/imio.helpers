@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.6 (unreleased)
+0.6 (2017-09-15)
 ----------------
 
 - Changed method `xhtml.storeExternalImagesLocally` to
