@@ -665,6 +665,54 @@ Attribut "style:width=0px;" :
 
 <p>&nbsp;</p>
 
+<p style="color: #0000FF;"><u><strong>Désactivation de l'optimisation de la largeur des colonnes lors de l'utilisation du style "table-layout: fixed" :</strong></u></p>
+
+Tableau avec largeur fixée à 150px mais qui va être optimisé :
+<table style="width:150px">
+    <tbody>
+        <tr>
+            <td><p>1</p></td>
+            <td><p>2</p></td>
+            <td><p>3</p></td>
+        </tr>
+    </tbody>
+</table>
+
+Tableau sans aucun style (ni largeur) :
+<table>
+    <tbody>
+        <tr>
+            <td><p>1</p></td>
+            <td><p>2</p></td>
+            <td><p>3</p></td>
+        </tr>
+    </tbody>
+</table>
+
+Tableau "fixed" avec largeur définie à 150px :
+<table style="table-layout:fixed; width: 150px">
+    <tbody>
+        <tr>
+            <td><p>1</p></td>
+            <td><p>2</p></td>
+            <td><p>3</p></td>
+        </tr>
+    </tbody>
+</table>
+
+Tableau "fixed" sans largeur définie :
+<table style="table-layout:fixed">
+    <tbody>
+        <tr>
+            <td><p>1</p></td>
+            <td><p>2</p></td>
+            <td><p>3</p></td>
+        </tr>
+    </tbody>
+</table>
+
+<p>&nbsp;</p>
+
 <p style="color: #0000FF;"><u><strong>Tableau complexe de 17cm de large :</strong></u></p>
 
 <p>Couleur de fond en rgb(), en #123123 et en HTML color.</p>
