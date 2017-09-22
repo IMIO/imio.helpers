@@ -4,8 +4,8 @@ Changelog
 0.7 (unreleased)
 ----------------
 
-- Nothing changed yet.
-
+- Added method `testing_logger` to `testing.py` that enables logging into tests.
+  [gbastien]
 
 0.6 (2017-09-15)
 ----------------

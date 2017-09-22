@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 """Base module for unittesting."""
+import imio.helpers
+import logging
+import sys
+import unittest
 from plone.app.testing import applyProfile
 from plone.app.testing import FunctionalTesting
 from plone.app.testing import IntegrationTesting
@@ -11,9 +15,15 @@ from plone.app.testing import TEST_USER_ID
 from plone.app.testing import TEST_USER_NAME
 from plone.testing import z2
 
-import imio.helpers
 
-import unittest
+def testing_logger(logger_name=''):
+    logger = logging.getLogger(logger_name)
+    logger.setLevel(logging.DEBUG)
+    handler = logging.StreamHandler(sys.stdout)
+    formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    return logger
 
 
 class PloneWithHelpersLayer(PloneSandboxLayer):
