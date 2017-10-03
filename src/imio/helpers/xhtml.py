@@ -2,6 +2,7 @@
 import cgi
 import lxml.html
 import os
+import pkg_resources
 import types
 import urllib
 from os import path
@@ -10,7 +11,15 @@ from zope.container.interfaces import INameChooser
 from plone import api
 from Products.CMFPlone.utils import safe_unicode
 from plone.app.imaging.scale import ImageScale
+from plone.outputfilters.browser.resolveuid import uuidToURL
 from plone.outputfilters.filters.resolveuid_and_caption import ResolveUIDAndCaptionFilter
+
+try:
+    HAS_CKEDITOR = True
+    pkg_resources.get_distribution('collective.ckeditor')
+except pkg_resources.DistributionNotFound:
+    HAS_CKEDITOR = False
+
 
 CLASS_TO_LAST_CHILDREN_NUMBER_OF_CHARS_DEFAULT = 240
 # Xhtml tags that may contain content
@@ -387,14 +396,17 @@ def storeImagesLocally(context,
     for img in imgs:
         img_src = img.attrib['src']
         # we only handle http stored images
-        if not img_src.startswith('http'):
+        if not img_src.startswith('http') and not img_src.startswith('resolveuid'):
             continue
         filename = data = None
         # external images
         if store_external_images and not img_src.startswith(portal_url):
             filename, data = _handle_external_image(img_src)
 
-        # image in portal but not already stored incontext
+        # image in portal but not already stored in context
+        # handle images using resolveuid
+        if img_src.startswith('resolveuid'):
+            img_src = uuidToURL(img_src.split('/')[1])
         if store_internal_images and \
            img_src.startswith(portal_url) and \
            not img_src.startswith(context_url):
@@ -408,7 +420,15 @@ def storeImagesLocally(context,
         name = name_chooser.chooseName(filename, context)
         new_img_id = context.invokeFactory(imagePortalType, id=name, title=name, file=data)
         new_img = getattr(context, new_img_id)
-        img.attrib['src'] = new_img.absolute_url()
+        # store a resolveuid if using it, the absolute_url to image if not
+        if img_src.startswith('resolveuid') or \
+           (HAS_CKEDITOR and
+                hasattr(portal.portal_properties, 'ckeditor_properties') and
+                portal.portal_properties.ckeditor_properties.allow_link_byuid):
+            new_img_src = 'resolveuid/{0}'.format(new_img.UID())
+        else:
+            new_img_src = new_img.absolute_url()
+        img.attrib['src'] = new_img_src
 
     if not changed:
         return xhtmlContent
