@@ -322,7 +322,8 @@ def storeImagesLocally(context,
                        imagePortalType='Image',
                        store_external_images=True,
                        store_internal_images=True,
-                       pretty_print=False):
+                       pretty_print=False,
+                       force_resolve_uid=False):
     """If images are found in the given p_xhtmlContent,
        we download it and stored it in p_context, this way we ensure that it will
        always be available in case the external/internal image image disappear.
@@ -421,7 +422,8 @@ def storeImagesLocally(context,
         new_img_id = context.invokeFactory(imagePortalType, id=name, title=name, file=data)
         new_img = getattr(context, new_img_id)
         # store a resolveuid if using it, the absolute_url to image if not
-        if img_src.startswith('resolveuid') or \
+        if force_resolve_uid or \
+           img_src.startswith('resolveuid') or \
            (HAS_CKEDITOR and
                 hasattr(portal.portal_properties, 'ckeditor_properties') and
                 portal.portal_properties.ckeditor_properties.allow_link_byuid):

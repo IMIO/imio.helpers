@@ -4,8 +4,10 @@ Changelog
 0.8 (unreleased)
 ----------------
 
-- Nothing changed yet.
-
+- In `xhtml.storeImagesLocally`, take into account `<img> src`
+  that uses `resolveuid`.  This is the case when using `collective.ckeditor` and
+  option `allow_link_byuid` is enabled.
+  [gbastien]
 
 0.7 (2017-09-22)
 ----------------

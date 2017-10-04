@@ -491,6 +491,18 @@ class TestXHTMLModule(IntegrationTestCase):
         logo = self.portal.folder.get('image-1.png')
         self.assertTrue(IImageContent.providedBy(logo))
 
+    def test_storeExternalImagesLocallyWithResolveUID(self):
+        """ """
+        # working example
+        text = '<p>Working external image <img src="http://www.imio.be/contact.png"/>.</p>'
+        result = storeImagesLocally(self.portal, text, force_resolve_uid=True)
+
+        # image was downloaded and link to it was turned to a resolveuid
+        img = self.portal.get('contact.png')
+        self.assertEqual(
+            result,
+            '<p>Working external image <img src="resolveuid/{0}"/>.</p>'.format(img.UID()))
+
     def test_storeInternalImagesLocally(self):
         """
           Test that images src contained in a XHTML that reference internal images stored
@@ -498,9 +510,8 @@ class TestXHTMLModule(IntegrationTestCase):
         """
         file_path = path.join(path.dirname(__file__), 'dot.gif')
         data = open(file_path, 'r')
-        img = self.portal.invokeFactory('Image', id='dot.gif', title='Image', file=data.read())
+        self.portal.invokeFactory('Image', id='dot.gif', title='Image', file=data.read())
         data.close()
-        img = getattr(self.portal, img)
         text = '<p>Internal image <img src="{0}/dot.gif"/>.</p>'.format(self.portal_url)
         expected = '<p>Internal image <img src="{0}/folder/dot.gif"/>.</p>'.format(self.portal_url)
         # image was created in folder
@@ -521,3 +532,33 @@ class TestXHTMLModule(IntegrationTestCase):
         self.assertEqual(
             storeImagesLocally(self.portal.folder, text),
             text)
+
+    def test_storeInternalImagesLocallyWithResolveUID(self):
+        """ """
+        # create 2 images
+        file_path = path.join(path.dirname(__file__), 'dot.gif')
+        data = open(file_path, 'r')
+        self.portal.invokeFactory('Image',
+                                  id='dot.gif',
+                                  title='Image',
+                                  file=data.read())
+        img2_id = self.portal.invokeFactory('Image',
+                                            id='dot2.gif',
+                                            title='Image',
+                                            file=data.read())
+        data.close()
+        img2 = getattr(self.portal, img2_id)
+        text = '<p>Internal image full url <img src="{0}/dot.gif"/>.</p>' \
+            '<p>Internal image resolveuid <img src="resolveuid/{1}"/>.</p>'.format(
+                self.portal_url, img2.UID())
+
+        # every images uri are turned to resolveuid
+        result = storeImagesLocally(self.portal.folder, text, force_resolve_uid=True)
+        # images were created in folder
+        self.assertEqual(self.portal.folder.objectIds(), ['dot.gif', 'dot2.gif'])
+        new_img = self.portal.folder.get('dot.gif')
+        new_img2 = self.portal.folder.get('dot2.gif')
+        expected = '<p>Internal image full url <img src="resolveuid/{0}"/>.</p>' \
+            '<p>Internal image resolveuid <img src="resolveuid/{1}"/>.</p>'.format(
+                new_img.UID(), new_img2.UID())
+        self.assertEqual(result, expected)
