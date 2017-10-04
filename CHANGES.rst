@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.8 (unreleased)
+0.8 (2017-10-04)
 ----------------
 
 - In `xhtml.storeImagesLocally`, take into account `<img> src`
