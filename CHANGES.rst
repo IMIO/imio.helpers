@@ -8,6 +8,10 @@ Changelog
   that uses `resolveuid`.  This is the case when using `collective.ckeditor` and
   option `allow_link_byuid` is enabled.
   [gbastien]
+- Do not use `/* ... */` together with `https://` in helpers.js comment or
+  merged javascripts produce a wrong format and raise a JS comment unterminated
+  error in the browser.
+  [gbastien]
 
 0.7 (2017-09-22)
 ----------------
