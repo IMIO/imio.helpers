@@ -562,3 +562,9 @@ class TestXHTMLModule(IntegrationTestCase):
             '<p>Internal image resolveuid <img src="resolveuid/{1}"/>.</p>'.format(
                 new_img.UID(), new_img2.UID())
         self.assertEqual(result, expected)
+
+    def test_storeImagesLocallyWithoutSrc(self):
+        """Do not fail when no src in the <img> tag."""
+        text = '<p>Text <img style="width: 50px; height: 50px;"/>.</p>'
+        # nothing was changed
+        self.assertEqual(storeImagesLocally(self.portal.folder, text), text)

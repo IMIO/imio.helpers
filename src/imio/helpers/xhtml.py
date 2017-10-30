@@ -395,7 +395,7 @@ def storeImagesLocally(context,
     # return received xhtmlContent if nothing was changed
     changed = False
     for img in imgs:
-        img_src = img.attrib['src']
+        img_src = img.get('src', '')
         # we only handle http stored images
         if not img_src.startswith('http') and not img_src.startswith('resolveuid'):
             continue

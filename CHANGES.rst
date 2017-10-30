@@ -6,6 +6,8 @@ Changelog
 
 - Added appy.pod usecase for complex styles start/end on same paragraph.
   [gbastien]
+- Do not break in `xhtml.storeImagesLocally` when no `<img> src` found.
+  [gbastien]
 
 0.8 (2017-10-04)
 ----------------
