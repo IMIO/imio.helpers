@@ -8,6 +8,8 @@ Changelog
   [gbastien]
 - Do not break in `xhtml.storeImagesLocally` when no `<img> src` found.
   [gbastien]
+- Add methods to manage annotations (Add and Remove).
+  [anuyens, odelaere]
 
 0.8 (2017-10-04)
 ----------------
