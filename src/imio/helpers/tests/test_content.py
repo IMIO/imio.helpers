@@ -16,7 +16,6 @@ from imio.helpers.content import safe_encode
 from imio.helpers.content import transitions
 from imio.helpers.content import validate_fields
 from imio.helpers.testing import IntegrationTestCase
-from plone.api.exc import InvalidParameterError
 
 
 class TestContentModule(IntegrationTestCase):
@@ -164,5 +163,8 @@ class TestContentModule(IntegrationTestCase):
         self.assertSetEqual(IAnnotations(obj)['test_annot'], set(['trilili', ]))
         del_from_annotation('test_annot', 'trilili', uid=obj.UID())
         self.assertSetEqual(IAnnotations(obj)['test_annot'], set([]))
+        # remove value who not exist in set
         del_from_annotation('test_annot', 'trololo', uid=obj.UID())
         self.assertSetEqual(IAnnotations(obj)['test_annot'], set([]))
+        # remove value from a no-existing key in annotation
+        self.assertIsNone(del_from_annotation('test_not_key_in_annot', 'trololo', uid=obj.UID()))
