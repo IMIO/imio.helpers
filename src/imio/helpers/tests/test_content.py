@@ -1,17 +1,21 @@
 # -*- coding: utf-8 -*-
 
 import os
+
 from plone import api
+from zope.annotation import IAnnotations
 from zope.schema._bootstrapinterfaces import WrongType
 
-from imio.helpers.testing import IntegrationTestCase
 from imio.helpers.content import add_file
 from imio.helpers.content import add_image
+from imio.helpers.content import add_to_annotation
 from imio.helpers.content import create
+from imio.helpers.content import del_from_annotation
 from imio.helpers.content import get_object
 from imio.helpers.content import safe_encode
 from imio.helpers.content import transitions
 from imio.helpers.content import validate_fields
+from imio.helpers.testing import IntegrationTestCase
 
 
 class TestContentModule(IntegrationTestCase):
@@ -142,3 +146,25 @@ class TestContentModule(IntegrationTestCase):
         self.assertEqual(safe_encode(u'héhé'), 'héhé')
         self.assertEqual(safe_encode(u'héhé', encoding='utf8'), 'héhé')
         self.assertEqual(safe_encode('héhé', encoding='whatelse'), 'héhé')
+
+    def test_add_and_remove_annotation(self):
+        obj = api.content.create(container=self.portal.folder,
+                                 id='tt',
+                                 type='testingtype',
+                                 enabled='Should be a boolean')
+        # test add
+        add_to_annotation('test_annot', 'tralala', uid=obj.UID())
+        self.assertSetEqual(IAnnotations(obj)['test_annot'], set(['tralala', ]))
+        add_to_annotation('test_annot', 'trilili', obj=obj)
+        self.assertSetEqual(IAnnotations(obj)['test_annot'], set(['tralala', 'trilili']))
+
+        # test remove
+        del_from_annotation('test_annot', 'tralala', uid=obj.UID())
+        self.assertSetEqual(IAnnotations(obj)['test_annot'], set(['trilili', ]))
+        del_from_annotation('test_annot', 'trilili', uid=obj.UID())
+        self.assertSetEqual(IAnnotations(obj)['test_annot'], set([]))
+        # remove value who not exist in set
+        del_from_annotation('test_annot', 'trololo', uid=obj.UID())
+        self.assertSetEqual(IAnnotations(obj)['test_annot'], set([]))
+        # remove value from a no-existing key in annotation
+        self.assertIsNone(del_from_annotation('test_not_key_in_annot', 'trololo', uid=obj.UID()))

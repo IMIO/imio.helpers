@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
 
+import logging
 import os
-from zope.schema._field import Choice
-
-from plone import api
-from plone.app.textfield.value import RichTextValue
-from plone.namedfile.file import NamedBlobFile, NamedBlobImage
 
 from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.CMFPlone.utils import safe_unicode
+from plone import api
+from plone.api.validation import mutually_exclusive_parameters
+from plone.app.textfield.value import RichTextValue
+from plone.namedfile.file import NamedBlobFile, NamedBlobImage
+from zope.annotation import IAnnotations
+from zope.schema._field import Choice
 
-import logging
 logger = logging.getLogger('imo.helpers.content')
 
 
@@ -226,3 +227,26 @@ def safe_encode(value, encoding='utf-8'):
     if isinstance(value, unicode):
         return value.encode(encoding)
     return value
+
+
+@mutually_exclusive_parameters('obj', 'uid')
+def add_to_annotation(annotation_key, value, obj=None, uid=None):
+    """ Add annotation related to obj or uid """
+    if not obj:
+        obj = api.content.get(UID=uid)
+    annot = IAnnotations(obj)
+    if annotation_key not in annot:
+        annot[annotation_key] = set([])
+    annot[annotation_key].add(value)
+
+
+@mutually_exclusive_parameters('obj', 'uid')
+def del_from_annotation(annotation_key, value, obj=None, uid=None):
+    """ Delete annotation related to obj or uid """
+    if not obj:
+        obj = api.content.get(UID=uid)
+    annot = IAnnotations(obj)
+    if annotation_key not in annot:
+        return
+    if value in annot[annotation_key]:
+        annot[annotation_key].remove(value)
