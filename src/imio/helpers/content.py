@@ -250,3 +250,14 @@ def del_from_annotation(annotation_key, value, obj=None, uid=None):
         return
     if value in annot[annotation_key]:
         annot[annotation_key].remove(value)
+
+
+@mutually_exclusive_parameters('obj', 'uid')
+def get_from_annotation(annotation_key, obj=None, uid=None, default=None):
+    """ Get annotation related to obj or uid """
+    if not obj:
+        obj = api.content.get(UID=uid)
+    annot = IAnnotations(obj)
+    if annotation_key not in annot:
+        return default
+    return annot[annotation_key]

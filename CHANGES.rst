@@ -10,6 +10,8 @@ Changelog
   [gbastien]
 - Add methods to manage annotations (Add and Remove).
   [anuyens, odelaere]
+- Added method to get annotation
+  [sgeulette]
 
 0.8 (2017-10-04)
 ----------------
@@ -53,7 +55,7 @@ Changelog
   [gbastien]
 - Added JS fix to be able to print `<fieldset>` on several pages in Firefox,
   see https://bugzilla.mozilla.org/show_bug.cgi?id=471015.
-  This makes it necessary to add a default profile to add the JS resource 
+  This makes it necessary to add a default profile to add the JS resource
   `++resource++imio.helpers/helpers.js`.
   [gbastien]
 

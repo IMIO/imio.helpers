@@ -11,6 +11,7 @@ from imio.helpers.content import add_image
 from imio.helpers.content import add_to_annotation
 from imio.helpers.content import create
 from imio.helpers.content import del_from_annotation
+from imio.helpers.content import get_from_annotation
 from imio.helpers.content import get_object
 from imio.helpers.content import safe_encode
 from imio.helpers.content import transitions
@@ -152,9 +153,13 @@ class TestContentModule(IntegrationTestCase):
                                  id='tt',
                                  type='testingtype',
                                  enabled='Should be a boolean')
+        # test get
+        self.assertIsNone(get_from_annotation('test_annot', obj=obj))
+        self.assertEqual(get_from_annotation('test_annot', obj=obj, default='empty'), 'empty')
         # test add
         add_to_annotation('test_annot', 'tralala', uid=obj.UID())
         self.assertSetEqual(IAnnotations(obj)['test_annot'], set(['tralala', ]))
+        self.assertSetEqual(get_from_annotation('test_annot', obj=obj), set(['tralala', ]))
         add_to_annotation('test_annot', 'trilili', obj=obj)
         self.assertSetEqual(IAnnotations(obj)['test_annot'], set(['tralala', 'trilili']))
 
