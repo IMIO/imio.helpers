@@ -265,8 +265,10 @@ def get_from_annotation(annotation_key, obj=None, uid=None, default=None):
         obj = api.content.get(UID=uid)
 
     # api.content.get may return None
-    if obj:
-        annot = IAnnotations(obj)
-        if annotation_key not in annot:
-            return default
-        return annot[annotation_key]
+    if not obj:
+        return default
+
+    annot = IAnnotations(obj)
+    if annotation_key not in annot:
+        return default
+    return annot[annotation_key]

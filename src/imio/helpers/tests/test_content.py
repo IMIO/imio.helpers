@@ -163,7 +163,7 @@ class TestContentModule(IntegrationTestCase):
         self.assertIsNone(get_from_annotation('test_annot', obj=obj))
         self.assertEqual(get_from_annotation('test_annot', obj=obj, default='empty'), 'empty')
         # get value with uid that doesn't match an object raises no error.
-        get_from_annotation('test_annot', uid=fakeUid)
+        self.assertEqual(get_from_annotation('test_annot', uid=fakeUid, default='empty'), 'empty')
         # test add
         add_to_annotation('test_annot', 'tralala', uid=obj.UID())
         self.assertSetEqual(IAnnotations(obj)['test_annot'], set(['tralala', ]))
