@@ -234,10 +234,13 @@ def add_to_annotation(annotation_key, value, obj=None, uid=None):
     """ Add annotation related to obj or uid """
     if not obj:
         obj = api.content.get(UID=uid)
-    annot = IAnnotations(obj)
-    if annotation_key not in annot:
-        annot[annotation_key] = set([])
-    annot[annotation_key].add(value)
+
+    # api.content.get may return None
+    if obj:
+        annot = IAnnotations(obj)
+        if annotation_key not in annot:
+            annot[annotation_key] = set([])
+        annot[annotation_key].add(value)
 
 
 @mutually_exclusive_parameters('obj', 'uid')
@@ -245,11 +248,14 @@ def del_from_annotation(annotation_key, value, obj=None, uid=None):
     """ Delete annotation related to obj or uid """
     if not obj:
         obj = api.content.get(UID=uid)
-    annot = IAnnotations(obj)
-    if annotation_key not in annot:
-        return
-    if value in annot[annotation_key]:
-        annot[annotation_key].remove(value)
+
+    # api.content.get may return None
+    if obj:
+        annot = IAnnotations(obj)
+        if annotation_key not in annot:
+            return
+        if value in annot[annotation_key]:
+            annot[annotation_key].remove(value)
 
 
 @mutually_exclusive_parameters('obj', 'uid')
@@ -257,7 +263,10 @@ def get_from_annotation(annotation_key, obj=None, uid=None, default=None):
     """ Get annotation related to obj or uid """
     if not obj:
         obj = api.content.get(UID=uid)
-    annot = IAnnotations(obj)
-    if annotation_key not in annot:
-        return default
-    return annot[annotation_key]
+
+    # api.content.get may return None
+    if obj:
+        annot = IAnnotations(obj)
+        if annotation_key not in annot:
+            return default
+        return annot[annotation_key]

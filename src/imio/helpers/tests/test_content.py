@@ -153,22 +153,35 @@ class TestContentModule(IntegrationTestCase):
                                  id='tt',
                                  type='testingtype',
                                  enabled='Should be a boolean')
+        fakeUid = obj.UID()
+        api.content.delete(obj)
+        obj = api.content.create(container=self.portal.folder,
+                                 id='tt',
+                                 type='testingtype',
+                                 enabled='Should be a boolean')
         # test get
         self.assertIsNone(get_from_annotation('test_annot', obj=obj))
         self.assertEqual(get_from_annotation('test_annot', obj=obj, default='empty'), 'empty')
+        # get value with uid that doesn't match an object raises no error.
+        get_from_annotation('test_annot', uid=fakeUid)
         # test add
+        add_to_annotation('test_annot', 'tralala', uid=obj.UID())
+        self.assertSetEqual(IAnnotations(obj)['test_annot'], set(['tralala', ]))
         add_to_annotation('test_annot', 'tralala', uid=obj.UID())
         self.assertSetEqual(IAnnotations(obj)['test_annot'], set(['tralala', ]))
         self.assertSetEqual(get_from_annotation('test_annot', obj=obj), set(['tralala', ]))
         add_to_annotation('test_annot', 'trilili', obj=obj)
         self.assertSetEqual(IAnnotations(obj)['test_annot'], set(['tralala', 'trilili']))
-
+        # add value with uid that doesn't match an object raises no error.
+        add_to_annotation('test_annot', 'tralala', uid='znfzete tztzfozaebfozaefg')
         # test remove
         del_from_annotation('test_annot', 'tralala', uid=obj.UID())
         self.assertSetEqual(IAnnotations(obj)['test_annot'], set(['trilili', ]))
         del_from_annotation('test_annot', 'trilili', uid=obj.UID())
         self.assertSetEqual(IAnnotations(obj)['test_annot'], set([]))
-        # remove value who not exist in set
+        # remove value with uid that doesn't match an object raises no error.
+        del_from_annotation('test_annot', 'tralala', uid=fakeUid)
+        # remove value that doesn't exist in set
         del_from_annotation('test_annot', 'trololo', uid=obj.UID())
         self.assertSetEqual(IAnnotations(obj)['test_annot'], set([]))
         # remove value from a no-existing key in annotation
