@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.9 (unreleased)
+0.9 (2017-11-27)
 ----------------
 
 - Added appy.pod usecase for complex styles start/end on same paragraph.
