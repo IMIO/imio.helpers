@@ -4,8 +4,9 @@ Changelog
 0.10 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Fixed bug in `catalog.addOrUpdateIndexes` where a new index was not reindexed
+  if it was added together with an already existing index.
+  [gbastien]
 
 0.9 (2017-11-27)
 ----------------

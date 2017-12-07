@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from collections import OrderedDict
 from plone import api
 
 from imio.helpers.testing import IntegrationTestCase
@@ -31,6 +32,32 @@ class TestCatalogModule(IntegrationTestCase):
                                            id='prior-document',
                                            container=self.portal)
         addOrUpdateIndexes(self.portal, {'reversedUID': ('FieldIndex', {})})
+        self.assertTrue('reversedUID' in self.portal.portal_catalog.indexes())
+        # moreover existing objects were updated
+        brains = self.catalog(reversedUID=priorDocument.UID()[::-1])
+        self.assertTrue(len(brains) == 1)
+        self.assertTrue(brains[0].getObject().UID() == priorDocument.UID())
+
+    def test_addOrUpdateSeveralIndexes(self):
+        """
+        It is possible to pass several new indexes to addOrUpdateIndexes,
+        in this case, only new indexes are added and updated.
+        """
+        # for now reversedUID index does not exist...
+        self.assertTrue('reversedUID' not in self.catalog.indexes())
+        # and add an existing index UID
+        self.assertTrue(self.catalog.Indexes['UID'].getTagName() == 'UUIDIndex')
+        # add a document prior to adding the index
+        priorDocument = api.content.create(type='Document',
+                                           id='prior-document',
+                                           container=self.portal)
+        addOrUpdateIndexes(
+            self.portal,
+            # use an ordered dict so UID, an existing index, is after the new one
+            OrderedDict([
+                ('reversedUID', ('FieldIndex', {})),
+                ('UID', ('UUIDIndex', {}))])
+        )
         self.assertTrue('reversedUID' in self.portal.portal_catalog.indexes())
         # moreover existing objects were updated
         brains = self.catalog(reversedUID=priorDocument.UID()[::-1])

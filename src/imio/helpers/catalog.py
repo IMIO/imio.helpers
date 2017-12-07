@@ -21,6 +21,7 @@ def addOrUpdateIndexes(portal, indexInfos={}):
        Here are some examples of index types: "FieldIndex", "ZCTextIndex", "DateIndex".'''
     catalog = getToolByName(portal, 'portal_catalog')
     zopeCatalog = catalog._catalog
+    addedIndexes = []
     for indexName, indexInfo in indexInfos.iteritems():
         indexType, extra = indexInfo
         if indexType == 'ZCTextIndex' and not extra:
@@ -40,7 +41,6 @@ def addOrUpdateIndexes(portal, indexInfos={}):
                 logger.info('Existing index "%s" of type "%s" was removed:'
                             ' we need to recreate it with type "%s".' %
                             (indexName, oldType, indexType))
-        addedIndexes = []
         if indexName not in zopeCatalog.indexes:
             # We need to create this index
             addedIndexes.append(indexName)
