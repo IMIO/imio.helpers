@@ -2,6 +2,7 @@
 import urllib
 from os import path
 
+from plone import api
 from Products.ATContentTypes.interfaces import IImageContent
 
 from imio.helpers.testing import IntegrationTestCase
@@ -538,29 +539,62 @@ class TestXHTMLModule(IntegrationTestCase):
         # create 2 images
         file_path = path.join(path.dirname(__file__), 'dot.gif')
         data = open(file_path, 'r')
-        self.portal.invokeFactory('Image',
-                                  id='dot.gif',
-                                  title='Image',
-                                  file=data.read())
-        img2_id = self.portal.invokeFactory('Image',
-                                            id='dot2.gif',
-                                            title='Image',
-                                            file=data.read())
+        api.content.create(
+            container=self.portal,
+            type='Image',
+            id='dot.gif',
+            title='Image',
+            file=data.read())
+        img2 = api.content.create(
+            container=self.portal,
+            type='Image',
+            id='dot2.gif',
+            title='Image 2',
+            file=data.read())
+        img3 = api.content.create(
+            container=self.portal,
+            type='Image',
+            id='dot3.gif',
+            title='Image 3',
+            file=data.read())
+        img4 = api.content.create(
+            container=self.portal,
+            type='Image',
+            id='dot4.gif',
+            title='Image 4',
+            file=data.read())
+        img5 = api.content.create(
+            container=self.portal,
+            type='Image',
+            id='dot5.gif',
+            title='Image 5',
+            file=data.read())
         data.close()
-        img2 = getattr(self.portal, img2_id)
-        text = '<p>Internal image full url <img src="{0}/dot.gif"/>.</p>' \
-            '<p>Internal image resolveuid <img src="resolveuid/{1}"/>.</p>'.format(
-                self.portal_url, img2.UID())
+
+        text = '<p>Int img full url <img src="{0}/dot.gif"/>.</p>' \
+            '<p>Int img resolveuid <img src="resolveuid/{1}"/>.</p>' \
+            '<p>Int img resolveuid and image_preview <img src="resolveuid/{2}/image_preview"/>.</p>' \
+            '<p>Int img resolveuid portal_url <img src="{0}/resolveuid/{3}"/>.</p>' \
+            '<p>Int img resolveuid portal_url image_preview <img src="{0}/resolveuid/{4}/image_preview"/>.</p>'.format(
+                self.portal_url, img2.UID(), img3.UID(), img4.UID(), img5.UID())
 
         # every images uri are turned to resolveuid
         result = storeImagesLocally(self.portal.folder, text, force_resolve_uid=True)
         # images were created in folder
-        self.assertEqual(self.portal.folder.objectIds(), ['dot.gif', 'dot2.gif'])
+        self.assertEqual(
+            self.portal.folder.objectIds(),
+            ['dot.gif', 'dot2.gif', 'dot3.gif', 'dot4.gif', 'dot5.gif'])
         new_img = self.portal.folder.get('dot.gif')
         new_img2 = self.portal.folder.get('dot2.gif')
-        expected = '<p>Internal image full url <img src="resolveuid/{0}"/>.</p>' \
-            '<p>Internal image resolveuid <img src="resolveuid/{1}"/>.</p>'.format(
-                new_img.UID(), new_img2.UID())
+        new_img3 = self.portal.folder.get('dot3.gif')
+        new_img4 = self.portal.folder.get('dot4.gif')
+        new_img5 = self.portal.folder.get('dot5.gif')
+        expected = '<p>Int img full url <img src="resolveuid/{0}"/>.</p>' \
+            '<p>Int img resolveuid <img src="resolveuid/{1}"/>.</p>' \
+            '<p>Int img resolveuid and image_preview <img src="resolveuid/{2}/image_preview"/>.</p>' \
+            '<p>Int img resolveuid portal_url <img src="resolveuid/{3}"/>.</p>' \
+            '<p>Int img resolveuid portal_url image_preview <img src="resolveuid/{4}/image_preview"/>.</p>'.format(
+                new_img.UID(), new_img2.UID(), new_img3.UID(), new_img4.UID(), new_img5.UID())
         self.assertEqual(result, expected)
 
     def test_storeImagesLocallyWithoutSrc(self):

@@ -7,6 +7,13 @@ Changelog
 - Fixed bug in `catalog.addOrUpdateIndexes` where a new index was not reindexed
   if it was added together with an already existing index.
   [gbastien]
+- Fixed bug in `xhtml.storeImagesLocally` when img uses a `resolveuid` and
+  starts with the `portal_url` (this is the case when using `uploadimage plugin`
+  in `collective.ckeditor`), it raised a NotFound error.
+  [gbastien]
+- In `xhtml.storeImagesLocally`, keep the `scale` at the end of the URL using
+  `resolveuid` (like `resolveuid/content_uid/image_preview`).
+  [gbastien]
 
 0.9 (2017-11-27)
 ----------------

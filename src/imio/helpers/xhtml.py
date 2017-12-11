@@ -396,18 +396,30 @@ def storeImagesLocally(context,
     changed = False
     for img in imgs:
         img_src = img.get('src', '')
+
         # we only handle http stored images
-        if not img_src.startswith('http') and not img_src.startswith('resolveuid'):
+        if not img_src.startswith('http') and 'resolveuid' not in img_src:
             continue
         filename = data = None
         # external images
-        if store_external_images and not img_src.startswith(portal_url):
+        if store_external_images and not img_src.startswith(portal_url) and 'resolveuid' not in img_src:
             filename, data = _handle_external_image(img_src)
 
         # image in portal but not already stored in context
         # handle images using resolveuid
-        if img_src.startswith('resolveuid'):
-            img_src = uuidToURL(img_src.split('/')[1])
+        end_of_url = None
+        if 'resolveuid' in img_src:
+            # manage cases like :
+            # - resolveuid/2ff7ea3317df43438a09edfa84965b13
+            # - resolveuid/2ff7ea3317df43438a09edfa84965b13/image_preview
+            # - http://portal_url/resolveuid/2ff7ea3317df43438a09edfa84965b13
+            img_uid = img_src.split('resolveuid/')[-1].split('/')[0]
+            # save end of url if any, like /image_preview
+            end_of_url = img_src.split(img_uid)[-1]
+            if end_of_url == img_uid:
+                end_of_url = None
+            img_src = uuidToURL(img_uid)
+
         if store_internal_images and \
            img_src.startswith(portal_url) and \
            not img_src.startswith(context_url):
@@ -430,6 +442,9 @@ def storeImagesLocally(context,
             new_img_src = 'resolveuid/{0}'.format(new_img.UID())
         else:
             new_img_src = new_img.absolute_url()
+        if end_of_url:
+            new_img_src = '/'.join([new_img_src, end_of_url.strip('/')])
+
         img.attrib['src'] = new_img_src
 
     if not changed:
