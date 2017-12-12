@@ -395,27 +395,29 @@ def storeImagesLocally(context,
     # return received xhtmlContent if nothing was changed
     changed = False
     for img in imgs:
-        img_src = img.get('src', '')
+        original_img_src = img.get('src', '')
 
         # we only handle http stored images
-        if not img_src.startswith('http') and 'resolveuid' not in img_src:
+        if not original_img_src.startswith('http') and 'resolveuid' not in original_img_src:
             continue
         filename = data = None
         # external images
-        if store_external_images and not img_src.startswith(portal_url) and 'resolveuid' not in img_src:
-            filename, data = _handle_external_image(img_src)
+        if store_external_images and not original_img_src.startswith(portal_url) and \
+           'resolveuid' not in original_img_src:
+            filename, data = _handle_external_image(original_img_src)
 
         # image in portal but not already stored in context
         # handle images using resolveuid
         end_of_url = None
-        if 'resolveuid' in img_src:
+        img_src = original_img_src
+        if 'resolveuid' in original_img_src:
             # manage cases like :
             # - resolveuid/2ff7ea3317df43438a09edfa84965b13
             # - resolveuid/2ff7ea3317df43438a09edfa84965b13/image_preview
             # - http://portal_url/resolveuid/2ff7ea3317df43438a09edfa84965b13
-            img_uid = img_src.split('resolveuid/')[-1].split('/')[0]
+            img_uid = original_img_src.split('resolveuid/')[-1].split('/')[0]
             # save end of url if any, like /image_preview
-            end_of_url = img_src.split(img_uid)[-1]
+            end_of_url = original_img_src.split(img_uid)[-1]
             if end_of_url == img_uid:
                 end_of_url = None
             img_src = uuidToURL(img_uid)
@@ -435,7 +437,7 @@ def storeImagesLocally(context,
         new_img = getattr(context, new_img_id)
         # store a resolveuid if using it, the absolute_url to image if not
         if force_resolve_uid or \
-           img_src.startswith('resolveuid') or \
+           original_img_src.startswith('resolveuid') or \
            (HAS_CKEDITOR and
                 hasattr(portal.portal_properties, 'ckeditor_properties') and
                 portal.portal_properties.ckeditor_properties.allow_link_byuid):
