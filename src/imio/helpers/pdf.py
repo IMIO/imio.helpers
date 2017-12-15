@@ -7,8 +7,8 @@ from reportlab.lib.pagesizes import A4
 from reportlab.platypus import SimpleDocTemplate
 from reportlab.platypus import Flowable
 from reportlab.platypus.flowables import Image
-from pyPdf import PdfFileReader
-from pyPdf import PdfFileWriter
+from PyPDF2 import PdfFileReader
+from PyPDF2 import PdfFileWriter
 
 import uuid
 import os
@@ -86,7 +86,7 @@ class BarcodeStamp(object):
     def _merge_pdf(self, stamp_path):
         output_writer = PdfFileWriter()
         stamp = PdfFileReader(open(stamp_path, 'rb'))
-        content_file = open(self.filepath, 'r')
+        content_file = open(self.filepath, 'rb')
         content = PdfFileReader(content_file)
         counter = 0
         for page in content.pages:

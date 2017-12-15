@@ -14,6 +14,9 @@ Changelog
 - In `xhtml.storeImagesLocally`, keep the `scale` at the end of the URL using
   `resolveuid` (like `resolveuid/content_uid/image_preview`).
   [gbastien]
+- Use `PyPDF2` instead deprecated `pyPdf` to insert barcode into PDF.
+  This solves `ValueError: invalid literal for int() with base 10: ''`.
+  [gbastien]
 
 0.9 (2017-11-27)
 ----------------
