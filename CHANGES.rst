@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.10 (unreleased)
+0.10 (2017-12-21)
 -----------------
 
 - Fixed bug in `catalog.addOrUpdateIndexes` where a new index was not reindexed
