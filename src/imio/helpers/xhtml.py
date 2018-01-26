@@ -74,9 +74,9 @@ def removeBlanks(xhtmlContent, pretty_print=False):
             el.getparent().remove(el)
     # only return children of the <special_tag>
     return ''.join([lxml.html.tostring(x,
-                                       encoding='utf-8',
+                                       encoding='ascii',
                                        pretty_print=pretty_print,
-                                       method='xml')
+                                       method='html')
                     for x in tree.iterchildren()])
 
 
@@ -116,7 +116,7 @@ def addClassToContent(xhtmlContent, css_class, pretty_print=False):
     res = ''.join([lxml.html.tostring(x,
                                       encoding='ascii',
                                       pretty_print=pretty_print,
-                                      method='xml') for x in children])
+                                      method='html') for x in children])
     return res
 
 
@@ -186,7 +186,7 @@ def addClassToLastChildren(xhtmlContent,
     res = ''.join([lxml.html.tostring(x,
                                       encoding='ascii',
                                       pretty_print=pretty_print,
-                                      method='xml') for x in tree.iterchildren()])
+                                      method='html') for x in tree.iterchildren()])
     return res
 
 
@@ -223,7 +223,7 @@ def markEmptyTags(xhtmlContent,
     return ''.join([lxml.html.tostring(x,
                                        encoding='utf-8',
                                        pretty_print=pretty_print,
-                                       method='xml')
+                                       method='html')
                     for x in tree.iterchildren()])
 
 
@@ -244,7 +244,7 @@ def removeCssClasses(xhtmlContent,
     return ''.join([lxml.html.tostring(x,
                                        encoding='utf-8',
                                        pretty_print=pretty_print,
-                                       method='xml')
+                                       method='html')
                     for x in tree.iterchildren()])
 
 
@@ -314,7 +314,7 @@ def imagesToPath(context, xhtmlContent, pretty_print=False):
     return ''.join([lxml.html.tostring(x,
                                        encoding='ascii',
                                        pretty_print=pretty_print,
-                                       method='xml') for x in tree.iterchildren()])
+                                       method='html') for x in tree.iterchildren()])
 
 
 def storeImagesLocally(context,
@@ -455,4 +455,4 @@ def storeImagesLocally(context,
     return ''.join([lxml.html.tostring(x,
                                        encoding='utf-8',
                                        pretty_print=pretty_print,
-                                       method='xml') for x in tree.iterchildren()])
+                                       method='html') for x in tree.iterchildren()])

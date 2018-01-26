@@ -32,27 +32,27 @@ class TestXHTMLModule(IntegrationTestCase):
         self.assertEqual(removeBlanks('<p></p><br><br /><br/>'), '')
         self.assertEqual(removeBlanks('<p>&nbsp;</p>'), '')
         self.assertEqual(removeBlanks('<p>&nbsp;<p><p>&nbsp;</p><i></i>'), '')
-        self.assertEqual(removeBlanks('<p>Some text to keep</p><p>&nbsp;</p><i></i>'),
+        self.assertEqual(removeBlanks('<p>Some text to keep</p><p>&nbsp;</p><i>&nbsp;</i>'),
                          '<p>Some text to keep</p>')
         self.assertEqual(removeBlanks('<p> </p><p>Some text to keep</p><p>&nbsp;</p>'),
                          '<p>Some text to keep</p>')
         self.assertEqual(removeBlanks('<p>Text line 1</p><p>Text line 2</p>'),
                          '<p>Text line 1</p><p>Text line 2</p>')
         self.assertEqual(removeBlanks('<p><img src="my_image"/></p>'),
-                         '<p><img src="my_image"/></p>')
+                         '<p><img src="my_image"></p>')
         # complex tree filled
         self.assertEqual(removeBlanks('<ul><li>First line</li><li>second line</li></ul>'),
                          '<ul><li>First line</li><li>second line</li></ul>')
         # complex tree semi-filled
-        self.assertEqual(removeBlanks('<ul><li>First line</li><li></li></ul>'),
-                         '<ul><li>First line</li><li/></ul>')
+        self.assertEqual(removeBlanks('<ul><li>First line</li><li> </li></ul>'),
+                         '<ul><li>First line</li><li> </li></ul>')
         # empty complex tree, is not wiped out because master tag containing children
-        self.assertEqual(removeBlanks('<ul><li></li><li></li></ul>'),
-                         '<ul><li/><li/></ul>')
+        self.assertEqual(removeBlanks('<ul><li>&nbsp;</li><li>&nbsp;</li></ul>'),
+                         '<ul><li>&#160;</li><li>&#160;</li></ul>')
         # result is not prettyfied (pretty_print=False) but if source was
         # pretty, then the result is pretty also
-        self.assertEqual(removeBlanks('<ul>\n  <li/>\n  <li/>\n</ul>\n'),
-                         '<ul>\n  <li/>\n  <li/>\n</ul>\n')
+        self.assertEqual(removeBlanks('<ul>\n  <li>&nbsp;</li>\n  <li>&nbsp;</li>\n</ul>\n'),
+                         '<ul>\n  <li>&#160;</li>\n  <li>&#160;</li>\n</ul>\n')
 
     def test_xhtmlContentIsEmpty(self):
         """
@@ -83,7 +83,7 @@ class TestXHTMLModule(IntegrationTestCase):
         self.assertTrue(not xhtmlContentIsEmpty('<p>&nbsp;</p><p>Some text to keep</p><i>&nbsp;</i>'))
         self.assertTrue(not xhtmlContentIsEmpty('<p>&nbsp;</p><i>Some text to keep</i>'))
         self.assertTrue(not xhtmlContentIsEmpty('<table><tr><td>Some text to keep</td><td>&nbsp;</td></tr></table>'))
-        self.assertTrue(not xhtmlContentIsEmpty('<p><img src="my_image_path.png"/></p>'))
+        self.assertTrue(not xhtmlContentIsEmpty('<p><img src="my_image_path.png"></p>'))
 
     def test_addClassToContent(self):
         """
@@ -176,8 +176,8 @@ class TestXHTMLModule(IntegrationTestCase):
             '<ol><li class="podItemKeepWithNext">Line 1</li><li class="podItemKeepWithNext">Line 2</li></ol>')
         # as soon as an unhandled tag is discover, adaptation stops
         self.assertEqual(addClassToLastChildren(
-            '<p>13 chars line</p><img src="image.png"/><p>13 chars line</p>'),
-            '<p>13 chars line</p><img src="image.png"/><p class="ParaKWN">13 chars line</p>')
+            '<p>13 chars line</p><img src="image.png"><p>13 chars line</p>'),
+            '<p>13 chars line</p><img src="image.png"><p class="ParaKWN">13 chars line</p>')
         # test with sub tags
         self.assertEqual(addClassToLastChildren(
             '<p>Text</p><p><u><strong>dsdklm</strong></u></p>'),
@@ -225,7 +225,7 @@ class TestXHTMLModule(IntegrationTestCase):
         # pretty, then the result is pretty also
         self.assertEqual(addClassToLastChildren(
             '<p>text</p>\n<img src="image.png"/>\n<p>text</p>\n'),
-            '<p>text</p>\n<img src="image.png"/>\n<p class="ParaKWN">text</p>\n')
+            '<p>text</p>\n<img src="image.png">\n<p class="ParaKWN">text</p>\n')
 
     def test_markEmptyTags(self):
         """
@@ -238,28 +238,30 @@ class TestXHTMLModule(IntegrationTestCase):
         """
         self.assertEqual(markEmptyTags(''), '')
         self.assertEqual(markEmptyTags(None), None)
-        self.assertEqual(markEmptyTags("<p></p>"), '<p class="highlightBlankRow"/>')
+        self.assertEqual(markEmptyTags("<p></p>"), '<p class="highlightBlankRow"></p>')
         self.assertEqual(markEmptyTags("<p> </p>"), '<p class="highlightBlankRow"> </p>')
+        self.assertEqual(markEmptyTags("<p>&nbsp;</p>"), '<p class="highlightBlankRow">\xc2\xa0</p>')
         self.assertEqual(markEmptyTags("<p>Text</p>"), '<p>Text</p>')
-        self.assertEqual(markEmptyTags("<p>Text</p><p></p>"), '<p>Text</p><p class="highlightBlankRow"/>')
+        self.assertEqual(markEmptyTags("<p>Text</p><p></p>"), '<p>Text</p><p class="highlightBlankRow"></p>')
         # change markingClass
         self.assertEqual(markEmptyTags("<p> </p>", markingClass='customClass'), '<p class="customClass"> </p>')
         # "span" not handled by default
-        self.assertEqual(markEmptyTags("<span></span>"), '<span/>')
+        self.assertEqual(markEmptyTags("<span></span>"), '<span></span>')
+        self.assertEqual(markEmptyTags("<span>&nbsp;</span>"), '<span>\xc2\xa0</span>')
         # but "span" could be handled if necessary
-        self.assertEqual(markEmptyTags("<span></span>", tags=('span', )), '<span class="highlightBlankRow"/>')
+        self.assertEqual(markEmptyTags("<span></span>", tags=('span', )), '<span class="highlightBlankRow"></span>')
         # by default every empty tags are highlighted, but we can specify to highlight only trailing
         # ones aka only tags ending the XHTML content
         self.assertEqual(markEmptyTags("<p></p><p>Text</p><p></p>"),
-                         '<p class="highlightBlankRow"/><p>Text</p><p class="highlightBlankRow"/>')
+                         '<p class="highlightBlankRow"></p><p>Text</p><p class="highlightBlankRow"></p>')
         self.assertEqual(markEmptyTags("<p></p><p>Text</p><p></p>", onlyAtTheEnd=True),
-                         '<p/><p>Text</p><p class="highlightBlankRow"/>')
+                         '<p></p><p>Text</p><p class="highlightBlankRow"></p>')
         # we can also specify to add a title attribute to the highlighted tags
         self.assertEqual(markEmptyTags("<p>Text</p><p></p>", tagTitle='My tag title'),
-                         '<p>Text</p><p class="highlightBlankRow" title="My tag title"/>')
+                         '<p>Text</p><p class="highlightBlankRow" title="My tag title"></p>')
         # if an empty tag already have a class, the marking class is appended to it
         self.assertEqual(markEmptyTags("<p class='existingClass'></p>"),
-                         '<p class="highlightBlankRow existingClass"/>')
+                         '<p class="highlightBlankRow existingClass"></p>')
 
         # we may mark Unicode as well as UTF-8 xhtmlContent
         self.assertEqual(markEmptyTags('<p>UTF-8 string with special chars: \xc3\xa9</p>'),
@@ -279,7 +281,7 @@ class TestXHTMLModule(IntegrationTestCase):
         self.assertEqual(removeCssClasses('', css_classes=['my_class']), '')
         self.assertEqual(removeCssClasses(None), None)
         self.assertEqual(removeCssClasses(None, css_classes=['my_class']), None)
-        self.assertEqual(removeCssClasses('<p></p>', css_classes=['my_class']), '<p/>')
+        self.assertEqual(removeCssClasses('<p></p>', css_classes=['my_class']), '<p></p>')
         self.assertEqual(removeCssClasses('<p>Text</p>', css_classes=['my_class']), '<p>Text</p>')
         self.assertEqual(removeCssClasses('<p class="another_class">Text</p>', css_classes=['my_class']),
                          '<p class="another_class">Text</p>')
@@ -348,58 +350,58 @@ class TestXHTMLModule(IntegrationTestCase):
         # we do not setText because the mutator is overrided to use mxTidy
         # to prettify the HTML
         # test with internal image, absolute path
-        text = '<p>Image absolute path <img src="{0}/img"/> end of text.</p>'.format(self.portal_url)
+        text = '<p>Image absolute path <img src="{0}/img"> end of text.</p>'.format(self.portal_url)
         expected = text.replace("{0}/img".format(self.portal_url), img_blob_path)
         self.assertEqual(imagesToPath(doc, text).strip(), expected)
         # if we use an image having no blob, nothing is changed
-        text = '<p>Image absolute path <img src="{0}/img_without_blob"/> end of text.</p>'.format(self.portal_url)
+        text = '<p>Image absolute path <img src="{0}/img_without_blob"> end of text.</p>'.format(self.portal_url)
         self.assertEqual(imagesToPath(doc, text).strip(), text)
 
         # test with internal image, relative path
-        text = '<p>Image relative path <img src="../img" alt="Image" title="Image"/> end of text.</p>'
+        text = '<p>Image relative path <img src="../img" alt="Image" title="Image"> end of text.</p>'
         expected = text.replace("../img", img_blob_path)
         self.assertEqual(imagesToPath(doc2, text).strip(), expected)
         # if we use an image having no blob, nothing is changed
-        text = '<p>Image relative path <img src="../img_without_blob" alt="Image" title="Image"/> end of text.</p>'
+        text = '<p>Image relative path <img src="../img_without_blob" alt="Image" title="Image"> end of text.</p>'
         self.assertEqual(imagesToPath(doc2, text).strip(), text)
 
         # test with src to an ImageScale instead the full image
-        text = '<p>Link to ImageScale absolute path <img src="{0}/img/image_preview"/> '\
-               'and relative path <img src="../img/image_preview"/>.</p>'.format(self.portal_url)
+        text = '<p>Link to ImageScale absolute path <img src="{0}/img/image_preview"> '\
+               'and relative path <img src="../img/image_preview">.</p>'.format(self.portal_url)
         expected = text.replace("{0}/img/image_preview".format(self.portal_url), img_blob_path)
         expected = expected.replace("../img/image_preview", img_blob_path)
         self.assertEqual(imagesToPath(doc2, text).strip(), expected)
 
         # test with src to image that is not an image, src will be to doc
-        text = '<p>Src image to doc absolute path <img src="{0}/doc"/> '\
-               'and relative path <img src="../doc"/>.</p>'.format(self.portal_url)
+        text = '<p>Src image to doc absolute path <img src="{0}/doc"> '\
+               'and relative path <img src="../doc">.</p>'.format(self.portal_url)
         # left as is
         self.assertEqual(imagesToPath(doc2, text).strip(), text)
 
         # external image, absolute_path
         # nothing changed
-        text = '<p>Image absolute path <img src="http://www.othersite.com/image.png"/> end of text.</p>'
+        text = '<p>Image absolute path <img src="http://www.othersite.com/image.png"> end of text.</p>'
         self.assertEqual(imagesToPath(doc, text).strip(), text)
 
         # image that does not exist anymore, absolute and relative path
-        text = '<p>Removed image absolute path <img src="{0}/removed_img"/> '\
-               'and relative path <img src="../removed_img"/>.</p>'.format(self.portal_url)
+        text = '<p>Removed image absolute path <img src="{0}/removed_img"> '\
+               'and relative path <img src="../removed_img">.</p>'.format(self.portal_url)
         # left as is
         self.assertEqual(imagesToPath(doc, text).strip(), text)
 
         # more complex case with html sublevels, relative and absolute path images
-        text = """<p>Image absolute path <img src="{0}/img"/> end of text.</p>
+        text = """<p>Image absolute path <img src="{0}/img"> end of text.</p>
 <div>
-  <p>Image absolute path2 same img <img src="{0}/img"/> end of text.</p>
+  <p>Image absolute path2 same img <img src="{0}/img"> end of text.</p>
 </div>
-<p>Image absolute path <img src="http://www.othersite.com/image.png"/> end of text.</p>
+<p>Image absolute path <img src="http://www.othersite.com/image.png"> end of text.</p>
 <div>
   <p>
-    <strong>Image relative path <img src="../img" alt="Image" title="Image"/> end of text.</strong>
+    <strong>Image relative path <img src="../img" alt="Image" title="Image"> end of text.</strong>
   </p>
 </div>
-<p>Removed image absolute path <img src="{0}/removed_img" alt="Image" title="Image"/> end of text.</p>
-<p>Removed image relative path <img src="../removed_img" alt="Image" title="Image"/> end of text.</p>""".\
+<p>Removed image absolute path <img src="{0}/removed_img" alt="Image" title="Image"> end of text.</p>
+<p>Removed image relative path <img src="../removed_img" alt="Image" title="Image"> end of text.</p>""".\
             format(self.portal_url)
         expected = text.replace("{0}/img".format(self.portal_url), img_blob_path)
         expected = expected.replace("../img", img_blob_path)
@@ -413,16 +415,16 @@ class TestXHTMLModule(IntegrationTestCase):
         self.assertEqual(imagesToPath(doc, text), text)
 
         # image outside any other tag
-        text = '<img src="{0}/img/image_preview"/><img src="../img/image_preview"/>'.format(self.portal_url)
+        text = '<img src="{0}/img/image_preview"><img src="../img/image_preview">'.format(self.portal_url)
         expected = text.replace("{0}/img/image_preview".format(self.portal_url), img_blob_path)
         expected = expected.replace("../img/image_preview", img_blob_path)
         self.assertEqual(imagesToPath(doc2, text).replace('\n', ''), expected.replace('\n', ''))
 
         # using resolveuid and absolute path and relative path
-        text = '<img src="resolveuid/{0}/image_preview" alt="Image" title="Image"/>' \
-               '<img src="resolveuid/{0}" alt="Image" title="Image"/>' \
-               '<img src="{1}/img/image_preview"/>' \
-               '<img src="../img/image_preview"/>'.format(img.UID(), self.portal_url)
+        text = '<img src="resolveuid/{0}/image_preview" alt="Image" title="Image">' \
+               '<img src="resolveuid/{0}" alt="Image" title="Image">' \
+               '<img src="{1}/img/image_preview">' \
+               '<img src="../img/image_preview">'.format(img.UID(), self.portal_url)
         expected = text.replace("resolveuid/{0}/image_preview".format(img.UID()), img_blob_path)
         expected = expected.replace("resolveuid/{0}".format(img.UID()), img_blob_path)
         expected = expected.replace("{0}/img/image_preview".format(self.portal_url), img_blob_path)
@@ -468,14 +470,14 @@ class TestXHTMLModule(IntegrationTestCase):
         self.assertFalse('contact.png' in self.portal.objectIds())
         self.assertEqual(
             storeImagesLocally(doc, text),
-            '<p>Working external image <img src="{0}/contact.png"/>.</p>'.format(self.portal_url))
+            '<p>Working external image <img src="{0}/contact.png">.</p>'.format(self.portal_url))
         contact = self.portal.get('contact.png')
         self.assertTrue(IImageContent.providedBy(contact))
 
         # working example with a Folder, this test case where we have a container
         # using RichText field, in this case the Image is stored in the Folder, not next to it
-        text = '<p>Working external image <img src="http://www.imio.be/mascotte-presentation.jpg"/>.</p>'
-        expected = '<p>Working external image <img src="{0}/folder/mascotte-presentation.jpg"/>.</p>'.\
+        text = '<p>Working external image <img src="http://www.imio.be/mascotte-presentation.jpg">.</p>'
+        expected = '<p>Working external image <img src="{0}/folder/mascotte-presentation.jpg">.</p>'.\
             format(self.portal_url)
         self.assertFalse('mascotte-presentation.jpg' in self.portal.folder.objectIds())
         self.assertEqual(storeImagesLocally(self.portal.folder, text), expected)
@@ -484,8 +486,8 @@ class TestXHTMLModule(IntegrationTestCase):
 
         # link to external image without Content-Disposition
         # it is downloaded nevertheless but used filename will be 'image-1'
-        text = '<p>External site <img src="http://www.imio.be/logo.png"/>.</p>'
-        expected = '<p>External site <img src="{0}/folder/image-1.png"/>.</p>'.format(self.portal_url)
+        text = '<p>External site <img src="http://www.imio.be/logo.png">.</p>'
+        expected = '<p>External site <img src="{0}/folder/image-1.png">.</p>'.format(self.portal_url)
         downloaded_img_path, downloaded_img_infos = urllib.urlretrieve('http://www.imio.be/logo.png')
         self.assertIsNone(downloaded_img_infos.getheader('Content-Disposition'))
         self.assertEqual(storeImagesLocally(self.portal.folder, text), expected)
@@ -495,14 +497,14 @@ class TestXHTMLModule(IntegrationTestCase):
     def test_storeExternalImagesLocallyWithResolveUID(self):
         """ """
         # working example
-        text = '<p>Working external image <img src="http://www.imio.be/contact.png"/>.</p>'
+        text = '<p>Working external image <img src="http://www.imio.be/contact.png">.</p>'
         result = storeImagesLocally(self.portal, text, force_resolve_uid=True)
 
         # image was downloaded and link to it was turned to a resolveuid
         img = self.portal.get('contact.png')
         self.assertEqual(
             result,
-            '<p>Working external image <img src="resolveuid/{0}"/>.</p>'.format(img.UID()))
+            '<p>Working external image <img src="resolveuid/{0}">.</p>'.format(img.UID()))
 
     def test_storeInternalImagesLocally(self):
         """
@@ -513,8 +515,8 @@ class TestXHTMLModule(IntegrationTestCase):
         data = open(file_path, 'r')
         self.portal.invokeFactory('Image', id='dot.gif', title='Image', file=data.read())
         data.close()
-        text = '<p>Internal image <img src="{0}/dot.gif"/>.</p>'.format(self.portal_url)
-        expected = '<p>Internal image <img src="{0}/folder/dot.gif"/>.</p>'.format(self.portal_url)
+        text = '<p>Internal image <img src="{0}/dot.gif">.</p>'.format(self.portal_url)
+        expected = '<p>Internal image <img src="{0}/folder/dot.gif">.</p>'.format(self.portal_url)
         # image was created in folder
         self.assertEqual(
             storeImagesLocally(self.portal.folder, text),
@@ -528,7 +530,7 @@ class TestXHTMLModule(IntegrationTestCase):
             expected)
 
         # now check when internal image does not exist
-        text = '<p>Internal image <img src="{0}/unknown.gif"/>.</p>'.format(self.portal_url)
+        text = '<p>Internal image <img src="{0}/unknown.gif">.</p>'.format(self.portal_url)
         # in case an internal image is not found, nothing is done
         self.assertEqual(
             storeImagesLocally(self.portal.folder, text),
@@ -589,11 +591,11 @@ class TestXHTMLModule(IntegrationTestCase):
         new_img3 = self.portal.folder.get('dot3.gif')
         new_img4 = self.portal.folder.get('dot4.gif')
         new_img5 = self.portal.folder.get('dot5.gif')
-        expected = '<p>Int img full url <img src="resolveuid/{0}"/>.</p>' \
-            '<p>Int img resolveuid <img src="resolveuid/{1}"/>.</p>' \
-            '<p>Int img resolveuid and image_preview <img src="resolveuid/{2}/image_preview"/>.</p>' \
-            '<p>Int img resolveuid portal_url <img src="resolveuid/{3}"/>.</p>' \
-            '<p>Int img resolveuid portal_url image_preview <img src="resolveuid/{4}/image_preview"/>.</p>'.format(
+        expected = '<p>Int img full url <img src="resolveuid/{0}">.</p>' \
+            '<p>Int img resolveuid <img src="resolveuid/{1}">.</p>' \
+            '<p>Int img resolveuid and image_preview <img src="resolveuid/{2}/image_preview">.</p>' \
+            '<p>Int img resolveuid portal_url <img src="resolveuid/{3}">.</p>' \
+            '<p>Int img resolveuid portal_url image_preview <img src="resolveuid/{4}/image_preview">.</p>'.format(
                 new_img.UID(), new_img2.UID(), new_img3.UID(), new_img4.UID(), new_img5.UID())
         self.assertEqual(result, expected)
 

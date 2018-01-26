@@ -4,8 +4,9 @@ Changelog
 0.11 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Use `html` instead `xml` for `lxml.html.to_string` rendering `method`.
+  This avoids results like `<p><s></s></p>` turned to `<p><s/></p>`.
+  [gbastien]
 
 0.10 (2017-12-21)
 -----------------
