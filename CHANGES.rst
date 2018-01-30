@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.11 (unreleased)
+0.11 (2018-01-30)
 -----------------
 
 - Use `html` instead `xml` for `lxml.html.to_string` rendering `method`.
