@@ -4,8 +4,8 @@ Changelog
 0.12 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Added appy.pod usecase for rgba().
+  [gbastien]
 
 0.11 (2018-01-30)
 -----------------
