@@ -6,6 +6,8 @@ Changelog
 
 - Added appy.pod usecase for rgba().
   [gbastien]
+- Improved annotation code
+  [sgeulette]
 
 0.11 (2018-01-30)
 -----------------
