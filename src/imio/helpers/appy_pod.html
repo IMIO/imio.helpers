@@ -554,6 +554,43 @@ style sur &lt;span&gt; dans &lt;li&gt;
 
 <p>&nbsp;</p>
 
+<p style="color: #0000FF;"><u><strong>Tableaux collés dans CKeditor et idem rendus collés :</strong></u></p>
+
+<table>
+    <tbody>
+        <tr>
+            <td>Tableau1</td>
+            <td>Texte</td>
+        </tr>
+        <tr>
+            <td>1.1</td>
+            <td>Texte</td>
+        </tr>
+        <tr>
+            <td>1.2</td>
+            <td>Texte</td>
+        </tr>
+    </tbody>
+</table>
+<table>
+    <tbody>
+        <tr>
+            <td>Tableau2</td>
+            <td>Texte</td>
+        </tr>
+        <tr>
+            <td>2.1</td>
+            <td>Texte</td>
+        </tr>
+        <tr>
+            <td>2.2</td>
+            <td>Texte</td>
+        </tr>
+    </tbody>
+</table>
+
+<p>&nbsp;</p>
+
 <p style="color: #0000FF;"><u><strong>Bordure tableau via style sur balise table + border="1", ne rendait pas la bordure dans appy 0.9.7 :</strong></u></p>
 
 <table border="1" style="border:5px solid black;">
@@ -743,7 +780,7 @@ Tableau "fixed" sans largeur définie :
     <tbody>
         <tr>
             <td colspan="4" rowspan="1" style="background-color:rgb(0, 200, 100)">Utilisation de <b>"colspan"</b> et rgb</td>
-            <td colspan="5" rowspan="1"><!--style="background-color:rgba(0, 0, 255, 0.5)-->Utilisation de rgba, plante dans appy <= 0.9.10...</td>
+            <td colspan="5" rowspan="1" style="background-color:rgba(0, 0, 255, 0.5)">Utilisation de rgba, plante dans appy <= 0.9.10...</td>
         </tr>
         <tr>
             <td colspan="2" style="background-color:rgb(204, 204, 204); text-align:center; vertical-align:middle">Couleur de fond RGB, text centré, utilisation de <b>"rowspan"</b></td>
@@ -1618,7 +1655,7 @@ Tableau "fixed" sans largeur définie :
 
 <p>&nbsp;</p>
 
-<p style="color: #0000FF;"><u><strong>Tableau sans bordures (border="0" ou style="border: none;") :</strong></u></p>
+<p style="color: #0000FF;"><u><strong>Tableau sans bordures (border="0" ou style="border: none;" ou style="border: undefined;") :</strong></u></p>
 
 border="0"
 <table cellspacing="0" border="0" style="width:500px">
@@ -1652,6 +1689,36 @@ border="0"
 
 border="1" style="width:500px; border: none;"
 <table cellspacing="0" border="1" style="width:500px; border: none;">
+<tbody>
+    <tr>
+        <td>
+            <p>Texte 1.1;</p>
+        </td>
+        <td>
+            <p>Texte 1.2;</p>
+        </td>
+        <td>
+            <p>Texte 1.3;</p>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <p>Texte 2.1;</p>
+        </td>
+        <td>
+            <p>Texte 2.2;</p>
+        </td>
+        <td>
+            <p>Texte 2.3;</p>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<p>&nbsp;</p>
+
+border="1" style="width:500px; border: undefined;"
+<table cellspacing="0" border="1" style="width:500px; border: undefined;">
 <tbody>
     <tr>
         <td>
@@ -2817,6 +2884,10 @@ border="1" style="width:500px; border: none;"
 <p>Image utilisant un style="float: right;"</p>
 
 <p><img alt="" src="http://www.imio.be/contact.png" style="float: right;" title="contact.png" /></p>
+
+<p>Image utilisant un style="float: left;"</p>
+
+<p><img alt="" src="http://www.imio.be/contact.png" style="float: left;" title="contact.png" /></p>
 
 <p>Image redimensionnée (plus petite) via les attributs "width=150px" et "height=75px", pas via "style='width:...; height:...;"</p>
 
