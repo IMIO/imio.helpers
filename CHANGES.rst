@@ -1,7 +1,15 @@
 Changelog
 =========
 
-0.11 (unreleased)
+0.12 (unreleased)
+-----------------
+
+- Added appy.pod usecase for rgba().
+  [gbastien]
+- Improved annotation code
+  [sgeulette]
+
+0.11 (2018-01-30)
 -----------------
 
 - Use `html` instead `xml` for `lxml.html.to_string` rendering `method`.

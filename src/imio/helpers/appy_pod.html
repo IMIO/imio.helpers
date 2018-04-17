@@ -554,6 +554,43 @@ style sur &lt;span&gt; dans &lt;li&gt;
 
 <p>&nbsp;</p>
 
+<p style="color: #0000FF;"><u><strong>Tableaux collés dans CKeditor et idem rendus collés :</strong></u></p>
+
+<table>
+    <tbody>
+        <tr>
+            <td>Tableau1</td>
+            <td>Texte</td>
+        </tr>
+        <tr>
+            <td>1.1</td>
+            <td>Texte</td>
+        </tr>
+        <tr>
+            <td>1.2</td>
+            <td>Texte</td>
+        </tr>
+    </tbody>
+</table>
+<table>
+    <tbody>
+        <tr>
+            <td>Tableau2</td>
+            <td>Texte</td>
+        </tr>
+        <tr>
+            <td>2.1</td>
+            <td>Texte</td>
+        </tr>
+        <tr>
+            <td>2.2</td>
+            <td>Texte</td>
+        </tr>
+    </tbody>
+</table>
+
+<p>&nbsp;</p>
+
 <p style="color: #0000FF;"><u><strong>Bordure tableau via style sur balise table + border="1", ne rendait pas la bordure dans appy 0.9.7 :</strong></u></p>
 
 <table border="1" style="border:5px solid black;">
@@ -723,7 +760,7 @@ Tableau "fixed" sans largeur définie :
 
 <p style="color: #0000FF;"><u><strong>Tableau complexe de 17cm de large :</strong></u></p>
 
-<p>Couleur de fond en rgb(), en #123123 et en HTML color.</p>
+<p>Couleur de fond en rgb(), en rgba(), en #123123 et en HTML color.</p>
 
 <table border="1" cellpadding="1" cellspacing="1" style="height:78px; width:17cm">
     <tbody>
@@ -742,8 +779,8 @@ Tableau "fixed" sans largeur définie :
 <table border="1" cellpadding="1" cellspacing="1" style="width:17cm">
     <tbody>
         <tr>
-            <td colspan="4" rowspan="1" style="background-color:rgb(255, 255, 255)">Utilisation de <b>"colspan"</b></td>
-            <td colspan="5" rowspan="1" style="background-color:rgb(255, 255, 255)">&nbsp;</td>
+            <td colspan="4" rowspan="1" style="background-color:rgb(0, 200, 100)">Utilisation de <b>"colspan"</b> et rgb</td>
+            <td colspan="5" rowspan="1" style="background-color:rgba(0, 0, 255, 0.5)">Utilisation de rgba, plante dans appy <= 0.9.10...</td>
         </tr>
         <tr>
             <td colspan="2" style="background-color:rgb(204, 204, 204); text-align:center; vertical-align:middle">Couleur de fond RGB, text centré, utilisation de <b>"rowspan"</b></td>
@@ -1618,7 +1655,7 @@ Tableau "fixed" sans largeur définie :
 
 <p>&nbsp;</p>
 
-<p style="color: #0000FF;"><u><strong>Tableau sans bordures (border="0" ou style="border: none;") :</strong></u></p>
+<p style="color: #0000FF;"><u><strong>Tableau sans bordures (border="0" ou style="border: none;" ou style="border: undefined;") :</strong></u></p>
 
 border="0"
 <table cellspacing="0" border="0" style="width:500px">
@@ -1652,6 +1689,36 @@ border="0"
 
 border="1" style="width:500px; border: none;"
 <table cellspacing="0" border="1" style="width:500px; border: none;">
+<tbody>
+    <tr>
+        <td>
+            <p>Texte 1.1;</p>
+        </td>
+        <td>
+            <p>Texte 1.2;</p>
+        </td>
+        <td>
+            <p>Texte 1.3;</p>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <p>Texte 2.1;</p>
+        </td>
+        <td>
+            <p>Texte 2.2;</p>
+        </td>
+        <td>
+            <p>Texte 2.3;</p>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<p>&nbsp;</p>
+
+border="1" style="width:500px; border: undefined;"
+<table cellspacing="0" border="1" style="width:500px; border: undefined;">
 <tbody>
     <tr>
         <td>
@@ -1790,7 +1857,7 @@ border="1" style="width:500px; border: none;"
         <tr>
         </tr>
         <tr>
-            <td colspan="2" rowspan="2" style="width: 189px;"><span style="font-size:8px;">Partie DR + CGT&nbsp; +<br>
+            <td colspan="2" rowspan="2" style="width: 189px;"><span style="font-size:8px;">Partie DR + CGT&nbsp; +<br/>
             Mobilité (Tralala)</span></td>
             <td colspan="2" rowspan="2" style="width: 43px;"><span style="font-size:8px;">520.882,00&nbsp;</span></td>
             <td colspan="1" rowspan="2" style="width: 42px;"><span style="font-size:8px;">50%</span></td>
@@ -1817,7 +1884,7 @@ border="1" style="width:500px; border: none;"
             <td rowspan="1" style="width: 97px;"><span style="font-size:8px;">0,00</span></td>
         </tr>
         <tr>
-            <td colspan="2" rowspan="2" style="width: 189px;"><span style="font-size:8px;"><u>Honoraires et frais </u><br>
+            <td colspan="2" rowspan="2" style="width: 189px;"><span style="font-size:8px;"><u>Honoraires et frais </u><br/>
             Partie DR :</span></td>
             <td colspan="2" rowspan="2" style="width: 43px;"><span style="font-size:8px;">111.378,00&nbsp;&nbsp;&nbsp;</span></td>
             <td colspan="1" rowspan="2" style="width: 42px;"><span style="font-size:8px;">50%</span></td>
@@ -1835,7 +1902,7 @@ border="1" style="width:500px; border: none;"
             <td colspan="2" rowspan="2" style="width: 189px;"><span style="font-size:8px;">Partie DGO1</span></td>
             <td colspan="2" rowspan="2" style="width: 43px;"><span style="font-size:8px;">3.168,00&nbsp;</span></td>
             <td colspan="1" rowspan="2" style="width: 42px;"><span style="font-size:8px;">0%</span></td>
-            <td colspan="2" rowspan="2" style="width: 70px;"><span style="font-size:8px;">0,00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+            <td colspan="2" rowspan="2" style="width: 70px;"><span style="font-size:8px;">0,00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td>
             <td colspan="1" rowspan="2" style="width: 47px;"><span style="font-size:8px;">100%</span></td>
             <td colspan="4" rowspan="2" style="width: 70px;"><span style="font-size:8px;">3.168,00&nbsp;&nbsp;&nbsp;&nbsp;</span></td>
@@ -2818,6 +2885,10 @@ border="1" style="width:500px; border: none;"
 
 <p><img alt="" src="http://www.imio.be/contact.png" style="float: right;" title="contact.png" /></p>
 
+<p>Image utilisant un style="float: left;"</p>
+
+<p><img alt="" src="http://www.imio.be/contact.png" style="float: left;" title="contact.png" /></p>
+
 <p>Image redimensionnée (plus petite) via les attributs "width=150px" et "height=75px", pas via "style='width:...; height:...;"</p>
 
 <p><img alt="" src="http://www.imio.be/contact.png" height="150px" width="75px" title="contact.png" /></p>
@@ -2916,3 +2987,8 @@ border="1" style="width:500px; border: none;"
 <p style="color: #0000FF;"><u><strong>Texte utilisant la class CSS "mon_style", ne fonctionnait pas en appy<=0.9.8 à cause du "_" (ajouter un style du même nom dans l'ODT pour pouvoir tester) :</strong></u></p>
 
 <p class="mon_style">Le style devrait être appliqué à ce texte.</p>
+
+<p style="color: #0000FF;"><u><strong>Les balises non fermées comme &lt;br&gt; plantent la génération  :</strong></u></p>
+<p>Ligne un, il y a un saut de ligne entre les 2 lignes</p>
+<br>
+<p>Ligne deux</p>
