@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.12 (unreleased)
+0.12 (2018-05-03)
 -----------------
 
 - Added appy.pod usecase for rgba().
