@@ -138,7 +138,8 @@ class TestContentModule(IntegrationTestCase):
         self.assertListEqual([name for (name, fld) in get_schema_fields(obj=obj, behaviors=False)],
                              ['text', 'enabled'])
         self.assertListEqual([name for (name, fld) in get_schema_fields(obj=obj)],
-                             ['text', 'enabled', 'description', 'title', 'title'])
+                             ['text', 'enabled', 'description', 'title', 'title',
+                              'tal_condition', 'roles_bypassing_talcondition'])
         self.assertListEqual([name for (name, fld) in get_schema_fields(type_name='portnawak')],
                              [])
 
@@ -147,7 +148,9 @@ class TestContentModule(IntegrationTestCase):
         obj = api.content.create(container=self.portal.folder,
                                  id='tt',
                                  type='testingtype',
-                                 enabled='Should be a boolean')
+                                 enabled='Should be a boolean',
+                                 tal_condition=u'',
+                                 roles_bypassing_talcondition=set())
         self.assertEqual(validate_fields(obj),
                          [WrongType('Should be a boolean', bool, 'enabled')])
         obj.enabled = False

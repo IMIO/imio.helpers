@@ -5,6 +5,7 @@
 
   <include file="configure.zcml" />
   <include package="plone.app.dexterity" />
+  <include package="collective.behavior.talcondition" />
 
   <!-- This index is used by test_catalog.py -->
   <adapter name="reversedUID" factory=".tests.indexes.reversedUID" />

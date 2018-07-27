@@ -40,6 +40,7 @@ setup(
     ],
     extras_require={
         'test': [
+            'collective.behavior.talcondition',
             'plone.app.testing',
             'plone.app.dexterity',
         ],

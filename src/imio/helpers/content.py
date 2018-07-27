@@ -10,6 +10,7 @@ from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.CMFPlone.utils import safe_unicode
 from zope.annotation import IAnnotations
 from zope.component import getUtility
+from zope.interface.interfaces import IMethod
 from zope.schema._field import Choice
 
 import logging
@@ -217,7 +218,8 @@ def get_schema_fields(obj=None, type_name=None, behaviors=True):
     except:
         return []
     fti_schema = fti.lookupSchema()
-    fields = fti_schema.namesAndDescriptions(all=True)
+    fields = [field for field in fti_schema.namesAndDescriptions(all=True)
+              if not IMethod.providedBy(field)]
 
     if not behaviors:
         return fields
@@ -226,6 +228,9 @@ def get_schema_fields(obj=None, type_name=None, behaviors=True):
     for behavior_id in fti.behaviors:
         behavior = getUtility(IBehavior, behavior_id).interface
         fields.extend(behavior.namesAndDescriptions(all=True))
+    # keep only fields as interface methods are also returned by namesAndDescriptions
+    fields = [(field_name, field) for (field_name, field) in fields
+              if not IMethod.providedBy(field)]
     return fields
 
 
