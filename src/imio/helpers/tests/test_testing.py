@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from imio.helpers.testing import testing_logger
 from imio.helpers.testing import IntegrationTestCase
+from imio.helpers.testing import testing_logger
 
 
 class TestTesting(IntegrationTestCase):

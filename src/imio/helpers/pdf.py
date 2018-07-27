@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 
-from imio.helpers import barcode
 from cStringIO import StringIO
-from reportlab.lib.units import mm
-from reportlab.lib.pagesizes import A4
-from reportlab.platypus import SimpleDocTemplate
-from reportlab.platypus import Flowable
-from reportlab.platypus.flowables import Image
+from imio.helpers import barcode
 from PyPDF2 import PdfFileReader
 from PyPDF2 import PdfFileWriter
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.units import mm
+from reportlab.platypus import Flowable
+from reportlab.platypus import SimpleDocTemplate
+from reportlab.platypus.flowables import Image
 
-import uuid
 import os
+import uuid
 
 
 class BarcodeStamp(object):

@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 from Products.CMFCore.utils import getToolByName
-import logging
 from zope.component import getUtility
 from zope.intid.interfaces import IIntIds
+
+import logging
+
 
 logger = logging.getLogger('imio.helpers:catalog')
 

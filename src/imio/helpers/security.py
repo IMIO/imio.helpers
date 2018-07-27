@@ -1,11 +1,16 @@
 # -*- coding: utf-8 -*-
 
+from itertools import chain
+from random import choice
+from random import sample
+from random import seed
+from time import time
+
+import logging
 import os
 import string
-from itertools import chain
-from time import time
-from random import seed, choice, sample
-import logging
+
+
 logger = logging.getLogger("imio.helpers")
 
 

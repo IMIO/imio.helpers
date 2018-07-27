@@ -1,18 +1,20 @@
 # -*- coding: utf-8 -*-
+from Acquisition import aq_base
+from os import path
+from plone import api
+from plone.app.imaging.scale import ImageScale
+from plone.outputfilters.browser.resolveuid import uuidToURL
+from plone.outputfilters.filters.resolveuid_and_caption import ResolveUIDAndCaptionFilter
+from Products.CMFPlone.utils import safe_unicode
+from zope.container.interfaces import INameChooser
+
 import cgi
 import lxml.html
 import os
 import pkg_resources
 import types
 import urllib
-from os import path
-from Acquisition import aq_base
-from zope.container.interfaces import INameChooser
-from plone import api
-from Products.CMFPlone.utils import safe_unicode
-from plone.app.imaging.scale import ImageScale
-from plone.outputfilters.browser.resolveuid import uuidToURL
-from plone.outputfilters.filters.resolveuid_and_caption import ResolveUIDAndCaptionFilter
+
 
 try:
     HAS_CKEDITOR = True

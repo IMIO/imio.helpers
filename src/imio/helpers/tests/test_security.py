@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
+from imio.helpers.security import generate_password
+from imio.helpers.security import get_environment
+from imio.helpers.security import is_develop_environment
+from imio.helpers.testing import IntegrationTestCase
+
 import os
 import re
-
-from imio.helpers.security import generate_password
-from imio.helpers.security import is_develop_environment
-from imio.helpers.security import get_environment
-from imio.helpers.testing import IntegrationTestCase
 
 
 class TestSecurityModule(IntegrationTestCase):

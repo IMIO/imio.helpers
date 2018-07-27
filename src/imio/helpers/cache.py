@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
-import logging
 from datetime import datetime
+from plone import api
+from plone.i18n.normalizer import IIDNormalizer
+from plone.memoize import ram
+from plone.memoize.instance import Memojito
+from plone.memoize.interfaces import ICacheChooser
 from zope.component import getAllUtilitiesRegisteredFor
 from zope.component import getUtility
 from zope.component import queryUtility
 from zope.schema.interfaces import IVocabularyFactory
-from plone import api
-from plone.memoize import ram
-from plone.i18n.normalizer import IIDNormalizer
-from plone.memoize.instance import Memojito
-from plone.memoize.interfaces import ICacheChooser
+
+import logging
 
 
 logger = logging.getLogger('imio.helpers:cache')

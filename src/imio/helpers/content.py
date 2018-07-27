@@ -15,6 +15,7 @@ from zope.schema._field import Choice
 import logging
 import os
 
+
 logger = logging.getLogger('imo.helpers.content')
 
 

@@ -1,9 +1,9 @@
 from os import path
-from Products.Five.browser import BrowserView
 from plone import api
-from plone.dexterity.interfaces import IDexterityContent
-from plone.app.textfield.value import RichTextValue
 from plone.app.textfield import RichText
+from plone.app.textfield.value import RichTextValue
+from plone.dexterity.interfaces import IDexterityContent
+from Products.Five.browser import BrowserView
 
 
 class AppyPodSampleHTML(BrowserView):

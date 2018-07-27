@@ -8,7 +8,6 @@
 #
 
 from OFS.interfaces import IItem
-
 from plone.indexer import indexer
 
 

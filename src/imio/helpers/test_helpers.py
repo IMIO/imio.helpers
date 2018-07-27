@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from plone.app.testing import login
-
 from plone.testing.z2 import Browser
 
 import unittest

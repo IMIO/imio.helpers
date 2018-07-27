@@ -139,6 +139,8 @@ class TestContentModule(IntegrationTestCase):
                              ['text', 'enabled'])
         self.assertListEqual([name for (name, fld) in get_schema_fields(obj=obj)],
                              ['text', 'enabled', 'description', 'title', 'title'])
+        self.assertListEqual([name for (name, fld) in get_schema_fields(type_name='portnawak')],
+                             [])
 
     def test_validate_fields(self):
         """ """

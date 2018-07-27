@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 """Test fancytree."""
-import json
-
+from imio.helpers.fancytree.views import BaseRenderFancyTree
+from imio.helpers.testing import IntegrationTestCase
 from plone import api
 
-from imio.helpers.testing import IntegrationTestCase
-from imio.helpers.fancytree.views import BaseRenderFancyTree
+import json
 
 
 class RenderFancyTreeExample(BaseRenderFancyTree):

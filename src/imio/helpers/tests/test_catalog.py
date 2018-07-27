@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 
 from collections import OrderedDict
-from plone import api
-
-from imio.helpers.testing import IntegrationTestCase
-from imio.helpers.catalog import addOrUpdateIndexes
 from imio.helpers.catalog import addOrUpdateColumns
+from imio.helpers.catalog import addOrUpdateIndexes
 from imio.helpers.catalog import get_intid
-from imio.helpers.catalog import removeIndexes
 from imio.helpers.catalog import removeColumns
+from imio.helpers.catalog import removeIndexes
 from imio.helpers.catalog import ZCTextIndexInfo
+from imio.helpers.testing import IntegrationTestCase
+from plone import api
 from plone.app.testing import applyProfile
 from zope.component import getUtility
 from zope.intid.interfaces import IIntIds

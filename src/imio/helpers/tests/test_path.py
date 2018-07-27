@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
-import unittest
-from imio.helpers import path
 from imio.helpers import browser
+from imio.helpers import path
+
+import unittest
 
 
 class TestPath(unittest.TestCase):

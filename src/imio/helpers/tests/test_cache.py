@@ -1,12 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from datetime import datetime
-from zope.component import queryUtility
-from zope.schema.interfaces import IVocabularyFactory
-from plone import api
-from plone.memoize import ram
-from plone.memoize.instance import Memojito
-
 from imio.helpers.cache import _generate_params_key
 from imio.helpers.cache import cleanRamCache
 from imio.helpers.cache import cleanRamCacheFor
@@ -17,6 +11,12 @@ from imio.helpers.cache import invalidate_cachekey_volatile_for
 from imio.helpers.cache import volatile_cache_with_parameters
 from imio.helpers.cache import volatile_cache_without_parameters
 from imio.helpers.testing import IntegrationTestCase
+from plone import api
+from plone.memoize import ram
+from plone.memoize.instance import Memojito
+from zope.component import queryUtility
+from zope.schema.interfaces import IVocabularyFactory
+
 
 memPropName = Memojito.propname
 

@@ -1,10 +1,4 @@
 # -*- coding: utf-8 -*-
-import urllib
-from os import path
-
-from plone import api
-from Products.ATContentTypes.interfaces import IImageContent
-
 from imio.helpers.testing import IntegrationTestCase
 from imio.helpers.xhtml import addClassToContent
 from imio.helpers.xhtml import addClassToLastChildren
@@ -14,6 +8,11 @@ from imio.helpers.xhtml import removeBlanks
 from imio.helpers.xhtml import removeCssClasses
 from imio.helpers.xhtml import storeImagesLocally
 from imio.helpers.xhtml import xhtmlContentIsEmpty
+from os import path
+from plone import api
+from Products.ATContentTypes.interfaces import IImageContent
+
+import urllib
 
 
 class TestXHTMLModule(IntegrationTestCase):

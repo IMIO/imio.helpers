@@ -2,8 +2,8 @@
 
 from imio.helpers import barcode
 
-import unittest
 import os
+import unittest
 
 
 class TestBarcode(unittest.TestCase):

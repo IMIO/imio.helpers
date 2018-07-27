@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
 """Base module for unittesting."""
-import imio.helpers
-import logging
-import sys
-import unittest
 from plone.app.testing import applyProfile
 from plone.app.testing import FunctionalTesting
 from plone.app.testing import IntegrationTesting
@@ -14,6 +10,11 @@ from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
 from plone.app.testing import TEST_USER_NAME
 from plone.testing import z2
+
+import imio.helpers
+import logging
+import sys
+import unittest
 
 
 def testing_logger(logger_name=''):

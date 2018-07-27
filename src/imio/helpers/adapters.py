@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from zope.component import getMultiAdapter
 from plone import api
+from zope.component import getMultiAdapter
 
 
 class ListContainedDexterityObjectsForDisplayAdapter(object):

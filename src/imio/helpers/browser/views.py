@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
-from zope.component import getMultiAdapter
-
-from Products.Five import BrowserView
-
+from imio.helpers.interfaces import IListContainedDexterityObjectsForDisplay
 from plone import api
 from plone.batching import Batch
-
-from imio.helpers.interfaces import IListContainedDexterityObjectsForDisplay
+from Products.Five import BrowserView
+from zope.component import getMultiAdapter
 
 
 class ContainerFolderListingView(BrowserView):

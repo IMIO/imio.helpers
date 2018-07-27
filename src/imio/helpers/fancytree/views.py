@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 """Fancy tree views."""
-import json
-
-from Products.Five import BrowserView
-from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from plone import api
 from plone.app.layout.navigation.navtree import buildFolderTree
 from plone.app.layout.navigation.navtree import NavtreeStrategyBase
+from Products.Five import BrowserView
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+
+import json
 
 
 class BaseRenderFancyTree(BrowserView):  # pylint: disable=R0921
