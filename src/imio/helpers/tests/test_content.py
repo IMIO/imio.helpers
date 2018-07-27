@@ -1,11 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import os
-
-from plone import api
-from zope.annotation import IAnnotations
-from zope.schema._bootstrapinterfaces import WrongType
-
 from imio.helpers.content import add_file
 from imio.helpers.content import add_image
 from imio.helpers.content import add_to_annotation
@@ -13,10 +7,16 @@ from imio.helpers.content import create
 from imio.helpers.content import del_from_annotation
 from imio.helpers.content import get_from_annotation
 from imio.helpers.content import get_object
+from imio.helpers.content import get_schema_fields
 from imio.helpers.content import safe_encode
 from imio.helpers.content import transitions
 from imio.helpers.content import validate_fields
 from imio.helpers.testing import IntegrationTestCase
+from plone import api
+from zope.annotation import IAnnotations
+from zope.schema._bootstrapinterfaces import WrongType
+
+import os
 
 
 class TestContentModule(IntegrationTestCase):
@@ -128,6 +128,17 @@ class TestContentModule(IntegrationTestCase):
         self.assertIn(4, ret)
         self.assertIn('doc2', self.portal.folder.objectIds())
         self.assertEquals(self.portal.folder.getObjectPosition('doc2'),  0)
+
+    def test_get_schema_fields(self):
+        """ """
+        obj = api.content.create(container=self.portal.folder,
+                                 id='tt',
+                                 type='testingtype',
+                                 enabled='Should be a boolean')
+        self.assertListEqual([name for (name, fld) in get_schema_fields(obj=obj, behaviors=False)],
+                             ['text', 'enabled'])
+        self.assertListEqual([name for (name, fld) in get_schema_fields(obj=obj)],
+                             ['text', 'enabled', 'description', 'title', 'title'])
 
     def test_validate_fields(self):
         """ """

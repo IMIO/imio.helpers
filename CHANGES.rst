@@ -4,8 +4,8 @@ Changelog
 0.13 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Added `content.get_schema_fields` to get schema fields (behaviors included by default).
+  [sgeulette]
 
 0.12 (2018-05-03)
 -----------------

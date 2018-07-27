@@ -1,16 +1,19 @@
 # -*- coding: utf-8 -*-
 
-import logging
-import os
-
-from Products.CMFCore.WorkflowCore import WorkflowException
-from Products.CMFPlone.utils import safe_unicode
 from plone import api
 from plone.api.validation import mutually_exclusive_parameters
 from plone.app.textfield.value import RichTextValue
-from plone.namedfile.file import NamedBlobFile, NamedBlobImage
+from plone.behavior.interfaces import IBehavior
+from plone.namedfile.file import NamedBlobFile
+from plone.namedfile.file import NamedBlobImage
+from Products.CMFCore.WorkflowCore import WorkflowException
+from Products.CMFPlone.utils import safe_unicode
 from zope.annotation import IAnnotations
+from zope.component import getUtility
 from zope.schema._field import Choice
+
+import logging
+import os
 
 logger = logging.getLogger('imo.helpers.content')
 
@@ -199,16 +202,40 @@ def richtextval(text):
     return RichTextValue(raw=safe_unicode(text), mimeType='text/html', outputMimeType='text/html', encoding='utf-8')
 
 
-def validate_fields(obj):
+@api.validation.at_least_one_of('obj', 'type_name')
+def get_schema_fields(obj=None, type_name=None, behaviors=True):
+    """
+        Get all fields on content or type from its schema and its behaviors.
+        Return a list of field name and field object.
+    """
+    portal_types = api.portal.get_tool('portal_types')
+    if obj:
+        type_name = obj.portal_type
+    try:
+        fti = portal_types[type_name]
+    except:
+        return []
+    fti_schema = fti.lookupSchema()
+    fields = fti_schema.namesAndDescriptions(all=True)
+
+    if not behaviors:
+        return fields
+
+    # also lookup behaviors
+    for behavior_id in fti.behaviors:
+        behavior = getUtility(IBehavior, behavior_id).interface
+        fields.extend(behavior.namesAndDescriptions(all=True))
+    return fields
+
+
+def validate_fields(obj, behaviors=True):
     """
        Validates every fields of given p_obj.
     """
-    portal_types = api.portal.get_tool('portal_types')
-    fti = portal_types[obj.portal_type]
-    schema = fti.lookupSchema()
+    fields = get_schema_fields(obj=obj, behaviors=True)
     errors = []
-    for field_name in schema:
-        field = schema.get(field_name).bind(obj)
+    for (field_name, field) in fields:
+        field = field.bind(obj)
         value = getattr(obj, field_name)
         try:
             field._validate(value)
