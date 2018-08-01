@@ -9,7 +9,7 @@ def generate_barcode(data, executable='zint', barcode=92, scale=2):
     output = cStringIO.StringIO()
     command = [
         executable,
-        #'--directpng',  # no more used in version 2.6.0, and replaced by 2 following parameters
+        # '--directpng',  # no more used in version 2.6.0, and replaced by 2 following parameters
         '--direct',
         '--filetype=PNG',
         '--barcode={0}'.format(barcode),

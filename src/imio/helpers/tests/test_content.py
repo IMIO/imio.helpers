@@ -127,7 +127,7 @@ class TestContentModule(IntegrationTestCase):
         ret = create(conf, cids={10: self.portal.folder}, pos=True)
         self.assertIn(4, ret)
         self.assertIn('doc2', self.portal.folder.objectIds())
-        self.assertEquals(self.portal.folder.getObjectPosition('doc2'),  0)
+        self.assertEquals(self.portal.folder.getObjectPosition('doc2'), 0)
 
     def test_get_schema_fields(self):
         """ """
