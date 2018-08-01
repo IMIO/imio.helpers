@@ -19,3 +19,4 @@ src/*
 var/
 .coverage
 share/
+pip-selfcheck.json

@@ -37,6 +37,7 @@ setup(
         'plone.app.intid',
         'plone.dexterity',
         'setuptools',
+        'Plone',
     ],
     extras_require={
         'test': [

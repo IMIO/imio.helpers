@@ -10,6 +10,9 @@ Changelog
 - Pep8 on imports
   [sgeulette]
 - Added appy.pod usecase for lists containing tables.
+  [bleybaert]
+- Added dependency on `Plone` in `setup.py`.
+  [gbastien]
 
 0.12 (2018-05-03)
 -----------------
