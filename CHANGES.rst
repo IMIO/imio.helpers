@@ -4,10 +4,12 @@ Changelog
 0.13 (unreleased)
 -----------------
 
-- Added `content.get_schema_fields` to get schema fields (behaviors included by default).
+- Added `content.get_schema_fields` to get schema fields (behaviors included
+  by default).
   [sgeulette]
 - Pep8 on imports
   [sgeulette]
+- Added appy.pod usecase for lists containing tables.
 
 0.12 (2018-05-03)
 -----------------
