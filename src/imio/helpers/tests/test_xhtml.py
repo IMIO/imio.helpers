@@ -598,8 +598,21 @@ class TestXHTMLModule(IntegrationTestCase):
                 new_img.UID(), new_img2.UID(), new_img3.UID(), new_img4.UID(), new_img5.UID())
         self.assertEqual(result, expected)
 
-    def test_storeImagesLocallyWithoutSrc(self):
-        """Do not fail when no src in the <img> tag."""
+    def test_storeImagesLocallyWithWrongSrc(self):
+        """Do not fail when no src in the <img> tag or src is to something else than an image."""
+        # no src
         text = '<p>Text <img style="width: 50px; height: 50px;"/>.</p>'
         # nothing was changed
         self.assertEqual(storeImagesLocally(self.portal.folder, text), text)
+
+        # src to a non Image, Folder
+        text = '<p>Text <img src="{0}"style="width: 50px; height: 50px;"/>.</p>'.format(
+            self.portal.absolute_url())
+        # nothing was changed
+        self.assertEqual(storeImagesLocally(self.portal.folder, text), text)
+
+        # src to a non Image, Portal
+        text = '<p>Text <img src="{0}"style="width: 50px; height: 50px;"/>.</p>'.format(
+            self.portal.folder.absolute_url())
+        # nothing was changed
+        self.assertEqual(storeImagesLocally(self.portal.folder2, text), text)

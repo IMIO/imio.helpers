@@ -7,11 +7,15 @@ Changelog
 - Added `content.get_schema_fields` to get schema fields (behaviors included
   by default).
   [sgeulette]
-- Pep8 on imports
+- Pep8 on imports.
   [sgeulette]
 - Added appy.pod usecase for lists containing tables.
   [bleybaert]
 - Added dependency on `Plone` in `setup.py`.
+  [gbastien]
+- Do not break in `xhtml.storeImagesLocally._handle_internal_image` if image
+  src is not a path to an image but to another element (like `Folder` or
+  `Plone Site`).
   [gbastien]
 
 0.12 (2018-05-03)

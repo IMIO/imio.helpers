@@ -49,6 +49,8 @@ class PloneWithHelpersLayer(PloneSandboxLayer):
         login(portal, TEST_USER_NAME)
         folder_id = portal.invokeFactory('Folder', 'folder')
         portal[folder_id].reindexObject()
+        folder2_id = portal.invokeFactory('Folder', 'folder2')
+        portal[folder2_id].reindexObject()
 
         # Commit so that the test browser sees these objects
         import transaction

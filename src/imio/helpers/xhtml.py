@@ -339,12 +339,18 @@ def storeImagesLocally(context,
         img_path = img_src.replace(portal_url, '')
         img_path = img_path.lstrip('/')
         img_path = path.join(portal.absolute_url_path(), img_path)
+
         # right, traverse to image
         try:
             imageObj = portal.unrestrictedTraverse(img_path)
         except KeyError:
             # wrong img_path
             return None, None
+
+        # not an image
+        if not imageObj.portal_type == 'Image':
+            return None, None
+
         filename = imageObj.getId()
         data = imageObj.getBlobWrapper().data
         return filename, data
@@ -357,6 +363,8 @@ def storeImagesLocally(context,
         except IOError:
             # url not existing
             return None, None
+
+        # not an image
         if not downloaded_img_infos.maintype == 'image':
             return None, None
 
