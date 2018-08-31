@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.13 (unreleased)
+0.13 (2018-08-31)
 -----------------
 
 - Added `content.get_schema_fields` to get schema fields (behaviors included
