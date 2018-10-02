@@ -4,8 +4,8 @@ Changelog
 0.14 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Improved content create to avoid creating object when defined id already exists.
+  [sgeulette]
 
 0.13 (2018-08-31)
 -----------------

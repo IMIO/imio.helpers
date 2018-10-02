@@ -180,8 +180,10 @@ def create(conf, cids={}, globl=False, pos=False, clean_globl=False):
         if not parent:
             raise ValueError("Dict nb %s: cannot find container '%s')" % ((cid and '%s (cid=%s)' % (i, cid) or i),
                              container))
-        obj = get_object(parent=parent, type=dic['type'], title=dic.get('title'),
-                         id=dic.get('id', ''))
+        if dic.get('id', ''):
+            obj = get_object(parent=parent, id=dic.get('id'))
+        else:
+            obj = get_object(parent=parent, type=dic['type'], title=dic.get('title'))
         if not obj:
             obj = api.content.create(container=parent, type=dic['type'], title=safe_unicode(dic['title']),
                                      id=dic.get('id', None), safe_id=not bool(dic.get('id', '')),
