@@ -6,6 +6,8 @@ Changelog
 
 - Improved content create to avoid creating object when defined id already exists.
   [sgeulette]
+- Added methods content.uuidsToCatalogBrains and content.uuidsToObjects.
+  [gbastien]
 
 0.13 (2018-08-31)
 -----------------

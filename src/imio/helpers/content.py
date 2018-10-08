@@ -307,3 +307,28 @@ def get_from_annotation(annotation_key, obj=None, uid=None, default=None):
     if annotation_key not in annot:
         return default
     return annot[annotation_key]
+
+
+def uuidsToCatalogBrains(uuids=[], ordered=True):
+    """ Given a list of UUIDs, attempt to return catalog brains,
+        keeping original uuids list order if ordered=True. """
+
+    catalog = api.portal.get_tool('portal_catalog')
+
+    brains = catalog(UID=uuids)
+
+    if ordered:
+        # we need to sort found brains according to uuids
+        def getKey(item):
+            return uuids.index(item.UID)
+        brains = sorted(brains, key=getKey)
+
+    return brains
+
+
+def uuidsToObjects(uuids=[], ordered=True):
+    """ Given a list of UUIDs, attempt to return content objects,
+        keeping original uuids list order if ordered=True. """
+
+    brains = uuidsToCatalogBrains(uuids, ordered=ordered)
+    return [brain.getObject() for brain in brains]

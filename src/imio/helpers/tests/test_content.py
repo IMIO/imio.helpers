@@ -10,6 +10,8 @@ from imio.helpers.content import get_object
 from imio.helpers.content import get_schema_fields
 from imio.helpers.content import safe_encode
 from imio.helpers.content import transitions
+from imio.helpers.content import uuidsToCatalogBrains
+from imio.helpers.content import uuidsToObjects
 from imio.helpers.content import validate_fields
 from imio.helpers.testing import IntegrationTestCase
 from plone import api
@@ -202,3 +204,31 @@ class TestContentModule(IntegrationTestCase):
         self.assertSetEqual(IAnnotations(obj)['test_annot'], set([]))
         # remove value from a no-existing key in annotation
         self.assertIsNone(del_from_annotation('test_not_key_in_annot', 'trololo', uid=obj.UID()))
+
+    def test_uuidsToCatalogBrains(self):
+        folder_uid = self.portal.folder.UID()
+        folder2_uid = self.portal.folder2.UID()
+        uuids = [folder_uid, folder2_uid]
+        self.assertEqual(len(uuidsToCatalogBrains(uuids)), 2)
+        uuids = [folder_uid, folder2_uid, 'unknown_uid']
+        self.assertEqual(len(uuidsToCatalogBrains(uuids)), 2)
+        self.assertEqual(
+            [brain.UID for brain in uuidsToCatalogBrains(uuids, ordered=True)],
+            [folder_uid, folder2_uid])
+        uuids = [folder2_uid, folder_uid]
+        self.assertEqual(
+            [brain.UID for brain in uuidsToCatalogBrains(uuids, ordered=True)],
+            uuids)
+
+    def test_uuidsToObjects(self):
+        folder_uid = self.portal.folder.UID()
+        folder2_uid = self.portal.folder2.UID()
+        uuids = [folder_uid, folder2_uid, 'unknown_uid']
+        self.assertEqual(len(uuidsToObjects(uuids)), 2)
+        self.assertEqual(
+            uuidsToObjects(uuids, ordered=True),
+            [self.portal.folder, self.portal.folder2])
+        uuids = [folder2_uid, folder_uid]
+        self.assertEqual(
+            uuidsToObjects(uuids, ordered=True),
+            [self.portal.folder2, self.portal.folder])
