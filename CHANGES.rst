@@ -11,6 +11,9 @@ Changelog
 - Adapted `content.validate_fields` to bypass validation when field.required=False,
   value is None and field type is other than Bool.
   [gbastien]
+- Added parameter raise_on_errors to content.validate_fields to raise a ValueError
+  when errors are found instead simply returning it.
+  [gbastien]
 
 0.13 (2018-08-31)
 -----------------
