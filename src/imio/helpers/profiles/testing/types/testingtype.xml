@@ -39,6 +39,16 @@
            &lt;title&gt;Enabled&lt;/title&gt;
            &lt;required&gt;False&lt;/required&gt;
          &lt;/field&gt;
+         &lt;field name="textline" type="zope.schema.TextLine"&gt;
+           &lt;description/&gt;
+           &lt;title&gt;Text line&lt;/title&gt;
+           &lt;required&gt;False&lt;/required&gt;
+         &lt;/field&gt;
+         &lt;field name="mandatory_textline" type="zope.schema.TextLine"&gt;
+           &lt;description/&gt;
+           &lt;title&gt;Mandatory text line&lt;/title&gt;
+           &lt;required&gt;True&lt;/required&gt;
+         &lt;/field&gt;
        &lt;/schema&gt;
      &lt;/model&gt;
  </property>

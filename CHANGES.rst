@@ -8,6 +8,9 @@ Changelog
   [sgeulette]
 - Added methods content.uuidsToCatalogBrains and content.uuidsToObjects.
   [gbastien]
+- Adapted `content.validate_fields` to bypass validation when field.required=False,
+  value is None and field type is other than Bool.
+  [gbastien]
 
 0.13 (2018-08-31)
 -----------------

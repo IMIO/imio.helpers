@@ -138,9 +138,10 @@ class TestContentModule(IntegrationTestCase):
                                  type='testingtype',
                                  enabled='Should be a boolean')
         self.assertListEqual([name for (name, fld) in get_schema_fields(obj=obj, behaviors=False)],
-                             ['text', 'enabled'])
+                             ['text', 'enabled', 'mandatory_textline', 'textline'])
         self.assertListEqual([name for (name, fld) in get_schema_fields(obj=obj)],
-                             ['text', 'enabled', 'description', 'title', 'title',
+                             ['text', 'enabled', 'mandatory_textline', 'textline',
+                              'description', 'title', 'title',
                               'tal_condition', 'roles_bypassing_talcondition'])
         self.assertListEqual([name for (name, fld) in get_schema_fields(type_name='portnawak')],
                              [])
@@ -151,6 +152,8 @@ class TestContentModule(IntegrationTestCase):
                                  id='tt',
                                  type='testingtype',
                                  enabled='Should be a boolean',
+                                 textline=None,
+                                 mandatory_textline=u'Some text',
                                  tal_condition=u'',
                                  roles_bypassing_talcondition=set())
         self.assertEqual(validate_fields(obj),
@@ -158,6 +161,13 @@ class TestContentModule(IntegrationTestCase):
         obj.enabled = False
         self.assertFalse(validate_fields(obj))
         obj.enabled = True
+        self.assertFalse(validate_fields(obj))
+        # not required fields other than Bool must contain something
+        # else than None if field is required=True
+        obj.mandatory_textline = None
+        self.assertEqual(validate_fields(obj),
+                         [WrongType(None, unicode, 'mandatory_textline')])
+        obj.mandatory_textline = u'Some text'
         self.assertFalse(validate_fields(obj))
 
     def test_safe_encode(self):

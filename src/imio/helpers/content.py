@@ -11,7 +11,7 @@ from Products.CMFPlone.utils import safe_unicode
 from zope.annotation import IAnnotations
 from zope.component import getUtility
 from zope.interface.interfaces import IMethod
-from zope.schema._field import Choice
+from zope.schema._field import Bool
 
 import logging
 import os
@@ -236,7 +236,7 @@ def get_schema_fields(obj=None, type_name=None, behaviors=True):
     return fields
 
 
-def validate_fields(obj, behaviors=True):
+def validate_fields(obj, behaviors=True, raise_on_errors=False):
     """
        Validates every fields of given p_obj.
     """
@@ -245,13 +245,15 @@ def validate_fields(obj, behaviors=True):
     for (field_name, field) in fields:
         field = field.bind(obj)
         value = getattr(obj, field_name)
+        # accept None for most of fields if required=False
+        if value is None and not field.required and not (isinstance(field, (Bool, ))):
+            continue
         try:
             field._validate(value)
         except Exception, exc:
-            # bypass for Choice field not required, accept a None value
-            if isinstance(field, Choice) and not field.required and value is None:
-                continue
             errors.append(exc)
+    if raise_on_errors and errors:
+        raise ValueError(str(errors))
     return errors
 
 
