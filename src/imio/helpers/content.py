@@ -248,6 +248,13 @@ def validate_fields(obj, behaviors=True, raise_on_errors=False):
         # accept None for most of fields if required=False
         if value is None and not field.required and not (isinstance(field, (Bool, ))):
             continue
+        # we sadly have to bypass validation for field having a source as it fails
+        # because in plone.formwidget.contenttree source.py
+        # self._getBrainByToken('/'.join(value.getPhysicalPath()))
+        # raises 'RelationValue' object has no attribute 'getPhysicalPath'
+        if hasattr(field, 'source') and field.source is not None:
+            logger.warn("Bypassing validation of field '%s'" % field)
+            continue
         try:
             field._validate(value)
         except Exception, exc:
