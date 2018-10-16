@@ -18,6 +18,7 @@ import os
 
 
 logger = logging.getLogger('imo.helpers.content')
+ADDED_TYPE_ERROR = 'A validation error occurred while instantiating "{0}" with id "{1}". {2}'
 
 
 def get_object(parent='', id='', title='', type='', obj_path=''):
@@ -260,7 +261,9 @@ def validate_fields(obj, behaviors=True, raise_on_errors=False):
         except Exception, exc:
             errors.append(exc)
     if raise_on_errors and errors:
-        raise ValueError(str(errors))
+        error_msg = ADDED_TYPE_ERROR.format(
+            obj.portal_type, obj.id, '\n'.join([repr(error) for error in errors]))
+        raise ValueError(error_msg)
     return errors
 
 
