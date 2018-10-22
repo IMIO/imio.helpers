@@ -321,7 +321,7 @@ def get_from_annotation(annotation_key, obj=None, uid=None, default=None):
     return annot[annotation_key]
 
 
-def uuidsToCatalogBrains(uuids=[], ordered=True):
+def uuidsToCatalogBrains(uuids=[], ordered=False):
     """ Given a list of UUIDs, attempt to return catalog brains,
         keeping original uuids list order if ordered=True. """
 
@@ -338,7 +338,7 @@ def uuidsToCatalogBrains(uuids=[], ordered=True):
     return brains
 
 
-def uuidsToObjects(uuids=[], ordered=True):
+def uuidsToObjects(uuids=[], ordered=False):
     """ Given a list of UUIDs, attempt to return content objects,
         keeping original uuids list order if ordered=True. """
 
