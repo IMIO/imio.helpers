@@ -167,6 +167,9 @@ class TestContentModule(IntegrationTestCase):
         obj.mandatory_textline = None
         self.assertEqual(validate_fields(obj),
                          [WrongType(None, unicode, 'mandatory_textline')])
+        # validate_fields may raise a ValueError if raise_on_errors=True
+        self.assertRaises(ValueError, validate_fields, obj, raise_on_errors=True)
+        # back to correct value
         obj.mandatory_textline = u'Some text'
         self.assertFalse(validate_fields(obj))
 
