@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.14 (unreleased)
+0.14 (2018-10-22)
 -----------------
 
 - Improved content create to avoid creating object when defined id already exists.
