@@ -254,7 +254,8 @@ def validate_fields(obj, behaviors=True, raise_on_errors=False):
         # self._getBrainByToken('/'.join(value.getPhysicalPath()))
         # raises 'RelationValue' object has no attribute 'getPhysicalPath'
         if hasattr(field, 'source') and field.source is not None:
-            logger.warn("Bypassing validation of field '%s'" % field)
+            logger.warn("Bypassing validation of field {0} of {1}".format(
+                field_name, '/'.join(obj.getPhysicalPath())))
             continue
         try:
             field._validate(value)

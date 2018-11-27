@@ -4,8 +4,8 @@ Changelog
 0.15 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Display more logging in `content.validate_fields` when bypassing validation.
+  [gbastien]
 
 0.14 (2018-10-22)
 -----------------
