@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from Products.CMFCore.utils import getToolByName
+from Products.ZCatalog.ProgressHandler import ZLogHandler
 from zope.component import getUtility
 from zope.intid.interfaces import IIntIds
 
@@ -50,8 +51,8 @@ def addOrUpdateIndexes(portal, indexInfos={}):
             logger.info('Created index "%s" of type "%s"...' % (indexName, indexType))
 
     if addedIndexes:
-        # Indexing database content based on this index.
-        catalog.reindexIndex(addedIndexes, portal.REQUEST)
+        pghandler = ZLogHandler()
+        catalog.reindexIndex(addedIndexes, portal.REQUEST, pghandler=pghandler)
 
 
 def removeIndexes(portal, indexes=()):

@@ -6,6 +6,9 @@ Changelog
 
 - Display more logging in `content.validate_fields` when bypassing validation.
   [gbastien]
+- In `catalog.addOrUpdateIndexes`, pass a `ZLogHandler` to `reindexIndex` so the
+  progress is shown in the Zope log.
+  [gbastien]
 
 0.14 (2018-10-22)
 -----------------
