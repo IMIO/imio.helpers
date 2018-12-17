@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from persistent.list import PersistentList
 from plone import api
 from plone.api.validation import mutually_exclusive_parameters
 from plone.app.textfield.value import RichTextValue
@@ -288,8 +289,9 @@ def add_to_annotation(annotation_key, value, obj=None, uid=None):
 
     annot = IAnnotations(obj)
     if annotation_key not in annot:
-        annot[annotation_key] = set([])
-    annot[annotation_key].add(value)
+        annot[annotation_key] = PersistentList()
+    if value not in annot[annotation_key]:
+        annot[annotation_key].append(value)
 
 
 @mutually_exclusive_parameters('obj', 'uid')
