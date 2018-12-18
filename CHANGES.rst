@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.15 (unreleased)
+0.15 (2018-12-18)
 -----------------
 
 - Display more logging in `content.validate_fields` when bypassing validation.
