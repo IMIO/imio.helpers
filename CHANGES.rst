@@ -9,6 +9,10 @@ Changelog
 - In `catalog.addOrUpdateIndexes`, pass a `ZLogHandler` to `reindexIndex` so the
   progress is shown in the Zope log.
   [gbastien]
+- In `content.add_to_annotation` and `content.del_from_annotation`, store
+  annotation in a `PersistentList` instead a `set()` to avoid persistence
+  problems.
+  [gbastien]
 
 0.14 (2018-10-22)
 -----------------
