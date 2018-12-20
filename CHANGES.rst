@@ -4,8 +4,9 @@ Changelog
 0.16 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Added `appy.pod` usecase to show problems with table optimization if
+  `<td>` has a defined size.
+  [gbastien]
 
 0.15 (2018-12-18)
 -----------------
