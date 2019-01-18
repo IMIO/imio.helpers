@@ -1119,7 +1119,7 @@ Tableau "fixed" sans largeur définie :
 
 <p style="color: #0000FF;"><u><strong>Tableau avec nombreuses colonnes, taille de texte réduite en utilisant "font-size: 9px" et "font-size: 8px", cellspacing="0", headers du tableau en gras en utilisant "font-weight: bold" :</strong></u></p>
 
-<table cellspacing="0" border="1">
+<table border="1">
     <tbody>
         <tr>
             <th><span style="font-size:10px; font-weight: bold;">Température</span></th>
@@ -3130,3 +3130,20 @@ border="1" style="width:500px; border: undefined;"
 <p>Ligne un, il y a un saut de ligne entre les 2 lignes</p>
 <br>
 <p>Ligne deux</p>
+
+<p>&nbsp;</p>
+
+<p style="color: #0000FF;"><u><strong>Attribut linge-height pas pris en compte appy.pod <= 0.9.13 :</strong></u></p>
+
+<p>Mon texte blablabla sans line-height</p>
+<p>Mon texte blablabla sans line-height</p>
+<p style="line-height: 10px;">Mon texte blablabla line-height 10px, plus petit que la hauteur du texte</p>
+<p>Mon texte blablabla sans line-height</p>
+<p style="line-height: 50px;">Mon texte blablabla line-height 50px</p>
+<p>Mon texte blablabla sans line-height</p>
+<p style="line-height: 3em;">Mon texte blablabla line-height 3em</p>
+<p>Mon texte blablabla sans line-height</p>
+<p style="line-height: 10ex;">Mon texte blablabla line-height 10ex</p>
+<p>Mon texte blablabla sans line-height</p>
+
+<p>&nbsp;</p>

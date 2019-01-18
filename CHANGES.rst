@@ -10,6 +10,8 @@ Changelog
 - Added `appy.pod` usecase to show problems with table having a first empty
   `<tr></tr>` that do not render second column of following lines.
   [gbastien]
+- Added `appy.pod` usecase for line-height style.
+  [gbastien]
 
 0.15 (2018-12-18)
 -----------------
