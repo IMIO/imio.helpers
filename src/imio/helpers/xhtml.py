@@ -281,8 +281,9 @@ def imagesToPath(context, xhtmlContent, pretty_print=False):
     portal_url = portal.absolute_url()
     for img in imgs:
         # check if it is a local or an external image
-        img_src = img.attrib['src']
-        if img_src.startswith('http') and not img_src.startswith(portal_url):
+        img_src = img.attrib.get('src', None)
+        # wrong <img> without src or external image
+        if not img_src or (img_src.startswith('http') and not img_src.startswith(portal_url)):
             continue
         # here, we have an image contained in the portal
         # either absolute path (http://...) or relative (../images/myimage.png)

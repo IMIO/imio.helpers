@@ -419,6 +419,10 @@ class TestXHTMLModule(IntegrationTestCase):
         expected = expected.replace("../img/image_preview", img_blob_path)
         self.assertEqual(imagesToPath(doc2, text).replace('\n', ''), expected.replace('\n', ''))
 
+        # image without src, nothing done
+        text = '<img title="My image without src">'
+        self.assertEqual(imagesToPath(doc, text), text)
+
         # using resolveuid and absolute path and relative path
         text = '<img src="resolveuid/{0}/image_preview" alt="Image" title="Image">' \
                '<img src="resolveuid/{0}" alt="Image" title="Image">' \

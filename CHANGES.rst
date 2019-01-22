@@ -12,6 +12,10 @@ Changelog
   [gbastien]
 - Added `appy.pod` usecase for line-height style.
   [gbastien]
+- Added `appy.pod` usecase for `<img>` without `src` that breaks generation.
+  [gbastien]
+- Do not break in `xhtml.imagesToPath` if `<img>` does not have a `src`.
+  [gbastien]
 
 0.15 (2018-12-18)
 -----------------
