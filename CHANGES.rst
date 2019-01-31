@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.16 (unreleased)
+0.16 (2019-01-31)
 -----------------
 
 - Added `appy.pod` usecase to show problems with table optimization if
