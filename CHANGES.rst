@@ -4,8 +4,8 @@ Changelog
 0.17 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Added collapsible option on container view.
+  [sgeulette]
 
 0.16 (2019-01-31)
 -----------------

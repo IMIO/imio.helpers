@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2016-09-05 13:15+0000\n"
+"POT-Creation-Date: 2019-02-05 12:46+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,16 +25,35 @@ msgstr ""
 msgid "Description"
 msgstr ""
 
+#: ../browser/container.pt:14
+msgid "Fields"
+msgstr ""
+
 #: ../browser/folder_listing_table.pt:10
 msgid "State"
+msgstr ""
+
+#: ../testing.zcml:24
+msgid "Steps to ease tests of imio.helpers"
 msgstr ""
 
 #: ../browser/folder_listing_table.pt:8
 msgid "Title"
 msgstr ""
 
+#: ../configure.zcml:31
+msgid "imio.helpers"
+msgstr ""
+
+#: ../configure.zcml:31
+msgid "imio.helpers default"
+msgstr ""
+
+#: ../testing.zcml:24
+msgid "imio.helpers testing"
+msgstr ""
+
 #. Default: "Contents"
 #: ../browser/folder_listing.pt:9
 msgid "legend_folder_listing"
 msgstr ""
-
