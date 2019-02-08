@@ -2,8 +2,18 @@
 from imio.helpers.interfaces import IListContainedDexterityObjectsForDisplay
 from plone import api
 from plone.batching import Batch
+from plone.dexterity.browser.view import DefaultView
 from Products.Five import BrowserView
 from zope.component import getMultiAdapter
+
+
+class ContainerView(DefaultView):
+    """ """
+
+    collapse_all_fields = False
+    collapse_all_fields_onload = False
+    fields_to_collapse = []  # not yet used
+    fields_to_collapse_onload = []  # not yet used
 
 
 class ContainerFolderListingView(BrowserView):

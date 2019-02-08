@@ -4,6 +4,8 @@ Changelog
 0.17 (unreleased)
 -----------------
 
+- Added collapsible option on container view.
+  [sgeulette]
 - Do not store date for get_cachekey_volatile/invalidate_cachekey_volatile_for
   in a volatile (_v_...) as it seems "stored" by thread and is computed to much
   times.
