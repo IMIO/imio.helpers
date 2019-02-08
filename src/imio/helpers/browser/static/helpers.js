@@ -17,3 +17,8 @@ $(window).bind('afterprint', function(){
         }
     );
 });
+
+// currently displaying a faceted navigation?
+function has_faceted() {
+  return Boolean($("div#faceted-form").length);
+}

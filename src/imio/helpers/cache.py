@@ -9,12 +9,14 @@ from zope.component import getAllUtilitiesRegisteredFor
 from zope.component import getUtility
 from zope.component import queryUtility
 from zope.schema.interfaces import IVocabularyFactory
+from persistent.mapping import PersistentMapping
 
 import logging
 
 
 logger = logging.getLogger('imio.helpers:cache')
 VOLATILE_NAME_MAX_LENGTH = 200
+VOLATILE_ATTR = '_volatile_cache_keys'
 
 
 def cleanVocabularyCacheFor(vocabulary=None):
@@ -56,10 +58,11 @@ def get_cachekey_volatile(name):
     # that could lead to having 2 names beginning with same part using same volatile...
     normalized_name = queryUtility(IIDNormalizer).normalize(
         name, max_length=VOLATILE_NAME_MAX_LENGTH)
-    volatile_name = '_v_{0}'.format(normalized_name)
-    if not hasattr(portal, '_v_cache_keys'):
-        portal._v_cache_keys = {}
-    volatiles = portal._v_cache_keys
+    volatile_name = normalized_name
+    volatiles = getattr(portal, VOLATILE_ATTR, None)
+    if volatiles is None:
+        portal._volatile_cache_keys = PersistentMapping()
+        volatiles = portal._volatile_cache_keys
     date = volatiles.get(volatile_name)
     if not date:
         date = datetime.now()
@@ -72,8 +75,8 @@ def invalidate_cachekey_volatile_for(name):
     portal = api.portal.get()
     normalized_name = queryUtility(IIDNormalizer).normalize(
         name, max_length=VOLATILE_NAME_MAX_LENGTH)
-    volatile_name = '_v_{0}'.format(normalized_name)
-    volatiles = getattr(portal, '_v_cache_keys', {})
+    volatile_name = normalized_name
+    volatiles = getattr(portal, VOLATILE_ATTR, {})
     if volatile_name in volatiles:
         del volatiles[volatile_name]
 

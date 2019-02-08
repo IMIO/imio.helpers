@@ -8,6 +8,7 @@ from imio.helpers.cache import cleanVocabularyCacheFor
 from imio.helpers.cache import generate_key
 from imio.helpers.cache import get_cachekey_volatile
 from imio.helpers.cache import invalidate_cachekey_volatile_for
+from imio.helpers.cache import VOLATILE_ATTR
 from imio.helpers.cache import volatile_cache_with_parameters
 from imio.helpers.cache import volatile_cache_without_parameters
 from imio.helpers.testing import IntegrationTestCase
@@ -128,12 +129,12 @@ class TestCacheModule(IntegrationTestCase):
         method_name = 'My method'
         plone_utils = api.portal.get_tool('plone_utils')
         normalized_name = plone_utils.normalizeString(method_name)
-        volatile_name = '_v_{0}'.format(normalized_name)
+        volatile_name = normalized_name
         self.assertIsNone(getattr(self.portal, volatile_name, None))
         # calling the method will set the volatile on the portal
         date = get_cachekey_volatile(method_name)
         self.assertTrue(isinstance(date, datetime))
-        volatiles = getattr(self.portal, '_v_cache_keys', {})
+        volatiles = getattr(self.portal, VOLATILE_ATTR, {})
         self.assertTrue(isinstance(volatiles.get(volatile_name), datetime))
         # calling it again will still return same date
         self.assertEquals(date, get_cachekey_volatile(method_name))
@@ -146,7 +147,7 @@ class TestCacheModule(IntegrationTestCase):
         method_name = 'My method'
         plone_utils = api.portal.get_tool('plone_utils')
         normalized_name = plone_utils.normalizeString(method_name)
-        volatile_name = '_v_{0}'.format(normalized_name)
+        volatile_name = normalized_name
         self.assertIsNone(getattr(self.portal, volatile_name, None))
         # calling the method if volatile does not exist does not break
         invalidate_cachekey_volatile_for(method_name)
