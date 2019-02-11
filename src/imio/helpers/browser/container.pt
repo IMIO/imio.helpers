@@ -10,7 +10,7 @@
 <metal:main fill-slot="content-core">
   <metal:content-core define-macro="content-core">
 
-  <dl tal:condition="view/collapse_all_fields" id="container-collapsible"
+  <dl tal:condition="view/collapse_all_fields|nothing" id="container-collapsible"
       tal:attributes="class python:view.collapse_all_fields_onload and 'collapsible collapsedOnLoad' or 'collapsible'">
     <dt class="collapsibleHeader" i18n:translate="">Fields</dt>
     <dd class="collapsibleContent">
@@ -40,7 +40,7 @@
     </dd>
   </dl>
 
-  <tal:not_collapse_all_fields condition="not: view/collapse_all_fields">
+  <tal:not_collapse_all_fields condition="not: view/collapse_all_fields|nothing">
     <table class="no-style-table" width="100%">
       <tal:loop repeat="widget view/widgets/values">
         <tr tal:condition="python:widget.__name__ not in ('IBasic.title', 'IBasic.description', 'title', 'description',)">
