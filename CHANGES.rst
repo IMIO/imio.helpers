@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.17 (unreleased)
+0.17 (2019-02-12)
 -----------------
 
 - Added collapsible option on container view.
