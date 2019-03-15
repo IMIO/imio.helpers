@@ -4,8 +4,9 @@ Changelog
 0.18 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Added `appy.pod` sample that show problem of wrongly defined style like
+  `margin-left: opt;` using `opt` instead `0pt`.
+  [gbastien]
 
 0.17 (2019-02-12)
 -----------------
