@@ -2,7 +2,7 @@
 <p>&nbsp;</p>
 <p class="highlight-red">Idéalement utiliser un modèle dont le style par défaut a été redéfini, ceci permet de tester qu'un paragraphe utilisant un style est rendu avec le même style (Police et taille de police) qu'un paragraphe sans style</p>
 <p>&nbsp;</p>
-<p class="highlight-red">Pour tester l'utilisation du style "Signature" il faut également le redéfinir dans le modèle et lui adjoindre par exemple une couleur de fond</p>
+<p class="smallText">Pour tester l'utilisation du style "smallText" (qui est cassé en 0.9.13 quand utilisé dans &lt;li&gt; ou &lt;td&gt;) il faut s'assurer qu'il soit dans le modèle ou le fichier de styles associé</p>
 <p>&nbsp;</p>
 
 <p style="color: #0000FF;"><u><strong>&gt;&gt;&gt;&gt;&gt; TEXTE &lt;&lt;&lt;&lt;&lt; :</strong></u></p>
@@ -119,7 +119,7 @@ style sur &lt;span&gt; dans &lt;li&gt;
 
 <ul>
     <li><p style="font-style: italic; font-weight: bold;">attribut "style" italique gras;</p></li>
-    <li><p class="Signature">attribut "class" utilisant "Signature", un style par défaut de LibreOffice.</p></li>
+    <li><p class="smallText">attribut "class" utilisant "smallText".</p></li>
 </ul>
 
 <p>&nbsp;</p>
@@ -1916,7 +1916,7 @@ border="1" style="width:500px; border: undefined;"
   <tbody>
     <tr>
       <td><p style="font-weight: bold;">Texte utilisant attribut "style" gras;</p></td>
-      <td><p class="Signature">Texte utilisant attribut "class" la classe par défaut "Signature".</p></td>
+      <td><p class="smallText">Texte utilisant attribut "class" la classe par défaut "smallText".</p></td>
     </tr>
   </tbody>
 </table>

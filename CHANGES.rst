@@ -7,6 +7,8 @@ Changelog
 - Added `appy.pod` sample that show problem of wrongly defined style like
   `margin-left: opt;` using `opt` instead `0pt`.
   [gbastien]
+- Added `appy.pod` sample that show problem of class not used in `<li>` or `<td>`.
+  [gbastien]
 
 0.17 (2019-02-12)
 -----------------
