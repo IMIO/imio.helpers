@@ -3,14 +3,18 @@
 from persistent.list import PersistentList
 from plone import api
 from plone.api.validation import mutually_exclusive_parameters
+from plone.app.controlpanel.editing import IEditingSchema
 from plone.app.textfield.value import RichTextValue
 from plone.behavior.interfaces import IBehavior
 from plone.namedfile.file import NamedBlobFile
 from plone.namedfile.file import NamedBlobImage
+from plone.registry.interfaces import IRegistry
+from Products.CMFCore.interfaces import IPropertiesTool
 from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.CMFPlone.utils import safe_unicode
 from zope.annotation import IAnnotations
 from zope.component import getUtility
+from zope.component import queryUtility
 from zope.interface.interfaces import IMethod
 from zope.schema._field import Bool
 
@@ -347,3 +351,40 @@ def uuidsToObjects(uuids=[], ordered=False):
 
     brains = uuidsToCatalogBrains(uuids, ordered=ordered)
     return [brain.getObject() for brain in brains]
+
+
+def disable_link_integrity_checks():
+    """ """
+    ptool = queryUtility(IPropertiesTool)
+    site_props = getattr(ptool, 'site_properties', None)
+    original_link_integrity = False
+    if site_props and site_props.hasProperty(
+            'enable_link_integrity_checks'):
+        original_link_integrity = site_props.getProperty(
+            'enable_link_integrity_checks', False)
+        site_props.manage_changeProperties(
+            enable_link_integrity_checks=False)
+    else:
+        # Plone 5
+        registry = getUtility(IRegistry)
+        editing_settings = registry.forInterface(IEditingSchema, prefix='plone')
+        original_link_integrity = editing_settings.enable_link_integrity_checks
+        editing_settings.enable_link_integrity_checks = False
+    return original_link_integrity
+
+
+def restore_link_integrity_checks(original_link_integrity):
+    """ """
+    ptool = queryUtility(IPropertiesTool)
+    site_props = getattr(ptool, 'site_properties', None)
+    if site_props and site_props.hasProperty(
+            'enable_link_integrity_checks'):
+        ptool = queryUtility(IPropertiesTool)
+        site_props = getattr(ptool, 'site_properties', None)
+        site_props.manage_changeProperties(
+            enable_link_integrity_checks=original_link_integrity
+        )
+    else:
+        registry = getUtility(IRegistry)
+        editing_settings = registry.forInterface(IEditingSchema, prefix='plone')
+        editing_settings.enable_link_integrity_checks = original_link_integrity

@@ -5,9 +5,11 @@ from imio.helpers.content import add_image
 from imio.helpers.content import add_to_annotation
 from imio.helpers.content import create
 from imio.helpers.content import del_from_annotation
+from imio.helpers.content import disable_link_integrity_checks
 from imio.helpers.content import get_from_annotation
 from imio.helpers.content import get_object
 from imio.helpers.content import get_schema_fields
+from imio.helpers.content import restore_link_integrity_checks
 from imio.helpers.content import safe_encode
 from imio.helpers.content import transitions
 from imio.helpers.content import uuidsToCatalogBrains
@@ -245,3 +247,15 @@ class TestContentModule(IntegrationTestCase):
         self.assertEqual(
             uuidsToObjects(uuids, ordered=True),
             [self.portal.folder2, self.portal.folder])
+
+    def test_disable_link_integrity_checks(self):
+        self.assertTrue(self.portal.portal_properties.site_properties.enable_link_integrity_checks)
+        disable_link_integrity_checks()
+        self.assertFalse(self.portal.portal_properties.site_properties.enable_link_integrity_checks)
+
+    def test_restore_link_integrity_checks(self):
+        self.assertTrue(self.portal.portal_properties.site_properties.enable_link_integrity_checks)
+        restore_link_integrity_checks(False)
+        self.assertFalse(self.portal.portal_properties.site_properties.enable_link_integrity_checks)
+        restore_link_integrity_checks(True)
+        self.assertTrue(self.portal.portal_properties.site_properties.enable_link_integrity_checks)

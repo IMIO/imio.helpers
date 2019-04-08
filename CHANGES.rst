@@ -7,7 +7,13 @@ Changelog
 - Added `appy.pod` sample that show problem of wrongly defined style like
   `margin-left: opt;` using `opt` instead `0pt`.
   [gbastien]
-- Added `appy.pod` sample that show problem of class not used in `<li>` or `<td>`.
+- Added `appy.pod` sample that show problem of class not used in `<li>`
+  or `<td>`.
+  [gbastien]
+- Added methods `content.disable_link_integrity_checks` and
+  `content.restore_link_integrity_checks` to be able to disable the
+  `enable_link_integrity_checks property` and to restore it to it's original
+  value.  This works for Plone4 (property) and Plone5 (registry).
   [gbastien]
 
 0.17 (2019-02-12)
