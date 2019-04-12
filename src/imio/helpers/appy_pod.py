@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from os import path
 from plone import api
 from plone.app.textfield import RichText
