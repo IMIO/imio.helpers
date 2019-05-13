@@ -3,7 +3,6 @@
 from persistent.list import PersistentList
 from plone import api
 from plone.api.validation import mutually_exclusive_parameters
-from plone.app.controlpanel.editing import IEditingSchema
 from plone.app.textfield.value import RichTextValue
 from plone.behavior.interfaces import IBehavior
 from plone.namedfile.file import NamedBlobFile
@@ -11,6 +10,7 @@ from plone.namedfile.file import NamedBlobImage
 from plone.registry.interfaces import IRegistry
 from Products.CMFCore.interfaces import IPropertiesTool
 from Products.CMFCore.WorkflowCore import WorkflowException
+from Products.CMFPlone.utils import getFSVersionTuple
 from Products.CMFPlone.utils import safe_unicode
 from zope.annotation import IAnnotations
 from zope.component import getUtility
@@ -21,6 +21,10 @@ from zope.schema._field import Bool
 import logging
 import os
 
+
+HAS_PLONE5 = bool(getFSVersionTuple()[0] >= 5)
+if HAS_PLONE5:
+    from Products.CMFPlone.interfaces import IEditingSchema
 
 logger = logging.getLogger('imo.helpers.content')
 ADDED_TYPE_ERROR = 'A validation error occurred while instantiating "{0}" with id "{1}". {2}'

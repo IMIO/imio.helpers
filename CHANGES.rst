@@ -15,6 +15,8 @@ Changelog
   `enable_link_integrity_checks property` and to restore it to it's original
   value.  This works for Plone4 (property) and Plone5 (registry).
   [gbastien]
+- Fix import of `IEditingSchema` on Plone5.
+  [gbastien]
 
 0.17 (2019-02-12)
 -----------------
