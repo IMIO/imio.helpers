@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.18 (unreleased)
+0.18 (2019-05-16)
 -----------------
 
 - Added `appy.pod` sample that show problem of wrongly defined style like
