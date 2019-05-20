@@ -26,7 +26,7 @@ HAS_PLONE5 = bool(getFSVersionTuple()[0] >= 5)
 if HAS_PLONE5:
     from Products.CMFPlone.interfaces import IEditingSchema
 
-logger = logging.getLogger('imo.helpers.content')
+logger = logging.getLogger('imio.helpers.content')
 ADDED_TYPE_ERROR = 'A validation error occurred while instantiating "{0}" with id "{1}". {2}'
 
 
