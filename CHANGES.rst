@@ -4,8 +4,8 @@ Changelog
 0.19 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Added css id on row field display in container.pt and content.pt.
+  [sgeulette]
 
 0.18 (2019-05-16)
 -----------------

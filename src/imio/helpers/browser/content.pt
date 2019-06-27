@@ -11,7 +11,7 @@
   <metal:content-core define-macro="content-core">
 
     <table class="no-style-table" width="100%">
-        <tr tal:repeat="widget view/widgets/values">
+        <tr tal:repeat="widget view/widgets/values" tal:attributes="id string:row-${widget/id}">
             <td class="table_widget_label"><label tal:content="widget/label">Label</label></td>
             <td class="table_widget_value" tal:content="structure widget/render">Value</td>
         </tr>
@@ -21,7 +21,7 @@
               tal:attributes="id python:''.join((group.prefix, 'groups.', group.__name__)).replace('.', '-')">
         <legend tal:content="group/label" />
         <table class="no-style-table" width="100%">
-            <tr tal:repeat="widget group/widgets/values">
+            <tr tal:repeat="widget group/widgets/values" tal:attributes="id string:row-${widget/id}">
                 <td class="table_widget_label"><label tal:content="widget/label">Label</label></td>
                 <td class="table_widget_value" tal:content="structure widget/render">Value</td>
             </tr>
@@ -35,4 +35,3 @@
 
 </body>
 </html>
-

@@ -16,7 +16,8 @@
     <dd class="collapsibleContent">
       <table class="no-style-table" width="100%">
         <tal:loop repeat="widget view/widgets/values">
-          <tr tal:condition="python:widget.__name__ not in ('IBasic.title', 'IBasic.description', 'title', 'description',)">
+          <tr tal:condition="python:widget.__name__ not in ('IBasic.title', 'IBasic.description', 'title', 'description',)"
+              tal:attributes="id string:row-${widget/id}">
               <td class="table_widget_label">
                 <label tal:content="widget/label">Label</label>
               </td>
@@ -29,7 +30,7 @@
                 tal:attributes="id python:''.join((group.prefix, 'groups.', group.__name__)).replace('.', '-')">
           <legend tal:content="group/label" />
           <table class="no-style-table" width="100%">
-              <tr tal:repeat="widget group/widgets/values">
+              <tr tal:repeat="widget group/widgets/values" tal:attributes="id string:row-${widget/id}">
                   <td class="table_widget_label">
                     <label tal:content="widget/label">Label</label>
                   </td>
@@ -43,7 +44,8 @@
   <tal:not_collapse_all_fields condition="not: view/collapse_all_fields|nothing">
     <table class="no-style-table" width="100%">
       <tal:loop repeat="widget view/widgets/values">
-        <tr tal:condition="python:widget.__name__ not in ('IBasic.title', 'IBasic.description', 'title', 'description',)">
+        <tr tal:condition="python:widget.__name__ not in ('IBasic.title', 'IBasic.description', 'title', 'description',)"
+            tal:attributes="id string:row-${widget/id}">
             <td class="table_widget_label">
               <label tal:content="widget/label">Label</label>
             </td>
@@ -56,7 +58,7 @@
               tal:attributes="id python:''.join((group.prefix, 'groups.', group.__name__)).replace('.', '-')">
         <legend tal:content="group/label" />
         <table class="no-style-table" width="100%">
-            <tr tal:repeat="widget group/widgets/values">
+            <tr tal:repeat="widget group/widgets/values" tal:attributes="id string:row-${widget/id}">
                 <td class="table_widget_label">
                   <label tal:content="widget/label">Label</label>
                 </td>
@@ -77,4 +79,3 @@
 
 </body>
 </html>
-
