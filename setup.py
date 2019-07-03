@@ -38,6 +38,7 @@ setup(
         'plone.dexterity',
         'setuptools',
         'Plone',
+        'collective.monkeypatcher',
     ],
     extras_require={
         'test': [

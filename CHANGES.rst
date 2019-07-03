@@ -4,6 +4,8 @@ Changelog
 0.19 (unreleased)
 -----------------
 
+- Patch index method from collective.solr to fix an issue with partial reindex
+  [mpeeters]
 - Added css id on row field display in container.pt and content.pt.
   [sgeulette]
 
