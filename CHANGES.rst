@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.19 (unreleased)
+0.19 (2019-07-05)
 -----------------
 
 - Patch index method from collective.solr to fix an issue with partial reindex
