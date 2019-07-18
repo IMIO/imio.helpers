@@ -72,7 +72,7 @@ def removeBlanks(xhtmlContent, pretty_print=False):
 
     for el in tree.getchildren():
         # el can be a subtree, like <ul><li>...</li></ul> we must consider entire rendering of it
-        if xhtmlContentIsEmpty(el):
+        if xhtmlContentIsEmpty(el, tagWithAttributeIsNotEmpty=False):
             el.getparent().remove(el)
     # only return children of the <special_tag>
     return ''.join([lxml.html.tostring(x,
@@ -431,7 +431,8 @@ def storeImagesLocally(context,
             end_of_url = original_img_src.split(img_uid)[-1]
             if end_of_url == img_uid:
                 end_of_url = None
-            img_src = uuidToURL(img_uid)
+            # if not found, like when copy/paste HTML code containing resolveuid, use '' instead None
+            img_src = uuidToURL(img_uid) or ''
 
         if store_internal_images and \
            img_src.startswith(portal_url) and \

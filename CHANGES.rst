@@ -4,8 +4,14 @@ Changelog
 0.20 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- In `xhtml.storeImagesLocally`, do not break when a `resolveuid` is found but
+  it does not find the image. This can be the case when copy/pasting HTML code
+  from another instance or so.
+  [gbastien]
+- In `xhtml.removeBlanks`, check if content is empty by calling
+  `xhtml.xhtmlContentIsEmpty` with parameter `tagWithAttributeIsNotEmpty=False`
+  so empty tags with attributes are considered empty.
+  [gbastien]
 
 0.19 (2019-07-05)
 -----------------
