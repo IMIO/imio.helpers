@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.20 (unreleased)
+0.20 (2019-07-19)
 -----------------
 
 - In `xhtml.storeImagesLocally`, do not break when a `resolveuid` is found but
