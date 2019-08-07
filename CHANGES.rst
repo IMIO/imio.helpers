@@ -4,8 +4,12 @@ Changelog
 0.21 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Added parameter `get_again=False` to
+  `cache.invalidate_cachekey_volatile_for`, when True, this will call
+  `cache.get_cachekey_volatile` just after the cache is invalidated so we get
+  a fresh date stored. This is useful to avoid write by async requests if it
+  calls `cache.get_cachekey_volatile`.
+  [gbastien]
 
 0.20 (2019-07-19)
 -----------------

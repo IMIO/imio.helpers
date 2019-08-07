@@ -70,7 +70,7 @@ def get_cachekey_volatile(name):
     return date
 
 
-def invalidate_cachekey_volatile_for(name):
+def invalidate_cachekey_volatile_for(name, get_again=False):
     """ """
     portal = api.portal.get()
     normalized_name = queryUtility(IIDNormalizer).normalize(
@@ -79,6 +79,10 @@ def invalidate_cachekey_volatile_for(name):
     volatiles = getattr(portal, VOLATILE_ATTR, {})
     if volatile_name in volatiles:
         del volatiles[volatile_name]
+    # when the key is invalidated, get_cachekey_volatile so it
+    # stores a new date and it avoids a second write
+    if get_again:
+        get_cachekey_volatile(volatile_name)
 
 
 def _generate_params_key(*args, **kwargs):
