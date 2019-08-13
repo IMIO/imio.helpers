@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.21 (unreleased)
+0.21 (2019-08-13)
 -----------------
 
 - Added parameter `get_again=False` to
