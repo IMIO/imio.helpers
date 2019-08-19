@@ -69,9 +69,7 @@ def removeIndexes(portal, indexes=()):
 
 def addOrUpdateColumns(portal, columns=(), update_metadata=True):
     '''This method creates or updates in a p_portal portal_catalog
-       the metadata given in p_columns.
-       If update_metadata is True, the metadata will be updated
-       for every already catalogued objects.'''
+       the metadata given in p_columns.'''
     catalog = getToolByName(portal, 'portal_catalog')
     addedColumns = []
     for column in columns:
@@ -91,7 +89,7 @@ def addOrUpdateColumns(portal, columns=(), update_metadata=True):
             if obj is None:
                 logger.error('Could not update metadata for an object from the uid %r.' % path)
             else:
-                catalog.catalog_object(obj, idxs=addedColumns)
+                obj.reindexObject(idxs=addedColumns)
 
 
 def removeColumns(portal, columns=()):

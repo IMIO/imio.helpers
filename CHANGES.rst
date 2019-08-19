@@ -4,9 +4,9 @@ Changelog
 0.22 (unreleased)
 -----------------
 
-- In `catalog.addOrUpdateColumns`, use `portal_catalog.catalog_object` to
-  update the column for every objects, slightly faster than using
-  `object.reindexObject`.
+- Added parameter `update_metadata` to `catalog.addOrUpdateColumns`,
+  if `True` (default), the new added metadata are updateid on every
+  catalogued objects.
   [gbastien]
 
 0.21 (2019-08-13)
