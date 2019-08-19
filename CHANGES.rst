@@ -4,8 +4,10 @@ Changelog
 0.22 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- In `catalog.addOrUpdateColumns`, use `portal_catalog.catalog_object` to
+  update the column for every objects, slightly faster than using
+  `object.reindexObject`.
+  [gbastien]
 
 0.21 (2019-08-13)
 -----------------

@@ -67,9 +67,11 @@ def removeIndexes(portal, indexes=()):
             logger.info('Trying to remove an unexisting index with name "%s"...' % index)
 
 
-def addOrUpdateColumns(portal, columns=()):
+def addOrUpdateColumns(portal, columns=(), update_metadata=True):
     '''This method creates or updates in a p_portal portal_catalog
-       the metadata given in p_columns.'''
+       the metadata given in p_columns.
+       If update_metadata is True, the metadata will be updated
+       for every already catalogued objects.'''
     catalog = getToolByName(portal, 'portal_catalog')
     addedColumns = []
     for column in columns:
@@ -79,7 +81,7 @@ def addOrUpdateColumns(portal, columns=()):
             catalog.addColumn(column)
             logger.info('Added metadata "%s"...' % column)
 
-    if addedColumns:
+    if addedColumns and update_metadata:
         # update relevant metadata
         # there is no helper method in ZCatalog to update metadata
         # we need to get every catalogued objects and call reindexObject
@@ -89,7 +91,7 @@ def addOrUpdateColumns(portal, columns=()):
             if obj is None:
                 logger.error('Could not update metadata for an object from the uid %r.' % path)
             else:
-                obj.reindexObject(idxs=addedColumns)
+                catalog.catalog_object(obj, idxs=addedColumns)
 
 
 def removeColumns(portal, columns=()):
