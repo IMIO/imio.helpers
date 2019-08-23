@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.22 (unreleased)
+0.22 (2019-08-23)
 -----------------
 
 - Added parameter `update_metadata` to `catalog.addOrUpdateColumns`,
