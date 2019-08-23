@@ -5,7 +5,7 @@ Changelog
 -----------------
 
 - Added parameter `update_metadata` to `catalog.addOrUpdateColumns`,
-  if `True` (default), the new added metadata are updateid on every
+  if `True` (default), the new added metadata are updated on every
   catalogued objects.
   [gbastien]
 - Added function to return html link for an object
