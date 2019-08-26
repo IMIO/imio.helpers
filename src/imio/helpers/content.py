@@ -17,6 +17,7 @@ from zope.component import getUtility
 from zope.component import queryUtility
 from zope.interface.interfaces import IMethod
 from zope.schema._field import Bool
+from zope.schema.interfaces import IVocabularyFactory
 
 import logging
 import os
@@ -392,3 +393,12 @@ def restore_link_integrity_checks(original_link_integrity):
         registry = getUtility(IRegistry)
         editing_settings = registry.forInterface(IEditingSchema, prefix='plone')
         editing_settings.enable_link_integrity_checks = original_link_integrity
+
+
+def get_vocab(context, vocab_name, only_factory=False):
+    """ """
+    vocab_factory = getUtility(IVocabularyFactory, vocab_name)
+    if only_factory:
+        return vocab_factory
+    vocab = vocab_factory(context)
+    return vocab

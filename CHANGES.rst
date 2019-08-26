@@ -4,8 +4,9 @@ Changelog
 0.23 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Added `content.get_vocab` helper method to easily get a `IVocabularyFactory`
+  vocabulary instance or only the factory when parameter `only_factory=True`.
+  [gbastien]
 
 0.22 (2019-08-23)
 -----------------

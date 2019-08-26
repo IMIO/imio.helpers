@@ -9,6 +9,7 @@ from imio.helpers.content import disable_link_integrity_checks
 from imio.helpers.content import get_from_annotation
 from imio.helpers.content import get_object
 from imio.helpers.content import get_schema_fields
+from imio.helpers.content import get_vocab
 from imio.helpers.content import restore_link_integrity_checks
 from imio.helpers.content import safe_encode
 from imio.helpers.content import transitions
@@ -17,8 +18,10 @@ from imio.helpers.content import uuidsToObjects
 from imio.helpers.content import validate_fields
 from imio.helpers.testing import IntegrationTestCase
 from plone import api
+from plone.app.vocabularies.types import PortalTypesVocabulary
 from zope.annotation import IAnnotations
 from zope.schema._bootstrapinterfaces import WrongType
+from zope.schema.vocabulary import SimpleVocabulary
 
 import os
 
@@ -259,3 +262,9 @@ class TestContentModule(IntegrationTestCase):
         self.assertFalse(self.portal.portal_properties.site_properties.enable_link_integrity_checks)
         restore_link_integrity_checks(True)
         self.assertTrue(self.portal.portal_properties.site_properties.enable_link_integrity_checks)
+
+    def test_get_vocab(self):
+        vocab = get_vocab(self.portal, 'plone.app.vocabularies.PortalTypes')
+        self.assertTrue(isinstance(vocab, SimpleVocabulary))
+        vocab = get_vocab(None, 'plone.app.vocabularies.PortalTypes', only_factory=True)
+        self.assertTrue(isinstance(vocab, PortalTypesVocabulary))
