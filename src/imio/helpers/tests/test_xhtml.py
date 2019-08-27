@@ -4,6 +4,7 @@ from imio.helpers.xhtml import addClassToContent
 from imio.helpers.xhtml import addClassToLastChildren
 from imio.helpers.xhtml import imagesToPath
 from imio.helpers.xhtml import markEmptyTags
+from imio.helpers.xhtml import object_link
 from imio.helpers.xhtml import removeBlanks
 from imio.helpers.xhtml import removeCssClasses
 from imio.helpers.xhtml import storeImagesLocally
@@ -620,3 +621,14 @@ class TestXHTMLModule(IntegrationTestCase):
             self.portal.folder.absolute_url())
         # nothing was changed
         self.assertEqual(storeImagesLocally(self.portal.folder2, text), text)
+
+    def test_object_link(self):
+        obj = self.portal.folder
+        obj.setTitle(u'Folder title')
+        self.assertEqual(object_link(obj), u'<a href="http://nohost/plone/folder/view">Folder title</a>')
+        self.assertEqual(object_link(obj, view='edit'),
+                         u'<a href="http://nohost/plone/folder/edit">Folder title</a>')
+        self.assertEqual(object_link(obj, attribute='portal_type'),
+                         u'<a href="http://nohost/plone/folder/view">Folder</a>')
+        self.assertEqual(object_link(obj, view='edit', attribute='Description'),
+                         u'<a href="http://nohost/plone/folder/edit"></a>')
