@@ -4,6 +4,7 @@ from collections import OrderedDict
 from imio.helpers.catalog import addOrUpdateColumns
 from imio.helpers.catalog import addOrUpdateIndexes
 from imio.helpers.catalog import get_intid
+from imio.helpers.catalog import reindexIndexes
 from imio.helpers.catalog import removeColumns
 from imio.helpers.catalog import removeIndexes
 from imio.helpers.catalog import ZCTextIndexInfo
@@ -201,3 +202,13 @@ class TestCatalogModule(IntegrationTestCase):
         new_id = get_intid(obj, intids=intids)
         self.assertNotEqual(new_id, obj_id)
         self.assertNotEqual(new_id, 1)
+
+    def test_reindexIndexes(self):
+        self.assertFalse(self.portal.portal_catalog(Title='specific'))
+        obj = api.content.create(container=self.portal.folder, id='tt', type='testingtype')
+        obj.title = 'specific'
+        self.assertFalse(self.portal.portal_catalog(Title='specific'))
+        reindexIndexes(self.portal, ['Title'])
+        res = self.portal.portal_catalog(Title='specific')
+        self.assertEqual(len(res), 1)
+        self.assertEqual(res[0].UID, obj.UID())

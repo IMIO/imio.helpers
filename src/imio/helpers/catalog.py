@@ -105,6 +105,14 @@ def removeColumns(portal, columns=()):
             logger.info('Trying to remove an unexisting column with name "%s"...' % column)
 
 
+def reindexIndexes(portal, idxs=[]):
+    """Reindex given p_idxs."""
+    logger.info('Reindexing the "{0}" index(es)...'.format(', '.join(idxs)))
+    pghandler = ZLogHandler()
+    portal.portal_catalog.reindexIndex(idxs, REQUEST=None, pghandler=pghandler)
+    logger.info('Done.')
+
+
 def get_intid(obj, intids=None, create=True):
     """ Get intid value or create it if not found """
     if not intids:

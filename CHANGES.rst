@@ -7,6 +7,9 @@ Changelog
 - Added `content.get_vocab` helper method to easily get a `IVocabularyFactory`
   vocabulary instance or only the factory when parameter `only_factory=True`.
   [gbastien]
+- Added `catalog.reindexIndexes` helper method making it possible to reindex a
+  specific `portal_catalog` index with `ZLogHandler` log output.
+  [gbastien]
 
 0.22 (2019-08-23)
 -----------------
