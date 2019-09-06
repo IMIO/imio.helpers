@@ -395,10 +395,10 @@ def restore_link_integrity_checks(original_link_integrity):
         editing_settings.enable_link_integrity_checks = original_link_integrity
 
 
-def get_vocab(context, vocab_name, only_factory=False):
+def get_vocab(context, vocab_name, only_factory=False, **kwargs):
     """ """
     vocab_factory = getUtility(IVocabularyFactory, vocab_name)
     if only_factory:
         return vocab_factory
-    vocab = vocab_factory(context)
+    vocab = vocab_factory(context, **kwargs)
     return vocab
