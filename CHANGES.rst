@@ -10,6 +10,8 @@ Changelog
 - Added `catalog.reindexIndexes` helper method making it possible to reindex a
   specific `portal_catalog` index with `ZLogHandler` log output.
   [gbastien]
+- Added javascript function to callViewAndReload with ajax. Gotten from PloneMeeting ;-)
+  [sgeulette]
 
 0.22 (2019-08-23)
 -----------------

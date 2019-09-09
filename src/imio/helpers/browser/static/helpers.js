@@ -22,3 +22,31 @@ $(window).bind('afterprint', function(){
 function has_faceted() {
   return Boolean($("div#faceted-form").length);
 }
+
+// ajax call managing a call to a given p_view_name and reload taking faceted into account
+function callViewAndReload(baseUrl, view_name, params, force_faceted=false) {
+  redirect = '0';
+  if (!force_faceted && !has_faceted()) {
+    redirect = '1';
+  }
+  $.ajax({
+    url: baseUrl + "/" + view_name,
+    data: params,
+    dataType: 'html',
+    cache: false,
+    async: true,
+    success: function(data) {
+        // reload the faceted page if we are on it, refresh current if not
+        if ((redirect === '0') && !(data)) {
+            Faceted.URLHandler.hash_changed();
+        }
+        else {
+            window.location.href = data;
+        }
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      /*console.log(textStatus);*/
+      window.location.href = window.location.href;
+      }
+    });
+}
