@@ -15,6 +15,7 @@ from Products.CMFPlone.utils import safe_unicode
 from zope.annotation import IAnnotations
 from zope.component import getUtility
 from zope.component import queryUtility
+from zope.i18n import translate
 from zope.interface.interfaces import IMethod
 from zope.schema._field import Bool
 from zope.schema.interfaces import IVocabularyFactory
@@ -402,3 +403,16 @@ def get_vocab(context, vocab_name, only_factory=False, **kwargs):
         return vocab_factory
     vocab = vocab_factory(context, **kwargs)
     return vocab
+
+
+def get_state_infos(obj):
+    """ """
+    wfTool = api.portal.get_tool('portal_workflow')
+    review_state = wfTool.getInfoFor(obj, 'review_state')
+    wf = wfTool.getWorkflowsFor(obj)[0]
+    state = wf.states.get(review_state)
+    state_title = state and state.title or review_state
+    return {'state_name': review_state,
+            'state_title': translate(state_title,
+                                     domain="plone",
+                                     context=obj.REQUEST)}

@@ -12,6 +12,8 @@ Changelog
   [gbastien]
 - Added javascript function to callViewAndReload with ajax. Gotten from PloneMeeting ;-)
   [sgeulette]
+- Added get_state_infos (used in PM and plonetheme.imioapps).
+  [sgeulette]
 
 0.22 (2019-08-23)
 -----------------

@@ -9,6 +9,7 @@ from imio.helpers.content import disable_link_integrity_checks
 from imio.helpers.content import get_from_annotation
 from imio.helpers.content import get_object
 from imio.helpers.content import get_schema_fields
+from imio.helpers.content import get_state_infos
 from imio.helpers.content import get_vocab
 from imio.helpers.content import restore_link_integrity_checks
 from imio.helpers.content import safe_encode
@@ -268,3 +269,10 @@ class TestContentModule(IntegrationTestCase):
         self.assertTrue(isinstance(vocab, SimpleVocabulary))
         vocab = get_vocab(None, 'plone.app.vocabularies.PortalTypes', only_factory=True)
         self.assertTrue(isinstance(vocab, PortalTypesVocabulary))
+
+    def test_get_state_infos(self):
+        self.portal.portal_workflow.setChainForPortalTypes(('Document', ), ('intranet_workflow', ))
+        obj = api.content.create(container=self.portal.folder, id='mydoc', title='My document', type='Document')
+        self.assertDictEqual(get_state_infos(obj), {'state_title': u'Internal draft', 'state_name': 'internal'})
+        transitions(obj, 'submit')
+        self.assertDictEqual(get_state_infos(obj), {'state_title': u'Pending review', 'state_name': 'pending'})
