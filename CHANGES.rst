@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.23 (unreleased)
+0.23 (2019-09-12)
 -----------------
 
 - Added `content.get_vocab` helper method to easily get a `IVocabularyFactory`
