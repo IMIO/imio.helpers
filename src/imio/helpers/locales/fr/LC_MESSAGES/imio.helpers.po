@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2019-02-05 12:46+0000\n"
+"POT-Creation-Date: 2019-11-05 16:15+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,7 +22,7 @@ msgstr "Auteur"
 msgid "Description"
 msgstr "Description"
 
-#: ../browser/container.pt:14
+#: ../browser/container.pt:15
 msgid "Fields"
 msgstr "Champs de l'élément"
 
@@ -38,11 +38,11 @@ msgstr ""
 msgid "Title"
 msgstr "Titre"
 
-#: ../configure.zcml:31
+#: ../configure.zcml:33
 msgid "imio.helpers"
 msgstr ""
 
-#: ../configure.zcml:31
+#: ../configure.zcml:33
 msgid "imio.helpers default"
 msgstr ""
 
