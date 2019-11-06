@@ -6,6 +6,8 @@ Changelog
 
 - Removed wrong overrides of `collective.iconifiedcategory` translation file.
   [gbastien]
+- Added optionally behavior prefix in get_schema_fields.
+  [sgeulette]
 
 0.23 (2019-09-12)
 -----------------

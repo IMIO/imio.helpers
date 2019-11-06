@@ -149,6 +149,10 @@ class TestContentModule(IntegrationTestCase):
                              ['text', 'enabled', 'mandatory_textline', 'textline',
                               'description', 'title', 'title',
                               'tal_condition', 'roles_bypassing_talcondition'])
+        self.assertListEqual([name for (name, fld) in get_schema_fields(obj=obj, prefix=True)],
+                             ['text', 'enabled', 'mandatory_textline', 'textline',
+                              'IBasic.description', 'IBasic.title', 'INameFromTitle.title',
+                              'ITALCondition.tal_condition', 'ITALCondition.roles_bypassing_talcondition'])
         self.assertListEqual([name for (name, fld) in get_schema_fields(type_name='portnawak')],
                              [])
 

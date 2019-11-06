@@ -219,9 +219,9 @@ def richtextval(text):
 
 
 @api.validation.at_least_one_of('obj', 'type_name')
-def get_schema_fields(obj=None, type_name=None, behaviors=True):
+def get_schema_fields(obj=None, type_name=None, behaviors=True, prefix=False):
     """
-        Get all fields on content or type from its schema and its behaviors.
+        Get all fields on dexterity content or type from its schema and its behaviors.
         Return a list of field name and field object.
     """
     portal_types = api.portal.get_tool('portal_types')
@@ -232,7 +232,7 @@ def get_schema_fields(obj=None, type_name=None, behaviors=True):
     except:
         return []
     fti_schema = fti.lookupSchema()
-    fields = [field for field in fti_schema.namesAndDescriptions(all=True)
+    fields = [(field_name, field) for (field_name, field) in fti_schema.namesAndDescriptions(all=True)
               if not IMethod.providedBy(field)]
 
     if not behaviors:
@@ -241,10 +241,13 @@ def get_schema_fields(obj=None, type_name=None, behaviors=True):
     # also lookup behaviors
     for behavior_id in fti.behaviors:
         behavior = getUtility(IBehavior, behavior_id).interface
-        fields.extend(behavior.namesAndDescriptions(all=True))
-    # keep only fields as interface methods are also returned by namesAndDescriptions
-    fields = [(field_name, field) for (field_name, field) in fields
-              if not IMethod.providedBy(field)]
+        for (field_name, field) in behavior.namesAndDescriptions(all=True):
+            # keep only fields as interface methods are also returned by namesAndDescriptions
+            if IMethod.providedBy(field):
+                continue
+            if prefix:
+                field_name = '{}.{}'.format(behavior.__name__, field_name)
+            fields.append((field_name, field))
     return fields
 
 
