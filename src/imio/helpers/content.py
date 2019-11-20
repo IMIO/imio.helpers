@@ -273,7 +273,7 @@ def validate_fields(obj, behaviors=True, raise_on_errors=False):
             continue
         try:
             field._validate(value)
-        except Exception, exc:
+        except Exception as exc:
             errors.append(exc)
     if raise_on_errors and errors:
         error_msg = ADDED_TYPE_ERROR.format(

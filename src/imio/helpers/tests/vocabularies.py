@@ -1,14 +1,14 @@
 # encoding: utf-8
 
 from plone.memoize.instance import memoize
-from zope.interface import implements
+from zope.interface import implementer
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
 
 
+@implementer(IVocabularyFactory)
 class TestingVocabulary(object):
-    implements(IVocabularyFactory)
 
     @memoize
     def __call__(self, context):
