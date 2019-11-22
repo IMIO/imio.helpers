@@ -8,6 +8,11 @@ Changelog
   [gbastien]
 - Added optionally behavior prefix in get_schema_fields.
   [sgeulette]
+- Fixed bug in `xhtml.storeImagesLocally._handle_internal_image` to be sure
+  that traversed path to image does not starts with a `/` or it fails with
+  a `KeyError`.  This is the case when the `Plone Site` is using a domain name.
+  Make sure also traversed `img_path` element is actually an `Image`.
+  [gbastien]
 
 0.23 (2019-09-12)
 -----------------

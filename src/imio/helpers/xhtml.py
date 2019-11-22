@@ -338,8 +338,9 @@ def storeImagesLocally(context,
         """ """
         # get image from URL
         img_path = img_src.replace(portal_url, '')
-        img_path = img_path.lstrip('/')
         img_path = path.join(portal.absolute_url_path(), img_path)
+        # path can not start with a '/'
+        img_path = img_path.lstrip('/')
 
         # right, traverse to image
         try:
@@ -349,7 +350,7 @@ def storeImagesLocally(context,
             return None, None
 
         # not an image
-        if not imageObj.portal_type == 'Image':
+        if getattr(imageObj, 'portal_type', None) != 'Image':
             return None, None
 
         filename = imageObj.getId()
