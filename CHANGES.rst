@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.24 (unreleased)
+0.24 (2019-11-25)
 -----------------
 
 - Removed wrong overrides of `collective.iconifiedcategory` translation file.
