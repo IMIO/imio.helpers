@@ -16,7 +16,12 @@ setup(
     long_description=long_description,
     # Get more from http://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
+        "Development Status :: 5 - Production/Stable",
         "Environment :: Web Environment",
+        "Framework :: Plone",
+        "Framework :: Plone :: 4.3",
+        "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
+        "Operating System :: OS Independent",
         "Framework :: Plone",
         "Framework :: Plone :: 4.3",
         "Programming Language :: Python",
@@ -25,7 +30,8 @@ setup(
     keywords='plone helpers utils dev imio',
     author='Simon Delcourt',
     author_email='simon.delcourt@imio.be',
-    url='http://pypi.python.org/pypi/imio.helpers',
+    url='https://github.com/imio/imio.helpers',
+    download_url='https://pypi.org/project/imio.helpers',
     license='GPL',
     packages=find_packages('src', exclude=['ez_setup']),
     namespace_packages=['imio'],
