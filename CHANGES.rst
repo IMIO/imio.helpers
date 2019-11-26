@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.25 (unreleased)
+0.25 (2019-11-26)
 -----------------
 
 - Added logging in `xhtml.storeImagesLocally` if unable to
