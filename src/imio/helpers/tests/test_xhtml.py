@@ -622,6 +622,22 @@ class TestXHTMLModule(IntegrationTestCase):
         # nothing was changed
         self.assertEqual(storeImagesLocally(self.portal.folder2, text), text)
 
+    def test_storeImagesLocallyWithImgPathStoredInFolderStartingWithContextURL(self):
+        """Make sure an image stored in a folder that have same id as begining
+           of another folder the image is stored in downloads the image."""
+
+        self.assertTrue(self.portal.folder2.absolute_url().startswith(
+            self.portal.folder.absolute_url()))
+
+        text = '<p>Working external image <img src="http://www.imio.be/contact.png">.</p>'
+        storeImagesLocally(self.portal.folder2, text)
+        text = '<p>Working external image <img src="{0}">.</p>'.format(
+            self.portal.folder2.objectValues()[0].absolute_url()
+        )
+        self.assertFalse(self.portal.folder.objectIds())
+        storeImagesLocally(self.portal.folder, text)
+        self.assertTrue(self.portal.folder.objectIds())
+
     def test_object_link(self):
         obj = self.portal.folder
         obj.setTitle(u'Folder title')

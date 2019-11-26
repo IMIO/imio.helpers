@@ -4,8 +4,13 @@ Changelog
 0.25 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Added logging in `xhtml.storeImagesLocally` if unable to
+  traverse to `img_path`.
+  [gbastien]
+- Fixed bug in `xhtml.storeImagesLocally` where an image stored in another
+  Plone element having `absolute_url` starting with current element
+  `absolute_url` was not stored locally.
+  [gbastien]
 
 0.24 (2019-11-25)
 -----------------

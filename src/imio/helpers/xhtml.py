@@ -10,11 +10,14 @@ from zope.container.interfaces import INameChooser
 
 import cgi
 import lxml.html
+import logging
 import os
 import pkg_resources
 import types
 import urllib
 
+
+logger = logging.getLogger('imio.helpers:xhtml')
 
 try:
     HAS_CKEDITOR = True
@@ -345,8 +348,12 @@ def storeImagesLocally(context,
         # right, traverse to image
         try:
             imageObj = portal.unrestrictedTraverse(img_path)
-        except KeyError:
+        except (KeyError, AttributeError):
             # wrong img_path
+            logger.warning(
+                'In \'storeImagesLocally\', could not traverse '
+                'img_path \'{0}\' for \'{1}\'!'.format(
+                    img_path, context.absolute_url()))
             return None, None
 
         # not an image
@@ -397,7 +404,9 @@ def storeImagesLocally(context,
         return xhtmlContent
     portal = api.portal.get()
     portal_url = portal.absolute_url()
-    context_url = context.absolute_url()
+    # make sure context_url ends with a '/' to avoid mismatch if folder holding the
+    # image absolute_url starts with context_url
+    context_url = context.absolute_url() + '/'
     # adapter to generate a valid id, it needs a container, so it will be context or it's parent
     try:
         name_chooser = INameChooser(context)
