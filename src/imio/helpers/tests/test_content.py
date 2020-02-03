@@ -13,6 +13,7 @@ from imio.helpers.content import get_state_infos
 from imio.helpers.content import get_vocab
 from imio.helpers.content import restore_link_integrity_checks
 from imio.helpers.content import safe_encode
+from imio.helpers.content import set_to_annotation
 from imio.helpers.content import transitions
 from imio.helpers.content import uuidsToCatalogBrains
 from imio.helpers.content import uuidsToObjects
@@ -206,7 +207,8 @@ class TestContentModule(IntegrationTestCase):
         # get value with uid that doesn't match an object raises no error.
         self.assertEqual(get_from_annotation('test_annot', uid=fakeUid, default='empty'), 'empty')
         # test add
-        add_to_annotation('test_annot', 'tralala', uid=obj.UID())
+        ret = add_to_annotation('test_annot', 'tralala', uid=obj.UID())
+        self.assertEqual(ret, 'tralala')
         self.assertEqual(IAnnotations(obj)['test_annot'], ['tralala'])
         add_to_annotation('test_annot', 'tralala', uid=obj.UID())
         self.assertEqual(IAnnotations(obj)['test_annot'], ['tralala'])
@@ -214,9 +216,11 @@ class TestContentModule(IntegrationTestCase):
         add_to_annotation('test_annot', 'trilili', obj=obj)
         self.assertEqual(IAnnotations(obj)['test_annot'], ['tralala', 'trilili'])
         # add value with uid that doesn't match an object raises no error.
-        add_to_annotation('test_annot', 'tralala', uid='znfzete tztzfozaebfozaefg')
+        ret = add_to_annotation('test_annot', 'tralala', uid='znfzete tztzfozaebfozaefg')
+        self.assertIsNone(ret)
         # test remove
-        del_from_annotation('test_annot', 'tralala', uid=obj.UID())
+        ret = del_from_annotation('test_annot', 'tralala', uid=obj.UID())
+        self.assertEqual(ret, 'tralala')
         self.assertEqual(IAnnotations(obj)['test_annot'], ['trilili'])
         del_from_annotation('test_annot', 'trilili', uid=obj.UID())
         self.assertEqual(IAnnotations(obj)['test_annot'], [])
@@ -227,6 +231,14 @@ class TestContentModule(IntegrationTestCase):
         self.assertEqual(IAnnotations(obj)['test_annot'], [])
         # remove value from a no-existing key in annotation
         self.assertIsNone(del_from_annotation('test_not_key_in_annot', 'trololo', uid=obj.UID()))
+        # test simple set
+        ret = set_to_annotation('test_annot', 'trululu', obj=obj)
+        self.assertEqual(ret, 'trululu')
+        self.assertEqual(IAnnotations(obj)['test_annot'], 'trululu')
+        set_to_annotation('test_annot', 'trululuid', uid=obj.UID())
+        self.assertEqual(IAnnotations(obj)['test_annot'], 'trululuid')
+        ret = set_to_annotation('test_annot', 'trululu', uid='df dgf fdsqqe dsf')
+        self.assertIsNone(ret)
 
     def test_uuidsToCatalogBrains(self):
         folder_uid = self.portal.folder.UID()

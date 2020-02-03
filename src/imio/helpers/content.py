@@ -305,6 +305,7 @@ def add_to_annotation(annotation_key, value, obj=None, uid=None):
         annot[annotation_key] = PersistentList()
     if value not in annot[annotation_key]:
         annot[annotation_key].append(value)
+    return value
 
 
 @mutually_exclusive_parameters('obj', 'uid')
@@ -321,6 +322,7 @@ def del_from_annotation(annotation_key, value, obj=None, uid=None):
         return
     if value in annot[annotation_key]:
         annot[annotation_key].remove(value)
+    return value
 
 
 @mutually_exclusive_parameters('obj', 'uid')
@@ -335,6 +337,19 @@ def get_from_annotation(annotation_key, obj=None, uid=None, default=None):
     if annotation_key not in annot:
         return default
     return annot[annotation_key]
+
+
+@mutually_exclusive_parameters('obj', 'uid')
+def set_to_annotation(annotation_key, value, obj=None, uid=None):
+    """ Set annotation related to obj or uid """
+    if not obj:
+        obj = api.content.get(UID=uid)
+        if not obj:
+            return
+
+    annot = IAnnotations(obj)
+    annot[annotation_key] = value
+    return value
 
 
 def uuidsToCatalogBrains(uuids=[], ordered=False):

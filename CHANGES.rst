@@ -4,8 +4,10 @@ Changelog
 0.26 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Added set_to_annotation method.
+  [sgeulette]
+- Always return something in annotations functions.
+  [sgeulette]
 
 0.25 (2019-11-26)
 -----------------
