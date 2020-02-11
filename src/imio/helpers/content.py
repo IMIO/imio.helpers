@@ -158,7 +158,7 @@ def create(conf, cids={}, globl=False, pos=False, clean_globl=False):
             ]
         :param cids: dict containing as key a 'cid' and as value 'an object'
         :param globl: indicate if cid - object relations will be globally used for this call (default: False)
-        :param pos: set created objects at list position. (default: True)
+        :param pos: set created objects at list position. (default: False)
         :param clean_globl: clean global dic
 
         :return cids dict
