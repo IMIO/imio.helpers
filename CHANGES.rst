@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.26 (unreleased)
+0.26 (2020-02-25)
 -----------------
 
 - Added set_to_annotation method.
