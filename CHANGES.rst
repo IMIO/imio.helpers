@@ -4,8 +4,12 @@ Changelog
 0.27 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Do not break in `xhtml.imagesToPath` if `<img>` use a
+  wrong `resolveuid/unknown_uid`.
+  [gbastien]
+- Fixed tests to not use images from site `https://www.imio.be/` but
+  from site `https://i.picsum.photos/`.
+  [gbastien]
 
 0.26 (2020-02-25)
 -----------------

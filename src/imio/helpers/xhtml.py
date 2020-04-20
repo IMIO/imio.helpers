@@ -6,11 +6,12 @@ from plone.app.imaging.scale import ImageScale
 from plone.outputfilters.browser.resolveuid import uuidToURL
 from plone.outputfilters.filters.resolveuid_and_caption import ResolveUIDAndCaptionFilter
 from Products.CMFPlone.utils import safe_unicode
+from zExceptions import NotFound
 from zope.container.interfaces import INameChooser
 
 import cgi
-import lxml.html
 import logging
+import lxml.html
 import os
 import pkg_resources
 import types
@@ -297,13 +298,14 @@ def imagesToPath(context, xhtmlContent, pretty_print=False):
             try:
                 # get the image but remove leading '/'
                 imageObj = portal.unrestrictedTraverse(img_src[1:])
-            except (KeyError, AttributeError):
+            except (KeyError, AttributeError, NotFound):
                 continue
         # relative path
         else:
             try:
                 imageObj = context.unrestrictedTraverse(img_src)
-            except (KeyError, AttributeError):
+            # in case we have a wrong resolveuid/unknown_uid, it raises NotFound
+            except (KeyError, AttributeError, NotFound):
                 continue
         # maybe we have a ImageScale instead of the real Image object?
         if isinstance(imageObj, ImageScale):

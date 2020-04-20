@@ -435,6 +435,10 @@ class TestXHTMLModule(IntegrationTestCase):
         expected = expected.replace("../img/image_preview", img_blob_path)
         self.assertEqual(imagesToPath(doc2, text).replace('\n', ''), expected.replace('\n', ''))
 
+        # does not break with wrong resolveuid
+        text = '<img src="resolveuid/unknown_uid" alt="Image" title="Image">'
+        self.assertEqual(imagesToPath(doc2, text), text)
+
     def test_storeExternalImagesLocally(self):
         """
           Test that images src contained in a XHTML that reference external images is
@@ -466,26 +470,26 @@ class TestXHTMLModule(IntegrationTestCase):
         self.assertEqual(storeImagesLocally(doc, text), text)
 
         # working example
-        text = '<p>Working external image <img src="http://www.imio.be/contact.png"/>.</p>'
+        text = '<p>Working external image <img src="https://i.picsum.photos/id/10/200/300.jpg"/>.</p>'
         # we have Content-Dispsition header
-        downloaded_img_path, downloaded_img_infos = urllib.urlretrieve('http://www.imio.be/contact.png')
+        downloaded_img_path, downloaded_img_infos = urllib.urlretrieve('https://i.picsum.photos/id/10/200/300.jpg')
         self.assertTrue(downloaded_img_infos.getheader('Content-Disposition'))
         # image object does not exist for now
-        self.assertFalse('contact.png' in self.portal.objectIds())
+        self.assertFalse('10-200x300.jpg' in self.portal.objectIds())
         self.assertEqual(
             storeImagesLocally(doc, text),
-            '<p>Working external image <img src="{0}/contact.png">.</p>'.format(self.portal_url))
-        contact = self.portal.get('contact.png')
-        self.assertTrue(IImageContent.providedBy(contact))
+            '<p>Working external image <img src="{0}/10-200x300.jpg">.</p>'.format(self.portal_url))
+        img = self.portal.get('10-200x300.jpg')
+        self.assertTrue(IImageContent.providedBy(img))
 
         # working example with a Folder, this test case where we have a container
         # using RichText field, in this case the Image is stored in the Folder, not next to it
-        text = '<p>Working external image <img src="http://www.imio.be/mascotte-presentation.jpg">.</p>'
-        expected = '<p>Working external image <img src="{0}/folder/mascotte-presentation.jpg">.</p>'.\
+        text = '<p>Working external image <img src="https://i.picsum.photos/id/1082/200/200.jpg">.</p>'
+        expected = '<p>Working external image <img src="{0}/folder/1082-200x200.jpg">.</p>'.\
             format(self.portal_url)
-        self.assertFalse('mascotte-presentation.jpg' in self.portal.folder.objectIds())
+        self.assertFalse('1082-200x200.jpg' in self.portal.folder.objectIds())
         self.assertEqual(storeImagesLocally(self.portal.folder, text), expected)
-        mascotte = self.portal.folder.get('mascotte-presentation.jpg')
+        mascotte = self.portal.folder.get('1082-200x200.jpg')
         self.assertTrue(IImageContent.providedBy(mascotte))
 
         # link to external image without Content-Disposition
@@ -501,11 +505,11 @@ class TestXHTMLModule(IntegrationTestCase):
     def test_storeExternalImagesLocallyWithResolveUID(self):
         """ """
         # working example
-        text = '<p>Working external image <img src="http://www.imio.be/contact.png">.</p>'
+        text = '<p>Working external image <img src="https://i.picsum.photos/id/10/200/300.jpg">.</p>'
         result = storeImagesLocally(self.portal, text, force_resolve_uid=True)
 
         # image was downloaded and link to it was turned to a resolveuid
-        img = self.portal.get('contact.png')
+        img = self.portal.get('10-200x300.jpg')
         self.assertEqual(
             result,
             '<p>Working external image <img src="resolveuid/{0}">.</p>'.format(img.UID()))
@@ -629,7 +633,7 @@ class TestXHTMLModule(IntegrationTestCase):
         self.assertTrue(self.portal.folder2.absolute_url().startswith(
             self.portal.folder.absolute_url()))
 
-        text = '<p>Working external image <img src="http://www.imio.be/contact.png">.</p>'
+        text = '<p>Working external image <img src="https://i.picsum.photos/id/10/200/300.jpg">.</p>'
         storeImagesLocally(self.portal.folder2, text)
         text = '<p>Working external image <img src="{0}">.</p>'.format(
             self.portal.folder2.objectValues()[0].absolute_url()
