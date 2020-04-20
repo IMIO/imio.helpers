@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.27 (unreleased)
+0.27 (2020-04-20)
 -----------------
 
 - Do not break in `xhtml.imagesToPath` if `<img>` use a
