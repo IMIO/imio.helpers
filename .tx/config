@@ -1,0 +1,10 @@
+[main]
+host = https://www.transifex.com
+
+[plonegov-imio.imio-helpers-pot]
+file_filter = src/imio/helpers/locales/<lang>/LC_MESSAGES/imio.helpers.po
+minimum_perc = 0
+source_file = src/imio/helpers/locales/imio.helpers.pot
+source_lang = en
+type = PO
+

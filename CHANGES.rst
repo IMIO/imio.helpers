@@ -4,6 +4,8 @@ Changelog
 0.28 (unreleased)
 -----------------
 
+- Add Transifex.net service integration to manage the translation process.
+  [macagua]
 - Add Spanish translation
   [macagua]
 
