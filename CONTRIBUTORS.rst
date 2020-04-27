@@ -1,2 +1,3 @@
 - Simon Delcourt, simon.delcourt@imio.be
 - Gauthier Bastien, gauthier.bastien@imio.be
+- Leonardo J. Caballero G., leonardocaballero@gmail.com
