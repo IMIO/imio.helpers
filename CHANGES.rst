@@ -4,7 +4,8 @@ Changelog
 0.28 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Add Spanish translation
+  [macagua]
 
 
 0.27 (2020-04-20)

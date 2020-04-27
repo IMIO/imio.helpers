@@ -1,0 +1,41 @@
+# Translation of imio.helpers.pot to Spanish
+# Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2020.
+msgid ""
+msgstr ""
+"Project-Id-Version: imio.helpers\n"
+"POT-Creation-Date: 2016-09-05 13:15+0000\n"
+"PO-Revision-Date: 2020-04-27 01:47-0400\n"
+"Last-Translator: Leonardo J. Caballero G. <leonardocaballero@gmail.com>\n"
+"Language-Team: ES <LL@li.org>\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Virtaal 0.7.1\n"
+"Language-Code: es\n"
+"Language-Name: Spanish\n"
+"Preferred-Encodings: utf-8 latin1\n"
+"Domain: imio.helpers\n"
+"X-Is-Fallback-For: es-ar es-bo es-cl es-co es-cr es-do es-ec es-es es-sv es-gt es-hn es-mx es-ni es-pa es-py es-pe es-pr es-us es-uy es-ve\n"
+
+#: ../browser/folder_listing_table.pt:11
+msgid "Author"
+msgstr "Autor"
+
+#: ../browser/folder_listing_table.pt:9
+msgid "Description"
+msgstr "Descripción"
+
+#: ../browser/folder_listing_table.pt:10
+msgid "State"
+msgstr "Estado"
+
+#: ../browser/folder_listing_table.pt:8
+msgid "Title"
+msgstr "Título"
+
+#. Default: "Contents"
+#: ../browser/folder_listing.pt:9
+msgid "legend_folder_listing"
+msgstr "Contenidos"
