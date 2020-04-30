@@ -4,8 +4,8 @@ Changelog
 0.28 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Added `outputMimeType` parameter to `richtextval` method
+  [sgeulette]
 
 0.27 (2020-04-20)
 -----------------

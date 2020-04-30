@@ -211,11 +211,11 @@ def create(conf, cids={}, globl=False, pos=False, clean_globl=False):
     return cids_l
 
 
-def richtextval(text):
+def richtextval(text, outputMimeType='text/html'):
     """
         Return a RichTextValue to be stored in IRichText field
     """
-    return RichTextValue(raw=safe_unicode(text), mimeType='text/html', outputMimeType='text/html', encoding='utf-8')
+    return RichTextValue(raw=safe_unicode(text), mimeType='text/html', outputMimeType=outputMimeType, encoding='utf-8')
 
 
 @api.validation.at_least_one_of('obj', 'type_name')
