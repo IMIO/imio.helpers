@@ -62,7 +62,6 @@ class TestContentModule(IntegrationTestCase):
         self.assertEqual(obj, get_object(type='Document', id='mydoc', title='My document', obj_path='folder/mydoc'))
 
     def test_transitions(self):
-        self.portal.portal_workflow.setChainForPortalTypes(('Document', ), ('intranet_workflow', ))
         obj = api.content.create(container=self.portal.folder, id='mydoc', type='Document')
         self.assertEqual(api.content.get_state(obj), 'internal')
         # apply one transition
@@ -254,6 +253,18 @@ class TestContentModule(IntegrationTestCase):
         self.assertEqual(
             [brain.UID for brain in uuidsToCatalogBrains(uuids, ordered=True)],
             uuids)
+
+    def test_uuidsToCatalogBrains_query_parameter(self):
+        folder = self.portal.folder
+        folder2 = self.portal.folder2
+        folder_uid = folder.UID()
+        folder2_uid = folder2.UID()
+        self.assertEqual(api.content.get_state(folder), 'internal')
+        api.content.transition(folder2, 'hide')
+        self.assertEqual(api.content.get_state(folder2), 'private')
+        uuids = [folder_uid, folder2_uid]
+        self.assertEqual(len(uuidsToCatalogBrains(uuids)), 2)
+        self.assertEqual(len(uuidsToCatalogBrains(uuids, query={'review_state': 'internal'})), 1)
 
     def test_uuidsToObjects(self):
         folder_uid = self.portal.folder.UID()

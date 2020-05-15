@@ -44,6 +44,8 @@ class PloneWithHelpersLayer(PloneSandboxLayer):
         # Install into Plone site using portal_setup
         applyProfile(portal, 'imio.helpers:testing')
 
+        # use intranet_workflow for every types
+        portal.portal_workflow.setDefaultChain('intranet_workflow')
         # Login and create some test content
         setRoles(portal, TEST_USER_ID, ['Manager'])
         login(portal, TEST_USER_NAME)

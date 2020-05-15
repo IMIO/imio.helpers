@@ -352,13 +352,13 @@ def set_to_annotation(annotation_key, value, obj=None, uid=None):
     return value
 
 
-def uuidsToCatalogBrains(uuids=[], ordered=False):
+def uuidsToCatalogBrains(uuids=[], ordered=False, query={}):
     """ Given a list of UUIDs, attempt to return catalog brains,
         keeping original uuids list order if ordered=True. """
 
     catalog = api.portal.get_tool('portal_catalog')
 
-    brains = catalog(UID=uuids)
+    brains = catalog(UID=uuids, **query)
 
     if ordered:
         # we need to sort found brains according to uuids
@@ -369,11 +369,11 @@ def uuidsToCatalogBrains(uuids=[], ordered=False):
     return brains
 
 
-def uuidsToObjects(uuids=[], ordered=False):
+def uuidsToObjects(uuids=[], ordered=False, query={}):
     """ Given a list of UUIDs, attempt to return content objects,
         keeping original uuids list order if ordered=True. """
 
-    brains = uuidsToCatalogBrains(uuids, ordered=ordered)
+    brains = uuidsToCatalogBrains(uuids, ordered=ordered, query=query)
     return [brain.getObject() for brain in brains]
 
 
