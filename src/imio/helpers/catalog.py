@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from Products.CMFCore.utils import getToolByName
+from plone import api
 from Products.ZCatalog.ProgressHandler import ZLogHandler
 from zope.component import getUtility
 from zope.intid.interfaces import IIntIds
@@ -16,13 +16,13 @@ class ZCTextIndexInfo:
     index_type = 'Okapi BM25 Rank'
 
 
-def addOrUpdateIndexes(portal, indexInfos={}):
+def addOrUpdateIndexes(portal, indexInfos={}, catalog_id='portal_catalog'):
     '''This method creates or updates, in a p_portal, definitions of indexes
-       in its portal_catalog, based on index-related information given in
+       in its p_catalog_id, based on index-related information given in
        p_indexInfos. p_indexInfos is a dictionary of the form
        {s_indexName: (s_indexType, s_indexExtra)}.
        Here are some examples of index types: "FieldIndex", "ZCTextIndex", "DateIndex".'''
-    catalog = getToolByName(portal, 'portal_catalog')
+    catalog = api.portal.get_tool(catalog_id)
     zopeCatalog = catalog._catalog
     addedIndexes = []
     for indexName, indexInfo in indexInfos.iteritems():
@@ -55,9 +55,9 @@ def addOrUpdateIndexes(portal, indexInfos={}):
         catalog.reindexIndex(addedIndexes, portal.REQUEST, pghandler=pghandler)
 
 
-def removeIndexes(portal, indexes=()):
-    '''This method will remove given p_indexes if found in the portal_catalog.'''
-    catalog = getToolByName(portal, 'portal_catalog')
+def removeIndexes(portal, indexes=(), catalog_id='portal_catalog'):
+    '''This method will remove given p_indexes if found in the p_catalog_id.'''
+    catalog = api.portal.get_tool(catalog_id)
     registered_indexes = catalog.indexes()
     for index in indexes:
         if index in registered_indexes:
@@ -67,10 +67,10 @@ def removeIndexes(portal, indexes=()):
             logger.info('Trying to remove an unexisting index with name "%s"...' % index)
 
 
-def addOrUpdateColumns(portal, columns=(), update_metadata=True):
-    '''This method creates or updates in a p_portal portal_catalog
+def addOrUpdateColumns(portal, columns=(), update_metadata=True, catalog_id='portal_catalog'):
+    '''This method creates or updates in a p_portal p_catalog_id
        the metadata given in p_columns.'''
-    catalog = getToolByName(portal, 'portal_catalog')
+    catalog = api.portal.get_tool(catalog_id)
     addedColumns = []
     for column in columns:
         # Only add it if not already existing
@@ -92,10 +92,10 @@ def addOrUpdateColumns(portal, columns=(), update_metadata=True):
                 obj.reindexObject(idxs=addedColumns)
 
 
-def removeColumns(portal, columns=()):
-    '''This method will remove in p_portal portal_catalog
+def removeColumns(portal, columns=(), catalog_id='portal_catalog'):
+    '''This method will remove in p_portal p_catalog_id
        the metadata given in p_columns.'''
-    catalog = getToolByName(portal, 'portal_catalog')
+    catalog = api.portal.get_tool(catalog_id)
     registered_columns = catalog.schema()
     for column in columns:
         if column in registered_columns:
@@ -105,11 +105,12 @@ def removeColumns(portal, columns=()):
             logger.info('Trying to remove an unexisting column with name "%s"...' % column)
 
 
-def reindexIndexes(portal, idxs=[]):
+def reindexIndexes(portal, idxs=[], catalog_id='portal_catalog'):
     """Reindex given p_idxs."""
     logger.info('Reindexing the "{0}" index(es)...'.format(', '.join(idxs)))
     pghandler = ZLogHandler()
-    portal.portal_catalog.reindexIndex(idxs, REQUEST=None, pghandler=pghandler)
+    catalog = api.portal.get_tool(catalog_id)
+    catalog.reindexIndex(idxs, REQUEST=None, pghandler=pghandler)
     logger.info('Done.')
 
 

@@ -10,6 +10,11 @@ Changelog
   complete the catalog query in case you have `UIDs` and you want to filter
   it on additional index like `review_state`.
   [gbastien]
+- Added new parameter `catalog_id='portal_catalog'` to methods
+  `catalog.addOrUpdateIndexes`, `catalog.removeIndexes`,
+  `catalog.removeColumns` and `catalog.reindexIndexes` so it is possible to
+  proceed with another catalog than `portal_catalog`.
+  [gbastien]
 
 0.27 (2020-04-20)
 -----------------
