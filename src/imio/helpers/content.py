@@ -375,6 +375,16 @@ def uuidsToCatalogBrains(uuids=[], ordered=False, query={}, check_contained_uids
     return brains
 
 
+def _contained_objects(obj):
+    """ """
+    def get_objs(container, objs=[]):
+        for subcontainer in container.objectValues():
+            objs.append(subcontainer)
+            get_objs(subcontainer, objs)
+        return objs
+    return get_objs(obj)
+
+
 def uuidsToObjects(uuids=[], ordered=False, query={}, check_contained_uids=False):
     """ Given a list of UUIDs, attempt to return content objects,
         keeping original uuids list order if p_ordered=True.
@@ -394,7 +404,7 @@ def uuidsToObjects(uuids=[], ordered=False, query={}, check_contained_uids=False
             if obj.UID() not in uuids:
                 # it means we have a brain using a contained_uids
                 obj = brain.getObject()
-                for contained in obj.objectValues():
+                for contained in _contained_objects(obj):
                     if contained.UID() in uuids:
                         need_reorder = True
                         res.append(contained)
