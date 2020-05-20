@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from OFS.interfaces import IItem
 from plone import api
-from plone.indexer import indexer
-from Products.PluginIndexes.common.UnIndex import _marker
 from Products.ZCatalog.ProgressHandler import ZLogHandler
 from zope.component import getUtility
 from zope.intid.interfaces import IIntIds
@@ -18,15 +15,6 @@ class ZCTextIndexInfo:
     '''Silly class used for storing information about a ZCTextIndex.'''
     lexicon_id = 'plone_lexicon'
     index_type = 'Okapi BM25 Rank'
-
-
-@indexer(IItem)
-def contained_uids(obj):
-    """
-      Indexes the UID of every contained elements.
-    """
-    uids = [contained.UID() for contained in obj.objectValues()]
-    return uids or _marker
 
 
 def addOrUpdateIndexes(portal, indexInfos={}, catalog_id='portal_catalog'):
