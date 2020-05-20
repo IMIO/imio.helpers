@@ -15,6 +15,12 @@ Changelog
   `catalog.removeColumns` and `catalog.reindexIndexes` so it is possible to
   proceed with another catalog than `portal_catalog`.
   [gbastien]
+- Added parameter `check_contained_uids=False` to
+  `content.uuidsToCatalogBrains` and `content.uuidsToObjects`,
+  when set to `True`, if query on `UID` index returns nothing, it will query on
+  `contained_uids` index if it exists in the `portal_catalog` that is a special
+  index used to index `UIDs` of contained elements that are not indexed.
+  [gbastien]
 
 0.27 (2020-04-20)
 -----------------

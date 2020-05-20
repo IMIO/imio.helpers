@@ -352,13 +352,19 @@ def set_to_annotation(annotation_key, value, obj=None, uid=None):
     return value
 
 
-def uuidsToCatalogBrains(uuids=[], ordered=False, query={}):
+def uuidsToCatalogBrains(uuids=[], ordered=False, query={}, check_contained_uids=False):
     """ Given a list of UUIDs, attempt to return catalog brains,
-        keeping original uuids list order if ordered=True. """
+        keeping original uuids list order if p_ordered=True.
+        If p_check_contained_uids=True, if we do not find brains using the UID
+        index, we will try to get it using the contained_uids index, used when
+        subelements are not indexed."""
 
     catalog = api.portal.get_tool('portal_catalog')
 
     brains = catalog(UID=uuids, **query)
+
+    if not brains and check_contained_uids and 'contained_uids' in catalog.Indexes:
+        brains = catalog(contained_uids=uuids, **query)
 
     if ordered:
         # we need to sort found brains according to uuids
@@ -369,12 +375,39 @@ def uuidsToCatalogBrains(uuids=[], ordered=False, query={}):
     return brains
 
 
-def uuidsToObjects(uuids=[], ordered=False, query={}):
+def uuidsToObjects(uuids=[], ordered=False, query={}, check_contained_uids=False):
     """ Given a list of UUIDs, attempt to return content objects,
-        keeping original uuids list order if ordered=True. """
+        keeping original uuids list order if p_ordered=True.
+        If p_check_contained_uids=True, if we do not find brains using the UID
+        index, we will try to get it using the contained_uids index, used when
+        subelements are not indexed. """
 
-    brains = uuidsToCatalogBrains(uuids, ordered=ordered, query=query)
-    return [brain.getObject() for brain in brains]
+    brains = uuidsToCatalogBrains(uuids,
+                                  ordered=not check_contained_uids and ordered or False,
+                                  query=query,
+                                  check_contained_uids=check_contained_uids)
+    res = []
+    if check_contained_uids:
+        need_reorder = False
+        for brain in brains:
+            obj = brain.getObject()
+            if obj.UID() not in uuids:
+                # it means we have a brain using a contained_uids
+                obj = brain.getObject()
+                for contained in obj.objectValues():
+                    if contained.UID() in uuids:
+                        need_reorder = True
+                        res.append(contained)
+            else:
+                res.append(obj)
+        if ordered and need_reorder:
+            # need to sort here as disabled when calling uuidsToCatalogBrains
+            def getKey(item):
+                return uuids.index(item.UID())
+            res = sorted(res, key=getKey)
+    else:
+        res = [brain.getObject() for brain in brains]
+    return res
 
 
 def disable_link_integrity_checks():
