@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from imio.helpers.interfaces import IContainerOfUnindexedElementsMarker
 from persistent.list import PersistentList
 from plone import api
 from plone.api.validation import mutually_exclusive_parameters
@@ -375,11 +376,17 @@ def uuidsToCatalogBrains(uuids=[], ordered=False, query={}, check_contained_uids
     return brains
 
 
-def _contained_objects(obj):
-    """ """
+def _contained_objects(obj, only_unindexed=False):
+    """Return every elements contained in p_obj, incuding sub_elements.
+       If p_only_unindexed=True, then we only return elements that are not indexed"""
+    if only_unindexed and not IContainerOfUnindexedElementsMarker.providedBy(obj):
+        return []
+
     def get_objs(container, objs=[]):
         for subcontainer in container.objectValues():
-            objs.append(subcontainer)
+            if not only_unindexed or \
+               (only_unindexed and subcontainer._getCatalogTool() is None):
+                objs.append(subcontainer)
             get_objs(subcontainer, objs)
         return objs
     return get_objs(obj)

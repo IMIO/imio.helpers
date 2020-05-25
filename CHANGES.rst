@@ -21,6 +21,9 @@ Changelog
   `contained_uids` index if it exists in the `portal_catalog` that is a special
   index used to index `UIDs` of contained elements that are not indexed.
   [gbastien]
+- Added `IContainerOfUnindexedElementsMarker` marker interface to mark objects
+  containing unindexed objects.
+  [gbastien]
 
 0.27 (2020-04-20)
 -----------------
