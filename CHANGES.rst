@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.28 (unreleased)
+0.28 (2020-05-26)
 -----------------
 
 - Added `outputMimeType` parameter to `richtextval` method
