@@ -4,7 +4,9 @@ Changelog
 0.29 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Added parameter `unrestricted=False` to `content.uuidsToCatalogBrains` and
+  `content.uuidsToObjects`, when `True`, catalog search is done unrestricted.
+  [gbastien]
 
 
 0.28 (2020-05-26)

@@ -353,7 +353,11 @@ def set_to_annotation(annotation_key, value, obj=None, uid=None):
     return value
 
 
-def uuidsToCatalogBrains(uuids=[], ordered=False, query={}, check_contained_uids=False):
+def uuidsToCatalogBrains(uuids=[],
+                         ordered=False,
+                         query={},
+                         check_contained_uids=False,
+                         unrestricted=False):
     """ Given a list of UUIDs, attempt to return catalog brains,
         keeping original uuids list order if p_ordered=True.
         If p_check_contained_uids=True, if we do not find brains using the UID
@@ -361,11 +365,14 @@ def uuidsToCatalogBrains(uuids=[], ordered=False, query={}, check_contained_uids
         subelements are not indexed."""
 
     catalog = api.portal.get_tool('portal_catalog')
+    searcher = catalog.searchResults
+    if unrestricted:
+        searcher = catalog.unrestrictedSearchResults
 
-    brains = catalog(UID=uuids, **query)
+    brains = searcher(UID=uuids, **query)
 
     if not brains and check_contained_uids and 'contained_uids' in catalog.Indexes:
-        brains = catalog(contained_uids=uuids, **query)
+        brains = searcher(contained_uids=uuids, **query)
 
     if ordered:
         # we need to sort found brains according to uuids
@@ -392,7 +399,7 @@ def _contained_objects(obj, only_unindexed=False):
     return get_objs(obj)
 
 
-def uuidsToObjects(uuids=[], ordered=False, query={}, check_contained_uids=False):
+def uuidsToObjects(uuids=[], ordered=False, query={}, check_contained_uids=False, unrestricted=False):
     """ Given a list of UUIDs, attempt to return content objects,
         keeping original uuids list order if p_ordered=True.
         If p_check_contained_uids=True, if we do not find brains using the UID
@@ -402,15 +409,15 @@ def uuidsToObjects(uuids=[], ordered=False, query={}, check_contained_uids=False
     brains = uuidsToCatalogBrains(uuids,
                                   ordered=not check_contained_uids and ordered or False,
                                   query=query,
-                                  check_contained_uids=check_contained_uids)
+                                  check_contained_uids=check_contained_uids,
+                                  unrestricted=unrestricted)
     res = []
     if check_contained_uids:
         need_reorder = False
         for brain in brains:
-            obj = brain.getObject()
+            obj = brain._unrestrictedGetObject()
             if obj.UID() not in uuids:
                 # it means we have a brain using a contained_uids
-                obj = brain.getObject()
                 for contained in _contained_objects(obj):
                     if contained.UID() in uuids:
                         need_reorder = True
