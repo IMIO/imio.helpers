@@ -8,7 +8,6 @@ Changelog
   `content.uuidsToObjects`, when `True`, catalog search is done unrestricted.
   [gbastien]
 
-
 0.28 (2020-05-26)
 -----------------
 
