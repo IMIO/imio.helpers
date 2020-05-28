@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.29 (unreleased)
+0.29 (2020-05-28)
 -----------------
 
 - Added parameter `unrestricted=False` to `content.uuidsToCatalogBrains` and
