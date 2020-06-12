@@ -4,8 +4,9 @@ Changelog
 0.30 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- In `content.uuidsToObjects`, get object with `brain._unrestrictedGetObject`
+  in case parameter `unrestricted=True`.
+  [gbastien]
 
 0.29 (2020-05-28)
 -----------------

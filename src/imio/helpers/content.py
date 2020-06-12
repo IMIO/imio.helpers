@@ -430,7 +430,7 @@ def uuidsToObjects(uuids=[], ordered=False, query={}, check_contained_uids=False
                 return uuids.index(item.UID())
             res = sorted(res, key=getKey)
     else:
-        res = [brain.getObject() for brain in brains]
+        res = [brain._unrestrictedGetObject() for brain in brains]
     return res
 
 
