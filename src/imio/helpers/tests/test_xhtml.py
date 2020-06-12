@@ -15,6 +15,9 @@ from Products.ATContentTypes.interfaces import IImageContent
 
 import urllib
 
+picsum_image1_url = 'https://i.picsum.photos/id/10/200/300.jpg?hmac=94QiqvBcKJMHpneU69KYg2pky8aZ6iBzKrAuhSUBB9s'
+picsum_image2_url = 'https://i.picsum.photos/id/1082/200/200.jpg?hmac=3usO1ziO7kCseIG52ruhRigxyk39W_L9eECWe1Hs6fY'
+
 
 class TestXHTMLModule(IntegrationTestCase):
     """
@@ -470,9 +473,9 @@ class TestXHTMLModule(IntegrationTestCase):
         self.assertEqual(storeImagesLocally(doc, text), text)
 
         # working example
-        text = '<p>Working external image <img src="https://i.picsum.photos/id/10/200/300.jpg"/>.</p>'
+        text = '<p>Working external image <img src="%s"/>.</p>' % picsum_image1_url
         # we have Content-Dispsition header
-        downloaded_img_path, downloaded_img_infos = urllib.urlretrieve('https://i.picsum.photos/id/10/200/300.jpg')
+        downloaded_img_path, downloaded_img_infos = urllib.urlretrieve(picsum_image1_url)
         self.assertTrue(downloaded_img_infos.getheader('Content-Disposition'))
         # image object does not exist for now
         self.assertFalse('10-200x300.jpg' in self.portal.objectIds())
@@ -484,7 +487,7 @@ class TestXHTMLModule(IntegrationTestCase):
 
         # working example with a Folder, this test case where we have a container
         # using RichText field, in this case the Image is stored in the Folder, not next to it
-        text = '<p>Working external image <img src="https://i.picsum.photos/id/1082/200/200.jpg">.</p>'
+        text = '<p>Working external image <img src="%s">.</p>' % picsum_image2_url
         expected = '<p>Working external image <img src="{0}/folder/1082-200x200.jpg">.</p>'.\
             format(self.portal_url)
         self.assertFalse('1082-200x200.jpg' in self.portal.folder.objectIds())
@@ -505,7 +508,7 @@ class TestXHTMLModule(IntegrationTestCase):
     def test_storeExternalImagesLocallyWithResolveUID(self):
         """ """
         # working example
-        text = '<p>Working external image <img src="https://i.picsum.photos/id/10/200/300.jpg">.</p>'
+        text = '<p>Working external image <img src="%s">.</p>' % picsum_image1_url
         result = storeImagesLocally(self.portal, text, force_resolve_uid=True)
 
         # image was downloaded and link to it was turned to a resolveuid
@@ -633,7 +636,7 @@ class TestXHTMLModule(IntegrationTestCase):
         self.assertTrue(self.portal.folder2.absolute_url().startswith(
             self.portal.folder.absolute_url()))
 
-        text = '<p>Working external image <img src="https://i.picsum.photos/id/10/200/300.jpg">.</p>'
+        text = '<p>Working external image <img src="%s">.</p>' % picsum_image1_url
         storeImagesLocally(self.portal.folder2, text)
         text = '<p>Working external image <img src="{0}">.</p>'.format(
             self.portal.folder2.objectValues()[0].absolute_url()
