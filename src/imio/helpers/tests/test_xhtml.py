@@ -460,8 +460,7 @@ class TestXHTMLModule(IntegrationTestCase):
         self.assertEqual(storeImagesLocally(doc, ''), '')
         self.assertEqual(storeImagesLocally(doc, '<p>&nbsp;</p>'), '<p>&nbsp;</p>')
         # not changed if only contains local images, using relative or absolute path
-        text = '<p>Image absolute path <img src="/img"/> and relative path <img src="../img"/>.</p>'.\
-            format(self.portal_url)
+        text = '<p>Image absolute path <img src="/img"/> and relative path <img src="../img"/>.</p>'
         self.assertEqual(storeImagesLocally(doc, text), text)
 
         # link to unexisting external image, site exists but not image (error 404) nothing changed

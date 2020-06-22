@@ -230,7 +230,7 @@ def get_schema_fields(obj=None, type_name=None, behaviors=True, prefix=False):
         type_name = obj.portal_type
     try:
         fti = portal_types[type_name]
-    except:
+    except KeyError:
         return []
     fti_schema = fti.lookupSchema()
     fields = [(field_name, field) for (field_name, field) in fti_schema.namesAndDescriptions(all=True)

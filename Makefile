@@ -2,7 +2,7 @@
 #
 all: run
 py:=2.7
-plone:=52
+plone:=4
 
 .PHONY: bootstrap buildout run test cleanall
 bootstrap:
