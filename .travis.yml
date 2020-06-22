@@ -1,32 +1,61 @@
+os:
+  - linux
+dist: bionic
 language: python
 
-sudo: required
-
 cache:
+  pip: true
   directories:
-    - buildout-cache
+  - eggs
+  - zint-2.8.0
 
-python:
-  - 2.7
+matrix:
+  include:
+    - python: "2.7"
+      env: PLONE_VERSION=4
+    - python: "2.7"
+      env: PLONE_VERSION=51
+    - python: "2.7"
+      env: PLONE_VERSION=52
+    - python: "3.7.7"
+      env: PLONE_VERSION=52
+    - python: "3.8"
+      env: PLONE_VERSION=52
+
+jobs:
+  fast_finish: true
 
 before_install:
-  - sudo apt-get install libpng12-dev cmake libqt4-dev libqt5widgets5 qttools5-dev
-  - sudo wget -O zint_2.6.0_amd64.deb https://sourceforge.net/projects/zint/files/zint/2.6.0/zint_2.6.0_amd64.deb/download
-  - sudo dpkg -i zint_2.6.0_amd64.deb
+  - sudo apt-get update
+  - sudo apt-get -y install g++ libpng-dev cmake libqt4-dev libqt5widgets5 qttools5-dev
+  - sudo wget -t 3 -T 60 --waitretry 5 -O zint-2.8.0.tar.gz https://sourceforge.net/projects/zint/files/zint/2.8.0/zint-2.8.0.tar.gz/download
+  - sudo tar -xf zint-2.8.0.tar.gz
+  - cd zint-2.8.0
+  - sudo cmake .
+  - sudo make
+  - sudo make install
+  - cd ..
+  - virtualenv -p `which python` .
+  - bin/pip install -r requirements.txt
+  - cp test_plone$PLONE_VERSION.cfg buildout.cfg
 
 install:
-  - mkdir -p buildout-cache/{eggs,downloads}
-  - python bootstrap.py --version=2.11.3 -c travis.cfg
-  - bin/buildout -c travis.cfg -N annotate
-  - bin/buildout -c travis.cfg -Nqt 5
+  - bin/buildout annotate
+  - bin/buildout
+
+before_script:
+- 'export DISPLAY=:99.0'
+- Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+- sleep 3
+- firefox -v
 
 script:
   - bin/test
 
 after_success:
-  - bin/coverage run bin/test
-  - pip install -q coveralls==0.5
-  - coveralls
+  - bin/createcoverage --output-dir=parts/test/coverage
+  - bin/pip install -q coveralls
+  - bin/coveralls
 
 notifications:
   email:

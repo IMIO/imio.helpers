@@ -1,24 +1,26 @@
 #!/usr/bin/make
 #
 all: run
+py:=2.7
+plone:=52
 
 .PHONY: bootstrap buildout run test cleanall
 bootstrap:
-	virtualenv-2.7 .
-	./bin/python bootstrap.py --version=2.10.0 --setuptools-version=33.1.1
+	if [ -f /usr/bin/virtualenv-2.7 ] ; then virtualenv-2.7 -p python$(py) .;else virtualenv -p python$(py) .;fi
+	bin/pip install -r requirements.txt
+	./bin/python bootstrap.py --version=2.13.2
 
 buildout:
+	cp test_plone$(plone).cfg buildout.cfg
 	if ! test -f bin/buildout;then make bootstrap;fi
-	bin/buildout -Nt 5
+	bin/buildout
 
 run:
 	if ! test -f bin/instance;then make buildout;fi
 	bin/instance fg
 
-test:
-	if ! test -f bin/test;then make buildout;fi
-	rm -fr htmlcov
-	bin/coverage.sh
+test: buildout
+	bin/test
 
 cleanall:
 	rm -fr bin develop-eggs htmlcov include .installed.cfg lib .mr.developer.cfg parts downloads eggs
