@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.30 (unreleased)
+0.30 (2020-06-24)
 -----------------
 
 - In `content.uuidsToObjects`, get object with `brain._unrestrictedGetObject`
