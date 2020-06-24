@@ -2,7 +2,7 @@ exclude .mr.developer.cfg
 graft src/imio
 graft buildout.d
 graft docs
-include *.cfg *.rst *.in
+include *.cfg *.rst *.in *.txt
 include *.py
 include .coveragerc
 include .travis.yml
