@@ -88,8 +88,8 @@ def transitions(obj, transitions):
     for tr in transitions:
         try:
             workflowTool.doActionFor(obj, tr)
-        except WorkflowException:
-            logger.warn("Cannot apply transition '%s' on obj '%s'" % (tr, obj))
+        except WorkflowException, msg:
+            logger.warn("Cannot apply transition '%s' on obj '%s': '%s'" % (tr, obj, msg))
 
 
 def create_NamedBlob(filepath, typ='file'):
@@ -488,6 +488,6 @@ def get_state_infos(obj):
     state = wf.states.get(review_state)
     state_title = state and state.title or review_state
     return {'state_name': review_state,
-            'state_title': translate(state_title,
+            'state_title': translate(safe_unicode(state_title),
                                      domain="plone",
                                      context=obj.REQUEST)}

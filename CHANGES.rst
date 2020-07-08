@@ -4,8 +4,8 @@ Changelog
 0.31 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Correctly translate a utf8 state title.
+  [sgeulette]
 
 0.30 (2020-06-24)
 -----------------
