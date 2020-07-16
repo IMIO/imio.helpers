@@ -12,6 +12,7 @@ from imio.helpers.content import get_schema_fields
 from imio.helpers.content import get_state_infos
 from imio.helpers.content import get_vocab
 from imio.helpers.content import restore_link_integrity_checks
+from imio.helpers.content import safe_delattr
 from imio.helpers.content import safe_encode
 from imio.helpers.content import set_to_annotation
 from imio.helpers.content import transitions
@@ -303,3 +304,12 @@ class TestContentModule(IntegrationTestCase):
         self.assertDictEqual(get_state_infos(obj), {'state_title': u'Internal draft', 'state_name': 'internal'})
         transitions(obj, 'submit')
         self.assertDictEqual(get_state_infos(obj), {'state_title': u'Pending review', 'state_name': 'pending'})
+
+    def test_safe_delattr(self):
+        attr_name = 'testing_attr_name'
+        setattr(self.portal, attr_name, attr_name)
+        self.assertTrue(hasattr(self.portal, attr_name))
+        safe_delattr(self.portal, attr_name)
+        self.assertFalse(hasattr(self.portal, attr_name))
+        safe_delattr(self.portal, attr_name)
+        self.assertFalse(hasattr(self.portal, attr_name))

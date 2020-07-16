@@ -11,6 +11,7 @@ from plone.namedfile.file import NamedBlobImage
 from plone.registry.interfaces import IRegistry
 from Products.CMFCore.interfaces import IPropertiesTool
 from Products.CMFCore.WorkflowCore import WorkflowException
+from Products.CMFPlone.utils import base_hasattr
 from Products.CMFPlone.utils import getFSVersionTuple
 from Products.CMFPlone.utils import safe_unicode
 from zope.annotation import IAnnotations
@@ -491,3 +492,9 @@ def get_state_infos(obj):
             'state_title': translate(safe_unicode(state_title),
                                      domain="plone",
                                      context=obj.REQUEST)}
+
+
+def safe_delattr(obj, attr_name):
+    """ """
+    if base_hasattr(obj, attr_name):
+        delattr(obj, attr_name)

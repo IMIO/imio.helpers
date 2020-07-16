@@ -6,6 +6,8 @@ Changelog
 
 - Correctly translate a utf8 state title.
   [sgeulette]
+- Added `content.safe_delattr` to avoid having to check `base_hasattr` before.
+  [gbastien]
 
 0.30 (2020-06-24)
 -----------------
