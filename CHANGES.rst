@@ -8,6 +8,10 @@ Changelog
   [sgeulette]
 - Added `content.safe_delattr` to avoid having to check `base_hasattr` before.
   [gbastien]
+- Added JS helper function `toggleDetails` to be able to show/hide details
+  using a collapsable `<div>`.
+  [gbastien]
+
 
 0.30 (2020-06-24)
 -----------------

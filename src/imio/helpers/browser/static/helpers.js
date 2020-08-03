@@ -50,3 +50,41 @@ function callViewAndReload(baseUrl, view_name, params, force_faceted=false) {
       }
     });
 }
+
+// used to show/hide details
+function toggleDetails(id, toggle_parent_active=true, parent_tag=null, load_view=null) {
+  tag = $('#' + id);
+  tag.slideToggle(200);
+  if (toggle_parent_active) {
+    if (!parent_tag) {
+      parent_tag = tag.prev()[0];
+    }
+    parent_tag.classList.toggle("active");
+  }
+
+  inner_content_tag = $('div.collapsible-inner-content', tag)[0];
+  if (load_view && !inner_content_tag.dataset.loaded) {
+    // load content in the collapsible-inner-content div
+    var url = $("link[rel='canonical']").attr('href') + '/' + load_view;
+    $.ajax({
+      url: url,
+      dataType: 'html',
+      data: {},
+      cache: false,
+      async: true,
+      success: function(data) {
+        inner_content_tag.innerHTML = data;
+        inner_content_tag.dataset.loaded = true;
+        /* trigger event when ajax success, this let's register some JS
+         * initialization in returned HTML */
+        $.event.trigger({
+            type: "toggle_details_ajax_success",
+            tag: tag});
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        /*console.log(textStatus);*/
+        window.location.href = window.location.href;
+        }
+    });
+  }
+}
