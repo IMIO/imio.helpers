@@ -33,7 +33,7 @@
 </ul>
 
 <p>&nbsp;</p>
-<p>sans liste :</p>
+<p>Sans liste :</p>
 
 <p><s><em>italique barré</em></s>;</p>
 <p><em><strong>italique gras</strong></em>;</p>
@@ -73,7 +73,7 @@ style directement sur &lt;li style=...&gt;
 </ul>
 
 <p>&nbsp;</p>
-<p>sans liste :</p>
+<p>Sans liste :</p>
 
 <p style="font-style: italic; text-decoration: line-through;">italique barré;</p>
 <p style="font-style: italic; font-weight: bold;">italique gras;</p>
@@ -119,7 +119,7 @@ style sur &lt;span&gt; dans &lt;li&gt;
 
 <ul>
     <li><p style="font-style: italic; font-weight: bold;">attribut "style" italique gras;</p></li>
-    <li><p class="smallText">attribut "class" utilisant "smallText".</p></li>
+    <li><p class="smallText">attribut "class" utilisant "smallText", ne fonctionne pas en appy.pod 0.9.16!!!</p></li>
 </ul>
 
 <p>&nbsp;</p>
@@ -207,11 +207,16 @@ style sur &lt;span&gt; dans &lt;li&gt;
 
 <p>&nbsp;</p>
 
-<p style="color: #0000FF;"><u><strong>Retrait en début de ligne négatif :</strong></u></p>
+<p style="color: #0000FF;"><u><strong>Retrait en début de ligne négatif, en "pt" ne fonctionne pas appy.pod 0.9.16 :</strong></u></p>
 
 <p style="margin-left:-1cm">Mon texte avec retrait de margin-left:-1cm;</p>
-
+<p style="margin-left:1cm">Mon texte avec retrait de margin-left:1cm;</p>
+<p style="margin-left:-2.75pt">Mon texte avec retrait de margin-left:-2.75pt;</p>
+<p style="margin-left:2.75pt">Mon texte avec retrait de margin-left:2.75pt;</p>
 <p style="margin-left:-.75pt">Mon texte avec retrait de margin-left:-.75pt;</p>
+<p style="margin-left:.75pt">Mon texte avec retrait de margin-left:.75pt;</p>
+<p style="margin-left:-5px">Mon texte avec retrait de margin-left:-5px;</p>
+<p style="margin-left:5px">Mon texte avec retrait de margin-left:5px;</p>
 
 <p>Mon texte sans retrait.</p>
 
@@ -545,7 +550,7 @@ style sur &lt;span&gt; dans &lt;li&gt;
                 </tr>
             </tbody>
         </table>
-        <p>Texte après le tableau</p>
+        <p>Texte après le tableau, cassé en appy.pod 0.9.16, le texte se transforme en puce alors qu'il devrait rester texte</p>
     </li>
     <li>Puce après le tableau</li>
 </ul>
@@ -889,6 +894,33 @@ Tableau "fixed" sans largeur définie :
         </tr>
     </tbody>
 </table>
+
+<p>&nbsp;</p>
+
+<p style="color: #0000FF;"><u><strong>Tableau donc les &lt;td&gt; contiennent &lt;p class="xSmallText" /&gt;, classes CSS changeant la taille du texte, ignorés (appy.pod 0.9.16) :</strong></u></p>
+
+<table>
+    <tbody>
+        <tr>
+            <td><p>Texte normal</p></td>
+            <td><p class="smallText">Texte petit</p></td>
+            <td><p class="xSmallText">Texte très petit</p></td>
+        </tr>
+        <tr>
+            <td><p>Texte normal</p></td>
+            <td><p class="largeText">Texte grand</p></td>
+            <td><p class="xLargeText">Texte très grand</p></td>
+        </tr>
+    </tbody>
+</table>
+
+<p>Hors tableau :</p>
+<p>Texte normal</p>
+<p class="smallText">Texte petit</p>
+<p class="xSmallText">Texte très petit</p>
+<p>Texte normal</p>
+<p class="largeText">Texte grand</p>
+<p class="xLargeText">Texte très grand</p>
 
 <p>&nbsp;</p>
 
@@ -3005,31 +3037,33 @@ border="1" style="width:500px; border: undefined;"
 
 <p>Cette image devrait être affichée dans le document généré, trop large elle est adaptée au document</p>
 
-<p><img alt="" src="http://www.imio.be/logo.png" style="height:78px; width:639px" title="logo.png" /></p>
+<p><img alt="" src="https://i.picsum.photos/id/458/2000/2000.jpg?hmac=FF_D-rZJkcfApPCmsekc4XQ9o8dJlgaSnz7SpmxjOhQ" style="height:2000px; width:2000px" title="image.png" /></p>
 
 <p>Une petite image est affichée correctement</p>
 
-<p><img alt="" src="http://www.imio.be/contact.png" style="height:291px; width:148px" title="contact.png" /></p>
+<p><img alt="" src="https://i.picsum.photos/id/10/200/300.jpg?hmac=94QiqvBcKJMHpneU69KYg2pky8aZ6iBzKrAuhSUBB9s" style="height:300px; width:200px" title="image.png" /></p>
 
 <p>Image affichée sans width/height renseignés</p>
 
-<p><img alt="" src="http://www.imio.be/contact.png" title="contact.png" /></p>
+<p><img alt="" src="https://i.picsum.photos/id/10/200/300.jpg?hmac=94QiqvBcKJMHpneU69KYg2pky8aZ6iBzKrAuhSUBB9s" title="image.png" /></p>
 
 <p>Image utilisant un style="float: right;"</p>
 
-<p><img alt="" src="http://www.imio.be/contact.png" style="float: right;" title="contact.png" /></p>
+<p><img alt="" src="https://i.picsum.photos/id/10/200/300.jpg?hmac=94QiqvBcKJMHpneU69KYg2pky8aZ6iBzKrAuhSUBB9s" style="float: right;" title="image.png" /></p>
+<div style="clear: both;"></div>
 
 <p>Image utilisant un style="float: left;"</p>
 
-<p><img alt="" src="http://www.imio.be/contact.png" style="float: left;" title="contact.png" /></p>
+<p><img alt="" src="https://i.picsum.photos/id/10/200/300.jpg?hmac=94QiqvBcKJMHpneU69KYg2pky8aZ6iBzKrAuhSUBB9s" style="float: left;" title="image.png" /></p>
+<div style="clear: both;"></div>
 
 <p>Image redimensionnée (plus petite) via les attributs "width=150px" et "height=75px", pas via "style='width:...; height:...;"</p>
 
-<p><img alt="" src="http://www.imio.be/contact.png" height="150px" width="75px" title="contact.png" /></p>
+<p><img alt="" src="https://i.picsum.photos/id/10/200/300.jpg?hmac=94QiqvBcKJMHpneU69KYg2pky8aZ6iBzKrAuhSUBB9s" height="150px" width="75px" title="image.png" /></p>
 
 <p>Une image redimensionnée dans l'éditeur est rendue redimensionnée et utilise style="height:150px; width:75px"</p>
 
-<p><img alt="" src="http://www.imio.be/contact.png" style="height:150px; width:75px" title="contact.png" /></p>
+<p><img alt="" src="https://i.picsum.photos/id/10/200/300.jpg?hmac=94QiqvBcKJMHpneU69KYg2pky8aZ6iBzKrAuhSUBB9s" style="height:150px; width:75px" title="image.png" /></p>
 
 <p>Image non trouvée externe</p>
 
@@ -3057,13 +3091,13 @@ border="1" style="width:500px; border: undefined;"
     <tr>
         <td>
             <p>
-                <img alt="" src="http://www.imio.be/contact.png" style="height:291px; width:148px" title="contact.png" />
+                <img alt="" src="https://i.picsum.photos/id/10/200/300.jpg?hmac=94QiqvBcKJMHpneU69KYg2pky8aZ6iBzKrAuhSUBB9s" style="height:300px; width:200px" title="image.png" />
             </p>
         </td>
     </tr>
     <tr>
         <td>
-            <img alt="" src="http://www.imio.be/contact.png" style="height:291px; width:148px" title="contact.png" />
+			<img alt="" src="https://i.picsum.photos/id/10/200/300.jpg?hmac=94QiqvBcKJMHpneU69KYg2pky8aZ6iBzKrAuhSUBB9s" style="height:300px; width:200px" title="image.png" />
         </td>
     </tr>
 </table>
@@ -3106,7 +3140,7 @@ border="1" style="width:500px; border: undefined;"
 
 <p>&nbsp;</p>
 
-<p style="color: #0000FF;"><u><strong>Texte avec des espaces dans des &lt;em&gt;, les espaces sont souvent perdus avec appy.pod<=0.9.8 :</strong></u></p>
+<p style="color: #0000FF;"><u><strong>Texte avec des espaces dans des &lt;em&gt;, les espaces sont souvent perdus avec appy.pod&lt;=0.9.8 :</strong></u></p>
 
 <p style="text-align:justify"><em><em>Texte </em></em><em><em>texte texte</em></em><em><em> texte </em></em><em><em>texte</em></em><em><em> texte.</em></em></p>
 

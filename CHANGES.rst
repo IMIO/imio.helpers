@@ -11,7 +11,9 @@ Changelog
 - Added JS helper function `toggleDetails` to be able to show/hide details
   using a collapsable `<div>`.
   [gbastien]
-
+- Completed `appy_pod` usecases,
+  fixed images to use https://picsum.photos/ instead https://www.imio.be
+  [gbastien]
 
 0.30 (2020-06-24)
 -----------------
