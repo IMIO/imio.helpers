@@ -52,7 +52,7 @@ function callViewAndReload(baseUrl, view_name, params, force_faceted=false) {
 }
 
 // used to show/hide details
-function toggleDetails(id, toggle_parent_active=true, parent_tag=null, load_view=null) {
+function toggleDetails(id, toggle_parent_active=true, parent_tag=null, load_view=null, base_url=null) {
   tag = $('#' + id);
   tag.slideToggle(200);
   if (toggle_parent_active) {
@@ -65,7 +65,8 @@ function toggleDetails(id, toggle_parent_active=true, parent_tag=null, load_view
   inner_content_tag = $('div.collapsible-inner-content', tag)[0];
   if (load_view && !inner_content_tag.dataset.loaded) {
     // load content in the collapsible-inner-content div
-    var url = $("link[rel='canonical']").attr('href') + '/' + load_view;
+    var url = base_url || $("link[rel='canonical']").attr('href');
+    url = url + '/' + load_view;
     $.ajax({
       url: url,
       dataType: 'html',
