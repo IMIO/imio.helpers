@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.31 (unreleased)
+0.31 (2020-08-18)
 -----------------
 
 - Correctly translate a utf8 state title.
