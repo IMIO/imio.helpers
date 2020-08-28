@@ -52,7 +52,7 @@ def addOrUpdateIndexes(portal, indexInfos={}, catalog_id='portal_catalog'):
             logger.info('Created index "%s" of type "%s"...' % (indexName, indexType))
 
     if addedIndexes:
-        pghandler = ZLogHandler()
+        pghandler = ZLogHandler(steps=1000)
         catalog.reindexIndex(addedIndexes, portal.REQUEST, pghandler=pghandler)
 
 
@@ -109,7 +109,7 @@ def removeColumns(portal, columns=(), catalog_id='portal_catalog'):
 def reindexIndexes(portal, idxs=[], catalog_id='portal_catalog'):
     """Reindex given p_idxs."""
     logger.info('Reindexing the "{0}" index(es)...'.format(', '.join(idxs)))
-    pghandler = ZLogHandler()
+    pghandler = ZLogHandler(steps=1000)
     catalog = api.portal.get_tool(catalog_id)
     catalog.reindexIndex(idxs, REQUEST=None, pghandler=pghandler)
     logger.info('Done.')

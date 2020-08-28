@@ -4,8 +4,9 @@ Changelog
 0.32 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Log every 1000 elements instead 100 in `catalog.addOrUpdateIndexes` and
+  `catalog.reindexIndexes`.
+  [gbastien]
 
 0.31 (2020-08-18)
 -----------------
