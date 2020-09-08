@@ -7,6 +7,8 @@ Changelog
 - Log every 1000 elements instead 100 in `catalog.addOrUpdateIndexes` and
   `catalog.reindexIndexes`.
   [gbastien]
+- Fixed code to make except Exception syntax Python 3.8 compatible.
+  [gbastien]
 
 0.31 (2020-08-18)
 -----------------

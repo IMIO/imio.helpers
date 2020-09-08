@@ -89,8 +89,8 @@ def transitions(obj, transitions):
     for tr in transitions:
         try:
             workflowTool.doActionFor(obj, tr)
-        except WorkflowException, msg:
-            logger.warn("Cannot apply transition '%s' on obj '%s': '%s'" % (tr, obj, msg))
+        except WorkflowException as exc:
+            logger.warn("Cannot apply transition '%s' on obj '%s': '%s'" % (tr, obj, exc))
 
 
 def create_NamedBlob(filepath, typ='file'):
