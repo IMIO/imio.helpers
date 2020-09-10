@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.32 (unreleased)
+0.32 (2020-09-10)
 -----------------
 
 - Log every 1000 elements instead 100 in `catalog.addOrUpdateIndexes` and
