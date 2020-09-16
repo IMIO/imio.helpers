@@ -14,11 +14,13 @@ from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.CMFPlone.utils import base_hasattr
 from Products.CMFPlone.utils import getFSVersionTuple
 from Products.CMFPlone.utils import safe_unicode
+from zc.relation.interfaces import ICatalog
 from zope.annotation import IAnnotations
 from zope.component import getUtility
 from zope.component import queryUtility
 from zope.i18n import translate
 from zope.interface.interfaces import IMethod
+from zope.intid.interfaces import IIntIds
 from zope.schema._field import Bool
 from zope.schema.interfaces import IVocabularyFactory
 
@@ -498,3 +500,47 @@ def safe_delattr(obj, attr_name):
     """ """
     if base_hasattr(obj, attr_name):
         delattr(obj, attr_name)
+
+
+def get_relations(obj, attribute=None, backrefs=False):
+    """Get any kind of references and backreferences"""
+    res = []
+    int_id = get_intid(obj)
+    if not int_id:
+        return res
+
+    relation_catalog = getUtility(ICatalog)
+    if not relation_catalog:
+        return res
+
+    query = {}
+    if attribute:
+        # Constrain the search for certain relation-types.
+        query['from_attribute'] = attribute
+
+    if backrefs:
+        query['to_id'] = int_id
+    else:
+        query['from_id'] = int_id
+
+    return relation_catalog.findRelations(query)
+
+
+def get_back_relations(obj, attribute=None, as_objects=True):
+    back_relations = get_relations(obj, attribute=attribute, backrefs=True)
+    res = [back_relation.from_object for back_relation in back_relations
+           if not back_relation.isBroken()]
+    return res
+
+
+def get_intid(obj):
+    """Return the intid of an object from the intid-catalog"""
+    intids = queryUtility(IIntIds)
+    if intids is None:
+        return
+    # check that the object has an intid, otherwise there's nothing to be done
+    try:
+        return intids.getId(obj)
+    except KeyError:
+        # The object has not been added to the ZODB yet
+        return

@@ -49,8 +49,9 @@ setup(
     extras_require={
         'test': [
             'collective.behavior.talcondition',
-            'plone.app.testing',
             'plone.app.dexterity',
+            'plone.app.relationfield>=1.3.0',
+            'plone.app.testing',
         ],
         'pdf': [
             'PyPDF2',

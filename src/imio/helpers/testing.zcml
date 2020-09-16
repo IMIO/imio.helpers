@@ -5,6 +5,7 @@
 
   <include file="configure.zcml" />
   <include package="plone.app.dexterity" />
+  <include package="plone.app.relationfield" />
   <include package="collective.behavior.talcondition" />
 
   <!-- This index is used by test_catalog.py -->

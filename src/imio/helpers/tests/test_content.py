@@ -6,8 +6,10 @@ from imio.helpers.content import add_to_annotation
 from imio.helpers.content import create
 from imio.helpers.content import del_from_annotation
 from imio.helpers.content import disable_link_integrity_checks
+from imio.helpers.content import get_back_relations
 from imio.helpers.content import get_from_annotation
 from imio.helpers.content import get_object
+from imio.helpers.content import get_relations
 from imio.helpers.content import get_schema_fields
 from imio.helpers.content import get_state_infos
 from imio.helpers.content import get_vocab
@@ -22,7 +24,12 @@ from imio.helpers.content import validate_fields
 from imio.helpers.testing import IntegrationTestCase
 from plone import api
 from plone.app.vocabularies.types import PortalTypesVocabulary
+from z3c.relationfield.relation import RelationValue
 from zope.annotation import IAnnotations
+from zope.component import getUtility
+from zope.event import notify
+from zope.intid.interfaces import IIntIds
+from zope.lifecycleevent import ObjectModifiedEvent
 from zope.schema._bootstrapinterfaces import WrongType
 from zope.schema.vocabulary import SimpleVocabulary
 
@@ -313,3 +320,21 @@ class TestContentModule(IntegrationTestCase):
         self.assertFalse(hasattr(self.portal, attr_name))
         safe_delattr(self.portal, attr_name)
         self.assertFalse(hasattr(self.portal, attr_name))
+
+    def test_get_relations(self):
+        obj = api.content.create(container=self.portal.folder, id='tt', type='testingtype')
+        intids = getUtility(IIntIds)
+        obj.relations = [RelationValue(intids.getId(self.portal.folder))]
+        notify(ObjectModifiedEvent(obj))
+        self.assertEqual(len(list(get_relations(obj))), 1)
+        self.assertEqual(len(list(get_relations(obj, 'relations'))), 1)
+        self.assertEqual(len(list(get_relations(obj, 'unknown'))), 0)
+
+    def test_get_back_relations(self):
+        obj = api.content.create(container=self.portal.folder, id='tt', type='testingtype')
+        intids = getUtility(IIntIds)
+        obj.relations = [RelationValue(intids.getId(self.portal.folder))]
+        notify(ObjectModifiedEvent(obj))
+        self.assertEqual(len(list(get_back_relations(self.portal.folder))), 1)
+        self.assertEqual(len(list(get_back_relations(self.portal.folder, 'relations'))), 1)
+        self.assertEqual(len(list(get_back_relations(self.portal.folder, 'unknown'))), 0)

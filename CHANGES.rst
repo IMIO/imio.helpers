@@ -4,8 +4,9 @@ Changelog
 0.33 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Added `content.get_relations` and `content.get_back_relations` to easily
+  get relations and back relations on an object.
+  [gbastien]
 
 0.32 (2020-09-10)
 -----------------

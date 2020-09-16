@@ -29,26 +29,44 @@
  <property name="model_source">
      &lt;model xmlns:security="http://namespaces.plone.org/supermodel/security" xmlns:marshal="http://namespaces.plone.org/supermodel/marshal" xmlns:form="http://namespaces.plone.org/supermodel/form" xmlns="http://namespaces.plone.org/supermodel/schema" xmlns:i18n="http://xml.zope.org/namespaces/i18n"&gt;
        &lt;schema&gt;
+
          &lt;field name="text" type="plone.app.textfield.RichText"&gt;
            &lt;description/&gt;
            &lt;title&gt;Text&lt;/title&gt;
            &lt;required&gt;False&lt;/required&gt;
          &lt;/field&gt;
+
          &lt;field name="enabled" type="zope.schema.Bool"&gt;
            &lt;description/&gt;
            &lt;title&gt;Enabled&lt;/title&gt;
            &lt;required&gt;False&lt;/required&gt;
          &lt;/field&gt;
+
          &lt;field name="textline" type="zope.schema.TextLine"&gt;
            &lt;description/&gt;
            &lt;title&gt;Text line&lt;/title&gt;
            &lt;required&gt;False&lt;/required&gt;
          &lt;/field&gt;
+
          &lt;field name="mandatory_textline" type="zope.schema.TextLine"&gt;
            &lt;description/&gt;
            &lt;title&gt;Mandatory text line&lt;/title&gt;
            &lt;required&gt;True&lt;/required&gt;
          &lt;/field&gt;
+
+         &lt;field name=&quot;relations&quot; type=&quot;z3c.relationfield.schema.RelationList&quot;&gt;
+           &lt;description/&gt;
+           &lt;required&gt;False&lt;/required&gt;
+           &lt;title&gt;Relations&lt;/title&gt;
+           &lt;value_type type=&quot;z3c.relationfield.schema.RelationChoice&quot;&gt;
+             &lt;title i18n:translate=&quot;&quot;&gt;Relation Choice&lt;/title&gt;
+             &lt;portal_type&gt;
+               &lt;element&gt;Document&lt;/element&gt;
+               &lt;element&gt;News Item&lt;/element&gt;
+             &lt;/portal_type&gt;
+           &lt;/value_type&gt;
+         &lt;/field&gt;
+
        &lt;/schema&gt;
      &lt;/model&gt;
  </property>
