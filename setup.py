@@ -50,7 +50,7 @@ setup(
         'test': [
             'collective.behavior.talcondition',
             'plone.app.dexterity',
-            'plone.app.relationfield>=1.3.0',
+            'plone.app.relationfield',
             'plone.app.testing',
         ],
         'pdf': [
