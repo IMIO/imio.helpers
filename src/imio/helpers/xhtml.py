@@ -371,7 +371,7 @@ def storeImagesLocally(context,
         # right, we have an external image, download it, stores it in context and update img_src
         try:
             downloaded_img_path, downloaded_img_infos = urllib.urlretrieve(img_src)
-        except IOError:
+        except (IOError, UnicodeError):
             # url not existing
             return None, None
 

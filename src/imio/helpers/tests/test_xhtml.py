@@ -644,6 +644,13 @@ class TestXHTMLModule(IntegrationTestCase):
         storeImagesLocally(self.portal.folder, text)
         self.assertTrue(self.portal.folder.objectIds())
 
+    def test_storeExternalImagesLocallyImageURLWithNonASCIIChars(self):
+        """URL to image may contain non ASCII chars."""
+        text = '<p>External image with special chars <img src="http://www.imio.be/émage.png">.</p>'
+        result = storeImagesLocally(self.portal, text, force_resolve_uid=True)
+        # in this case, image is ignored
+        self.assertEqual(result, text)
+
     def test_object_link(self):
         obj = self.portal.folder
         obj.setTitle(u'Folder title')
