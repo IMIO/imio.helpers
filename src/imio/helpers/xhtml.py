@@ -482,7 +482,7 @@ def storeImagesLocally(context,
                                        method='html') for x in tree.iterchildren()])
 
 
-def separate_images(context, xhtmlContent, pretty_print=False):
+def separate_images(xhtmlContent, pretty_print=False):
     """Make sure images are separated in different paragraphs.
        So <p><img .../><img .../></p> is changed to
        <p><img .../></p></p><img .../></p>."""

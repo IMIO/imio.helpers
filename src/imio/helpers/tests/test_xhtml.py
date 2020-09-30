@@ -666,40 +666,40 @@ class TestXHTMLModule(IntegrationTestCase):
     def test_separate_images(self):
         # one image, nothing changed
         text = '<p><img src="http://plone/nohost/image1.png"></p>'
-        result = separate_images(self.portal, text)
+        result = separate_images(text)
         self.assertEqual(text, result)
         # one image with text, nothing changed
         text = '<p><img src="http://plone/nohost/image1.png">.</p>'
-        result = separate_images(self.portal, text)
+        result = separate_images(text)
         self.assertEqual(text, result)
         # one image with text, nothing changed
         text = '<p>Example : <img src="http://plone/nohost/image1.png"></p>'
-        result = separate_images(self.portal, text)
+        result = separate_images(text)
         self.assertEqual(text, result)
         # 2 images with text, nothing changed
         text = '<p>Example : <img src="http://plone/nohost/image1.png">' \
             '<img src="http://plone/nohost/image2.png"></p>'
-        result = separate_images(self.portal, text)
+        result = separate_images(text)
         self.assertEqual(text, result)
 
         # <p> containg other tags than <img>, nothing changed
         text = '<p><img src="http://plone/nohost/image1.png">' \
             '<img src="http://plone/nohost/image2.png"><span>Text</span></p>'
-        result = separate_images(self.portal, text)
+        result = separate_images(text)
         self.assertEqual(text, result)
 
         # now working examples
         # 2 images
         text = '<p><img src="http://plone/nohost/image1.png">' \
             '<img src="http://plone/nohost/image2.png"></p>'
-        result = separate_images(self.portal, text)
+        result = separate_images(text)
         self.assertEqual(result, '<p><img src="http://plone/nohost/image1.png"></p>'
                          '<p><img src="http://plone/nohost/image2.png"></p>')
         # 3 images
         text = '<p><img src="http://plone/nohost/image1.png">' \
             '<img src="http://plone/nohost/image2.png">' \
             '<img src="http://plone/nohost/image3.png"></p>'
-        result = separate_images(self.portal, text)
+        result = separate_images(text)
         self.assertEqual(result, '<p><img src="http://plone/nohost/image1.png"></p>'
                          '<p><img src="http://plone/nohost/image2.png"></p>'
                          '<p><img src="http://plone/nohost/image3.png"></p>')
@@ -710,7 +710,7 @@ class TestXHTMLModule(IntegrationTestCase):
             '<img src="http://plone/nohost/image3.png"></p>' \
             '<p>Some other text...</p>' \
             '<p><img src="http://plone/nohost/image4.png"></p>'
-        result = separate_images(self.portal, text)
+        result = separate_images(text)
         self.assertEqual(result, '<p>My text and so on...</p>'
                          '<p><img src="http://plone/nohost/image1.png"></p>'
                          '<p><img src="http://plone/nohost/image2.png"></p>'
@@ -728,7 +728,7 @@ class TestXHTMLModule(IntegrationTestCase):
             '<p><img src="http://plone/nohost/image6.png"></p>' \
             '<table><tr><td><p><img src="http://plone/nohost/image7.png">' \
             '<img src="http://plone/nohost/image8.png"></p></td></tr></table>'
-        result = separate_images(self.portal, text)
+        result = separate_images(text)
         self.assertEqual(result, '<p>My text and so on...</p>'
                          '<p><img src="http://plone/nohost/image1.png"></p>'
                          '<div><img src="http://plone/nohost/image2.png"></div>'
