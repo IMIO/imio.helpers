@@ -7,6 +7,7 @@ from imio.helpers.xhtml import markEmptyTags
 from imio.helpers.xhtml import object_link
 from imio.helpers.xhtml import removeBlanks
 from imio.helpers.xhtml import removeCssClasses
+from imio.helpers.xhtml import separate_images
 from imio.helpers.xhtml import storeImagesLocally
 from imio.helpers.xhtml import xhtmlContentIsEmpty
 from os import path
@@ -661,3 +662,80 @@ class TestXHTMLModule(IntegrationTestCase):
                          u'<a href="http://nohost/plone/folder/view">Folder</a>')
         self.assertEqual(object_link(obj, view='edit', attribute='Description'),
                          u'<a href="http://nohost/plone/folder/edit"></a>')
+
+    def test_separate_images(self):
+        # one image, nothing changed
+        text = '<p><img src="http://plone/nohost/image1.png"></p>'
+        result = separate_images(self.portal, text)
+        self.assertEqual(text, result)
+        # one image with text, nothing changed
+        text = '<p><img src="http://plone/nohost/image1.png">.</p>'
+        result = separate_images(self.portal, text)
+        self.assertEqual(text, result)
+        # one image with text, nothing changed
+        text = '<p>Example : <img src="http://plone/nohost/image1.png"></p>'
+        result = separate_images(self.portal, text)
+        self.assertEqual(text, result)
+        # 2 images with text, nothing changed
+        text = '<p>Example : <img src="http://plone/nohost/image1.png">' \
+            '<img src="http://plone/nohost/image2.png"></p>'
+        result = separate_images(self.portal, text)
+        self.assertEqual(text, result)
+
+        # <p> containg other tags than <img>, nothing changed
+        text = '<p><img src="http://plone/nohost/image1.png">' \
+            '<img src="http://plone/nohost/image2.png"><span>Text</span></p>'
+        result = separate_images(self.portal, text)
+        self.assertEqual(text, result)
+
+        # now working examples
+        # 2 images
+        text = '<p><img src="http://plone/nohost/image1.png">' \
+            '<img src="http://plone/nohost/image2.png"></p>'
+        result = separate_images(self.portal, text)
+        self.assertEqual(result, '<p><img src="http://plone/nohost/image1.png"></p>'
+                         '<p><img src="http://plone/nohost/image2.png"></p>')
+        # 3 images
+        text = '<p><img src="http://plone/nohost/image1.png">' \
+            '<img src="http://plone/nohost/image2.png">' \
+            '<img src="http://plone/nohost/image3.png"></p>'
+        result = separate_images(self.portal, text)
+        self.assertEqual(result, '<p><img src="http://plone/nohost/image1.png"></p>'
+                         '<p><img src="http://plone/nohost/image2.png"></p>'
+                         '<p><img src="http://plone/nohost/image3.png"></p>')
+        # complex case
+        text = '<p>My text and so on...</p>' \
+            '<p><img src="http://plone/nohost/image1.png"></p>' \
+            '<p><img src="http://plone/nohost/image2.png">' \
+            '<img src="http://plone/nohost/image3.png"></p>' \
+            '<p>Some other text...</p>' \
+            '<p><img src="http://plone/nohost/image4.png"></p>'
+        result = separate_images(self.portal, text)
+        self.assertEqual(result, '<p>My text and so on...</p>'
+                         '<p><img src="http://plone/nohost/image1.png"></p>'
+                         '<p><img src="http://plone/nohost/image2.png"></p>'
+                         '<p><img src="http://plone/nohost/image3.png"></p>'
+                         '<p>Some other text...</p>'
+                         '<p><img src="http://plone/nohost/image4.png"></p>')
+        # very complex case
+        text = '<p>My text and so on...</p>' \
+            '<p><img src="http://plone/nohost/image1.png"></p>' \
+            '<div><img src="http://plone/nohost/image2.png">' \
+            '<img src="http://plone/nohost/image3.png"></div>' \
+            '<p>Some other text...</p>' \
+            '<p><img src="http://plone/nohost/image4.png">' \
+            '<img src="http://plone/nohost/image5.png"></p>' \
+            '<p><img src="http://plone/nohost/image6.png"></p>' \
+            '<table><tr><td><p><img src="http://plone/nohost/image7.png">' \
+            '<img src="http://plone/nohost/image8.png"></p></td></tr></table>'
+        result = separate_images(self.portal, text)
+        self.assertEqual(result, '<p>My text and so on...</p>'
+                         '<p><img src="http://plone/nohost/image1.png"></p>'
+                         '<div><img src="http://plone/nohost/image2.png"></div>'
+                         '<div><img src="http://plone/nohost/image3.png"></div>'
+                         '<p>Some other text...</p>'
+                         '<p><img src="http://plone/nohost/image4.png"></p>'
+                         '<p><img src="http://plone/nohost/image5.png"></p>'
+                         '<p><img src="http://plone/nohost/image6.png"></p>'
+                         '<table><tr><td><p><img src="http://plone/nohost/image7.png">'
+                         '<img src="http://plone/nohost/image8.png"></p></td></tr></table>')

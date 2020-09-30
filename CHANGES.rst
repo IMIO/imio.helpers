@@ -10,6 +10,9 @@ Changelog
 - Do not break in `xhtml.storeImagesLocally` if image URL
   contains non-ASCII characters.
   [gbastien]
+- Added `xhtml.separate_images` that will make sure images are separated in
+  different `<p>` to avoid breaking `appy.pod` when using `LibreOffice 6.0.x`.
+  [gbastien]
 
 0.32 (2020-09-10)
 -----------------

@@ -482,6 +482,43 @@ def storeImagesLocally(context,
                                        method='html') for x in tree.iterchildren()])
 
 
+def separate_images(context, xhtmlContent, pretty_print=False):
+    """Make sure images are separated in different paragraphs.
+       So <p><img .../><img .../></p> is changed to
+       <p><img .../></p></p><img .../></p>."""
+
+    tree = _turnToLxmlTree(xhtmlContent)
+    if not isinstance(tree, lxml.html.HtmlElement):
+        return xhtmlContent
+
+    # return received xhtmlContent if nothing was changed
+    changed = False
+    inserted_index = 1
+    for elt_index, elt in enumerate(tree.getchildren()):
+        if elt.tag not in ('p', 'div'):
+            continue
+        # only manage <p>/<div> containing several <img>, nothing else
+        imgs = elt.xpath('.//img')
+        len_imgs = len(imgs)
+        contained_tags = elt.getchildren()
+        if len_imgs > 1 and len_imgs == len(contained_tags) and not elt.text_content():
+            changed = True
+            for img_index, img in enumerate(imgs[1:]):
+                new_elt = lxml.html.Element(elt.tag)
+                tree.insert(elt_index + inserted_index + img_index, new_elt)
+                inserted_index += 1
+                # append will move the img, not necessary to remove from elt
+                new_elt.append(img)
+
+    if not changed:
+        return xhtmlContent
+
+    return ''.join([lxml.html.tostring(x,
+                                       encoding='utf-8',
+                                       pretty_print=pretty_print,
+                                       method='html') for x in tree.iterchildren()])
+
+
 def object_link(obj, view='view', attribute='Title', content=''):
     """ Returns an html link for the given object """
     href = view and "%s/%s" % (obj.absolute_url(), view) or obj.absolute_url()
