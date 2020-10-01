@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.33 (unreleased)
+0.33 (2020-10-01)
 -----------------
 
 - Added `content.get_relations` and `content.get_back_relations` to easily
