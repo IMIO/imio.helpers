@@ -14,14 +14,6 @@ function replaceListingTable(overrides) {
     });
 }
 
-function setoddeven() {
-var tbody = $(this);
-// jquery :odd and :even are 0 based
-tbody.find('tr').removeClass('odd').removeClass('even')
-.filter(':odd').addClass('even').end()
-.filter(':even').addClass('odd');
-}
-
 $(document).ready(function(){
     /* folder listing table loading actions */
     $("#content-core").delegate("div.listingBar a", "click", function(event) {

@@ -4,8 +4,9 @@ Changelog
 0.34 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Moved JS function `setoddeven` from `listings.js` to
+  `helpers.js` so it is available by default.
+  [gbastien]
 
 0.33 (2020-10-01)
 -----------------

@@ -89,3 +89,11 @@ function toggleDetails(id, toggle_parent_active=true, parent_tag=null, load_view
     });
   }
 }
+
+function setoddeven() {
+  var tbody = $(this);
+  // jquery :odd and :even are 0 based
+  tbody.find('tr').removeClass('odd').removeClass('even')
+  .filter(':odd').addClass('even').end()
+  .filter(':even').addClass('odd');
+}
