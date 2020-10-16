@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.34 (unreleased)
+0.34 (2020-10-16)
 -----------------
 
 - Moved JS function `setoddeven` from `listings.js` to
