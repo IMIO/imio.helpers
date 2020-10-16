@@ -7,6 +7,9 @@ Changelog
 - Moved JS function `setoddeven` from `listings.js` to
   `helpers.js` so it is available by default.
   [gbastien]
+- Added setup_logger in security module to change logger level (when
+  doing `instance run` by example)
+  [sgeulette]
 
 0.33 (2020-10-01)
 -----------------
