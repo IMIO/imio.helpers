@@ -51,6 +51,11 @@ function callViewAndReload(baseUrl, view_name, params, force_faceted=false) {
     });
 }
 
+// return the canonical url in JS, so the URL of the main object, useful when on a view
+function canonical_url() {
+  return $("link[rel='canonical']").attr('href');
+}
+
 // used to show/hide details
 function toggleDetails(id, toggle_parent_active=true, parent_tag=null, load_view=null, base_url=null) {
   tag = $('#' + id);
@@ -61,18 +66,22 @@ function toggleDetails(id, toggle_parent_active=true, parent_tag=null, load_view
     }
     parent_tag.classList.toggle("active");
   }
-
   inner_content_tag = $('div.collapsible-inner-content', tag)[0];
   if (load_view && !inner_content_tag.dataset.loaded) {
+    loadCollapsibleContent(tag, load_view, async=true, base_url)
+  }
+}
+
+function loadCollapsibleContent(tag, load_view, async=true, base_url=null) {
     // load content in the collapsible-inner-content div
-    var url = base_url || $("link[rel='canonical']").attr('href');
+    var url = base_url || canonical_url();
     url = url + '/' + load_view;
     $.ajax({
       url: url,
       dataType: 'html',
       data: {},
       cache: false,
-      async: true,
+      async: async,
       success: function(data) {
         inner_content_tag.innerHTML = data;
         inner_content_tag.dataset.loaded = true;
@@ -87,7 +96,6 @@ function toggleDetails(id, toggle_parent_active=true, parent_tag=null, load_view
         window.location.href = window.location.href;
         }
     });
-  }
 }
 
 function setoddeven() {

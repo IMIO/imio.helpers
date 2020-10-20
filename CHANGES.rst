@@ -4,8 +4,12 @@ Changelog
 0.35 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Added JS helper method `canonical_url` to get the current canonical URL
+  so the url of the context when on a view.
+  [gbastien]
+- In `toggleDetails` JS function, moved the part that does the async load in
+  `loadCollapsibleContent` function so it is possible to call if from outside.
+  [gbastien]
 
 0.34 (2020-10-16)
 -----------------
