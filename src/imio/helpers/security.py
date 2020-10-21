@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from itertools import chain
+from plone.api.validation import at_least_one_of
+from plone.api.validation import mutually_exclusive_parameters
 from random import choice
 from random import sample
 from random import seed
@@ -10,6 +12,7 @@ import logging
 import os
 import string
 
+from zope.component import getMultiAdapter
 
 logger = logging.getLogger("imio.helpers")
 
@@ -78,3 +81,23 @@ def setup_logger(level=20):
         if handler.level == 30 and handler.formatter is not None:
             handler.level = level
             break
+
+
+@mutually_exclusive_parameters('email', 'fullname')
+@at_least_one_of('email', 'fullname')
+def get_user_from_criteria(context, email=None, fullname=None):
+    """
+    :param context: context, with request as context.REQUEST
+    :param email: part of user email
+    :param fullname: part of user fullname
+    :return: list of dict describing users
+             [{'description': u'Bob Smith', 'title': u'Bob Smith', 'principal_type': 'user', 'userid': 'bsm',
+               'email': 'bsm@mail.com', 'pluginid': 'mutable_properties', 'login': 'bsm', 'id': 'bsm'}]
+    """
+    hunter = getMultiAdapter((context, context.REQUEST), name='pas_search')
+    criteria = {}
+    if email:
+        criteria['email'] = email
+    if fullname:
+        criteria['fullname'] = fullname
+    return hunter.searchUsers(**criteria)

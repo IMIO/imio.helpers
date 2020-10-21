@@ -2,8 +2,10 @@
 
 from imio.helpers.security import generate_password
 from imio.helpers.security import get_environment
+from imio.helpers.security import get_user_from_criteria
 from imio.helpers.security import is_develop_environment
 from imio.helpers.testing import IntegrationTestCase
+from plone import api
 
 import os
 import re
@@ -19,6 +21,7 @@ class TestSecurityModule(IntegrationTestCase):
             del os.environ['IS_DEV_ENV']
         if 'ENV' in os.environ.keys():
             del os.environ['ENV']
+        self.portal = self.layer['portal']
 
     def test_is_develop_environment(self):
         os.environ['IS_DEV_ENV'] = 'false'
@@ -41,3 +44,13 @@ class TestSecurityModule(IntegrationTestCase):
         self.assertIsNotNone(re.search(r'[A-Z]', pwd))
         self.assertIsNotNone(re.search(r'[a-z]', pwd))
         self.assertIsNotNone(re.search(r'[!#$%&*+<=>?@-]', pwd))
+
+    def test_get_user_from_criteria(self):
+        api.user.create('elementary@mail.be', 'ssmith', '12345', properties={'fullname': 'Stéphan Smith'})
+        api.user.create('teacher@school.be', 'teacher', '12345', properties={'fullname': 'Paul Smith'})
+        self.assertEqual(len(get_user_from_criteria(self.portal, email='unknown')), 0)
+        self.assertEqual(len(get_user_from_criteria(self.portal, fullname='unknown')), 0)
+        self.assertEqual(len(get_user_from_criteria(self.portal, email='mentary')), 1)
+        self.assertEqual(len(get_user_from_criteria(self.portal, fullname='Stéph')), 1)
+        self.assertEqual(len(get_user_from_criteria(self.portal, email='.be')), 2)
+        self.assertEqual(len(get_user_from_criteria(self.portal, fullname='Smith')), 2)

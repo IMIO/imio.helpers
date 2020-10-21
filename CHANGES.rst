@@ -10,6 +10,9 @@ Changelog
 - In `toggleDetails` JS function, moved the part that does the async load in
   `loadCollapsibleContent` function so it is possible to call if from outside.
   [gbastien]
+- Added `get_user_from_criteria` helper method to search users following
+  email or fullname
+  [sgeulette]
 
 0.34 (2020-10-16)
 -----------------
