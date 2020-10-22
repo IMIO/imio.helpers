@@ -81,7 +81,7 @@ def get_object(parent='', id='', title='', type='', obj_path=''):
     return None
 
 
-def transitions(obj, transitions):
+def transitions(obj, transitions, warn=False):
     """
         Apply multiple transitions on obj
     """
@@ -92,7 +92,8 @@ def transitions(obj, transitions):
         try:
             workflowTool.doActionFor(obj, tr)
         except WorkflowException as exc:
-            logger.warn("Cannot apply transition '%s' on obj '%s': '%s'" % (tr, obj, exc))
+            if warn:
+                logger.warn("Cannot apply transition '%s' on obj '%s': '%s'" % (tr, obj, exc))
 
 
 def create_NamedBlob(filepath, typ='file'):

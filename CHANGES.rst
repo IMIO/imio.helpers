@@ -13,6 +13,8 @@ Changelog
 - Added `get_user_from_criteria` helper method to search users following
   email or fullname
   [sgeulette]
+- Added param on `transitions` method, to not warn by default
+  [sgeulette]
 
 0.34 (2020-10-16)
 -----------------
