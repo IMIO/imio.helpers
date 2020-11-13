@@ -15,6 +15,8 @@ Changelog
   [sgeulette]
 - Added param on `transitions` method, to not warn by default
   [sgeulette]
+- Completed `appy_pod` usecases, `font-size 50%/150%`.
+  [gbastien]
 
 0.34 (2020-10-16)
 -----------------
