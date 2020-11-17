@@ -17,6 +17,9 @@ Changelog
   [sgeulette]
 - Completed `appy_pod` usecases, `font-size 50%/150%`.
   [gbastien]
+- Added `catalog.merge_queries` function that merges `plone.app.querystring`
+  compatible catalog queries into one single query.
+  [gbastien]
 
 0.34 (2020-10-16)
 -----------------

@@ -126,3 +126,27 @@ def get_intid(obj, intids=None, create=True):
         if create:
             return intids.register(obj)
     return 1
+
+
+def merge_queries(queries):
+    """Merge plone.app.querystring compatible queries."""
+    res = {}
+    for query in queries:
+        for k in query:
+            subkey, value = query[k].items()[0]
+            # store value as a list so it can be extended
+            if not isinstance(value, list):
+                value = [value]
+            if k in res:
+                # subkey may be 'query' or 'not'
+                if subkey in res[k]:
+                    # avoid duplicates
+                    value = [v for v in value
+                             if v not in res[k][subkey]]
+                    res[k][subkey].extend(value)
+                else:
+                    res[k][subkey] = value
+            else:
+                res[k] = {}
+                res[k][subkey] = value
+    return res

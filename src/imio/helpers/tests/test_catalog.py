@@ -4,6 +4,7 @@ from collections import OrderedDict
 from imio.helpers.catalog import addOrUpdateColumns
 from imio.helpers.catalog import addOrUpdateIndexes
 from imio.helpers.catalog import get_intid
+from imio.helpers.catalog import merge_queries
 from imio.helpers.catalog import reindexIndexes
 from imio.helpers.catalog import removeColumns
 from imio.helpers.catalog import removeIndexes
@@ -212,3 +213,25 @@ class TestCatalogModule(IntegrationTestCase):
         res = self.portal.portal_catalog(Title='specific')
         self.assertEqual(len(res), 1)
         self.assertEqual(res[0].UID, obj.UID())
+
+    def test_merge_queries(self):
+        query1 = {'portal_type': {'query': 'Document'}, 'review_state': {'query': ['private']}, }
+        query2 = {'portal_type': {'query': ['Document']}, 'review_state': {'query': ['published']}, }
+        query3 = {'portal_type': {'query': ['Folder']}, 'Title': {'query': ['title']}, }
+        query4 = {'review_state': {'query': 'pending'}}
+        query5 = {'Creator': {'query': 'author'}}
+        self.assertEqual(merge_queries([query1, query2]),
+                         {'portal_type': {'query': ['Document']},
+                          'review_state': {'query': ['private', 'published']}})
+        self.assertEqual(merge_queries([query1, query3]),
+                         {'portal_type': {'query': ['Document', 'Folder']},
+                          'review_state': {'query': ['private', 'published']},
+                          'Title': {'query': ['title']}})
+        self.assertEqual(merge_queries([query2, query4]),
+                         {'portal_type': {'query': ['Document']},
+                          'review_state': {'query': ['published', 'pending']}})
+        self.assertEqual(merge_queries([query1, query2, query3, query4, query5]),
+                         {'portal_type': {'query': ['Document', 'Folder']},
+                          'Creator': {'query': ['author']},
+                          'review_state': {'query': ['private', 'published', 'pending']},
+                          'Title': {'query': ['title']}})
