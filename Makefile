@@ -6,7 +6,7 @@ plone:=4
 
 .PHONY: bootstrap buildout run test cleanall
 bootstrap:
-	if command -v virtualenv-2.7 >/dev/null 2>&1 ; then virtualenv-2.7 -p python$(py) .;else virtualenv -p python$(py) .;fi
+	if command -v virtualenv-2.7 >/dev/null 2>&1 ; then virtualenv-2.7 .;else virtualenv -p python$(py) .;fi
 	bin/pip install -r requirements.txt
 	./bin/python bootstrap.py --version=2.13.2
 
