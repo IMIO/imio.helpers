@@ -132,21 +132,24 @@ def merge_queries(queries):
     """Merge plone.app.querystring compatible queries."""
     res = {}
     for query in queries:
-        for k in query:
-            subkey, value = query[k].items()[0]
+        for k, v in query.items():
+            subkey, value = v.items()[0]
             # store value as a list so it can be extended
             if not isinstance(value, list):
                 value = [value]
-            if k in res:
+
+            if k not in res:
+                # init new value
+                res[k] = {}
+                res[k][subkey] = value
+            else:
+                # complete existing value
                 # subkey may be 'query' or 'not'
                 if subkey in res[k]:
                     # avoid duplicates
-                    value = [v for v in value
-                             if v not in res[k][subkey]]
+                    value = [_v for _v in value
+                             if _v not in res[k][subkey]]
                     res[k][subkey].extend(value)
                 else:
                     res[k][subkey] = value
-            else:
-                res[k] = {}
-                res[k][subkey] = value
     return res
