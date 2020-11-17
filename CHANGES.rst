@@ -20,6 +20,9 @@ Changelog
 - Added `catalog.merge_queries` function that merges `plone.app.querystring`
   compatible catalog queries into one single query.
   [gbastien]
+- Do not break in `xhtml.storeImagesLocally` if a `NotFound` occurs while
+  getting an internal image.
+  [gbastien]
 
 0.34 (2020-10-16)
 -----------------

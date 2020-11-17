@@ -350,7 +350,7 @@ def storeImagesLocally(context,
         # right, traverse to image
         try:
             imageObj = portal.unrestrictedTraverse(img_path)
-        except (KeyError, AttributeError):
+        except (KeyError, AttributeError, NotFound):
             # wrong img_path
             logger.warning(
                 'In \'storeImagesLocally\', could not traverse '
