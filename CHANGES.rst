@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.35 (unreleased)
+0.35 (2020-11-18)
 -----------------
 
 - Added JS helper method `canonical_url` to get the current canonical URL
