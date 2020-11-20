@@ -11,6 +11,7 @@ from plone.app.testing import TEST_USER_ID
 from plone.app.testing import TEST_USER_NAME
 from plone.testing import z2
 
+import collective.MockMailHost
 import imio.helpers
 import logging
 import sys
@@ -38,11 +39,14 @@ class PloneWithHelpersLayer(PloneSandboxLayer):
             package=imio.helpers,
             name='testing.zcml'
         )
+        self.loadZCML(package=collective.MockMailHost)
+        z2.installProduct(app, 'collective.MockMailHost')
 
     def setUpPloneSite(self, portal):
         """Set up Plone."""
         # Install into Plone site using portal_setup
         applyProfile(portal, 'imio.helpers:testing')
+        applyProfile(portal, 'collective.MockMailHost:default')
 
         # use intranet_workflow for every types
         portal.portal_workflow.setDefaultChain('intranet_workflow')
@@ -61,6 +65,7 @@ class PloneWithHelpersLayer(PloneSandboxLayer):
     def tearDownZope(self, app):
         """Tear down Zope."""
         z2.uninstallProduct(app, 'imio.helpers')
+        z2.uninstallProduct(app, 'collective.MockMailHost')
 
 
 FIXTURE = PloneWithHelpersLayer(
