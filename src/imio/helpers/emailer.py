@@ -27,8 +27,8 @@ def get_mail_host(check=False):
     if check:
         # check mailhost on 'smtp_host' and 'email_from_address'
         portal = api.portal.get()
-        ctrlOverview = getMultiAdapter((portal, portal.REQUEST), name='overview-controlpanel')
-        if not ctrlOverview.mailhost_warning():
+        ctrl_overview = getMultiAdapter((portal, portal.REQUEST), name='overview-controlpanel')
+        if not ctrl_overview.mailhost_warning():
             return api.portal.get_tool('MailHost')
     else:
         return api.portal.get_tool('MailHost')
