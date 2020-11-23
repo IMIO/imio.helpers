@@ -37,7 +37,11 @@ def get_mail_host(check=False):
 
 
 def create_html_email(html, with_plain=True):
-    """ Returns an email message with a utf8 html body """
+    """ Returns an email message with an html body and optionally plain body
+    :param html: html body content
+    :param with_plain: add plain text version (default=True)
+    :return: MIMEMultipart instance
+    """
     charset = get_email_charset()
     html = safe_unicode(html, charset)
 
@@ -71,7 +75,12 @@ def create_html_email(html, with_plain=True):
 
 @api.validation.at_least_one_of('filepath', 'content')
 def add_attachment(eml, filename, filepath=None, content=None):
-    """ Add attachment to email """
+    """ Adds attachment to email instance
+    :param eml: email instance
+    :param filename: file name string to store in header
+    :param filepath: attachment file disk path
+    :param content: attachment binary content
+    """
     # Add as application/octet-stream: email client can usually download this automatically as attachment
     part = MIMEBase("application", "octet-stream")
     if filepath:
@@ -87,7 +96,15 @@ def add_attachment(eml, filename, filepath=None, content=None):
 
 
 def send_email(eml, subject, mfrom, mto, mcc=None, mbcc=None):
-    """ Send an email with MailHost. """
+    """ Sends an email with MailHost.
+    :param eml: email instance
+    :param subject: subject string
+    :param mfrom: from string
+    :param mto: to string or string list
+    :param mcc: cc string or string list
+    :param mbcc: bcc string or string list
+    :return: boolean status
+    """
     mail_host = get_mail_host()
     if mail_host is None:
         logger.error('Could not send email: mail host not well defined.')

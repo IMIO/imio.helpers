@@ -4,8 +4,9 @@ Changelog
 0.36 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Added email functions (`create_html_email`, `add_attachment`, `send_email`)
+  to create and send an email with attachments.
+  [sgeulette]
 
 0.35 (2020-11-18)
 -----------------
