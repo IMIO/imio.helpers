@@ -7,6 +7,9 @@ Changelog
 - Added email functions (`create_html_email`, `add_attachment`, `send_email`)
   to create and send an email with attachments.
   [sgeulette]
+- Optimized `xhtml.separate_images`, do only walk the tree if
+  it contains images (`img` tag).
+  [gbastien]
 
 0.35 (2020-11-18)
 -----------------

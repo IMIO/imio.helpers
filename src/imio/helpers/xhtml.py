@@ -488,7 +488,9 @@ def separate_images(xhtmlContent, pretty_print=False):
        <p><img .../></p></p><img .../></p>."""
 
     tree = _turnToLxmlTree(xhtmlContent)
-    if not isinstance(tree, lxml.html.HtmlElement):
+    # bypass if wrong format or no img
+    if not isinstance(tree, lxml.html.HtmlElement) or \
+       not tree.xpath('.//img'):
         return xhtmlContent
 
     # return received xhtmlContent if nothing was changed
