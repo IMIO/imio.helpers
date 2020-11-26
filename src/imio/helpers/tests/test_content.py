@@ -14,6 +14,7 @@ from imio.helpers.content import get_schema_fields
 from imio.helpers.content import get_state_infos
 from imio.helpers.content import get_vocab
 from imio.helpers.content import restore_link_integrity_checks
+from imio.helpers.content import richtextval
 from imio.helpers.content import safe_delattr
 from imio.helpers.content import safe_encode
 from imio.helpers.content import set_to_annotation
@@ -338,3 +339,15 @@ class TestContentModule(IntegrationTestCase):
         self.assertEqual(len(list(get_back_relations(self.portal.folder))), 1)
         self.assertEqual(len(list(get_back_relations(self.portal.folder, 'relations'))), 1)
         self.assertEqual(len(list(get_back_relations(self.portal.folder, 'unknown'))), 0)
+
+    def test_richtextval(self):
+        obj1 = api.content.create(container=self.portal.folder, id='tt1', type='testingtype')
+        obj2 = api.content.create(container=self.portal.folder, id='tt2', type='testingtype')
+        obj1.text = richtextval("<p>My text</p>")
+        self.assertEqual(obj1.text.raw, u"<p>My text</p>")
+        self.assertEqual(obj1.text.output, u"<p>My text</p>")
+        # use safe_html
+        text_with_link = '<p>My text <a href="resolveuid/{0}"</p>'.format(obj2.UID())
+        obj1.text = richtextval(text_with_link)
+        self.assertEqual(obj1.text.raw, text_with_link)
+        self.assertEqual(obj1.text.output, u'<p>My text <a href="http://nohost/plone/folder/tt2"></p>')

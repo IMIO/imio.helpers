@@ -10,6 +10,9 @@ Changelog
 - Optimized `xhtml.separate_images`, do only walk the tree if
   it contains images (`img` tag).
   [gbastien]
+- Fixed `content.richtextval` `outputMimeType` parameter to use
+  `text/x-html-safe` instead `text/html`.
+  [gbastien]
 
 0.35 (2020-11-18)
 -----------------
