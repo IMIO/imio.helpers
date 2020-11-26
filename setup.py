@@ -6,8 +6,7 @@ from setuptools import setup
 
 
 long_description = (
-    open('README.rst').read() + '\n' + 'Contributors\n============\n' + '\n' +
-    open('CONTRIBUTORS.rst').read() + '\n' + open('CHANGES.rst').read() + '\n')
+    open('README.rst').read() + '\n' + open('CHANGES.rst').read() + '\n')
 
 setup(
     name='imio.helpers',
