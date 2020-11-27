@@ -68,11 +68,11 @@ function toggleDetails(id, toggle_parent_active=true, parent_tag=null, load_view
   }
   inner_content_tag = $('div.collapsible-inner-content', tag)[0];
   if (load_view && !inner_content_tag.dataset.loaded) {
-    loadCollapsibleContent(tag, load_view, async=true, base_url)
+    loadContent(inner_content_tag, load_view, async=true, base_url, event_name="toggle_details_ajax_success")
   }
 }
 
-function loadCollapsibleContent(tag, load_view, async=true, base_url=null) {
+function loadContent(tag, load_view, async=true, base_url=null, event_name=null) {
     // load content in the collapsible-inner-content div
     var url = base_url || canonical_url();
     url = url + '/' + load_view;
@@ -83,13 +83,15 @@ function loadCollapsibleContent(tag, load_view, async=true, base_url=null) {
       cache: false,
       async: async,
       success: function(data) {
-        inner_content_tag.innerHTML = data;
-        inner_content_tag.dataset.loaded = true;
+        tag.innerHTML = data;
+        tag.dataset.loaded = true;
         /* trigger event when ajax success, this let's register some JS
          * initialization in returned HTML */
-        $.event.trigger({
-            type: "toggle_details_ajax_success",
-            tag: tag});
+        if (event_name) {
+          $.event.trigger({
+              type: event_name,
+              tag: tag});
+        }
       },
       error: function(jqXHR, textStatus, errorThrown) {
         /*console.log(textStatus);*/

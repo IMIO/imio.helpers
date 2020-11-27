@@ -13,6 +13,9 @@ Changelog
 - Fixed `content.richtextval` `outputMimeType` parameter to use
   `text/x-html-safe` instead `text/html`.
   [gbastien]
+- Renamed JS function `loadCollapsibleContent` to `loadContent` as it can be
+  used outside of `collapsible` scope.
+  [gbastien]
 
 0.35 (2020-11-18)
 -----------------
