@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.36 (unreleased)
+0.36 (2020-12-07)
 -----------------
 
 - Added email functions (`create_html_email`, `add_attachment`, `send_email`)
