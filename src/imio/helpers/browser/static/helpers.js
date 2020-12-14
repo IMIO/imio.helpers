@@ -107,3 +107,57 @@ function setoddeven() {
   .filter(':odd').addClass('even').end()
   .filter(':even').addClass('odd');
 }
+
+function submitFormHelper(form, onsuccess=submitFormHelperOnsuccessDefault, onerror=null) {
+    $('input#form-buttons-apply').click(function(event) {
+      event.preventDefault();
+      var data = {'ajax_load': true};
+      $(this.form.elements).each(function(){
+          // use checked instead value for checkbox and radio
+          if (this.type == 'checkbox' && !this.checked) {
+            // unchecked checkboxes are ignored
+            return;
+          }
+          if (this.type == 'radio') {
+            if (this.checked) {
+              data[this.name] = this.value;
+            }
+            else {
+              return;
+            }
+          }
+          // default
+          data[this.name] = this.value;
+        });
+      $.ajax( {
+      type: 'POST',
+      url: this.form.action,
+      data: data,
+      cache: false,
+      async: true,
+      success: function(data) {
+        if (onsuccess) {return onsuccess(data);}
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        if (onerror) {
+          return onerror(data);
+        }
+        else {
+          window.location.href = canonical_url();
+        }
+      },
+    } );
+  });
+}
+
+function submitFormHelperOnsuccessDefault(data) {
+  // close the overlay
+  cancel_button = $('input#form-buttons-cancel');
+  if (cancel_button) {
+    cancel_button.click();
+  }
+  // reload faceted
+  if (has_faceted) {
+    Faceted.URLHandler.hash_changed();
+  }
+}

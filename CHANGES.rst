@@ -4,8 +4,11 @@ Changelog
 0.37 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Added JS function `submitFormHelper` that will submit a given form and
+  `onsuccess`, will call the function `onsuccess` in parameter
+  (by default, when called in an overlay, will close the overlay and
+  reload the faceted navigation).
+  [gbastien]
 
 0.36 (2020-12-07)
 -----------------
