@@ -111,30 +111,18 @@ function setoddeven() {
 function submitFormHelper(form, onsuccess=submitFormHelperOnsuccessDefault, onerror=null) {
     $('input#form-buttons-apply').click(function(event) {
       event.preventDefault();
-      var data = {'ajax_load': true};
-      $(this.form.elements).each(function(){
-          // use checked instead value for checkbox and radio
-          if (this.type == 'checkbox' && !this.checked) {
-            // unchecked checkboxes are ignored
-            return;
-          }
-          if (this.type == 'radio') {
-            if (this.checked) {
-              data[this.name] = this.value;
-            }
-            else {
-              return;
-            }
-          }
-          // default
-          data[this.name] = this.value;
-        });
+      data = $(this.form).serializeArray();
+      // buttons are not included by serializeArray but we need it
+      buttons = $("input[name^='form.buttons']", this.form);
+      buttons.each(function() {data.push({name: this.name, value: this.value});});
+      // include ajax_load meaning we are in an overlay
+      data.push({name: "ajax_load", value: true});
       $.ajax( {
       type: 'POST',
       url: this.form.action,
       data: data,
       cache: false,
-      async: true,
+      async: false,
       success: function(data) {
         if (onsuccess) {return onsuccess(data);}
       },
