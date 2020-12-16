@@ -48,6 +48,7 @@ setup(
     extras_require={
         'test': [
             'collective.behavior.talcondition',
+            'collective.fingerpointing',
             'collective.MockMailHost',
             'ipdb',
             'plone.app.dexterity',

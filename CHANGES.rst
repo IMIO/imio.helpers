@@ -9,6 +9,9 @@ Changelog
   (by default, when called in an overlay, will close the overlay and
   reload the faceted navigation).
   [gbastien]
+- Added `security.fplog` helper to ease adding a `collective.fingerpointing`
+  message to the log.
+  [gbastien]
 
 0.36 (2020-12-07)
 -----------------

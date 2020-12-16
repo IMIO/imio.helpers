@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 
+from collective.fingerpointing.config import AUDIT_MESSAGE
+from collective.fingerpointing.logger import log_info
+from collective.fingerpointing.utils import get_request_information
 from itertools import chain
 from plone.api.validation import at_least_one_of
 from plone.api.validation import mutually_exclusive_parameters
@@ -81,6 +84,12 @@ def setup_logger(level=20):
         if handler.level == 30 and handler.formatter is not None:
             handler.level = level
             break
+
+
+def fplog(action, extras):
+    """collective.fingerpointing add log message."""
+    user, ip = get_request_information()
+    log_info(AUDIT_MESSAGE.format(user, ip, action, extras))
 
 
 @mutually_exclusive_parameters('email', 'fullname')

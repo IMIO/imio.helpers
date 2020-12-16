@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from imio.helpers.security import fplog
 from imio.helpers.security import generate_password
 from imio.helpers.security import get_environment
 from imio.helpers.security import get_user_from_criteria
@@ -22,6 +23,9 @@ class TestSecurityModule(IntegrationTestCase):
         if 'ENV' in os.environ.keys():
             del os.environ['ENV']
         self.portal = self.layer['portal']
+
+    def test_fplog(self):
+        fplog('test_action', 'test_extras')
 
     def test_is_develop_environment(self):
         os.environ['IS_DEV_ENV'] = 'false'
