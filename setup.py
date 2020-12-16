@@ -38,6 +38,7 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
+        'collective.fingerpointing',
         'plone.api',
         'plone.app.intid',
         'plone.dexterity',
@@ -48,7 +49,6 @@ setup(
     extras_require={
         'test': [
             'collective.behavior.talcondition',
-            'collective.fingerpointing',
             'collective.MockMailHost',
             'ipdb',
             'plone.app.dexterity',
