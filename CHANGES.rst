@@ -12,6 +12,8 @@ Changelog
 - Added `security.fplog` helper to ease adding a `collective.fingerpointing`
   message to the log.
   [gbastien]
+- Added `plone.app.relationfield` as a direct dependency.
+  [gbastien]
 
 0.36 (2020-12-07)
 -----------------

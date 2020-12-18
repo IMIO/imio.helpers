@@ -39,12 +39,13 @@ setup(
     zip_safe=False,
     install_requires=[
         'collective.fingerpointing',
+        'collective.monkeypatcher',
         'plone.api',
         'plone.app.intid',
+        'plone.app.relationfield',
         'plone.dexterity',
         'setuptools',
         'Plone',
-        'collective.monkeypatcher',
     ],
     extras_require={
         'test': [
@@ -52,7 +53,6 @@ setup(
             'collective.MockMailHost',
             'ipdb',
             'plone.app.dexterity',
-            'plone.app.relationfield',
             'plone.app.testing',
         ],
         'pdf': [
