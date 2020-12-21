@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.37 (unreleased)
+0.37 (2020-12-21)
 -----------------
 
 - Added JS function `submitFormHelper` that will submit a given form and
