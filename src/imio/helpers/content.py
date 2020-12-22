@@ -6,6 +6,7 @@ from plone import api
 from plone.api.validation import mutually_exclusive_parameters
 from plone.app.textfield.value import RichTextValue
 from plone.behavior.interfaces import IBehavior
+from plone.i18n.normalizer.interfaces import IUserPreferredURLNormalizer
 from plone.namedfile.file import NamedBlobFile
 from plone.namedfile.file import NamedBlobImage
 from plone.registry.interfaces import IRegistry
@@ -548,3 +549,9 @@ def get_intid(obj):
     except KeyError:
         # The object has not been added to the ZODB yet
         return
+
+
+def normalize_name(request, name):
+    """Use INameFromTitle normalizer on given p_name."""
+    normalizer = IUserPreferredURLNormalizer(request)
+    return normalizer.normalize(name)

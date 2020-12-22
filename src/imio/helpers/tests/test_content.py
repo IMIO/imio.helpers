@@ -13,6 +13,7 @@ from imio.helpers.content import get_relations
 from imio.helpers.content import get_schema_fields
 from imio.helpers.content import get_state_infos
 from imio.helpers.content import get_vocab
+from imio.helpers.content import normalize_name
 from imio.helpers.content import restore_link_integrity_checks
 from imio.helpers.content import richtextval
 from imio.helpers.content import safe_delattr
@@ -351,3 +352,10 @@ class TestContentModule(IntegrationTestCase):
         obj1.text = richtextval(text_with_link)
         self.assertEqual(obj1.text.raw, text_with_link)
         self.assertEqual(obj1.text.output, u'<p>My text <a href="http://nohost/plone/folder/tt2"></p>')
+
+    def test_normalize_name(self):
+        request = self.portal.REQUEST
+        self.assertEqual(normalize_name(request, u'CV Informaticien N\xb02016-1'),
+                         'cv-informaticien-ndeg2016-1')
+        self.assertEqual(normalize_name(request, u'Héhé du texte'),
+                         'hehe-du-texte')
