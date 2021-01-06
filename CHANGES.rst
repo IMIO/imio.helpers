@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.38 (unreleased)
+0.38 (2021-01-06)
 -----------------
 
 - Added `content.normalize_name` that will normalize a given name, this is the
