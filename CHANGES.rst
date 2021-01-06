@@ -5,7 +5,7 @@ Changelog
 -----------------
 
 - Added `content.normalize_name` that will normalize a given name, this is the
-  code used when turning a title to an id when creation a new content.
+  code used when turning a title to an id when creating a new content.
   [gbastien]
 
 0.37 (2020-12-21)
