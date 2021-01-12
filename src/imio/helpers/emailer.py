@@ -22,13 +22,17 @@ EMAIL_CHARSET = 'utf-8'
 
 
 def get_email_charset():
-    """ Character set to use for encoding the email. """
+    """Character set to use for encoding the email."""
     portal = api.portal.get()
     return portal.getProperty('email_charset', EMAIL_CHARSET)
 
 
 def get_mail_host(check=False):
-    """ Get the MailHost object. """
+    """Get the MailHost object.
+
+    :param check: bool. Check if mailhost configuration is correct.
+    :return: MailHost tool
+    """
     if check:
         # check mailhost on 'smtp_host' and 'email_from_address'
         portal = api.portal.get()
@@ -42,10 +46,12 @@ def get_mail_host(check=False):
 
 
 def create_html_email(html, with_plain=True):
-    """ Returns an email message with an html body and optionally plain body
+    """ Returns an email message with an html body and optionally plain body.
+
     :param html: html body content
     :param with_plain: add plain text version (default=True)
     :return: MIMEMultipart instance
+    :rtype: MIMEMultipart
     """
     charset = get_email_charset()
     html = safe_unicode(html, charset)
@@ -80,7 +86,9 @@ def create_html_email(html, with_plain=True):
 
 @api.validation.at_least_one_of('filepath', 'content')
 def add_attachment(eml, filename, filepath=None, content=None):
-    """ Adds attachment to email instance
+    """ Adds attachment to email instance.
+    Must pass at least filepath or content.
+
     :param eml: email instance
     :param filename: file name string to store in header
     :param filepath: attachment file disk path
@@ -102,13 +110,15 @@ def add_attachment(eml, filename, filepath=None, content=None):
 
 def send_email(eml, subject, mfrom, mto, mcc=None, mbcc=None):
     """ Sends an email with MailHost.
+
     :param eml: email instance
     :param subject: subject string
     :param mfrom: from string
     :param mto: to string or string list
     :param mcc: cc string or string list
     :param mbcc: bcc string or string list
-    :return: boolean status
+    :return: status
+    :rtype: bool
     """
     mail_host = get_mail_host()
     if mail_host is None:
@@ -138,14 +148,13 @@ def send_email(eml, subject, mfrom, mto, mcc=None, mbcc=None):
 
 
 class InvalidEmailAddressFormat(schema.ValidationError):
-    """Exception for invalid address format"""
+    """Exception for invalid address format with real name part."""
     __doc__ = _(u"Invalid email address format: 'real name <email>' or 'email (real name)'")
 
 
 class InvalidEmailAddress(schema.ValidationError):
-    """
-        Exception for invalid address.
-        `doc` method is used to return a dynamic message with real tested address.
+    """Exception for invalid address.
+       `doc` method is used to return a dynamic message with real tested address.
     """
 
     def __init__(self, eml, *args, **kwargs):
@@ -156,7 +165,11 @@ class InvalidEmailAddress(schema.ValidationError):
 
 
 def validate_email_address(value):
-    """Simple email validator"""
+    """Email validator for email address with possible real name part.
+
+    :param value: email value
+    :return: True
+    """
     eml = value
     complex_form = True in [b in eml and e in eml for b, e in ('<>', '()')]
     # Use parseaddr only when necessary to avoid correction like 'a @d.c' => 'a@d.c'
