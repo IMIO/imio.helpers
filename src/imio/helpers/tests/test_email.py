@@ -70,11 +70,14 @@ class TestEmail(IntegrationTestCase):
         mail_host.secureSend = sec_send_orig
 
     def test_validate_email_address(self):
-        self.assertTrue(validate_email_address('name@domain.org'))
-        self.assertTrue(validate_email_address(u'name@domain.org'))
-        self.assertTrue(validate_email_address('"Real Name" <name@domain.org>'))
-        self.assertTrue(validate_email_address('Real Name <name@domain.org>'))
-        self.assertTrue(validate_email_address('name@domain.org (Real Name)'))
+        self.assertTupleEqual(validate_email_address('name@domain.org'), (u'', u'name@domain.org'))
+        self.assertTupleEqual(validate_email_address(u'name@domain.org'), (u'', u'name@domain.org'))
+        self.assertTupleEqual(validate_email_address('"Real Name" <name@domain.org>'),
+                              (u'Real Name', u'name@domain.org'))
+        self.assertTupleEqual(validate_email_address('Real Name <name@domain.org>'),
+                              (u'Real Name', u'name@domain.org'))
+        self.assertTupleEqual(validate_email_address('name@domain.org (Real Name)'),
+                              (u'Real Name', u'name@domain.org'))
         # errors on format
         self.assertRaises(InvalidEmailAddressFormat, validate_email_address, '<>')
         self.assertRaises(InvalidEmailAddressFormat, validate_email_address, '()')

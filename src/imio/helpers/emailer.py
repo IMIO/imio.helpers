@@ -168,11 +168,13 @@ def validate_email_address(value):
     """Email validator for email address with possible real name part.
 
     :param value: email value
-    :return: True
+    :return: tuple containing real name and address
+    :rtype: tuple
     """
-    eml = value
     if not value:
         return True
+    eml = safe_unicode(value)
+    realname = u''
     complex_form = True in [b in eml and e in eml for b, e in ('<>', '()')]
     # Use parseaddr only when necessary to avoid correction like 'a @d.c' => 'a@d.c'
     # or to avoid bad split like 'a<a@d.c' => 'a@d.c'
@@ -187,4 +189,4 @@ def validate_email_address(value):
         checkEmailAddress(eml)
     except EmailAddressInvalid:
         raise InvalidEmailAddress(eml)
-    return True
+    return realname, eml
