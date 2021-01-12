@@ -3,11 +3,16 @@
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from email.utils import parseaddr
 from email import encoders
+from imio.helpers import _
 from plone import api
+from Products.CMFDefault.exceptions import EmailAddressInvalid
+from Products.CMFDefault.utils import checkEmailAddress
 from Products.CMFPlone.utils import safe_unicode
 from smtplib import SMTPException
 from zope.component import getMultiAdapter
+from zope import schema
 
 import logging
 import socket
@@ -129,4 +134,39 @@ def send_email(eml, subject, mfrom, mto, mcc=None, mbcc=None):
     except Exception:
         raise
     # sent successfully
+    return True
+
+
+class InvalidEmailAddressFormat(schema.ValidationError):
+    """Exception for invalid address format"""
+    __doc__ = _(u"Invalid email address format: 'real name <email>' or 'email (real name)'")
+
+
+class InvalidEmailAddress(schema.ValidationError):
+    """
+        Exception for invalid address.
+        `doc` method is used to return a dynamic message with real tested address.
+    """
+
+    def __init__(self, eml, *args, **kwargs):
+        self.eml = eml
+
+    def doc(self):
+        return _(u"Invalid email address '${eml}'", mapping={'eml': self.eml})
+
+
+def validate_email_address(value):
+    """Simple email validator"""
+    eml = value
+    complex_form = True in [b in eml and e in eml for b, e in ('<>', '()')]
+    # Use parseaddr only when necessary to avoid correction like 'a @d.c' => 'a@d.c'
+    # or to avoid bad split like 'a<a@d.c' => 'a@d.c'
+    if complex_form:
+        realname, eml = parseaddr(eml)
+        if not realname and not eml:
+            raise InvalidEmailAddressFormat(value)
+    try:
+        checkEmailAddress(eml)
+    except EmailAddressInvalid:
+        raise InvalidEmailAddress(eml)
     return True

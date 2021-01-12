@@ -4,8 +4,8 @@ Changelog
 0.39 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Added `validate_email_address` to check email address with a real name part.
+  [sgeulette]
 
 0.38 (2021-01-06)
 -----------------

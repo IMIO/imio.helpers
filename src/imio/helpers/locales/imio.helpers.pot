@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2019-11-05 16:15+0000\n"
+"POT-Creation-Date: 2021-01-12 08:42+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,11 +29,19 @@ msgstr ""
 msgid "Fields"
 msgstr ""
 
+#: ../emailer.py:155
+msgid "Invalid email address '${eml}'"
+msgstr ""
+
+#: ../emailer.py:142
+msgid "Invalid email address format: 'real name <email>' or 'email (real name)'"
+msgstr ""
+
 #: ../browser/folder_listing_table.pt:10
 msgid "State"
 msgstr ""
 
-#: ../testing.zcml:24
+#: ../testing.zcml:25
 msgid "Steps to ease tests of imio.helpers"
 msgstr ""
 
@@ -49,7 +57,7 @@ msgstr ""
 msgid "imio.helpers default"
 msgstr ""
 
-#: ../testing.zcml:24
+#: ../testing.zcml:25
 msgid "imio.helpers testing"
 msgstr ""
 

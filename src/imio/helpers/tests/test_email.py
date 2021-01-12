@@ -3,7 +3,10 @@
 from imio.helpers.emailer import add_attachment
 from imio.helpers.emailer import create_html_email
 from imio.helpers.emailer import get_mail_host
+from imio.helpers.emailer import InvalidEmailAddress
+from imio.helpers.emailer import InvalidEmailAddressFormat
 from imio.helpers.emailer import send_email
+from imio.helpers.emailer import validate_email_address
 from imio.helpers.testing import IntegrationTestCase
 
 import os
@@ -65,3 +68,25 @@ class TestEmail(IntegrationTestCase):
         # not ok if in list
         self.assertRaises(UnicodeEncodeError, send_email, eml, u'Email subject', '<noreply@from.org>', ['dest@to.org', u'Stéphan Geulette <seg@to.org>'])
         mail_host.secureSend = sec_send_orig
+
+    def test_validate_email_address(self):
+        self.assertTrue(validate_email_address('name@domain.org'))
+        self.assertTrue(validate_email_address(u'name@domain.org'))
+        self.assertTrue(validate_email_address('"Real Name" <name@domain.org>'))
+        self.assertTrue(validate_email_address('Real Name <name@domain.org>'))
+        self.assertTrue(validate_email_address('name@domain.org (Real Name)'))
+        # errors on format
+        self.assertRaises(InvalidEmailAddressFormat, validate_email_address, '<>')
+        self.assertRaises(InvalidEmailAddressFormat, validate_email_address, '()')
+        self.assertRaises(InvalidEmailAddressFormat, validate_email_address, '<,name@domain.org>')
+        self.assertRaises(InvalidEmailAddressFormat, validate_email_address, '(name@domain.org)')
+        # errors on email
+        self.assertRaises(InvalidEmailAddress, validate_email_address, '')
+        self.assertRaises(InvalidEmailAddress, validate_email_address, '[name@domain.org]')
+        self.assertRaises(InvalidEmailAddress, validate_email_address, ',name@domain.org')
+        self.assertRaises(InvalidEmailAddress, validate_email_address, 'na me@domain.org')
+        self.assertRaises(InvalidEmailAddress, validate_email_address, 'name|domain.org')
+        self.assertRaises(InvalidEmailAddress, validate_email_address, 'name@domainorg')
+        self.assertRaises(InvalidEmailAddress, validate_email_address, 'na<me@domain.org')
+        self.assertRaises(InvalidEmailAddress, validate_email_address, 'name@domain.or(g')
+        self.assertRaises(InvalidEmailAddress, validate_email_address, 'name@domain.or)g')
