@@ -114,9 +114,9 @@ def send_email(eml, subject, mfrom, mto, mcc=None, mbcc=None):
     :param eml: email instance
     :param subject: subject string
     :param mfrom: from string
-    :param mto: to string or string list
-    :param mcc: cc string or string list
-    :param mbcc: bcc string or string list
+    :param mto: to string or string list or (name, address) list
+    :param mcc: cc string or string list or (name, address) list
+    :param mbcc: bcc string or string list or (name, address) list
     :return: status
     :rtype: bool
     """
