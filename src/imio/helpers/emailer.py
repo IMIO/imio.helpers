@@ -161,7 +161,7 @@ class InvalidEmailAddress(schema.ValidationError):
         self.eml = eml
 
     def doc(self):
-        return _(u"Invalid email address '${eml}'", mapping={'eml': self.eml})
+        return _(u"Invalid email address: '${eml}'", mapping={'eml': self.eml})
 
 
 def validate_email_address(value):
