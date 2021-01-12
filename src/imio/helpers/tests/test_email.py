@@ -83,6 +83,7 @@ class TestEmail(IntegrationTestCase):
         # errors on email
         self.assertRaises(InvalidEmailAddress, validate_email_address, '[name@domain.org]')
         self.assertRaises(InvalidEmailAddress, validate_email_address, ',name@domain.org')
+        self.assertRaises(InvalidEmailAddress, validate_email_address, 'Real Name <na me@domain.org>')
         self.assertRaises(InvalidEmailAddress, validate_email_address, 'na me@domain.org')
         self.assertRaises(InvalidEmailAddress, validate_email_address, 'name|domain.org')
         self.assertRaises(InvalidEmailAddress, validate_email_address, 'name@domainorg')

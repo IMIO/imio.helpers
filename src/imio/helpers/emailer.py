@@ -180,6 +180,9 @@ def validate_email_address(value):
         realname, eml = parseaddr(eml)
         if not realname and not eml:
             raise InvalidEmailAddressFormat(value)
+        # we check if the email has not been corrected by parseaddr, removing some characters like space
+        if eml not in value:
+            raise InvalidEmailAddress(u"'{}' => '{}' ?".format(value, eml))
     try:
         checkEmailAddress(eml)
     except EmailAddressInvalid:
