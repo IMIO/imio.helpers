@@ -171,6 +171,8 @@ def validate_email_address(value):
     :return: True
     """
     eml = value
+    if not value:
+        return True
     complex_form = True in [b in eml and e in eml for b, e in ('<>', '()')]
     # Use parseaddr only when necessary to avoid correction like 'a @d.c' => 'a@d.c'
     # or to avoid bad split like 'a<a@d.c' => 'a@d.c'
