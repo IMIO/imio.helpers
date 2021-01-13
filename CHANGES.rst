@@ -6,6 +6,8 @@ Changelog
 
 - Added `validate_email_address` to check email address with a real name part.
   [sgeulette]
+- Added `validate_email_addresses` to check email addresses, separated by a comma.
+  [sgeulette]
 
 0.38 (2021-01-06)
 -----------------

@@ -14,6 +14,7 @@ from smtplib import SMTPException
 from zope.component import getMultiAdapter
 from zope import schema
 
+import csv
 import logging
 import socket
 
@@ -190,3 +191,21 @@ def validate_email_address(value):
     except EmailAddressInvalid:
         raise InvalidEmailAddress(eml)
     return realname, eml
+
+
+def validate_email_addresses(value):
+    """Email validator for email addresses (with possible real name part) separated by ','.
+
+    :param value: email value
+    :return: True
+    """
+    if not value:
+        return True
+    ret = []
+    # we need to multiply doublequotes, otherwise they are removed by csv
+    value = value.replace('"', '"""')
+    # split addresses using csv
+    for line in csv.reader([value], delimiter=',', quotechar='"', skipinitialspace=True):
+        for eml in line:
+            ret.append(validate_email_address(eml))
+    return ret

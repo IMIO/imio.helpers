@@ -7,6 +7,7 @@ from imio.helpers.emailer import InvalidEmailAddress
 from imio.helpers.emailer import InvalidEmailAddressFormat
 from imio.helpers.emailer import send_email
 from imio.helpers.emailer import validate_email_address
+from imio.helpers.emailer import validate_email_addresses
 from imio.helpers.testing import IntegrationTestCase
 
 import os
@@ -93,3 +94,38 @@ class TestEmail(IntegrationTestCase):
         self.assertRaises(InvalidEmailAddress, validate_email_address, 'na<me@domain.org')
         self.assertRaises(InvalidEmailAddress, validate_email_address, 'name@domain.or(g')
         self.assertRaises(InvalidEmailAddress, validate_email_address, 'name@domain.or)g')
+
+    def test_validate_email_addresses(self):
+        self.assertListEqual(validate_email_addresses('name@domain.org'), [(u'', u'name@domain.org')])
+        self.assertListEqual(validate_email_addresses(u'name@domain.org'), [(u'', u'name@domain.org')])
+        self.assertListEqual(validate_email_addresses('"Real Name" <name@domain.org>'),
+                             [(u'Real Name', u'name@domain.org')])
+        self.assertListEqual(validate_email_addresses('Real Name <name@domain.org>'),
+                             [(u'Real Name', u'name@domain.org')])
+        self.assertListEqual(validate_email_addresses('name@domain.org (Real Name)'),
+                             [(u'Real Name', u'name@domain.org')])
+        self.assertListEqual(validate_email_addresses('name1@domain.org, name2@domain.org'),
+                             [(u'', u'name1@domain.org'), (u'', u'name2@domain.org')])
+        self.assertListEqual(validate_email_addresses('Real Name <name1@domain.org>, name2@domain.org'),
+                             [(u'Real Name', u'name1@domain.org'), (u'', u'name2@domain.org')])
+        self.assertListEqual(validate_email_addresses('Real Name <name1@domain.org>, "Other Name" <name2@domain.org>'),
+                             [(u'Real Name', u'name1@domain.org'), (u'Other Name', u'name2@domain.org')])
+        self.assertListEqual(validate_email_addresses('"Real, Name" <name@domain.org>'),
+                             [(u'Real, Name', u'name@domain.org')])
+        self.assertListEqual(validate_email_addresses('"Real, Name" <name1@domain.org>, '
+                                                      '"Other, Name" <name2@domain.org>'),
+                             [(u'Real, Name', u'name1@domain.org'), (u'Other, Name', u'name2@domain.org')])
+        # errors on format
+        self.assertRaises(InvalidEmailAddressFormat, validate_email_addresses, '<>')
+        self.assertRaises(InvalidEmailAddressFormat, validate_email_addresses, '()')
+        self.assertRaises(InvalidEmailAddressFormat, validate_email_addresses, '(name@domain.org)')
+        # errors on email
+        self.assertRaises(InvalidEmailAddress, validate_email_addresses, '[name@domain.org]')
+        self.assertRaises(InvalidEmailAddress, validate_email_addresses, 'Real Name <na me@domain.org>')
+        self.assertRaises(InvalidEmailAddress, validate_email_addresses, 'na me@domain.org')
+        self.assertRaises(InvalidEmailAddress, validate_email_addresses, 'Real, Name <name@domain.org>')
+        self.assertRaises(InvalidEmailAddress, validate_email_addresses, 'name|domain.org')
+        self.assertRaises(InvalidEmailAddress, validate_email_addresses, 'name@domainorg')
+        self.assertRaises(InvalidEmailAddress, validate_email_addresses, 'na<me@domain.org')
+        self.assertRaises(InvalidEmailAddress, validate_email_addresses, 'name@domain.or(g')
+        self.assertRaises(InvalidEmailAddress, validate_email_addresses, 'name@domain.or)g')
