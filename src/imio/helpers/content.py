@@ -555,3 +555,12 @@ def normalize_name(request, name):
     """Use INameFromTitle normalizer on given p_name."""
     normalizer = IUserPreferredURLNormalizer(request)
     return normalizer.normalize(name)
+
+
+def get_modified_attrs(modified_event):
+    """Useful in a IObjectModifiedEvent to get what fields were actually edited."""
+    if not modified_event.descriptions:
+        return
+    mod_attrs = [name for attr in modified_event.descriptions
+                 for name in attr.attributes]
+    return mod_attrs

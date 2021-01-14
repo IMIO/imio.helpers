@@ -8,6 +8,9 @@ Changelog
   [sgeulette]
 - Added `validate_email_addresses` to check email addresses, separated by a comma.
   [sgeulette]
+- Added `content.get_modified_attrs`, when called in a `IObjectModifiedEvent`
+  handler, will return the list of field names that were actually modified.
+  [gbastien]
 
 0.38 (2021-01-06)
 -----------------
