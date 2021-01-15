@@ -559,8 +559,6 @@ def normalize_name(request, name):
 
 def get_modified_attrs(modified_event):
     """Useful in a IObjectModifiedEvent to get what fields were actually edited."""
-    if not modified_event.descriptions:
-        return
     mod_attrs = [name for attr in modified_event.descriptions
                  for name in attr.attributes]
     return mod_attrs
