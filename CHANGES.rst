@@ -11,6 +11,8 @@ Changelog
 - Added `content.get_modified_attrs`, when called in a `IObjectModifiedEvent`
   handler, will return the list of field names that were actually modified.
   [gbastien]
+- Returned email sender error messages.
+  [sgeulette]
 
 0.38 (2021-01-06)
 -----------------
