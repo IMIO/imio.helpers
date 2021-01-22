@@ -11,6 +11,8 @@ Changelog
 - Added `content.get_modified_attrs`, when called in a `IObjectModifiedEvent`
   handler, will return the list of field names that were actually modified.
   [gbastien]
+- Returned email sender error messages.
+  [sgeulette]
 - Added `content.uuidToCatalogBrain` that is a shortcut to
   `content.uuidsToCatalogBrains` but that will return a single value.
   [gbastien]

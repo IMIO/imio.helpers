@@ -124,7 +124,7 @@ def send_email(eml, subject, mfrom, mto, mcc=None, mbcc=None):
     mail_host = get_mail_host()
     if mail_host is None:
         logger.error('Could not send email: mail host not well defined.')
-        return False
+        return False, 'Mail host not well defined'
 
     charset = get_email_charset()
     subject = safe_unicode(subject, charset)
@@ -139,13 +139,13 @@ def send_email(eml, subject, mfrom, mto, mcc=None, mbcc=None):
         # secureSend is deprecated and patched in Products/CMFPlone/patches/securemailhost.py
         # send remove from headers bcc !!
         mail_host.secureSend(eml, mto, mfrom, subject=subject, charset=charset, **kwargs)
-    except (socket.error, SMTPException):
-        logger.error('Could not send email to %s with subject %s', mto, subject)
-        return False
+    except (socket.error, SMTPException) as e:
+        logger.error("Could not send email to '{}' with subject '{}': {}".format(mto, subject, e))
+        return False, 'Could not send email : {}'.format(e)
     except Exception:
         raise
     # sent successfully
-    return True
+    return True, ''
 
 
 class InvalidEmailAddressFormat(schema.ValidationError):
