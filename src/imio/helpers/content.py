@@ -391,6 +391,23 @@ def uuidsToCatalogBrains(uuids=[],
     return brains
 
 
+def uuidToCatalogBrain(uuid,
+                       ordered=False,
+                       query={},
+                       check_contained_uids=False,
+                       unrestricted=False):
+    """Shortcut to call uuidsToCatalogBrains to get one single element."""
+    res = uuidsToCatalogBrains(
+        uuids=[uuid],
+        ordered=ordered,
+        query=query,
+        check_contained_uids=check_contained_uids,
+        unrestricted=unrestricted)
+    if res:
+        res = res[0]
+    return res
+
+
 def _contained_objects(obj, only_unindexed=False):
     """Return every elements contained in p_obj, incuding sub_elements.
        If p_only_unindexed=True, then we only return elements that are not indexed"""

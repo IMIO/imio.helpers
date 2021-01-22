@@ -22,6 +22,7 @@ from imio.helpers.content import set_to_annotation
 from imio.helpers.content import transitions
 from imio.helpers.content import uuidsToCatalogBrains
 from imio.helpers.content import uuidsToObjects
+from imio.helpers.content import uuidToCatalogBrain
 from imio.helpers.content import validate_fields
 from imio.helpers.testing import IntegrationTestCase
 from plone import api
@@ -288,6 +289,12 @@ class TestContentModule(IntegrationTestCase):
         self.assertEqual(
             uuidsToObjects(uuids, ordered=True),
             [self.portal.folder2, self.portal.folder])
+
+    def test_uuidToCatalogBrain(self):
+        folder_uid = self.portal.folder.UID()
+        res = uuidToCatalogBrain(folder_uid)
+        self.assertEqual(len(res), 1)
+        self.assertEqual(res.UID, folder_uid)
 
     def test_disable_link_integrity_checks(self):
         self.assertTrue(self.portal.portal_properties.site_properties.enable_link_integrity_checks)
