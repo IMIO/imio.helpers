@@ -292,9 +292,8 @@ class TestContentModule(IntegrationTestCase):
 
     def test_uuidToCatalogBrain(self):
         folder_uid = self.portal.folder.UID()
-        res = uuidToCatalogBrain(folder_uid)
-        self.assertEqual(len(res), 1)
-        self.assertEqual(res.UID, folder_uid)
+        single_brain = uuidToCatalogBrain(folder_uid)
+        self.assertEqual(single_brain.UID, folder_uid)
 
     def test_disable_link_integrity_checks(self):
         self.assertTrue(self.portal.portal_properties.site_properties.enable_link_integrity_checks)
