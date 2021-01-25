@@ -14,6 +14,8 @@ from imio.helpers.content import get_schema_fields
 from imio.helpers.content import get_state_infos
 from imio.helpers.content import get_vocab
 from imio.helpers.content import normalize_name
+from imio.helpers.content import object_values
+from imio.helpers.content import object_ids
 from imio.helpers.content import restore_link_integrity_checks
 from imio.helpers.content import richtextval
 from imio.helpers.content import safe_delattr
@@ -365,3 +367,11 @@ class TestContentModule(IntegrationTestCase):
                          'cv-informaticien-ndeg2016-1')
         self.assertEqual(normalize_name(request, u'Héhé du texte'),
                          'hehe-du-texte')
+
+    def test_object_values(self):
+        self.assertEqual(object_values(self.portal, 'Folder'), [])
+        self.assertEqual(object_values(self.portal, 'ATFolder'), [self.portal.folder, self.portal.folder2])
+
+    def test_object_ids(self):
+        self.assertEqual(object_ids(self.portal, 'Folder'), [])
+        self.assertEqual(object_ids(self.portal, 'ATFolder'), ['folder', 'folder2'])

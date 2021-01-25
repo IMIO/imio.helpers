@@ -579,3 +579,23 @@ def get_modified_attrs(modified_event):
     mod_attrs = [name for attr in modified_event.descriptions
                  for name in attr.attributes]
     return mod_attrs
+
+
+def object_values(context, class_name):
+    """Behaves like objectValues from Zope but as meta_type for
+       DX content_type is always the same, check the contained element class name."""
+    res = []
+    for contained in context.objectValues():
+        if contained.__class__.__name__ == class_name:
+            res.append(contained)
+    return res
+
+
+def object_ids(context, class_name):
+    """Behaves like objectIds from Zope but as meta_type for
+       DX content_type is always the same, check the contained element class name."""
+    res = []
+    for contained in context.objectValues():
+        if contained.__class__.__name__ == class_name:
+            res.append(contained.getId())
+    return res

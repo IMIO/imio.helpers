@@ -16,6 +16,11 @@ Changelog
 - Added `content.uuidToCatalogBrain` that is a shortcut to
   `content.uuidsToCatalogBrains` but that will return a single value.
   [gbastien]
+- Added `content.object_values` and `content.object_ids` method, equivalent to
+  Zope's `objectValues` and `objectIds` but that will check contained element
+  class name instead `meta_type` so it works with DX content types where
+  `meta_type` is the same for every types.
+  [gbastien]
 
 0.38 (2021-01-06)
 -----------------
