@@ -21,6 +21,9 @@ Changelog
   class name instead `meta_type` so it works with DX content types where
   `meta_type` is the same for every types.
   [gbastien]
+- Added `content.uuidToObject` that is a shortcut to
+  `content.uuidsToObjects` but that will return a single value.
+  [gbastien]
 
 0.38 (2021-01-06)
 -----------------

@@ -459,6 +459,23 @@ def uuidsToObjects(uuids=[], ordered=False, query={}, check_contained_uids=False
     return res
 
 
+def uuidToObject(uuid,
+                 ordered=False,
+                 query={},
+                 check_contained_uids=False,
+                 unrestricted=False):
+    """Shortcut to call uuidsToObjects to get one single element."""
+    res = uuidsToObjects(
+        uuids=[uuid],
+        ordered=ordered,
+        query=query,
+        check_contained_uids=check_contained_uids,
+        unrestricted=unrestricted)
+    if res:
+        res = res[0]
+    return res
+
+
 def disable_link_integrity_checks():
     """ """
     ptool = queryUtility(IPropertiesTool)

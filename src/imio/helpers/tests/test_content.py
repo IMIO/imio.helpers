@@ -25,6 +25,7 @@ from imio.helpers.content import transitions
 from imio.helpers.content import uuidsToCatalogBrains
 from imio.helpers.content import uuidsToObjects
 from imio.helpers.content import uuidToCatalogBrain
+from imio.helpers.content import uuidToObject
 from imio.helpers.content import validate_fields
 from imio.helpers.testing import IntegrationTestCase
 from plone import api
@@ -296,6 +297,11 @@ class TestContentModule(IntegrationTestCase):
         folder_uid = self.portal.folder.UID()
         single_brain = uuidToCatalogBrain(folder_uid)
         self.assertEqual(single_brain.UID, folder_uid)
+
+    def test_uuidToObject(self):
+        folder_uid = self.portal.folder.UID()
+        single_obj = uuidToObject(folder_uid)
+        self.assertEqual(single_obj.UID(), folder_uid)
 
     def test_disable_link_integrity_checks(self):
         self.assertTrue(self.portal.portal_properties.site_properties.enable_link_integrity_checks)
