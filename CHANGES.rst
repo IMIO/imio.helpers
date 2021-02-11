@@ -24,6 +24,8 @@ Changelog
 - Added `content.uuidToObject` that is a shortcut to
   `content.uuidsToObjects` but that will return a single value.
   [gbastien]
+- Corrected `has_faceted` function call in `submitFormHelperOnsuccessDefault` js
+  [sgeulette]
 
 0.38 (2021-01-06)
 -----------------

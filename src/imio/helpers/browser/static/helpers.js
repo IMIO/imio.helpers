@@ -145,7 +145,7 @@ function submitFormHelperOnsuccessDefault(data) {
     cancel_button.click();
   }
   // reload faceted
-  if (has_faceted) {
+  if (has_faceted()) {
     Faceted.URLHandler.hash_changed();
   }
 }
