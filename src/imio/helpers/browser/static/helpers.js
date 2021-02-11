@@ -148,4 +148,7 @@ function submitFormHelperOnsuccessDefault(data) {
   if (has_faceted()) {
     Faceted.URLHandler.hash_changed();
   }
+  else {
+    window.location.reload();
+  }
 }

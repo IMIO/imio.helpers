@@ -26,6 +26,8 @@ Changelog
   [gbastien]
 - Corrected `has_faceted` function call in `submitFormHelperOnsuccessDefault` js
   [sgeulette]
+- Reloaded page when `submitFormHelper` is used on a non faceted page
+  [sgeulette]
 
 0.38 (2021-01-06)
 -----------------
