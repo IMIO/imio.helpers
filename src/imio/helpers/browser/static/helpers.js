@@ -57,9 +57,11 @@ function canonical_url() {
 }
 
 // used to show/hide details
-function toggleDetails(id, toggle_parent_active=true, parent_tag=null, load_view=null, base_url=null) {
+function toggleDetails(id, toggle_parent_active=true, parent_tag=null, load_view=null, base_url=null, toggle_type='slide') {
   tag = $('#' + id);
-  tag.slideToggle(200);
+  if (toggle_type == 'slide') {
+    tag.slideToggle(200);
+  } else {tag.fadeToggle(200);}
   if (toggle_parent_active) {
     if (!parent_tag) {
       parent_tag = tag.prev()[0];

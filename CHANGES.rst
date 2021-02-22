@@ -28,6 +28,11 @@ Changelog
   [sgeulette]
 - Reloaded page when `submitFormHelper` is used on a non faceted page
   [sgeulette]
+- Added parameter `toggle_type='slide'` to JS helper `toggleDetails`,
+  so it is possible to use `slideToggle` (default) or `fadeToggle`.
+  `fadeToggle` behaves better when the hidden part contains a sticky element
+  (table header).
+  [gbastien]
 
 0.38 (2021-01-06)
 -----------------
