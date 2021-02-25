@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.39 (unreleased)
+0.39 (2021-02-25)
 -----------------
 
 - Added `validate_email_address` to check email address with a real name part.
