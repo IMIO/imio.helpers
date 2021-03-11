@@ -4,8 +4,8 @@ Changelog
 0.40 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Added `target` option in `object_link` function
+  [sgeulette]
 
 0.39 (2021-02-25)
 -----------------

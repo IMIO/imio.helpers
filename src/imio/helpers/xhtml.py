@@ -521,7 +521,7 @@ def separate_images(xhtmlContent, pretty_print=False):
                                        method='html') for x in tree.iterchildren()])
 
 
-def object_link(obj, view='view', attribute='Title', content=''):
+def object_link(obj, view='view', attribute='Title', content='', target=''):
     """ Returns an html link for the given object """
     href = view and "%s/%s" % (obj.absolute_url(), view) or obj.absolute_url()
     if not content:
@@ -530,4 +530,6 @@ def object_link(obj, view='view', attribute='Title', content=''):
         content = getattr(obj, attribute)
         if callable(content):
             content = content()
-    return u'<a href="%s">%s</a>' % (href, safe_unicode(content))
+    if target:
+        target = ' target="{}"'.format(target)
+    return u'<a href="%s"%s>%s</a>' % (href, target, safe_unicode(content))

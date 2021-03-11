@@ -662,6 +662,8 @@ class TestXHTMLModule(IntegrationTestCase):
                          u'<a href="http://nohost/plone/folder/view">Folder</a>')
         self.assertEqual(object_link(obj, view='edit', attribute='Description'),
                          u'<a href="http://nohost/plone/folder/edit"></a>')
+        self.assertEqual(object_link(obj, view='edit', attribute='Description', target='_blank'),
+                         u'<a href="http://nohost/plone/folder/edit" target="_blank"></a>')
 
     def test_separate_images(self):
         # one image, nothing changed
