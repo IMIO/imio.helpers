@@ -7,7 +7,7 @@ import json
 
 
 # create type converter for :json
-if 'field2json' not in type_converters:
+if 'json' not in type_converters:
     def field2json(v):
         try:
             v = json.loads(v)
