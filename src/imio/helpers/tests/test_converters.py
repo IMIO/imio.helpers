@@ -3,6 +3,8 @@
 from imio.helpers.testing import IntegrationTestCase
 from ZPublisher.tests.testHTTPRequest import HTTPRequestTests
 
+import imio.helpers.converters  # noqa
+
 
 class TestConverters(IntegrationTestCase, HTTPRequestTests):
 
