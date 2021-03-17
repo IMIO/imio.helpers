@@ -6,6 +6,8 @@ Changelog
 
 - Added `target` option in `object_link` function
   [sgeulette]
+- Added a ZPublisher `:json` suffix type converter.
+  [gbastien]
 
 0.39 (2021-02-25)
 -----------------
