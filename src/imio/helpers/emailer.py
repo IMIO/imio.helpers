@@ -129,7 +129,7 @@ def send_email(eml, subject, mfrom, mto, mcc=None, mbcc=None):
     charset = get_email_charset()
     subject = safe_unicode(subject, charset)
     kwargs = {}
-    # put only as parameter id defined, so mockmailhost can be used in tests with secureSend as send patch
+    # put only as parameter if defined, so mockmailhost can be used in tests with secureSend as send patch
     if mcc is not None:
         kwargs['mcc'] = mcc
     if mbcc is not None:
