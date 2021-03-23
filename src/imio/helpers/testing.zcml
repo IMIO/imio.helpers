@@ -7,6 +7,7 @@
   <include package="plone.app.dexterity" />
   <include package="plone.app.relationfield" />
   <include package="collective.behavior.talcondition" />
+  <include package="collective.MockMailHost" />
 
   <!-- This index is used by test_catalog.py -->
   <adapter name="reversedUID" factory=".tests.indexes.reversedUID" />

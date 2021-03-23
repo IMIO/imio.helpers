@@ -8,6 +8,8 @@ Changelog
   [sgeulette]
 - Added a ZPublisher `:json` suffix type converter.
   [gbastien]
+- Changed MockMailHost patch to avoid some problems
+  [sgeulette]
 
 0.39 (2021-02-25)
 -----------------

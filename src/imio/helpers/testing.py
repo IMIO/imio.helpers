@@ -39,8 +39,6 @@ class PloneWithHelpersLayer(PloneSandboxLayer):
             package=imio.helpers,
             name='testing.zcml'
         )
-        self.loadZCML(package=collective.MockMailHost)
-        z2.installProduct(app, 'collective.MockMailHost')
 
     def setUpPloneSite(self, portal):
         """Set up Plone."""
@@ -65,7 +63,6 @@ class PloneWithHelpersLayer(PloneSandboxLayer):
     def tearDownZope(self, app):
         """Tear down Zope."""
         z2.uninstallProduct(app, 'imio.helpers')
-        z2.uninstallProduct(app, 'collective.MockMailHost')
 
 
 FIXTURE = PloneWithHelpersLayer(
