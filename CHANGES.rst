@@ -10,6 +10,9 @@ Changelog
   [gbastien]
 - Changed MockMailHost patch to avoid some problems
   [sgeulette]
+- Make `xhtml.storeImagesLocally` handle images with `src` using base64 encoded
+  data (like `data:image/png;base64,...)`.
+  [gbastien]
 
 0.39 (2021-02-25)
 -----------------

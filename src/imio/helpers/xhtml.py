@@ -421,7 +421,9 @@ def storeImagesLocally(context,
         original_img_src = img.get('src', '')
 
         # we only handle http stored images
-        if not original_img_src.startswith('http') and 'resolveuid' not in original_img_src:
+        if not original_img_src.startswith('http') and \
+           'resolveuid' not in original_img_src and \
+           ';base64,' not in original_img_src:
             continue
         filename = data = None
         # external images

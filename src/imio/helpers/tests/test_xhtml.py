@@ -19,6 +19,19 @@ import urllib
 picsum_image1_url = 'https://i.picsum.photos/id/10/200/300.jpg?hmac=94QiqvBcKJMHpneU69KYg2pky8aZ6iBzKrAuhSUBB9s'
 picsum_image2_url = 'https://i.picsum.photos/id/1082/200/200.jpg?hmac=3usO1ziO7kCseIG52ruhRigxyk39W_L9eECWe1Hs6fY'
 
+base64_img_data = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAADWElEQVQ4ja2VX2yTBRTFj2QP" \
+    "JGtoLWWMZWN/tDBW1oQSoatuUNycNnWYMV1M9nVrJgRit6msVWuBj5fhQkhB5jagIqDQP2MmkKyDbToSKjSAo2yYInUhuiFEohghcQH7HR9M" \
+    "2RLWgJGTnJf7cJOb87v3AlOUk4OZGg1WlRqxztEE7/p6fL5hLbwf2dHneAfBTQ58k5YGLR5Hi56Fzirgs9JVaC41wpKdDV12NnQZGchXKpGp" \
+    "UiFDqcSsx2pWWIgS4wo4i4vw2pTyU//Bk1IqMcv0ElyaBVgGACrVMrNW6zy9dGlL9FHWaj/sTfQRRcwAAOifQ2XVajgBQC6fn1dWtu+ezXaM" \
+    "jY3J3bryXYqrW2gRPDEAeL1sbkW7Xd0BYAbW1+PT/HwYACAzc2XNzZt/SiQpSZO+e/ceJUkiSf7V18vfKwp5/9yLHBqKxgBgZ1NWx6gvj29X" \
+    "Zb4Fswmu+ekoAICsrCUlodA1qbY2QEHwUxD8bG7uYSh0jVu3DrCuLkCL4OflU3l0OWZy48aOW6mpqemly59+QVyb6wIAvLkGO9LTUfBMRoph" \
+    "sVpWaahuH9UXtbOg4gsWGHfdCgSG452dPSM225d3gsEIvd4wi5aX31arC6MajfXgQwkbV2CdWo2S1kb5xW8PzKNz9xoaWnZQ726jektXbHj4" \
+    "BjWa4vITJ777u7//Kq9c+ZVO587o87qFb5Qs0VQ8IGWBPA8AIJMhTfwAR7/aPnvstEfFru1zWNvpYGrbWabUu0+eDV+9bjJVWY8cCU6EQhFe" \
+    "uDDCzQ3O34LtjfRsssYUCoXik/dydw0fXHRDr5XrIJMhbcv76D7unv3z+UNzGPbmsHu/lrq2A0ypd58c+Pr762ZztbW7u3/i8OFBejx93Ptx" \
+    "a/KGiZH3i4qhvYdelsz73JLQtpkLd3cxVzwei0R+oU5XXD4+Ph4fHBzl2Ngf9Pl8yUeeGsq8xepKfXXnj0WGyVC83kvxPXuCI9u2Be5EIlGe" \
+    "OXORpldeTR7KdNjU1QVosfhpsfhpt/cwHP6JojjAmhovhRofL5/KTY7NdGBPhToBdjz+L9gTfb28/QDsHx4Ge5rVu2+zHWNDQ3InVk+YbvWe" \
+    "+HEAkp6v/6cnemATSvoCmtFvb0Kvy47BR72AfwDXsx4tZedcTQAAAABJRU5ErkJggg=="
+
 
 class TestXHTMLModule(IntegrationTestCase):
     """
@@ -651,6 +664,21 @@ class TestXHTMLModule(IntegrationTestCase):
         result = storeImagesLocally(self.portal, text, force_resolve_uid=True)
         # in this case, image is ignored
         self.assertEqual(result, text)
+
+    def test_storeExternalImagesLocallyDataBase64Image(self):
+        """Test when src is a data:image base64 encoded image."""
+        text = '<p>Image using data:image base64 encoded binary.</p>' \
+            '<p><img src="{0}" /></p><p><img src="{0}" /></p>'.format(base64_img_data)
+        expected = '<p>Image using data:image base64 encoded binary.</p>' \
+            '<p><img src="http://nohost/plone/image-1.png"></p>' \
+            '<p><img src="http://nohost/plone/image-2.png"></p>'
+        # for now, no images
+        self.assertEqual(len([obj for obj in self.portal.objectValues()
+                         if obj.portal_type == "Image"]), 0)
+        result = storeImagesLocally(self.portal, text)
+        self.assertEqual(result, expected)
+        self.assertEqual(len([obj for obj in self.portal.objectValues()
+                         if obj.portal_type == "Image"]), 2)
 
     def test_object_link(self):
         obj = self.portal.folder
