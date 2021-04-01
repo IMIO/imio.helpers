@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.40 (unreleased)
+0.40 (2021-04-01)
 -----------------
 
 - Added `target` option in `object_link` function
