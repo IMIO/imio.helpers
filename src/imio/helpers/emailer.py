@@ -105,7 +105,7 @@ def add_attachment(eml, filename, filepath=None, content=None):
         part.set_payload(content)
 
     encoders.encode_base64(part)
-    part.add_header('Content-Disposition', 'attachment; filename="{}"'.format(filename))
+    part.add_header('Content-Disposition', u'attachment; filename="{}"'.format(filename))
     eml.attach(part)
 
 
@@ -140,7 +140,7 @@ def send_email(eml, subject, mfrom, mto, mcc=None, mbcc=None):
         # send remove from headers bcc !!
         mail_host.secureSend(eml, mto, mfrom, subject=subject, charset=charset, **kwargs)
     except (socket.error, SMTPException) as e:
-        logger.error("Could not send email to '{}' with subject '{}': {}".format(mto, subject, e))
+        logger.error(u"Could not send email to '{}' with subject '{}': {}".format(mto, subject, e))
         return False, 'Could not send email : {}'.format(e)
     except Exception:
         raise

@@ -4,8 +4,8 @@ Changelog
 0.41 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Corrected encoding error in emailer.
+  [sgeulette]
 
 0.40 (2021-04-01)
 -----------------
