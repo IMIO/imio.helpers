@@ -6,6 +6,7 @@ from email.mime.text import MIMEText
 from email.utils import parseaddr
 from email import encoders
 from imio.helpers import _
+from imio.helpers.content import safe_encode
 from plone import api
 from Products.CMFDefault.exceptions import EmailAddressInvalid
 from Products.CMFDefault.utils import checkEmailAddress
@@ -105,7 +106,10 @@ def add_attachment(eml, filename, filepath=None, content=None):
         part.set_payload(content)
 
     encoders.encode_base64(part)
-    part.add_header('Content-Disposition', u'attachment; filename="{}"'.format(filename))
+    # filename must be utf8 to be correctly displayed in gmail
+    # in gmail with unicode: Content-Disposition: "attachment; filename=\"Réponse candidature ouvrier communal.odt\""
+    # in gmail with utf8: Content-Disposition: attachment; filename="Réponse candidature ouvrier communal.odt" => OK
+    part.add_header('Content-Disposition', 'attachment', filename=safe_encode(filename))
     eml.attach(part)
 
 
