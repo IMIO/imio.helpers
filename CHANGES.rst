@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.41 (unreleased)
+0.41 (2021-04-21)
 -----------------
 
 - Corrected encoding problem in emailer.
