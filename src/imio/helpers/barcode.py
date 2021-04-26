@@ -4,14 +4,14 @@ import cStringIO
 import subprocess
 
 
-def generate_barcode(data, executable='zint', barcode=92, scale=2):
+def generate_barcode(data, executable='zint', barcode=92, scale=2, filetype='PNG'):
     """Generate a barcode with zint in StringIO and return it"""
     output = cStringIO.StringIO()
     command = [
         executable,
         # '--directpng',  # no more used in version 2.6.0, and replaced by 2 following parameters
         '--direct',
-        '--filetype=PNG',
+        '--filetype={0}'.format(filetype),
         '--barcode={0}'.format(barcode),
         '--scale={0}'.format(scale),
         '--data={0}'.format(data),

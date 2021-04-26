@@ -14,6 +14,10 @@ class TestBarcode(unittest.TestCase):
         result = barcode.generate_barcode('123')
         self.assertEqual(barcode_file.read(), result.read())
 
+    def test_generate_barcode_filetype(self):
+        result = barcode.generate_barcode('123', filetype='GIF')
+        self.assertTrue(result.read().startswith('GIF'))
+
     def test_generate_barcode_missing_executable(self):
         self.assertRaises(OSError, barcode.generate_barcode, '123',
                           executable='zints')

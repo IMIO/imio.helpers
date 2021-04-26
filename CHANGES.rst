@@ -4,8 +4,9 @@ Changelog
 0.42 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Added parameter `filetype='PNG'` to `barcode.generate_barcode` so it is
+  possible to use another supported image file format.
+  [gbastien]
 
 0.41 (2021-04-21)
 -----------------
