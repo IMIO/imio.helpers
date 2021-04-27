@@ -113,7 +113,7 @@ def add_attachment(eml, filename, filepath=None, content=None):
     eml.attach(part)
 
 
-def send_email(eml, subject, mfrom, mto, mcc=None, mbcc=None):
+def send_email(eml, subject, mfrom, mto, mcc=None, mbcc=None, replyto=None):
     """ Sends an email with MailHost.
 
     :param eml: email instance
@@ -122,6 +122,7 @@ def send_email(eml, subject, mfrom, mto, mcc=None, mbcc=None):
     :param mto: to string or string list or (name, address) list
     :param mcc: cc string or string list or (name, address) list
     :param mbcc: bcc string or string list or (name, address) list
+    :param replyto: reply-to string or string list or (name, address) list
     :return: status
     :rtype: bool
     """
@@ -138,6 +139,8 @@ def send_email(eml, subject, mfrom, mto, mcc=None, mbcc=None):
         kwargs['mcc'] = mcc
     if mbcc is not None:
         kwargs['mbcc'] = mbcc
+    if replyto is not None:
+        kwargs['reply-to'] = replyto
     try:
         # secureSend is protected by permission 'Use mailhost'
         # secureSend is deprecated and patched in Products/CMFPlone/patches/securemailhost.py
