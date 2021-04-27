@@ -376,8 +376,15 @@ class TestContentModule(IntegrationTestCase):
 
     def test_object_values(self):
         self.assertEqual(object_values(self.portal, 'Folder'), [])
-        self.assertEqual(object_values(self.portal, 'ATFolder'), [self.portal.folder, self.portal.folder2])
+        self.assertEqual(object_values(self.portal, 'ATFolder'),
+                         [self.portal.folder, self.portal.folder2])
+        # may pass a list of class names
+        self.assertEqual(object_values(self.portal, ['Folder', 'ATFolder']),
+                         [self.portal.folder, self.portal.folder2])
 
     def test_object_ids(self):
         self.assertEqual(object_ids(self.portal, 'Folder'), [])
         self.assertEqual(object_ids(self.portal, 'ATFolder'), ['folder', 'folder2'])
+        # may pass a list of class names
+        self.assertEqual(object_ids(self.portal, ['Folder', 'ATFolder']),
+                         ['folder', 'folder2'])

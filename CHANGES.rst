@@ -7,6 +7,10 @@ Changelog
 - Added parameter `filetype='PNG'` to `barcode.generate_barcode` so it is
   possible to use another supported image file format.
   [gbastien]
+- Adapted `content.object_values` and `content.object_ids` to be able to pass
+  a single class name or a list of class names like it is the case for
+  `objectValues/objectIds`.
+  [gbastien]
 
 0.41 (2021-04-21)
 -----------------
