@@ -7,6 +7,9 @@ Changelog
 - Added parameter `filetype='PNG'` to `barcode.generate_barcode` so it is
   possible to use another supported image file format.
   [gbastien]
+- Added parameter `replyto` to `emailer.send_email` so it is possible to add
+  `reply-to` header in message
+  [sgeulette]
 
 0.41 (2021-04-21)
 -----------------

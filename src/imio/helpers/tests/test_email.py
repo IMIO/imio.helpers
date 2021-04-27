@@ -67,7 +67,8 @@ class TestEmail(IntegrationTestCase):
         # unicode is ok if singles
         self.assertTrue(send_email(eml, u'Email subject hé hé', u'noréply@from.org', u'dèst@to.org'))
         # not ok if in list
-        self.assertRaises(UnicodeEncodeError, send_email, eml, u'Email subject', '<noreply@from.org>', ['dest@to.org', u'Stéphan Geulette <seg@to.org>'])
+        self.assertRaises(UnicodeEncodeError, send_email, eml, u'Email subject', '<noreply@from.org>',
+                          ['dest@to.org', u'Stéphan Geulette <seg@to.org>'])
 
     def test_validate_email_address(self):
         self.assertTupleEqual(validate_email_address('name@domain.org'), (u'', u'name@domain.org'))
