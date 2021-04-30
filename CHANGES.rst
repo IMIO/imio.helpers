@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.42 (unreleased)
+0.42 (2021-04-30)
 -----------------
 
 - Added parameter `filetype='PNG'` to `barcode.generate_barcode` so it is
