@@ -622,3 +622,21 @@ def object_ids(context, class_names):
         if contained.__class__.__name__ in class_names:
             res.append(contained.getId())
     return res
+
+
+def get_user_fullname(username):
+    """Get fullname without using getMemberInfo that is slow slow slow..."""
+    acl_users = api.portal.get_tool('acl_users')
+    storages = [acl_users.mutable_properties._storage, ]
+    # if authentic is available check it first
+    if hasattr(acl_users, 'authentic'):
+        storages.insert(0, acl_users.authentic._useridentities_by_userid)
+
+    for storage in storages:
+        data = storage.get(username, None)
+        if data:
+            if hasattr(data, 'get') and data.get('fullname'):
+                return data.get('fullname')
+            else:
+                return data._identities['authentic-agents'].data['fullname']
+    return username
