@@ -4,8 +4,9 @@ Changelog
 0.43 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Fixed `submitFormHelperOnsuccessDefault` JS function to handle binary response
+  so it is possible to download the result of the ajax query.
+  [gbastien]
 
 0.42 (2021-04-30)
 -----------------
