@@ -4,8 +4,8 @@ Changelog
 0.43 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Lowercased email address after validation.
+  [sgeulette]
 
 0.42 (2021-04-30)
 -----------------

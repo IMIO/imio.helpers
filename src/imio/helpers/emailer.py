@@ -197,7 +197,7 @@ def validate_email_address(value):
         checkEmailAddress(eml)
     except EmailAddressInvalid:
         raise InvalidEmailAddress(eml)
-    return realname, eml
+    return realname, eml.lower()
 
 
 def validate_email_addresses(value):
