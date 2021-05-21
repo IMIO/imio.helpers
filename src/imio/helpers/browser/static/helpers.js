@@ -189,23 +189,25 @@ function submitFormHelper(form, onsuccess=submitFormHelperOnsuccessDefault, oner
 }
 
 function submitFormHelperOnsuccessDefault(data, textStatus, request) {
+  cancel_button = $('input#form-buttons-cancel');
   // download file if 'content-disposition' header found
   if (request.getResponseHeader('content-disposition')) {
     contentType = request.getResponseHeader('content-type');
     var blob = new Blob([data], {type: contentType});
     var objectUrl = URL.createObjectURL(blob);
     window.open(objectUrl);
-  }
-  // close the overlay
-  cancel_button = $('input#form-buttons-cancel');
-  if (cancel_button) {
     cancel_button.click();
-  }
-  // reload faceted
-  if (has_faceted()) {
-    Faceted.URLHandler.hash_changed();
   } else {
-      // window.location.reload(); will keep old values of selected checkboxes
-      window.location.href = window.location.href;
+    // close the overlay
+    if (cancel_button) {
+      cancel_button.click();
     }
+    // reload faceted
+    if (has_faceted()) {
+      Faceted.URLHandler.hash_changed();
+    } else {
+        // window.location.reload(); will keep old values of selected checkboxes
+        window.location.href = window.location.href;
+    }
+  }
 }
