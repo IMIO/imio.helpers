@@ -172,7 +172,6 @@ function submitFormHelper(form, onsuccess=submitFormHelperOnsuccessDefault, oner
       async: false,
       success: function(data, textStatus, request) {
         if (onsuccess) {
-          data = new Uint8Array(data);
           return onsuccess(data, textStatus, request);
           }
       },
@@ -192,11 +191,13 @@ function submitFormHelperOnsuccessDefault(data, textStatus, request) {
   cancel_button = $('input#form-buttons-cancel');
   // download file if 'content-disposition' header found
   if (request.getResponseHeader('content-disposition')) {
+    data = new Uint8Array(data);
     contentType = request.getResponseHeader('content-type');
     var blob = new Blob([data], {type: contentType});
     var objectUrl = URL.createObjectURL(blob);
     window.open(objectUrl);
     cancel_button.click();
+    URL.revokeObjectURL(objectUrl);
   } else {
     // close the overlay
     if (cancel_button) {
