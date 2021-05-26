@@ -4,6 +4,8 @@ Changelog
 0.43 (unreleased)
 -----------------
 
+- Lowercased email address after validation.
+  [sgeulette]
 - Fixed `submitFormHelperOnsuccessDefault` JS function to handle binary response
   so it is possible to download the result of the ajax query.
   [gbastien]
