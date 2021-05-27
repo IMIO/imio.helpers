@@ -731,6 +731,10 @@ class TestXHTMLModule(IntegrationTestCase):
                          u'<a href="http://nohost/plone/folder/edit" target="_blank"></a>')
 
     def test_separate_images(self):
+        # no image, content is returned as is
+        text = '<p>My text.</p><p>My text.</p><p>My text.</p>'
+        result = separate_images(text)
+        self.assertEqual(text, result)
         # one image, nothing changed
         text = '<p><img src="http://plone/nohost/image1.png"></p>'
         result = separate_images(text)
