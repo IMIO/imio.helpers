@@ -9,6 +9,7 @@ from Products.CMFPlone.utils import safe_unicode
 from zExceptions import NotFound
 from zope.container.interfaces import INameChooser
 
+import base64
 import cgi
 import logging
 import lxml.html
@@ -254,7 +255,48 @@ def removeCssClasses(xhtmlContent,
                     for x in tree.iterchildren()])
 
 
-def imagesToPath(context, xhtmlContent, pretty_print=False):
+def _img_from_src(context, img, portal, portal_url):
+    """ """
+    # check if it is a local or an external image
+    img_src = img.attrib.get('src', None)
+    # wrong <img> without src or external image
+    if not img_src or (img_src.startswith('http') and not img_src.startswith(portal_url)):
+        return
+    # here, we have an image contained in the portal
+    # either absolute path (http://...) or relative (../images/myimage.png)
+    imageObj = None
+    # absolute path
+    if img_src.startswith(portal_url):
+        img_src = img_src.replace(portal_url, '')
+        try:
+            # get the image but remove leading '/'
+            imageObj = portal.unrestrictedTraverse(img_src[1:])
+        except (KeyError, AttributeError, NotFound):
+            return
+    # relative path
+    else:
+        try:
+            imageObj = context.unrestrictedTraverse(img_src)
+        # in case we have a wrong resolveuid/unknown_uid, it raises NotFound
+        except (KeyError, AttributeError, NotFound):
+            return
+
+    # maybe we have a ImageScale instead of the real Image object?
+    if isinstance(imageObj, ImageScale):
+        imageObj = imageObj.aq_inner.aq_parent
+    return imageObj
+
+
+def _get_image_blob(imageObj):
+    """Be defensinve in case this is a wrong <img> with a src
+       to someting else than an image... """
+    blob = None
+    if hasattr(aq_base(imageObj), 'getBlobWrapper') and imageObj.get_size():
+        blob = imageObj.getBlobWrapper()
+    return blob
+
+
+def _transform_images(context, xhtmlContent, pretty_print=False, transform_type="path"):
     '''Turn <img> source contained in given p_xhtmlContent to a FileSystem absolute path
        to the .blob binary stored on the server.  This is usefull when generating documents
        with XHTML containing images that are private, LibreOffice is not able to access these
@@ -284,45 +326,52 @@ def imagesToPath(context, xhtmlContent, pretty_print=False):
     portal = api.portal.get()
     portal_url = portal.absolute_url()
     for img in imgs:
-        # check if it is a local or an external image
-        img_src = img.attrib.get('src', None)
-        # wrong <img> without src or external image
-        if not img_src or (img_src.startswith('http') and not img_src.startswith(portal_url)):
+        imageObj = _img_from_src(context, img, portal, portal_url)
+        if imageObj is None:
             continue
-        # here, we have an image contained in the portal
-        # either absolute path (http://...) or relative (../images/myimage.png)
-        imageObj = None
-        # absolute path
-        if img_src.startswith(portal_url):
-            img_src = img_src.replace(portal_url, '')
-            try:
-                # get the image but remove leading '/'
-                imageObj = portal.unrestrictedTraverse(img_src[1:])
-            except (KeyError, AttributeError, NotFound):
-                continue
-        # relative path
-        else:
-            try:
-                imageObj = context.unrestrictedTraverse(img_src)
-            # in case we have a wrong resolveuid/unknown_uid, it raises NotFound
-            except (KeyError, AttributeError, NotFound):
-                continue
-        # maybe we have a ImageScale instead of the real Image object?
-        if isinstance(imageObj, ImageScale):
-            imageObj = imageObj.aq_inner.aq_parent
+
+        blob = _get_image_blob(imageObj)
+        # change img src only if a blob was found
         blob_path = None
-        # be defensinve in case this is a wrong <img> with a src to someting else than an image...
-        if hasattr(aq_base(imageObj), 'getBlobWrapper') and imageObj.get_size():
-            blob_path = imageObj.getBlobWrapper().blob._p_blob_committed
-        # change img src only if a blob_path was found
-        if blob_path:
-            img.attrib['src'] = blob_path
+        if blob:
+            if transform_type == "path":
+                blob_path = blob.blob._p_blob_committed
+                if blob_path:
+                    img.attrib['src'] = blob_path
+            elif transform_type == "data":
+                blob_path = blob.blob._p_blob_committed
+                if blob_path and blob.content_type.startswith('image/'):
+                    img.attrib['src'] = "data:{0};base64,{1}".format(
+                        blob.content_type, base64.b64encode(blob.data))
 
     # use encoding to 'ascii' so HTML entities are translated to something readable
     return ''.join([lxml.html.tostring(x,
                                        encoding='ascii',
                                        pretty_print=pretty_print,
                                        method='html') for x in tree.iterchildren()])
+
+
+def imagesToPath(context, xhtmlContent, pretty_print=False):
+    '''Turn <img> source contained in given p_xhtmlContent to a FileSystem absolute path
+       to the .blob binary stored on the server.  This is usefull when generating documents
+       with XHTML containing images that are private, LibreOffice is not able to access these
+       images using the HTTP request.
+       <img src='http://mysite/myfolder/myimage.png' /> becomes
+       <img src='/absolute/path/to/blobstorage/myfile.blob'/>,
+       external images are left unchanged.
+       The image_scale is not kept, so :
+       <img src='http://mysite/myfolder/myimage.png/image_preview' /> becomes
+       <img src='/absolute/path/to/blobstorage/myfile.blob'/>.'''
+
+    return _transform_images(context, xhtmlContent, pretty_print, transform_type="path")
+
+
+def imagesToData(context, xhtmlContent, pretty_print=False):
+    '''Turn <img> source contained in given p_xhtmlContent to a data:image/png;base64... value.
+       External images are left unchanged.
+       The image_scale is not kept, so we get the full image.'''
+
+    return _transform_images(context, xhtmlContent, pretty_print, transform_type="data")
 
 
 def storeImagesLocally(context,

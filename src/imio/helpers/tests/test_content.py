@@ -14,8 +14,8 @@ from imio.helpers.content import get_schema_fields
 from imio.helpers.content import get_state_infos
 from imio.helpers.content import get_vocab
 from imio.helpers.content import normalize_name
-from imio.helpers.content import object_values
 from imio.helpers.content import object_ids
+from imio.helpers.content import object_values
 from imio.helpers.content import restore_link_integrity_checks
 from imio.helpers.content import richtextval
 from imio.helpers.content import safe_delattr
