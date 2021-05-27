@@ -2,6 +2,7 @@
 
 import pkg_resources
 
+
 try:
     pkg_resources.get_distribution("collective.solr")
 except pkg_resources.DistributionNotFound:

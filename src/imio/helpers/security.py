@@ -10,12 +10,12 @@ from random import choice
 from random import sample
 from random import seed
 from time import time
+from zope.component import getMultiAdapter
 
 import logging
 import os
 import string
 
-from zope.component import getMultiAdapter
 
 logger = logging.getLogger("imio.helpers")
 

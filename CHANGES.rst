@@ -6,6 +6,9 @@ Changelog
 
 - Lowercased email address after validation.
   [sgeulette]
+- Added `xhtml.imagesToData` that turns the src of images used in a xhtml
+  content from an `http` or equivalent URL to a data base64 value.
+  [gbastien]
 
 0.42 (2021-04-30)
 -----------------

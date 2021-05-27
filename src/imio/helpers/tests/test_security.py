@@ -5,6 +5,7 @@ from imio.helpers.security import generate_password
 from imio.helpers.security import get_environment
 from imio.helpers.security import get_user_from_criteria
 from imio.helpers.security import is_develop_environment
+from imio.helpers.security import setup_logger
 from imio.helpers.testing import IntegrationTestCase
 from plone import api
 
@@ -58,3 +59,7 @@ class TestSecurityModule(IntegrationTestCase):
         self.assertEqual(len(get_user_from_criteria(self.portal, fullname='Stéph')), 1)
         self.assertEqual(len(get_user_from_criteria(self.portal, email='.be')), 2)
         self.assertEqual(len(get_user_from_criteria(self.portal, fullname='Smith')), 2)
+
+    def test_setup_logger(self):
+        # just call it to check that it is not broken
+        self.assertIsNone(setup_logger())
