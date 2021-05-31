@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.43 (unreleased)
+0.43 (2021-05-31)
 -----------------
 
 - Lowercased email address after validation.
