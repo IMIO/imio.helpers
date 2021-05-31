@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
+from email import encoders
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.utils import parseaddr
-from email import encoders
 from imio.helpers import _
 from imio.helpers.content import safe_encode
 from plone import api
@@ -12,12 +12,13 @@ from Products.CMFDefault.exceptions import EmailAddressInvalid
 from Products.CMFDefault.utils import checkEmailAddress
 from Products.CMFPlone.utils import safe_unicode
 from smtplib import SMTPException
-from zope.component import getMultiAdapter
 from zope import schema
+from zope.component import getMultiAdapter
 
 import csv
 import logging
 import socket
+
 
 logger = logging.getLogger("imio.helpers")
 EMAIL_CHARSET = 'utf-8'

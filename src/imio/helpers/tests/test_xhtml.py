@@ -2,6 +2,7 @@
 from imio.helpers.testing import IntegrationTestCase
 from imio.helpers.xhtml import addClassToContent
 from imio.helpers.xhtml import addClassToLastChildren
+from imio.helpers.xhtml import imagesToData
 from imio.helpers.xhtml import imagesToPath
 from imio.helpers.xhtml import markEmptyTags
 from imio.helpers.xhtml import object_link
@@ -15,6 +16,7 @@ from plone import api
 from Products.ATContentTypes.interfaces import IImageContent
 
 import urllib
+
 
 picsum_image1_url = 'https://i.picsum.photos/id/10/200/300.jpg?hmac=94QiqvBcKJMHpneU69KYg2pky8aZ6iBzKrAuhSUBB9s'
 picsum_image2_url = 'https://i.picsum.photos/id/1082/200/200.jpg?hmac=3usO1ziO7kCseIG52ruhRigxyk39W_L9eECWe1Hs6fY'
@@ -31,6 +33,20 @@ base64_img_data = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAAC
     "a/KGiZH3i4qhvYdelsz73JLQtpkLd3cxVzwei0R+oU5XXD4+Ph4fHBzl2Ngf9Pl8yUeeGsq8xepKfXXnj0WGyVC83kvxPXuCI9u2Be5EIlGe" \
     "OXORpldeTR7KdNjU1QVosfhpsfhpt/cwHP6JojjAmhovhRofL5/KTY7NdGBPhToBdjz+L9gTfb28/QDsHx4Ge5rVu2+zHWNDQ3InVk+YbvWe" \
     "+HEAkp6v/6cnemATSvoCmtFvb0Kvy47BR72AfwDXsx4tZedcTQAAAABJRU5ErkJggg=="
+
+base64_gif_img_data = "data:image/gif;base64,R0lGODlhCgAKAPcAAP////79/f36+/3z8/zy8/rq7Prm6Pnq7Pje4vTx8v" \
+    "Pg5O6gqe2gqOq4v+igqt9tetxSYNs7Tdo5TNc5TNUbMdUbMNQRKNIKIdIJINIGHdEGHtEDGtACFdAAFtAAFNAAEs8AFAAAAAAAA" \
+    "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" \
+    "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" \
+    "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" \
+    "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" \
+    "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" \
+    "AAAAAAAAAAAAAAAAAAAAAAAAAAAAACIAIP3sAAoACBL2OAAAAPjHWRQAABUKiAAAABL2FAAAAhL+dPkBhPm4MP///xL2YPZNegA" \
+    "AAAAQAAAABgAAAAAAABL2wAAAAAAARRL25PEPfxQAAPEQAAAAAAAAA/3r+AAAAAAAGAAAABL2uAAAQgAAABL2pAAAAAAAAAAAAAA" \
+    "ADAAAAgABAfDTAAAAmAAAAAAAAAAAABL27Mku0AAQAAAAAAAAAEc1MUaDsAAAGBL3FPELyQAAAAABEgAAAwAAAQAAAxL22AAAmB" \
+    "L+dPO4dPPKQP///0c70EUoOQAAmMku0AAQABL3TAAAAEaDsEc1MUaDsAAABkT98AABEhL3wAAALAAAQAAAQBL3kQAACSH5BAEAA" \
+    "AAALAAAAAAKAAoAQAhGAAEIHEhw4IIIFCAsKCBwQAQQFyKCeKDAIEKFDAE4hBiRA0WCAwwUBLCAA4cMICg0YIjAQoaIFzJMSCCw" \
+    "5EkOKjM2FDkwIAA7"
 
 
 class TestXHTMLModule(IntegrationTestCase):
@@ -456,6 +472,27 @@ class TestXHTMLModule(IntegrationTestCase):
         text = '<img src="resolveuid/unknown_uid" alt="Image" title="Image">'
         self.assertEqual(imagesToPath(doc2, text), text)
 
+    def test_imagesToData(self):
+        """
+          Test that images src contained in a XHTML content are correctly changed to
+          the a data base64 value.
+          Method is based on same as imagesToPath so we do not redo
+          tests that are already done in test_imagesToPath.
+        """
+        # create a document and an image
+        docId = self.portal.invokeFactory('Document', id='doc', title='Document')
+        doc = getattr(self.portal, docId)
+        file_path = path.join(path.dirname(__file__), 'dot.gif')
+        data = open(file_path, 'r')
+        img = self.portal.invokeFactory('Image', id='img', title='Image', file=data.read())
+        img = getattr(self.portal, img)
+        # has a blob
+        self.assertEqual(img.get_size(), 873)
+        text = '<p>Image <img src="{0}/img"> end of text.</p>'.format(self.portal_url)
+        self.assertEqual(
+            imagesToData(doc, text),
+            '<p>Image <img src="{0}"> end of text.</p>'.format(base64_gif_img_data))
+
     def test_storeExternalImagesLocally(self):
         """
           Test that images src contained in a XHTML that reference external images is
@@ -694,6 +731,10 @@ class TestXHTMLModule(IntegrationTestCase):
                          u'<a href="http://nohost/plone/folder/edit" target="_blank"></a>')
 
     def test_separate_images(self):
+        # no image, content is returned as is
+        text = '<p>My text.</p><p>My text.</p><p>My text.</p>'
+        result = separate_images(text)
+        self.assertEqual(text, result)
         # one image, nothing changed
         text = '<p><img src="http://plone/nohost/image1.png"></p>'
         result = separate_images(text)

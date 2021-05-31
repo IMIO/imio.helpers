@@ -1,13 +1,21 @@
 Changelog
 =========
 
-0.43 (unreleased)
+0.44 (unreleased)
+-----------------
+
+- Nothing changed yet.
+
+
+0.43 (2021-05-31)
 -----------------
 
 - Lowercased email address after validation.
   [sgeulette]
 - Fixed `submitFormHelperOnsuccessDefault` JS function to handle binary response
   so it is possible to download the result of the ajax query.
+- Added `xhtml.imagesToData` that turns the src of images used in a xhtml
+  content from an `http` or equivalent URL to a data base64 value.
   [gbastien]
 
 0.42 (2021-04-30)
