@@ -12,6 +12,8 @@ Changelog
 
 - Lowercased email address after validation.
   [sgeulette]
+- Fixed `submitFormHelperOnsuccessDefault` JS function to handle binary response
+  so it is possible to download the result of the ajax query.
 - Added `xhtml.imagesToData` that turns the src of images used in a xhtml
   content from an `http` or equivalent URL to a data base64 value.
   [gbastien]

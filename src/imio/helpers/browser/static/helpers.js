@@ -110,6 +110,48 @@ function setoddeven() {
   .filter(':even').addClass('odd');
 }
 
+// make jQuery ajax support 'binary' dataType
+$.ajaxTransport("+binary", function (options, originalOptions, jqXHR) {
+    // check for conditions and support for blob / arraybuffer response type
+    if (window.FormData && ((options.dataType && (options.dataType == 'binary')) || (options.data && ((window.ArrayBuffer && options.data instanceof ArrayBuffer) || (window.Blob && options.data instanceof Blob))))) {
+        return {
+            // create new XMLHttpRequest
+            send: function (headers, callback) {
+                // setup all variables
+                var xhr = new XMLHttpRequest(),
+                    url = options.url,
+                    type = options.type,
+                    async = options.async || true,
+                    // blob or arraybuffer. Default is blob
+                    dataType = options.responseType || "blob",
+                    data = options.data || null,
+                    username = options.username || null,
+                    password = options.password || null;
+
+                xhr.addEventListener('load', function () {
+                    var data = {};
+                    data[options.dataType] = xhr.response;
+                    // make callback and send data
+                    callback(xhr.status, xhr.statusText, data, xhr.getAllResponseHeaders());
+                });
+
+                xhr.open(type, url, async, username, password);
+
+                // setup custom headers
+                for (var i in headers) {
+                    xhr.setRequestHeader(i, headers[i]);
+                }
+
+                xhr.responseType = dataType;
+                xhr.send(data);
+            },
+            abort: function () {
+                jqXHR.abort();
+            }
+        };
+    }
+});
+
 function submitFormHelper(form, onsuccess=submitFormHelperOnsuccessDefault, onerror=null) {
     $('input#form-buttons-apply').click(function(event) {
       event.preventDefault();
@@ -123,10 +165,15 @@ function submitFormHelper(form, onsuccess=submitFormHelperOnsuccessDefault, oner
       type: 'POST',
       url: this.form.action,
       data: data,
+      dataType: 'binary',
+      processData: 'false',
+      responseType: 'arraybuffer',
       cache: false,
       async: false,
-      success: function(data) {
-        if (onsuccess) {return onsuccess(data);}
+      success: function(data, textStatus, request) {
+        if (onsuccess) {
+          return onsuccess(data, textStatus, request);
+          }
       },
       error: function(jqXHR, textStatus, errorThrown) {
         if (onerror) {
@@ -140,17 +187,28 @@ function submitFormHelper(form, onsuccess=submitFormHelperOnsuccessDefault, oner
   });
 }
 
-function submitFormHelperOnsuccessDefault(data) {
-  // close the overlay
+function submitFormHelperOnsuccessDefault(data, textStatus, request) {
   cancel_button = $('input#form-buttons-cancel');
-  if (cancel_button) {
+  // download file if 'content-disposition' header found
+  if (request.getResponseHeader('content-disposition')) {
+    data = new Uint8Array(data);
+    contentType = request.getResponseHeader('content-type');
+    var blob = new Blob([data], {type: contentType});
+    var objectUrl = URL.createObjectURL(blob);
+    window.open(objectUrl);
     cancel_button.click();
-  }
-  // reload faceted
-  if (has_faceted()) {
-    Faceted.URLHandler.hash_changed();
-  }
-  else {
-    window.location.reload();
+    URL.revokeObjectURL(objectUrl);
+  } else {
+    // close the overlay
+    if (cancel_button) {
+      cancel_button.click();
+    }
+    // reload faceted
+    if (has_faceted()) {
+      Faceted.URLHandler.hash_changed();
+    } else {
+        // window.location.reload(); will keep old values of selected checkboxes
+        window.location.href = window.location.href;
+    }
   }
 }
