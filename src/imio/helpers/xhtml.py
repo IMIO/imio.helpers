@@ -558,8 +558,7 @@ def separate_images(xhtmlContent, pretty_print=False):
             contained_tags = [child for child in elt.getchildren()
                               if child.tag not in ('br', )]
             # contained text, if <p> contains <img> and text, we can not separate it
-            text = elt.text_content().strip()
-            if len_imgs == len(contained_tags) and not text:
+            if len_imgs == len(contained_tags) and not elt.text_content().strip():
                 changed = True
                 for img_index, img in enumerate(imgs[1:]):
                     new_elt = lxml.html.Element(elt.tag)
