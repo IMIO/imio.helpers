@@ -553,19 +553,20 @@ def separate_images(xhtmlContent, pretty_print=False):
         # only manage <p>/<div> containing several <img>, nothing else
         imgs = elt.xpath('.//img')
         len_imgs = len(imgs)
-        # <p> may not contain anything else than <img> or <br>
-        contained_tags = [child for child in elt.getchildren()
-                          if child.tag not in ('br', )]
-        # contained text, if <p> contains <img> and text, we can not separate it
-        text = elt.text_content().strip()
-        if len_imgs > 1 and len_imgs == len(contained_tags) and not text:
-            changed = True
-            for img_index, img in enumerate(imgs[1:]):
-                new_elt = lxml.html.Element(elt.tag)
-                tree.insert(elt_index + inserted_index + img_index, new_elt)
-                inserted_index += 1
-                # append will move the img, not necessary to remove from elt
-                new_elt.append(img)
+        if len_imgs > 1:
+            # <p> may not contain anything else than <img> or <br>
+            contained_tags = [child for child in elt.getchildren()
+                              if child.tag not in ('br', )]
+            # contained text, if <p> contains <img> and text, we can not separate it
+            text = elt.text_content().strip()
+            if len_imgs == len(contained_tags) and not text:
+                changed = True
+                for img_index, img in enumerate(imgs[1:]):
+                    new_elt = lxml.html.Element(elt.tag)
+                    tree.insert(elt_index + inserted_index + img_index, new_elt)
+                    inserted_index += 1
+                    # append will move the img, not necessary to remove from elt
+                    new_elt.append(img)
 
     if not changed:
         return xhtmlContent
