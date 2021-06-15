@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.44 (unreleased)
+0.44 (2021-06-15)
 -----------------
 
 - In `xhtml.separate_images` be a bit less defensive, too complex cases are
