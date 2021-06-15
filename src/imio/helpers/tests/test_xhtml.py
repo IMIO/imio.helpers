@@ -810,3 +810,21 @@ class TestXHTMLModule(IntegrationTestCase):
                          '<p><img src="http://plone/nohost/image6.png"></p>'
                          '<table><tr><td><p><img src="http://plone/nohost/image7.png">'
                          '<img src="http://plone/nohost/image8.png"></p></td></tr></table>')
+        # <br> are ignored
+        text = '<p><img src="http://plone/nohost/image1.png"><br><br />' \
+            '<img src="http://plone/nohost/image2.png"></p>'
+        result = separate_images(text)
+        self.assertEqual(result, '<p><img src="http://plone/nohost/image1.png"><br><br></p>'
+                         '<p><img src="http://plone/nohost/image2.png"></p>')
+        # blanks are ignored
+        text = '<p><img src="http://plone/nohost/image1.png">&nbsp; &nbsp;' \
+            '<img src="http://plone/nohost/image2.png"></p>'
+        result = separate_images(text)
+        self.assertEqual(result, '<p><img src="http://plone/nohost/image1.png">\xc2\xa0 \xc2\xa0</p>'
+                         '<p><img src="http://plone/nohost/image2.png"></p>')
+        # blanks and <br> are ignored as well
+        text = '<p><img src="http://plone/nohost/image1.png">&nbsp; &nbsp;<br>' \
+            '<img src="http://plone/nohost/image2.png"></p>'
+        result = separate_images(text)
+        self.assertEqual(result, '<p><img src="http://plone/nohost/image1.png">\xc2\xa0 \xc2\xa0<br></p>'
+                         '<p><img src="http://plone/nohost/image2.png"></p>')
