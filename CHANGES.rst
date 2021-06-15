@@ -4,8 +4,10 @@ Changelog
 0.44 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- In `xhtml.separate_images` be a bit less defensive, too complex cases are
+  still ignored but when the `<p>` contains only non textual elements like
+  `<br>` or `blanks`, just ignore these elements.
+  [gbastien]
 
 0.43 (2021-05-31)
 -----------------
