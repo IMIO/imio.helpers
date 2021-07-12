@@ -4,8 +4,9 @@ Changelog
 0.45 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Added `imio.helpers.SortedUsers`, a vocabulary listing users sorted using
+  `natsort.humansorted`. We need to rely on `natsort` to handle this.
+  [gbastien]
 
 0.44 (2021-06-15)
 -----------------
