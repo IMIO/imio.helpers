@@ -20,9 +20,9 @@ class TestVocabularies(IntegrationTestCase):
         vocab = get_vocab(self.portal, "imio.helpers.SortedUsers")
         self.assertEqual(
             [term.title for term in vocab._terms],
-            [u'a_new_user (A_new_user)',
+            [u'a_new_user (a_new_user)',
              u'A_new_user (A_new_user)',
              u'b_new_user (b_new_user)',
-             u'B_new_user (b_new_user)',
+             u'B_new_user (B_new_user)',
              u'new_user (new_user)',
              u'test_user_1_ (test_user_1_)'])
