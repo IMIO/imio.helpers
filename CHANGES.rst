@@ -7,6 +7,11 @@ Changelog
 - Added `imio.helpers.SortedUsers`, a vocabulary listing users sorted using
   `natsort.humansorted`. We need to rely on `natsort` to handle this.
   [gbastien]
+- Fixed bug in JS function `submitFormHelperOnsuccessDefault` called onsuccess
+  by `submitFormHelper` to only consider response as a file to return if
+  responser header `content-length` is found in request, this avoid returning
+  a wrong blob object when called code returns an error message.
+  [gbastien]
 
 0.44 (2021-06-15)
 -----------------

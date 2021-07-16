@@ -190,7 +190,7 @@ function submitFormHelper(form, onsuccess=submitFormHelperOnsuccessDefault, oner
 function submitFormHelperOnsuccessDefault(data, textStatus, request) {
   cancel_button = $('input#form-buttons-cancel');
   // download file if 'content-disposition' header found
-  if (request.getResponseHeader('content-disposition')) {
+  if (request.getResponseHeader('content-length')) {
     data = new Uint8Array(data);
     contentType = request.getResponseHeader('content-type');
     var blob = new Blob([data], {type: contentType});
