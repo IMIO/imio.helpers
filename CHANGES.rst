@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.45 (unreleased)
+0.45 (2021-07-16)
 -----------------
 
 - Added `imio.helpers.SortedUsers`, a vocabulary listing users sorted using
