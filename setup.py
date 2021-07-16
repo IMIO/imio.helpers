@@ -40,6 +40,7 @@ setup(
     install_requires=[
         'collective.fingerpointing',
         'collective.monkeypatcher',
+        'natsort<7',
         'plone.api',
         'plone.app.intid',
         'plone.app.relationfield',

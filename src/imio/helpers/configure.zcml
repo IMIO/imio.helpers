@@ -21,16 +21,14 @@
     <adapter
         factory=".adapters.ListContainedDexterityObjectsForDisplayAdapter"
         provides="imio.helpers.interfaces.IListContainedDexterityObjectsForDisplay"
-        for="plone.dexterity.interfaces.IDexterityContainer"
-    />
+        for="plone.dexterity.interfaces.IDexterityContainer" />
 
     <genericsetup:registerProfile
         name="default"
         title="imio.helpers default"
         directory="profiles/default"
         description="imio.helpers"
-        provides="Products.GenericSetup.interfaces.EXTENSION"
-        />
+        provides="Products.GenericSetup.interfaces.EXTENSION" />
     <include package="collective.monkeypatcher" />
 
     <configure zcml:condition="installed collective.solr">
@@ -39,8 +37,10 @@
           class="collective.solr.indexer.SolrIndexProcessor"
           original="index"
           replacement=".patches.solr_index"
-          preserveOriginal="true"
-          />
+          preserveOriginal="true" />
     </configure>
+
+    <utility component=".vocabularies.SortedUsersFactory"
+             name="imio.helpers.SortedUsers" />
 
 </configure>
