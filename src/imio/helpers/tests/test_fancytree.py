@@ -89,6 +89,6 @@ class TestBaseRenderFancyTree(IntegrationTestCase):
                     }
                 ]
             }
-            ])
+        ])
 
         self.assertEqual(output, expected)
