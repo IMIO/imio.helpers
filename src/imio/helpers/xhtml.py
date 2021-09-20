@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from Acquisition import aq_base
+from lxml.cssselect import CSSSelector
 from os import path
 from plone import api
 from plone.app.imaging.scale import ImageScale
@@ -79,6 +80,51 @@ def removeBlanks(xhtmlContent, pretty_print=False):
         # el can be a subtree, like <ul><li>...</li></ul> we must consider entire rendering of it
         if xhtmlContentIsEmpty(el, tagWithAttributeIsNotEmpty=False):
             el.getparent().remove(el)
+    # only return children of the <special_tag>
+    return ''.join([lxml.html.tostring(x,
+                                       encoding='ascii',
+                                       pretty_print=pretty_print,
+                                       method='html')
+                    for x in tree.iterchildren()])
+
+
+def replace_content(xhtml_content,
+                    css_class,
+                    new_content=u"",
+                    new_content_link={},
+                    pretty_print=False):
+    '''This method will get tags using given p_css_class and
+       replace it's content with given p_content.'''
+    tree = _turnToLxmlTree(xhtml_content)
+    if not isinstance(tree, lxml.html.HtmlElement):
+        return xhtml_content
+
+    new_content = safe_unicode(new_content)
+
+    selector = CSSSelector('.' + css_class)
+    elements = selector(tree)
+    for main_elt in elements:
+        # will find every contained elements
+        # store itered elements as we add new elements,
+        # iteration ignores last elements
+        elts = [elt for elt in main_elt.iter()]
+        for elt in elts:
+            is_main_elt = elt == main_elt
+            if is_main_elt:
+                if new_content_link:
+                    elt.text = u""
+                    new_elt = lxml.html.Element("a")
+                    new_elt.attrib["href"] = new_content_link["href"]
+                    new_elt.attrib["title"] = new_content_link.get("title", u"")
+                    new_elt.text = new_content or u""
+                    elt.append(new_elt)
+                else:
+                    elt.text = new_content or u""
+            else:
+                elt.tag = "span"
+                elt.text = u""
+                elt.tail = u""
+
     # only return children of the <special_tag>
     return ''.join([lxml.html.tostring(x,
                                        encoding='ascii',
