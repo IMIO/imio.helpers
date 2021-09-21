@@ -8,7 +8,6 @@ plone:=4
 bootstrap:
 	virtualenv -p python$(py) .
 	bin/pip install -r requirements.txt
-	./bin/python bootstrap.py --version=2.13.2
 
 buildout:
 	cp test_plone$(plone).cfg buildout.cfg

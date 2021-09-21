@@ -8,6 +8,7 @@ from imio.helpers.xhtml import markEmptyTags
 from imio.helpers.xhtml import object_link
 from imio.helpers.xhtml import removeBlanks
 from imio.helpers.xhtml import removeCssClasses
+from imio.helpers.xhtml import replace_content
 from imio.helpers.xhtml import separate_images
 from imio.helpers.xhtml import storeImagesLocally
 from imio.helpers.xhtml import xhtmlContentIsEmpty
@@ -828,3 +829,41 @@ class TestXHTMLModule(IntegrationTestCase):
         result = separate_images(text)
         self.assertEqual(result, '<p><img src="http://plone/nohost/image1.png">\xc2\xa0 \xc2\xa0<br></p>'
                          '<p><img src="http://plone/nohost/image2.png"></p>')
+
+    def test_replace_content(self):
+        text = '<p>Text <span class="to-hide">hidden</span> some other text.</p>' \
+            '<p>Text <span class="to-hide">hidden <strong>hidden</strong> hidden</span> some other text.</p>' \
+            '<p><span class="to-hide">hidden</span> some other text.</p>' \
+            '<p><span class="to-hide">hidden</span></p>' \
+            '<p><span class="to-hide">hidden</span></p>' \
+            '<table><tr><td>Text <span class="to-hide">hidden</span></td>' \
+            '<td>Text not hidden</td></tr></table>'
+        expected = '<p>Text <span class="to-hide"></span> some other text.</p>' \
+            '<p>Text <span class="to-hide"><span></span></span> some other text.</p>' \
+            '<p><span class="to-hide"></span> some other text.</p>' \
+            '<p><span class="to-hide"></span></p>' \
+            '<p><span class="to-hide"></span></p>' \
+            '<table><tr><td>Text <span class="to-hide"></span></td>' \
+            '<td>Text not hidden</td></tr></table>'
+        expected_new_content = '<p>Text <span class="to-hide">replaced</span> some other text.</p>' \
+            '<p>Text <span class="to-hide">replaced<span></span></span> some other text.</p>' \
+            '<p><span class="to-hide">replaced</span> some other text.</p>' \
+            '<p><span class="to-hide">replaced</span></p>' \
+            '<p><span class="to-hide">replaced</span></p>' \
+            '<table><tr><td>Text <span class="to-hide">replaced</span></td>' \
+            '<td>Text not hidden</td></tr></table>'
+        res = replace_content(text, css_class="to-hide")
+        self.assertEqual(res, expected)
+        res = replace_content(text, css_class="to-hide", new_content=u"replaced")
+        self.assertEqual(res, expected_new_content)
+        text_link = '<p>Text <span class="to-hide">hidden <strong>hidden</strong></span></p>'
+        expected_link = '<p>Text <span class="to-hide"><span></span>' \
+            '<a href="https://python.org" title="Explanation">replaced</a></span></p>'
+        res = replace_content(
+            text_link,
+            css_class="to-hide",
+            new_content=u"replaced",
+            new_content_link={
+                "href": "https://python.org",
+                "title": u"Explanation"})
+        self.assertEqual(res, expected_link)
