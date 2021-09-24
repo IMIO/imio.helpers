@@ -48,7 +48,7 @@ jobs:
         env:
           cache-name: cache-eggs
         with:
-          path: ~/buildout-cache/eggs
+          path: ./buildout-cache/eggs
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.PLONE_VERSION }}
       - name: buildout
         run: |
@@ -90,7 +90,7 @@ jobs:
         env:
           cache-name: cache-eggs
         with:
-          path: ~/buildout-cache/eggs
+          path: ./buildout-cache/eggs
           key: ${{ runner.os }}-build-${{ env.cache-name }}-coverage-${{ matrix.PLONE_VERSION }}
       - name: buildout
         run: |
