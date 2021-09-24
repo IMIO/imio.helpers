@@ -20,3 +20,4 @@ var/
 .coverage
 share/
 pip-selfcheck.json
+pyvenv.cfg

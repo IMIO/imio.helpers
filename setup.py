@@ -60,6 +60,9 @@ setup(
             'PyPDF2',
             'reportlab',
         ],
+        'lxml': [
+            'cssselect',
+        ],
     },
     entry_points="""
     [z3c.autoinclude.plugin]
