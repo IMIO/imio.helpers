@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from Acquisition import aq_base
-from lxml.cssselect import CSSSelector
 from os import path
 from plone import api
 from plone.app.imaging.scale import ImageScale
@@ -101,6 +100,7 @@ def replace_content(xhtml_content,
 
     new_content = safe_unicode(new_content)
 
+    from lxml.cssselect import CSSSelector
     selector = CSSSelector('.' + css_class)
     elements = selector(tree)
     for main_elt in elements:
