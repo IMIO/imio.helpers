@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.46 (unreleased)
+0.46 (2021-09-28)
 -----------------
 
 - Added `xhtml.replace_content` function that will replace the content of given
