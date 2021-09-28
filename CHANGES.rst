@@ -4,8 +4,10 @@ Changelog
 0.46 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Added `xhtml.replace_content` function that will replace the content of given
+  XHTML tag with some other content. This relies on package `cssselect` that is
+  added as an extra dependency thru `imio.helpers[lxml]`.
+  [gbastien]
 
 0.45 (2021-07-16)
 -----------------
