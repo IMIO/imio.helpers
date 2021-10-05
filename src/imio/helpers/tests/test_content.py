@@ -12,6 +12,7 @@ from imio.helpers.content import get_object
 from imio.helpers.content import get_relations
 from imio.helpers.content import get_schema_fields
 from imio.helpers.content import get_state_infos
+from imio.helpers.content import get_user_fullname
 from imio.helpers.content import get_vocab
 from imio.helpers.content import normalize_name
 from imio.helpers.content import object_ids
@@ -388,3 +389,14 @@ class TestContentModule(IntegrationTestCase):
         # may pass a list of class names
         self.assertEqual(object_ids(self.portal, ['Folder', 'ATFolder']),
                          ['folder', 'folder2'])
+
+    def test_user_fullname(self):
+        self.assertIsNone(get_user_fullname(None))
+        self.assertEqual(get_user_fullname(""), "")
+        self.assertEqual(get_user_fullname("unknown_user"), "unknown_user")
+        # create some users
+        user1 = api.user.create('a@b.be', 'user1', '12345', properties={'fullname': 'Stéphan Smith'})
+        api.user.create('a@b.be', 'user2', '12345', properties={'fullname': ''})
+        self.assertEqual(get_user_fullname("user1"), 'Stéphan Smith')
+        self.assertEqual(user1.getProperty("fullname"), get_user_fullname("user1"))
+        self.assertEqual(get_user_fullname("user2"), 'user2')

@@ -625,18 +625,24 @@ def object_ids(context, class_names):
 
 
 def get_user_fullname(username):
-    """Get fullname without using getMemberInfo that is slow slow slow..."""
+    """Get fullname without using getMemberInfo that is slow slow slow...
+       We get it only from mutable_properties or authentic.
+       If no fullname, return username instead nothing."""
     acl_users = api.portal.get_tool('acl_users')
     storages = [acl_users.mutable_properties._storage, ]
     # if authentic is available check it first
-    if hasattr(acl_users, 'authentic'):
+    if base_hasattr(acl_users, 'authentic'):
         storages.insert(0, acl_users.authentic._useridentities_by_userid)
 
     for storage in storages:
         data = storage.get(username, None)
-        if data:
-            if hasattr(data, 'get') and data.get('fullname'):
-                return data.get('fullname')
+        if data is not None:
+            fullname = ""
+            # mutable_properties
+            if hasattr(data, 'get'):
+                fullname = data.get('fullname')
+            # authentic
             else:
-                return data._identities['authentic-agents'].data['fullname']
+                fullname = data._identities['authentic-agents'].data['fullname']
+            return fullname or username
     return username

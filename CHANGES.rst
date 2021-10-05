@@ -4,8 +4,8 @@ Changelog
 0.47 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Fixed `content.get_user_fullname` that was breaking when user had no fullname.
+  [gbastien]
 
 0.46 (2021-09-28)
 -----------------
