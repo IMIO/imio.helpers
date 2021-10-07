@@ -6,6 +6,8 @@ Changelog
 
 - Fixed `content.get_user_fullname` that was breaking when user had no fullname.
   [gbastien]
+- Added `content.ur_find` that's the same as api.content.find but unrestrictedly
+  [sgeulette]
 
 0.46 (2021-09-28)
 -----------------

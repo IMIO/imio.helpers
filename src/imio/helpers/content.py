@@ -3,6 +3,7 @@
 from imio.helpers.interfaces import IContainerOfUnindexedElementsMarker
 from persistent.list import PersistentList
 from plone import api
+from plone.api.content import _parse_object_provides_query
 from plone.api.validation import mutually_exclusive_parameters
 from plone.app.textfield.value import RichTextValue
 from plone.behavior.interfaces import IBehavior
@@ -474,6 +475,60 @@ def uuidToObject(uuid,
     if res:
         res = res[0]
     return res
+
+
+def ur_find(context=None, depth=None, **kwargs):
+    """Find content in the portal unrestrictedly. Same as api.content.find... but unrestrictedly
+
+    :param context: Context for the search
+    :type obj: Content object
+    :param depth: How far in the content tree we want to search from context
+    :type obj: Content object
+    :returns: Catalog brains
+    :rtype: List
+    """
+    query = {}
+    query.update(**kwargs)
+
+    # Save the original path to maybe restore it later.
+    orig_path = query.get('path')
+    if isinstance(orig_path, dict):
+        orig_path = orig_path.get('query')
+
+    # Passing a context or depth overrides the existing path query,
+    # for now.
+    if context or depth is not None:
+        # Make the path a dictionary, unless it already is.
+        if not isinstance(orig_path, dict):
+            query['path'] = {}
+
+    # Limit search depth
+    if depth is not None:
+        # If we don't have a context, we'll assume the portal root.
+        if context is None and not orig_path:
+            context = api.portal.get()
+        else:
+            # Restore the original path
+            query['path']['query'] = orig_path
+        query['path']['depth'] = depth
+
+    if context is not None:
+        query['path']['query'] = '/'.join(context.getPhysicalPath())
+
+    # Convert interfaces to their identifiers and also allow to query
+    # multiple values using {'query:[], 'operator':'and|or'}
+    obj_provides = query.get('object_provides', [])
+    if obj_provides:
+        query['object_provides'] = _parse_object_provides_query(obj_provides)
+
+    # Make sure we don't dump the whole catalog.
+    catalog = api.portal.get_tool('portal_catalog')
+    indexes = catalog.indexes()
+    valid_indexes = [index for index in query if index in indexes]
+    if not valid_indexes:
+        return []
+
+    return catalog.unrestrictedSearchResults(**query)
 
 
 def disable_link_integrity_checks():
