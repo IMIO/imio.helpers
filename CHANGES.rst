@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.47 (unreleased)
+0.47 (2021-10-13)
 -----------------
 
 - Fixed `content.get_user_fullname` that was breaking when user had no fullname.
