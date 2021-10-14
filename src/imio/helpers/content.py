@@ -477,13 +477,15 @@ def uuidToObject(uuid,
     return res
 
 
-def ur_find(context=None, depth=None, **kwargs):
-    """Find content in the portal unrestrictedly. Same as api.content.find... but unrestrictedly
+def find(context=None, depth=None, unrestricted=False, **kwargs):
+    """Same as api.content.find... but possibly unrestrictedly
 
     :param context: Context for the search
     :type obj: Content object
     :param depth: How far in the content tree we want to search from context
     :type obj: Content object
+    :param unrestricted: unrestricted flag (default=False)
+    :type bool:
     :returns: Catalog brains
     :rtype: List
     """
@@ -527,8 +529,10 @@ def ur_find(context=None, depth=None, **kwargs):
     valid_indexes = [index for index in query if index in indexes]
     if not valid_indexes:
         return []
-
-    return catalog.unrestrictedSearchResults(**query)
+    if unrestricted:
+        return catalog.unrestrictedSearchResults(**query)
+    else:
+        return catalog.searchResults(**query)
 
 
 def disable_link_integrity_checks():

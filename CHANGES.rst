@@ -4,8 +4,8 @@ Changelog
 0.48 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Renamed `content.ur_find` to `content.find` with unrestricted parameter.
+  [sgeulette]
 
 0.47 (2021-10-13)
 -----------------
