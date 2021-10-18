@@ -530,7 +530,8 @@ def find(context=None, depth=None, unrestricted=False, **kwargs):
     if not valid_indexes:
         return []
     if unrestricted:
-        return catalog.unrestrictedSearchResults(**query)
+        # return a new list to avoid error if corresponding looped object is deleted
+        return list(catalog.unrestrictedSearchResults(**query))
     else:
         return catalog.searchResults(**query)
 

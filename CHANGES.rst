@@ -6,6 +6,8 @@ Changelog
 
 - Renamed `content.ur_find` to `content.find` with unrestricted parameter.
   [sgeulette]
+- Fixed `content.find` to avoid error if corresponding looped object is deleted.
+  [sgeulette]
 
 0.47 (2021-10-13)
 -----------------
