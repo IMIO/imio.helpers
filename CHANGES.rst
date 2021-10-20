@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.48 (unreleased)
+0.48 (2021-10-20)
 -----------------
 
 - Renamed `content.ur_find` to `content.find` with unrestricted parameter.
