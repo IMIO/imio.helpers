@@ -41,7 +41,7 @@ setup(
         'collective.fingerpointing',
         'collective.monkeypatcher',
         'natsort<7',
-        'plone.api',
+        'plone.api>1.9.1',
         'plone.app.intid',
         'plone.app.relationfield',
         'plone.dexterity',

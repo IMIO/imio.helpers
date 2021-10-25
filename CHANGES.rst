@@ -4,8 +4,9 @@ Changelog
 0.49 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Require `plone.api>1.9.1` because we need `content._parse_object_provides_query`.
+  This is necessay since we added `content.find`.
+  [gbastien]
 
 0.48 (2021-10-20)
 -----------------
