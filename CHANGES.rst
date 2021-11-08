@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.49 (unreleased)
+0.49 (2021-11-08)
 -----------------
 
 - Require `plone.api>1.9.1` because we need `content._parse_object_provides_query`.
