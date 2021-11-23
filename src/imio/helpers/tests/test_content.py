@@ -12,6 +12,7 @@ from imio.helpers.content import get_object
 from imio.helpers.content import get_relations
 from imio.helpers.content import get_schema_fields
 from imio.helpers.content import get_state_infos
+from imio.helpers.content import get_transitions
 from imio.helpers.content import get_user_fullname
 from imio.helpers.content import get_vocab
 from imio.helpers.content import normalize_name
@@ -400,3 +401,13 @@ class TestContentModule(IntegrationTestCase):
         self.assertEqual(get_user_fullname("user1"), 'Stéphan Smith')
         self.assertEqual(user1.getProperty("fullname"), get_user_fullname("user1"))
         self.assertEqual(get_user_fullname("user2"), 'user2')
+
+    def test_get_transitions(self):
+        obj = api.content.create(container=self.portal.folder, id='mydoc', type='Document')
+        self.assertEqual(get_transitions(obj),
+                         ['publish_internally', 'hide', 'submit'])
+        transitions(obj, 'submit')
+        self.assertEqual(get_transitions(obj),
+                         ['publish_internally', 'retract', 'publish_externally', 'reject'])
+        transitions(obj, 'publish_externally')
+        self.assertEqual(get_transitions(obj), ['retract'])

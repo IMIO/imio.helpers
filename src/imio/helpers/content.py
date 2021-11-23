@@ -706,3 +706,11 @@ def get_user_fullname(username):
                 fullname = data._identities['authentic-agents'].data['fullname']
             return fullname or username
     return username
+
+
+def get_transitions(obj):
+    """Return the ids of the available transitions as portal_workflow.getTransitionsFor
+       will actually return a list of dict with various infos (id, title, name, ...) of
+       the available transitions."""
+    wfTool = api.portal.get_tool('portal_workflow')
+    return [tr["id"] for tr in wfTool.getTransitionsFor(obj)]
