@@ -17,6 +17,7 @@ import logging
 logger = logging.getLogger('imio.helpers:cache')
 VOLATILE_NAME_MAX_LENGTH = 200
 VOLATILE_ATTR = '_volatile_cache_keys'
+METHODS_MAPPING_NAME = '_methods_invalidation_mapping'
 
 
 def cleanVocabularyCacheFor(vocabulary=None):
@@ -42,14 +43,14 @@ def cleanRamCache():
     thecache.ramcache.invalidateAll()
 
 
-def cleanRamCacheFor(methodId, obj=None):
+def cleanRamCacheFor(methodId):
     """Clean ram.cache for given p_methodId."""
     cache_chooser = getUtility(ICacheChooser)
     thecache = cache_chooser(methodId)
     thecache.ramcache.invalidate(methodId)
 
 
-def get_cachekey_volatile(name):
+def get_cachekey_volatile(name, method=None):
     """Helper for using a volatile corresponding to p_name
        to be used as cachekey stored in a volatile.
        If it exists, we return the value, either we store datetime.now()."""
@@ -67,10 +68,20 @@ def get_cachekey_volatile(name):
     if not date:
         date = datetime.now()
         volatiles[volatile_name] = date
+    # store caller method path so it will be invalidated in invalidate_cachekey_volatile_for
+    if method:
+        key = '%s.%s' % (method.__module__, method.__name__)
+        methods = volatiles.get(METHODS_MAPPING_NAME)
+        if methods is None:
+            volatiles[METHODS_MAPPING_NAME] = PersistentMapping()
+        if name not in volatiles[METHODS_MAPPING_NAME]:
+            volatiles[METHODS_MAPPING_NAME][name] = []
+        if key not in volatiles[METHODS_MAPPING_NAME][name]:
+            volatiles[METHODS_MAPPING_NAME][name].append(key)
     return date
 
 
-def invalidate_cachekey_volatile_for(name, get_again=False):
+def invalidate_cachekey_volatile_for(name, get_again=False, invalidate_cache=True):
     """ """
     portal = api.portal.get()
     normalized_name = queryUtility(IIDNormalizer).normalize(
@@ -83,6 +94,15 @@ def invalidate_cachekey_volatile_for(name, get_again=False):
     # stores a new date and it avoids a second write
     if get_again:
         get_cachekey_volatile(volatile_name)
+    # when date isinvalidated, every cache using it is stale
+    # so we may either specifically invalidate this cached methods
+    # or just wait for ram.cache to do it's cleanup itself
+    if invalidate_cache:
+        mapping = volatiles.get(METHODS_MAPPING_NAME, {})
+        if name in mapping:
+            for method in mapping[name]:
+                cleanRamCacheFor(method)
+            mapping.pop(name)
 
 
 def _generate_params_key(*args, **kwargs):

@@ -10,6 +10,13 @@ Changelog
 - Added `adapters.MissingTerms`, a base `z3c.form` missing terms adapter to be
   extended by local packages.
   [gbastien]
+- Added cache auto invalidation mecanism when using `cache.get_cachekey_volatile`
+  the caller method can be passed, it's name is stored in the volatiles registry
+  then when calling `cache.invalidate_cachekey_volatile_for` with
+  `invalidate_cache=True`, every cached methods are invalidated from `ram.cache`.
+  This will make stale cache be invalidated immediatelly as when a date changed,
+  the existing cache is never used again.
+  [gbastien]
 
 0.49 (2021-11-08)
 -----------------
