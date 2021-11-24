@@ -7,6 +7,9 @@ Changelog
 - Added `content.get_transitions` to be able to get available transition ids
   (as `wfTool.getTransitionsFor` returns a list of dict with transition infos).
   [gbastien]
+- Added `adapters.MissingTerms`, a base `z3c.form` missing terms adapter to be
+  extended by local packages.
+  [gbastien]
 
 0.49 (2021-11-08)
 -----------------
