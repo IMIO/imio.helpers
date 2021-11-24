@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 from plone import api
+from z3c.form.interfaces import IContextAware
+from z3c.form.interfaces import IDataManager
+from z3c.form.term import MissingTermsMixin
 from zope.component import getMultiAdapter
 
 
@@ -50,3 +53,40 @@ class ListContainedDexterityObjectsForDisplayAdapter(object):
             res.append(renderedAction)
             i = i + 1
         return res
+
+
+class MissingTerms(MissingTermsMixin):
+    """Base MissingTerms adapter to be used in local package."""
+
+    complete_voc = NotImplemented
+    field = NotImplemented
+    widget = NotImplemented
+
+    def getTerm(self, value):
+        try:
+            return super(MissingTermsMixin, self).getTerm(value)  # noqa
+        except LookupError:
+            try:
+                return self.complete_voc().getTerm(value)
+            except LookupError:
+                pass
+        if IContextAware.providedBy(self.widget) and not self.widget.ignoreContext:
+            cur_value = getMultiAdapter((self.widget.context, self.field), IDataManager).query()
+            if cur_value == value:
+                return self._makeMissingTerm(value)
+        raise
+
+    def getTermByToken(self, token):
+        try:
+            return super(MissingTermsMixin, self).getTermByToken(token)  # noqa
+        except LookupError:
+            try:
+                return self.complete_voc().getTermByToken(token)
+            except LookupError:
+                pass
+        if IContextAware.providedBy(self.widget) and not self.widget.ignoreContext:
+            value = getMultiAdapter((self.widget.context, self.field), IDataManager).query()
+            term = self._makeMissingTerm(value)
+            if term.token == token:
+                return term
+        raise LookupError(token)
