@@ -12,23 +12,31 @@ from imio.helpers.cache import VOLATILE_ATTR
 from imio.helpers.cache import volatile_cache_with_parameters
 from imio.helpers.cache import volatile_cache_without_parameters
 from imio.helpers.testing import IntegrationTestCase
+from persistent.mapping import PersistentMapping
 from plone import api
 from plone.memoize import ram
 from plone.memoize.instance import Memojito
 from zope.component import queryUtility
 from zope.schema.interfaces import IVocabularyFactory
+from zope.component import getUtility
+from plone.memoize.interfaces import ICacheChooser
 
 
 memPropName = Memojito.propname
 
 
-def ramCachedMethod_cachekey(method, portal, param):
+def ramCachedMethod_cachekey(method, portal, param, pass_volatile_method=False):
     '''cachekey method for ramCachedMethod.'''
-    return param
+    # used for test_get_cachekey_volatile_method_cleanup
+    if pass_volatile_method:
+        date = get_cachekey_volatile('test_cache.ramCachedMethod', method)
+    else:
+        date = get_cachekey_volatile('test_cache.ramCachedMethod')
+    return date, param
 
 
 @ram.cache(ramCachedMethod_cachekey)
-def ramCachedMethod(portal, param):
+def ramCachedMethod(portal, param, pass_volatile_method=False):
     """ """
     return portal.REQUEST.get('ramcached', None)
 
@@ -142,6 +150,27 @@ class TestCacheModule(IntegrationTestCase):
         # test isolation issues with test test_invalidate_cachekey_volatile_for
         invalidate_cachekey_volatile_for(method_name)
 
+    def test_get_cachekey_volatile_method(self):
+        """Test behavior when method is passed to get_cachekey_volatile."""
+        cache_chooser = getUtility(ICacheChooser)
+        thecache = cache_chooser("")
+        cache_data = thecache.ramcache._getStorage()._data
+        # will initialize cachekey_volatile and pass method
+        ramCachedMethod(self.portal, param='1', pass_volatile_method=True)
+        self.assertTrue('imio.helpers.tests.test_cache.ramCachedMethod' in cache_data)
+        volatiles = getattr(self.portal, VOLATILE_ATTR, {})
+        self.assertTrue(volatiles["_methods_invalidation_mapping"]["test_cache.ramCachedMethod"])
+        # when invalidating cache, the method is cleaned from ramcache
+        invalidate_cachekey_volatile_for('test_cache.ramCachedMethod')
+        self.assertFalse('imio.helpers.tests.test_cache.ramCachedMethod' in cache_data)
+        self.assertEqual(volatiles["_methods_invalidation_mapping"], PersistentMapping())
+        # if not passing method to get_cachekey_volatile then cache will not be cleanedup
+        ramCachedMethod(self.portal, param='1', pass_volatile_method=False)
+        self.assertTrue('imio.helpers.tests.test_cache.ramCachedMethod' in cache_data)
+        invalidate_cachekey_volatile_for('test_cache.ramCachedMethod')
+        # no cleanup, method still in cache storage
+        self.assertTrue('imio.helpers.tests.test_cache.ramCachedMethod' in cache_data)
+
     def test_invalidate_cachekey_volatile_for(self):
         """Helper method that will invalidate a given volatile."""
         method_name = 'My method'
@@ -156,7 +185,8 @@ class TestCacheModule(IntegrationTestCase):
         self.assertTrue(isinstance(first_date, datetime))
         invalidate_cachekey_volatile_for(method_name)
         self.assertIsNone(getattr(self.portal, volatile_name, None))
-        # if get_cachekey_volatile is called and volatile does not exist, it is created with datetime.now()
+        # if get_cachekey_volatile is called and volatile does not exist,
+        # it is created with datetime.now()
         second_date = get_cachekey_volatile(method_name)
         self.assertTrue(first_date < second_date)
 
