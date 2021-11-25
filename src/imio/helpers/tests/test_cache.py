@@ -16,10 +16,10 @@ from persistent.mapping import PersistentMapping
 from plone import api
 from plone.memoize import ram
 from plone.memoize.instance import Memojito
+from plone.memoize.interfaces import ICacheChooser
+from zope.component import getUtility
 from zope.component import queryUtility
 from zope.schema.interfaces import IVocabularyFactory
-from zope.component import getUtility
-from plone.memoize.interfaces import ICacheChooser
 
 
 memPropName = Memojito.propname
