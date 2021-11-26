@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.50 (unreleased)
+0.50 (2021-11-26)
 -----------------
 
 - Added `content.get_transitions` to be able to get available transition ids
