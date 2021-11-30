@@ -150,8 +150,6 @@ def send_email(eml, subject, mfrom, mto, mcc=None, mbcc=None, replyto=None):
     except (socket.error, SMTPException) as e:
         logger.error(u"Could not send email to '{}' with subject '{}': {}".format(mto, subject, e))
         return False, 'Could not send email : {}'.format(e)
-    except Exception:
-        raise
     # sent successfully
     return True, ''
 
