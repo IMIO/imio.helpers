@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 
-import pkg_resources
 from smtplib import SMTP_SSL
 from zope.sendmail.mailer import SMTPMailer
+
+import pkg_resources
+
 
 try:
     pkg_resources.get_distribution("collective.solr")
@@ -10,7 +12,6 @@ except pkg_resources.DistributionNotFound:
     HAS_SOLR = False
 else:
     from collective.solr.indexer import SolrIndexProcessor
-
     HAS_SOLR = True
 
 
