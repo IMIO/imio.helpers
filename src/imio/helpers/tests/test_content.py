@@ -3,6 +3,7 @@
 from imio.helpers.content import add_file
 from imio.helpers.content import add_image
 from imio.helpers.content import add_to_annotation
+from imio.helpers.content import base_getattr
 from imio.helpers.content import create
 from imio.helpers.content import del_from_annotation
 from imio.helpers.content import disable_link_integrity_checks
@@ -411,3 +412,13 @@ class TestContentModule(IntegrationTestCase):
                          ['publish_internally', 'retract', 'publish_externally', 'reject'])
         transitions(obj, 'publish_externally')
         self.assertEqual(get_transitions(obj), ['retract'])
+
+    def test_base_getattr(self):
+        obj = api.content.create(container=self.portal.folder, id='mydoc', type='Document')
+        self.assertTrue(self.portal.folder.getImmediatelyAddableTypes())
+        # getattr uses acquisition
+        self.assertTrue(getattr(self.portal.folder, 'getImmediatelyAddableTypes'))
+        self.assertTrue(getattr(obj, 'getImmediatelyAddableTypes'))
+        # base_getattr does not use acquisition
+        self.assertTrue(base_getattr(self.portal.folder, 'getImmediatelyAddableTypes'))
+        self.assertIsNone(base_getattr(obj, 'getImmediatelyAddableTypes'))

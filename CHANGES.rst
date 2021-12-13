@@ -6,6 +6,8 @@ Changelog
 
 - Added monkey patch to handle SSL mailer on port 465.
   [sgeulette]
+- Added `content.base_getattr` method that will `getattr` without acquisition.
+  [gbastien]
 
 0.50 (2021-11-26)
 -----------------

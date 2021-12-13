@@ -601,6 +601,12 @@ def safe_delattr(obj, attr_name):
         delattr(obj, attr_name)
 
 
+def base_getattr(obj, attr_name, default=None):
+    """ """
+    if base_hasattr(obj, attr_name):
+        return getattr(obj, attr_name, default)
+
+
 def get_relations(obj, attribute=None, backrefs=False):
     """Get any kind of references and backreferences"""
     res = []
