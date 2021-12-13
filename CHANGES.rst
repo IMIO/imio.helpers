@@ -4,8 +4,8 @@ Changelog
 0.51 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Added monkey patch to handle SSL mailer on port 465.
+  [sgeulette]
 
 0.50 (2021-11-26)
 -----------------

@@ -40,6 +40,13 @@
           preserveOriginal="true" />
     </configure>
 
+    <monkey:patch
+        description="Handled 465 port (SSL) smtp"
+        class="Products.MailHost.MailHost.MailBase"
+        original="_makeMailer"
+        replacement=".patches.ssl_makeMailer"
+        preserveOriginal="true" />
+
     <utility component=".vocabularies.SortedUsersFactory"
              name="imio.helpers.SortedUsers" />
 
