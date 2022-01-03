@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.51 (unreleased)
+0.51 (2022-01-03)
 -----------------
 
 - Added monkey patch to handle SSL mailer on port 465.
