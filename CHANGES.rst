@@ -4,8 +4,9 @@ Changelog
 0.52 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Added `cache.obj_modified` function that returns max value between
+  obj.modified(), obj._p_mtime and __anotations__._p_mtime
+  [sgeulette]
 
 0.51 (2022-01-03)
 -----------------

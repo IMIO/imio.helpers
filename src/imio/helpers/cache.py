@@ -158,3 +158,18 @@ def volatile_cache_without_parameters(func):
     replacement = cache(get_key)(func)
     replacement._cache_key = generate_key(func)
     return replacement
+
+
+def obj_modified(obj, asdatetime=True, check_annotation=True, asstring=False):
+    """Returns max value between obj.modified(), obj._p_mtime and __anotations__._p_mtime.
+
+       to check also attribute modification and annotation modification."""
+    if check_annotation:
+        modified = max(float(obj.modified()), obj._p_mtime, obj.__annotations__._p_mtime)
+    else:
+        modified = max(float(obj.modified()), obj._p_mtime)
+    if asdatetime:
+        modified = datetime.fromtimestamp(modified)
+    elif asstring:
+        modified = datetime.fromtimestamp(modified).strftime('%Y%m%d-%H%M%S-%f')
+    return modified
