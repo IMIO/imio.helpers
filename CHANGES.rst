@@ -7,6 +7,9 @@ Changelog
 - Added `cache.obj_modified` function that returns max value between
   obj.modified(), obj._p_mtime and __anotations__._p_mtime
   [sgeulette]
+- Added `cache.extract_wrapped` function that returns original decorated function.
+  Useful to compare cached and non cached results in tests.
+  [sgeulette]
 
 0.51 (2022-01-03)
 -----------------

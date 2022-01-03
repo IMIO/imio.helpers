@@ -6,6 +6,7 @@ from plone.i18n.normalizer import IIDNormalizer
 from plone.memoize import ram
 from plone.memoize.instance import Memojito
 from plone.memoize.interfaces import ICacheChooser
+from types import FunctionType
 from zope.component import getAllUtilitiesRegisteredFor
 from zope.component import getUtility
 from zope.component import queryUtility
@@ -173,3 +174,9 @@ def obj_modified(obj, asdatetime=True, check_annotation=True, asstring=False):
     elif asstring:
         modified = datetime.fromtimestamp(modified).strftime('%Y%m%d-%H%M%S-%f')
     return modified
+
+
+def extract_wrapped(decorated):
+    """Returns function that was decorated"""
+    closure = (c.cell_contents for c in decorated.__closure__)
+    return next((c for c in closure if isinstance(c, FunctionType)), None)
