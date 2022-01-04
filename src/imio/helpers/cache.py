@@ -6,6 +6,7 @@ from plone.i18n.normalizer import IIDNormalizer
 from plone.memoize import ram
 from plone.memoize.instance import Memojito
 from plone.memoize.interfaces import ICacheChooser
+from Products.CMFPlone.utils import base_hasattr
 from types import FunctionType
 from zope.component import getAllUtilitiesRegisteredFor
 from zope.component import getUtility
@@ -165,7 +166,7 @@ def obj_modified(obj, asdatetime=True, check_annotation=True, asstring=False):
     """Returns max value between obj.modified(), obj._p_mtime and __anotations__._p_mtime.
 
        to check also attribute modification and annotation modification."""
-    if check_annotation:
+    if check_annotation and base_hasattr(obj, '__annotations__'):
         modified = max(float(obj.modified()), obj._p_mtime, obj.__annotations__._p_mtime)
     else:
         modified = max(float(obj.modified()), obj._p_mtime)
