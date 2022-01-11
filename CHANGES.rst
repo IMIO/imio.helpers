@@ -10,6 +10,8 @@ Changelog
 - Added `cache.extract_wrapped` function that returns original decorated function.
   Useful to compare cached and non cached results in tests.
   [sgeulette]
+- Updated git fetch url
+  [sgeulette]
 
 0.51 (2022-01-03)
 -----------------
