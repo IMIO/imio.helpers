@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.52 (unreleased)
+0.52 (2022-01-12)
 -----------------
 
 - Added `cache.obj_modified` function that returns max value between
