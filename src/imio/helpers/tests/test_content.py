@@ -69,14 +69,14 @@ class TestContentModule(IntegrationTestCase):
         self.assertEqual(self.portal, get_object(obj_path='/'))
 
         # Give id
-        self.assertEqual(obj, get_object(id='mydoc'))
+        self.assertEqual(obj, get_object(oid='mydoc'))
         # Give title
         self.assertEqual(obj, get_object(title='My document'))
         # Give type
-        self.assertEqual(obj, get_object(type='Document', id='mydoc'))
+        self.assertEqual(obj, get_object(ptype='Document', oid='mydoc'))
         # All parameters
-        self.assertEqual(obj, get_object(type='Document', id='mydoc', title='My document', parent='folder'))
-        self.assertEqual(obj, get_object(type='Document', id='mydoc', title='My document', obj_path='folder/mydoc'))
+        self.assertEqual(obj, get_object(ptype='Document', oid='mydoc', title='My document', parent='folder'))
+        self.assertEqual(obj, get_object(ptype='Document', oid='mydoc', title='My document', obj_path='folder/mydoc'))
 
     def test_transitions(self):
         obj = api.content.create(container=self.portal.folder, id='mydoc', type='Document')

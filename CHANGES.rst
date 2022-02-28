@@ -4,8 +4,8 @@ Changelog
 0.53 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Refactored `get_object`
+  [sgeulette]
 
 0.52 (2022-01-12)
 -----------------

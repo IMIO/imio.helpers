@@ -38,14 +38,14 @@ logger = logging.getLogger('imio.helpers.content')
 ADDED_TYPE_ERROR = 'A validation error occurred while instantiating "{0}" with id "{1}". {2}'
 
 
-def get_object(parent='', id='', title='', type='', obj_path=''):
+def get_object(parent='', oid='', title='', ptype='', obj_path=''):
     """
     Find an object following parameters
-    :param id: searched id.
-    :type id: string
+    :param oid: searched id.
+    :type oid: string
 
-    :param type: searched portal type.
-    :type type: string
+    :param ptype: searched portal type.
+    :type ptype: string
 
     :param title: searched title.
     :type title: string
@@ -54,7 +54,7 @@ def get_object(parent='', id='', title='', type='', obj_path=''):
     :type obj_path: string
 
     :param parent: object parent (can be the object or the relative path).
-    :type type: object or string
+    :type parent: object or string
 
     :returns: Content object
     """
@@ -71,15 +71,15 @@ def get_object(parent='', id='', title='', type='', obj_path=''):
             params['path'] = {'query': '%s/%s' % (ppath, parent.strip('/')), 'depth': 1}
         else:
             params['path'] = {'query': '/'.join(parent.getPhysicalPath()), 'depth': 1}
-    if id:
-        params['id'] = id
+    if oid:
+        params['id'] = oid
     if title:
         params['Title'] = title
-    if type:
-        params['portal_type'] = type
+    if ptype:
+        params['portal_type'] = ptype
     brains = pc.unrestrictedSearchResults(**params)
     if brains:
-        return brains[0].getObject()
+        return brains[0]._unrestrictedGetObject()
     return None
 
 
@@ -200,9 +200,9 @@ def create(conf, cids={}, globl=False, pos=False, clean_globl=False):
             raise ValueError("Dict nb %s: cannot find container '%s')" % ((cid and '%s (cid=%s)' % (i, cid) or i),
                              container))
         if dic.get('id', ''):
-            obj = get_object(parent=parent, id=dic.get('id'))
+            obj = get_object(parent=parent, oid=dic.get('id'))
         else:
-            obj = get_object(parent=parent, type=dic['type'], title=dic.get('title'))
+            obj = get_object(parent=parent, ptype=dic['type'], title=dic.get('title'))
         if not obj:
             obj = api.content.create(container=parent, type=dic['type'], title=safe_unicode(dic['title']),
                                      id=dic.get('id', None), safe_id=not bool(dic.get('id', '')),
