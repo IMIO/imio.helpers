@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.53 (unreleased)
+0.53 (2022-03-17)
 -----------------
 
 - Refactored `get_object`
