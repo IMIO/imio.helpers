@@ -16,6 +16,7 @@ from imio.helpers.content import get_state_infos
 from imio.helpers.content import get_transitions
 from imio.helpers.content import get_user_fullname
 from imio.helpers.content import get_vocab
+from imio.helpers.content import get_vocab_values
 from imio.helpers.content import normalize_name
 from imio.helpers.content import object_ids
 from imio.helpers.content import object_values
@@ -323,6 +324,20 @@ class TestContentModule(IntegrationTestCase):
         self.assertTrue(isinstance(vocab, SimpleVocabulary))
         vocab = get_vocab(None, 'plone.app.vocabularies.PortalTypes', only_factory=True)
         self.assertTrue(isinstance(vocab, PortalTypesVocabulary))
+
+    def test_get_vocab_values(self):
+        values = get_vocab_values(self.portal, 'plone.app.vocabularies.PortalTypes')
+        self.assertTrue("testingtype" in values)
+        self.assertTrue("Folder" in values)
+        self.assertTrue("Document" in values)
+        values = get_vocab_values(self.portal, 'plone.app.vocabularies.PortalTypes', attr_name='value')
+        self.assertTrue("testingtype" in values)
+        self.assertTrue("Folder" in values)
+        self.assertTrue("Document" in values)
+        values = get_vocab_values(self.portal, 'plone.app.vocabularies.PortalTypes', attr_name='title')
+        self.assertTrue(u"Testing type" in values)
+        self.assertTrue(u"Folder" in values)
+        self.assertTrue(u"Page" in values)
 
     def test_get_state_infos(self):
         self.portal.portal_workflow.setChainForPortalTypes(('Document', ), ('intranet_workflow', ))

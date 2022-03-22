@@ -582,6 +582,13 @@ def get_vocab(context, vocab_name, only_factory=False, **kwargs):
     return vocab
 
 
+def get_vocab_values(context, vocab_name, attr_name='token', **kwargs):
+    """ """
+    vocab_factory = getUtility(IVocabularyFactory, vocab_name)
+    return [getattr(term, attr_name)
+            for term in vocab_factory(context, **kwargs)._terms]
+
+
 def get_state_infos(obj):
     """ """
     wfTool = api.portal.get_tool('portal_workflow')
