@@ -3,6 +3,7 @@
 from imio.helpers.content import get_vocab
 from imio.helpers.testing import IntegrationTestCase
 from plone import api
+from zope.schema.tests.test_vocabulary import SimpleTermTests
 
 
 class TestVocabularies(IntegrationTestCase):
@@ -26,3 +27,17 @@ class TestVocabularies(IntegrationTestCase):
              u'B_new_user (B_new_user)',
              u'new_user (new_user)',
              u'test_user_1_ (test_user_1_)'])
+
+
+class EnhancedTermTests(SimpleTermTests):
+    """Inherited class tests are also called"""
+
+    def _getTargetClass(self):
+        from imio.helpers.vocabularies import EnhancedTerm
+        return EnhancedTerm
+
+    def test_attrs(self):
+        term = self._makeOne(u'value', title=u'title')
+        self.assertDictEqual(term.attrs, {})
+        term = self._makeOne(u'value', title=u'title', attr1=u'attr1')
+        self.assertDictEqual(term.attrs, {'attr1': u'attr1'})

@@ -7,6 +7,8 @@ Changelog
 - Added `content.get_vocab_value` based on `content.get_vocab` but returns
   the values (`attr_name='token'` by default, may also be `value` or `title`).
   [gbastien]
+- Added `EnhancedTerm` based on `SimpleTerm` providing `attrs` dict on term
+  [sgeulette]
 
 0.53 (2022-03-17)
 -----------------

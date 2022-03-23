@@ -46,3 +46,10 @@ class SortedUsers(UsersFactory):
 
 
 SortedUsersFactory = SortedUsers()
+
+
+class EnhancedTerm(SimpleTerm):
+
+    def __init__(self, value, token=None, title=None, **attrs):
+        super(EnhancedTerm, self).__init__(value, token=token, title=title)
+        self.attrs = attrs
