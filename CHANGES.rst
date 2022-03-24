@@ -9,6 +9,9 @@ Changelog
   [gbastien]
 - Added `EnhancedTerm` based on `SimpleTerm` providing `attrs` dict on term
   [sgeulette]
+- Added `cache.cleanForeverCache` that will clear cache of functions using the
+  `@forever.memoize` decorator.
+  [gbastien]
 
 0.53 (2022-03-17)
 -----------------

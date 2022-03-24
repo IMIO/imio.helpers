@@ -12,6 +12,7 @@ from zope.component import getAllUtilitiesRegisteredFor
 from zope.component import getUtility
 from zope.component import queryUtility
 from zope.schema.interfaces import IVocabularyFactory
+from plone.memoize.forever import _memos
 
 import logging
 
@@ -50,6 +51,11 @@ def cleanRamCacheFor(methodId):
     cache_chooser = getUtility(ICacheChooser)
     thecache = cache_chooser(methodId)
     thecache.ramcache.invalidate(methodId)
+
+
+def cleanForeverCache():
+    """Clean cache using the @forever.memoize decorator."""
+    _memos.clear()
 
 
 def get_cachekey_volatile(name, method=None):

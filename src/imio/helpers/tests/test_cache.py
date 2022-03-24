@@ -11,6 +11,7 @@ from imio.helpers.cache import invalidate_cachekey_volatile_for
 from imio.helpers.cache import VOLATILE_ATTR
 from imio.helpers.cache import volatile_cache_with_parameters
 from imio.helpers.cache import volatile_cache_without_parameters
+from imio.helpers.cache import cleanForeverCache
 from imio.helpers.testing import IntegrationTestCase
 from persistent.mapping import PersistentMapping
 from plone import api
@@ -20,6 +21,7 @@ from plone.memoize.interfaces import ICacheChooser
 from zope.component import getUtility
 from zope.component import queryUtility
 from zope.schema.interfaces import IVocabularyFactory
+from plone.memoize import forever
 
 
 memPropName = Memojito.propname
@@ -49,6 +51,11 @@ def volatile_without_parameters_cached(portal):
 @volatile_cache_with_parameters
 def volatile_with_parameters_cached(portal, param):
     return portal.REQUEST.get('volatile_with_parameters_cached', None)
+
+
+@forever.memoize
+def forever_cached_date():
+    return datetime.now()
 
 
 class TestCacheModule(IntegrationTestCase):
@@ -131,6 +138,15 @@ class TestCacheModule(IntegrationTestCase):
         # now clean cache, it will returns 'b'
         cleanRamCacheFor('imio.helpers.tests.test_cache.ramCachedMethod')
         self.assertEquals(ramCachedMethod(self.portal, param='1'), 'b')
+
+    def test_cleanForeverCache(self):
+        """Test the cache.cleanForeverCache function."""
+        date = forever_cached_date()
+        self.assertEqual(date, forever_cached_date())
+        cleanForeverCache()
+        new_date = forever_cached_date()
+        self.assertNotEqual(date, new_date)
+        self.assertEqual(new_date, forever_cached_date())
 
     def test_get_cachekey_volatile(self):
         """Helper method that adds a volatile on the portal storing current date."""
