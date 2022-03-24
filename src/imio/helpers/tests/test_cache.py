@@ -2,6 +2,7 @@
 
 from datetime import datetime
 from imio.helpers.cache import _generate_params_key
+from imio.helpers.cache import cleanForeverCache
 from imio.helpers.cache import cleanRamCache
 from imio.helpers.cache import cleanRamCacheFor
 from imio.helpers.cache import cleanVocabularyCacheFor
@@ -11,17 +12,16 @@ from imio.helpers.cache import invalidate_cachekey_volatile_for
 from imio.helpers.cache import VOLATILE_ATTR
 from imio.helpers.cache import volatile_cache_with_parameters
 from imio.helpers.cache import volatile_cache_without_parameters
-from imio.helpers.cache import cleanForeverCache
 from imio.helpers.testing import IntegrationTestCase
 from persistent.mapping import PersistentMapping
 from plone import api
+from plone.memoize import forever
 from plone.memoize import ram
 from plone.memoize.instance import Memojito
 from plone.memoize.interfaces import ICacheChooser
 from zope.component import getUtility
 from zope.component import queryUtility
 from zope.schema.interfaces import IVocabularyFactory
-from plone.memoize import forever
 
 
 memPropName = Memojito.propname

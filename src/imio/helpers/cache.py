@@ -4,6 +4,7 @@ from persistent.mapping import PersistentMapping
 from plone import api
 from plone.i18n.normalizer import IIDNormalizer
 from plone.memoize import ram
+from plone.memoize.forever import _memos
 from plone.memoize.instance import Memojito
 from plone.memoize.interfaces import ICacheChooser
 from Products.CMFPlone.utils import base_hasattr
@@ -12,7 +13,6 @@ from zope.component import getAllUtilitiesRegisteredFor
 from zope.component import getUtility
 from zope.component import queryUtility
 from zope.schema.interfaces import IVocabularyFactory
-from plone.memoize.forever import _memos
 
 import logging
 
