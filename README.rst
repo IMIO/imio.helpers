@@ -1,8 +1,12 @@
-.. image:: https://travis-ci.org/IMIO/imio.helpers.svg?branch=master
-   :target: https://travis-ci.org/IMIO/imio.helpers
+.. image:: https://github.com/IMIO/imio.helpers/actions/workflows/main.yml/badge.svg?branch=master
+    :target: https://github.com/IMIO/imio.helpers/actions/workflows/main.yml
 
 .. image:: https://coveralls.io/repos/IMIO/imio.helpers/badge.png?branch=master
    :target: https://coveralls.io/r/IMIO/imio.helpers?branch=master
+
+.. image:: http://img.shields.io/pypi/v/imio.helpers.svg
+   :alt: PyPI badge
+   :target: https://pypi.org/project/imio.helpers
 
 
 ====================
