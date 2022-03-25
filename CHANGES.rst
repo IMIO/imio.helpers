@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.54 (unreleased)
+0.54 (2022-03-25)
 -----------------
 
 - Added `content.get_vocab_value` based on `content.get_vocab` but returns
