@@ -23,7 +23,7 @@
     <li><em><strong>italique gras</strong></em>;</li>
     <li><u><em>italique souligné</em></u>;</li>
     <li><s><strong>gras barré</strong></s>;</li>
-    <li><u><strong>gras souligné, NE FONCTIONNE PAS AVEC LIBREOFFICE4 EN WORD, TESTER EN LIBREOFFICE5</strong></u>;</li> 
+    <li><u><strong>gras souligné, NE FONCTIONNE PAS AVEC LIBREOFFICE4 EN WORD, TESTER EN LIBREOFFICE5</strong></u>;</li>
     <li><u><b>gras souligné</b></u>;</li>
     <li><s><em><strong>gras italique barré</strong></em></s>;</li>
     <li><u><em><strong>gras italique souligné</strong></em></u>;</li>
@@ -39,7 +39,7 @@
 <p><em><strong>italique gras</strong></em>;</p>
 <p><u><em>italique souligné</em></u>;</p>
 <p><s><strong>gras barré</strong></s>;</p>
-<p><u><strong>gras souligné, NE FONCTIONNE PAS AVEC LIBREOFFICE4 EN WORD, TESTER EN LIBREOFFICE5</strong></u>;</p> 
+<p><u><strong>gras souligné, NE FONCTIONNE PAS AVEC LIBREOFFICE4 EN WORD, TESTER EN LIBREOFFICE5</strong></u>;</p>
 <p><u><b>gras souligné</b></u>;</p>
 <p><s><em><strong>gras italique barré</strong></em></s>;</p>
 <p><u><em><strong>gras italique souligné</strong></em></u>;</p>
@@ -3078,6 +3078,10 @@ border="1" style="width:500px; border: undefined;"
 <p>Image non trouvée interne</p>
 
 <p><img alt="" src="unexisting_image.png" title="unexisting_image.png" /></p>
+
+<p>Une image utilisant un chemin de type C:\... ne casse pas la génération</p>
+
+<p><img src="C:\Users\username\images\mon_image.png" title="mon_image.png" /></p>
 
 <p>Une image utilisant un chemin de type file:/// ne casse pas la génération</p>
 
