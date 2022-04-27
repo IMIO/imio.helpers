@@ -102,7 +102,7 @@ def invalidate_cachekey_volatile_for(name, get_again=False, invalidate_cache=Tru
     # stores a new date and it avoids a second write
     if get_again:
         get_cachekey_volatile(volatile_name)
-    # when date isinvalidated, every cache using it is stale
+    # when date is invalidated, every cache using it is stale
     # so we may either specifically invalidate this cached methods
     # or just wait for ram.cache to do it's cleanup itself
     if invalidate_cache:
