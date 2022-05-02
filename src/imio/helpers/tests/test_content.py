@@ -362,7 +362,10 @@ class TestContentModule(IntegrationTestCase):
         notify(ObjectModifiedEvent(obj))
         self.assertEqual(len(list(get_relations(obj))), 1)
         self.assertEqual(len(list(get_relations(obj, 'relations'))), 1)
+        self.assertTrue(isinstance(list(get_relations(obj, 'relations'))[0], RelationValue))
         self.assertEqual(len(list(get_relations(obj, 'unknown'))), 0)
+        self.assertTrue(isinstance(list(get_relations(obj, 'relations', as_objects=True))[0],
+                                   self.portal.folder.__class__))
 
     def test_get_back_relations(self):
         obj = api.content.create(container=self.portal.folder, id='tt', type='testingtype')
@@ -372,6 +375,7 @@ class TestContentModule(IntegrationTestCase):
         self.assertEqual(len(list(get_back_relations(self.portal.folder))), 1)
         self.assertEqual(len(list(get_back_relations(self.portal.folder, 'relations'))), 1)
         self.assertEqual(len(list(get_back_relations(self.portal.folder, 'unknown'))), 0)
+        self.assertTrue(isinstance(list(get_back_relations(self.portal.folder, 'relations'))[0], obj.__class__))
 
     def test_richtextval(self):
         obj1 = api.content.create(container=self.portal.folder, id='tt1', type='testingtype')

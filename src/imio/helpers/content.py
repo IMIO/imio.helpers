@@ -614,10 +614,11 @@ def base_getattr(obj, attr_name, default=None):
         return getattr(obj, attr_name, default)
 
 
-def get_relations(obj, attribute=None, backrefs=False):
+def get_relations(obj, attribute=None, backrefs=False, as_objects=False):
     """Get any kind of references and backreferences"""
     res = []
-    int_id = get_intid(obj)
+    intids = queryUtility(IIntIds)
+    int_id = get_intid(obj, intids)
     if not int_id:
         return res
 
@@ -632,29 +633,31 @@ def get_relations(obj, attribute=None, backrefs=False):
 
     if backrefs:
         query['to_id'] = int_id
+        related = 'from_id'
     else:
         query['from_id'] = int_id
-
-    return relation_catalog.findRelations(query)
-
-
-def get_back_relations(obj, attribute=None, as_objects=True):
-    back_relations = get_relations(obj, attribute=attribute, backrefs=True)
-    res = [back_relation.from_object for back_relation in back_relations
-           if not back_relation.isBroken()]
-    return res
+        related = 'to_id'
+    if as_objects:
+        return [intids.getObject(getattr(rel, related)) for rel in relation_catalog.findRelations(query)
+                if not rel.isBroken()]
+    else:
+        return relation_catalog.findRelations(query)
 
 
-def get_intid(obj):
+def get_back_relations(obj, attribute=None):
+    return get_relations(obj, attribute=attribute, backrefs=True, as_objects=True)
+
+
+def get_intid(obj, intids=None):
     """Return the intid of an object from the intid-catalog"""
-    intids = queryUtility(IIntIds)
     if intids is None:
-        return
+        intids = queryUtility(IIntIds)
     # check that the object has an intid, otherwise there's nothing to be done
     try:
         return intids.getId(obj)
     except KeyError:
-        # The object has not been added to the ZODB yet
+        # The object has not been added to the ZODB yet or the intids catalog is broken
+        logger.warn("Missing intid for %s" % obj.absolute_url())
         return
 
 

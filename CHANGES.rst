@@ -4,8 +4,8 @@ Changelog
 0.55 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Improved `get_relations` to get optionally referenced objects.
+  [sgeulette]
 
 0.54 (2022-03-25)
 -----------------
