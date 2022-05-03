@@ -614,7 +614,7 @@ def base_getattr(obj, attr_name, default=None):
         return getattr(obj, attr_name, default)
 
 
-def get_relations(obj, attribute=None, backrefs=False, as_objects=False):
+def get_relations(obj, attribute=None, backrefs=False, as_obj=False):
     """Get any kind of references and backreferences"""
     res = []
     intids = queryUtility(IIntIds)
@@ -637,7 +637,7 @@ def get_relations(obj, attribute=None, backrefs=False, as_objects=False):
     else:
         query['from_id'] = int_id
         related = 'to_id'
-    if as_objects:
+    if as_obj:
         return [intids.getObject(getattr(rel, related)) for rel in relation_catalog.findRelations(query)
                 if not rel.isBroken()]
     else:
@@ -645,7 +645,7 @@ def get_relations(obj, attribute=None, backrefs=False, as_objects=False):
 
 
 def get_back_relations(obj, attribute=None):
-    return get_relations(obj, attribute=attribute, backrefs=True, as_objects=True)
+    return get_relations(obj, attribute=attribute, backrefs=True, as_obj=True)
 
 
 def get_intid(obj, intids=None):

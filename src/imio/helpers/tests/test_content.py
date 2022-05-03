@@ -364,7 +364,7 @@ class TestContentModule(IntegrationTestCase):
         self.assertEqual(len(list(get_relations(obj, 'relations'))), 1)
         self.assertTrue(isinstance(list(get_relations(obj, 'relations'))[0], RelationValue))
         self.assertEqual(len(list(get_relations(obj, 'unknown'))), 0)
-        self.assertTrue(isinstance(list(get_relations(obj, 'relations', as_objects=True))[0],
+        self.assertTrue(isinstance(list(get_relations(obj, 'relations', as_obj=True))[0],
                                    self.portal.folder.__class__))
 
     def test_get_back_relations(self):
