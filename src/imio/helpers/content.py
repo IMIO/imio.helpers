@@ -615,7 +615,14 @@ def base_getattr(obj, attr_name, default=None):
 
 
 def get_relations(obj, attribute=None, backrefs=False, as_obj=False):
-    """Get any kind of references and backreferences"""
+    """Get zc.relations or related objects.
+
+    :param obj: object relations
+    :param attribute: related attribute name relation
+    :param backrefs: get relations directed to the context (default is from the context)
+    :param as_obj: get objects pointed by relations
+    :return: relation's list or objects list
+    """
     res = []
     intids = queryUtility(IIntIds)
     int_id = get_intid(obj, intids)
