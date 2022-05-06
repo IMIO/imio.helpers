@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.55 (unreleased)
+0.55 (2022-05-06)
 -----------------
 
 - Improved `get_relations` to get optionally referenced objects.
