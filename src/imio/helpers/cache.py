@@ -193,6 +193,6 @@ def extract_wrapped(decorated):
 def setup_ram_cache(max_entries=100000, max_age=2400, cleanup_interval=600):
     """Can be called in IProcessStarting subscriber"""
     ramcache = queryUtility(IRAMCache)
-    if ramcache.maxEntries == 1000:
-        logger.info('=> Setting ramcache parameters')
-        ramcache.update(maxEntries=max_entries, maxAge=max_age, cleanupInterval=cleanup_interval)
+    logger.info('=> Setting ramcache parameters (maxEntries=%s, maxAge=%s, cleanupInterval=%s)' %
+                (max_entries, max_age, cleanup_interval))
+    ramcache.update(maxEntries=max_entries, maxAge=max_age, cleanupInterval=cleanup_interval)
