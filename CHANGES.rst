@@ -4,8 +4,8 @@ Changelog
 0.56 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Added `setup_ram_cache` method.
+  [sgeulette]
 
 0.55 (2022-05-06)
 -----------------

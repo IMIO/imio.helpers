@@ -12,6 +12,7 @@ from types import FunctionType
 from zope.component import getAllUtilitiesRegisteredFor
 from zope.component import getUtility
 from zope.component import queryUtility
+from zope.ramcache.interfaces.ram import IRAMCache
 from zope.schema.interfaces import IVocabularyFactory
 
 import logging
@@ -187,3 +188,11 @@ def extract_wrapped(decorated):
     """Returns function that was decorated"""
     closure = (c.cell_contents for c in decorated.__closure__)
     return next((c for c in closure if isinstance(c, FunctionType)), None)
+
+
+def setup_ram_cache(max_entries=100000, max_age=2400, cleanup_interval=600):
+    """Can be called in IProcessStarting subscriber"""
+    ramcache = queryUtility(IRAMCache)
+    if ramcache.maxEntries == 1000:
+        logger.info('=> Setting ramcache parameters')
+        ramcache.update(maxEntries=max_entries, maxAge=max_age, cleanupInterval=cleanup_interval)
