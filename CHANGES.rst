@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.56 (unreleased)
+0.56 (2022-05-13)
 -----------------
 
 - Added `setup_ram_cache` method.
