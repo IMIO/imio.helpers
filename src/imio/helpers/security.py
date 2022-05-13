@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-
+import Zope2
+from App.config import getConfiguration
 from collective.fingerpointing.config import AUDIT_MESSAGE
 from collective.fingerpointing.logger import log_info
 from collective.fingerpointing.utils import get_request_information
@@ -10,6 +11,8 @@ from random import choice
 from random import sample
 from random import seed
 from time import time
+
+from zope.app.publication.zopepublication import ZopePublication
 from zope.component import getMultiAdapter
 
 import logging
@@ -110,3 +113,30 @@ def get_user_from_criteria(context, email=None, fullname=None):
     if fullname:
         criteria['fullname'] = fullname
     return hunter.searchUsers(**criteria)
+
+
+def set_site_from_package_config(product_name):
+    """Set site context from plone-path given a product-config zope config.
+    Can be used in an IProcessStarting subscriber...
+
+    <product-config XXX>
+        plone-path YYY
+    </product-config>
+
+    :param product_name: configured product name string
+    :return: portal object if defined or None
+    """
+    config = getattr(getConfiguration(), 'product_config', {})
+    package_config = config.get(product_name)
+    if package_config and package_config.get('plone-path'):  # set on instance1 only
+        db = Zope2.DB
+        connection = db.open()
+        root_folder = connection.root().get(ZopePublication.root_name, None)
+        site = root_folder.unrestrictedTraverse(package_config['plone-path'])
+        try:
+            from zope.app.component.hooks import setSite
+        except ImportError:
+            from zope.component.hooks import setSite
+        setSite(site)
+        return site
+    return None

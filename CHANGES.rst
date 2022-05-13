@@ -6,6 +6,8 @@ Changelog
 
 - Added `setup_ram_cache` method.
   [sgeulette]
+- Added `set_site_from_package_config` method
+  [sgeulette]
 
 0.55 (2022-05-06)
 -----------------
