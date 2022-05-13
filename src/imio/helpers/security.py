@@ -128,7 +128,7 @@ def set_site_from_package_config(product_name):
     """
     config = getattr(getConfiguration(), 'product_config', {})
     package_config = config.get(product_name)
-    if package_config and package_config.get('plone-path'):  # set on instance1 only
+    if package_config and package_config.get('plone-path'):  # can be set on instance1 only or not at all
         db = Zope2.DB
         connection = db.open()
         root_folder = connection.root().get(ZopePublication.root_name, None)
