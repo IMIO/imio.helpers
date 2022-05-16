@@ -474,6 +474,8 @@ def uuidToObject(uuid,
         unrestricted=unrestricted)
     if res:
         res = res[0]
+    else:
+        res = None
     return res
 
 

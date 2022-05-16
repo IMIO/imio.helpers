@@ -306,6 +306,7 @@ class TestContentModule(IntegrationTestCase):
         folder_uid = self.portal.folder.UID()
         single_obj = uuidToObject(folder_uid)
         self.assertEqual(single_obj.UID(), folder_uid)
+        self.assertIsNone(uuidToObject('unknown_uid'))
 
     def test_disable_link_integrity_checks(self):
         self.assertTrue(self.portal.portal_properties.site_properties.enable_link_integrity_checks)

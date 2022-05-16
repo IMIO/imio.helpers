@@ -4,8 +4,8 @@ Changelog
 0.57 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- `content.uuidToObject` will now return `None` instead an empty list if uuid not found.
+  [gbastien]
 
 0.56 (2022-05-13)
 -----------------
