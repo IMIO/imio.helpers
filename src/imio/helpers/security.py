@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import Zope2
 from App.config import getConfiguration
 from collective.fingerpointing.config import AUDIT_MESSAGE
 from collective.fingerpointing.logger import log_info
@@ -11,13 +10,13 @@ from random import choice
 from random import sample
 from random import seed
 from time import time
-
 from zope.app.publication.zopepublication import ZopePublication
 from zope.component import getMultiAdapter
 
 import logging
 import os
 import string
+import Zope2
 
 
 logger = logging.getLogger("imio.helpers")
