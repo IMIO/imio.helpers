@@ -12,10 +12,12 @@ from types import FunctionType
 from zope.component import getAllUtilitiesRegisteredFor
 from zope.component import getUtility
 from zope.component import queryUtility
+from zope.globalrequest import getRequest
 from zope.ramcache.interfaces.ram import IRAMCache
 from zope.schema.interfaces import IVocabularyFactory
 
 import logging
+import md5
 
 
 logger = logging.getLogger('imio.helpers:cache')
@@ -193,6 +195,43 @@ def extract_wrapped(decorated):
 def setup_ram_cache(max_entries=100000, max_age=2400, cleanup_interval=600):
     """Can be called in IProcessStarting subscriber"""
     ramcache = queryUtility(IRAMCache)
+    import ipdb; ipdb.set_trace()
     logger.info('=> Setting ramcache parameters (maxEntries=%s, maxAge=%s, cleanupInterval=%s)' %
                 (max_entries, max_age, cleanup_interval))
     ramcache.update(maxEntries=max_entries, maxAge=max_age, cleanupInterval=cleanup_interval)
+
+
+def get_current_user_id(request=None):
+    """Try to get user_id from REQUEST or fallback to plone.api."""
+    user_id = None
+    try:
+        if request is None:
+            request = getRequest()
+        user_id = request["AUTHENTICATED_USER"].getId()
+    except Exception:
+        user_id = api.user.get_current().getId()
+    return user_id
+
+
+def get_plone_groups_for_user_cachekey(method, userId=None, the_objects=False):
+    '''cachekey method for self.get_plone_groups_for_user.'''
+    date = get_cachekey_volatile('Products.PloneMeeting.ToolPloneMeeting._users_groups_value')
+    return (date,
+            userId or get_current_user_id(getRequest()),
+            the_objects)
+
+
+@ram.cache(get_plone_groups_for_user_cachekey)
+def get_plone_groups_for_user(userId=None, the_objects=False):
+    """Just return user.getGroups but cached."""
+    if api.user.is_anonymous():
+        return []
+    user = userId and api.user.get(userId) or api.user.get_current()
+    if not hasattr(user, "getGroups"):
+        return []
+    if the_objects:
+        pg = api.portal.get_tool("portal_groups")
+        user_groups = pg.getGroupsByUserId(user.id)
+    else:
+        user_groups = user.getGroups()
+    return sorted(user_groups)
