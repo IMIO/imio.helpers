@@ -213,20 +213,20 @@ def get_current_user_id(request=None):
     return user_id
 
 
-def get_plone_groups_for_user_cachekey(method, userId=None, the_objects=False):
-    '''cachekey method for self.get_plone_groups_for_user.'''
+def get_plone_groups_for_user_cachekey(method, user_id=None, the_objects=False):
+    """cachekey method for self.get_plone_groups_for_user."""
     date = get_cachekey_volatile('Products.PloneMeeting.ToolPloneMeeting._users_groups_value')
     return (date,
-            userId or get_current_user_id(getRequest()),
+            user_id or get_current_user_id(getRequest()),
             the_objects)
 
 
 @ram.cache(get_plone_groups_for_user_cachekey)
-def get_plone_groups_for_user(userId=None, the_objects=False):
+def get_plone_groups_for_user(user_id=None, the_objects=False):
     """Just return user.getGroups but cached."""
     if api.user.is_anonymous():
         return []
-    user = userId and api.user.get(userId) or api.user.get_current()
+    user = user_id and api.user.get(user_id) or api.user.get_current()
     if not hasattr(user, "getGroups"):
         return []
     if the_objects:
