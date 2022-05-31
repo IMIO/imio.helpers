@@ -10,7 +10,7 @@ _ = MessageFactory('imio.helpers')
 def get_cachekey1(method, self, principal):
     return principal.id
 
-def get_cachekey2(method, self, principal, plugins, request=None):
+def get_cachekey2(method, self, principal, request=None):
     return principal.id
 
 def get_cachekey3(method, self, principal, request=None, **kwargs):
@@ -18,6 +18,12 @@ def get_cachekey3(method, self, principal, request=None, **kwargs):
 
 def get_cachekey4(method, self, plugins, user_id, name=None, request=None):
     return repr(plugins), user_id, name, str(getRequest()._debug)
+
+def get_cachekey5(method, self, plugins, user_id=None, login=None):
+    return repr(plugins), user_id, login
+
+def get_cachekey6(method, self, group_id):
+    return group_id
 
 
 from Products.PlonePAS.tools.groups import GroupsTool
@@ -33,3 +39,7 @@ decorator = ram.cache(get_cachekey3)
 PluggableAuthService._getGroupsForPrincipal = decorator(PluggableAuthService._getGroupsForPrincipal)
 decorator = ram.cache(get_cachekey4)
 PluggableAuthService._findUser = decorator(PluggableAuthService._findUser)
+decorator = ram.cache(get_cachekey5)
+PluggableAuthService._verifyUser = decorator(PluggableAuthService._verifyUser)
+decorator = ram.cache(get_cachekey6)
+GroupsTool.getGroupById = decorator(GroupsTool.getGroupById)
