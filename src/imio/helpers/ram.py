@@ -2,7 +2,9 @@
 
 from cPickle import dumps
 from DateTime import DateTime
+from plone import api
 from time import time
+from zope.globalrequest import getRequest
 from zope.ramcache.ram import caches
 from zope.ramcache.ram import RAMCache
 from zope.ramcache.ram import Storage
@@ -52,7 +54,13 @@ class IMIOStorage(Storage):
         result = []
 
         for ob in objects:
-            size = len(dumps(self._data[ob]))
+            try:
+                size = len(dumps(self._data[ob]))
+            except Exception as exc:
+                size = 0
+                api.portal.show_message(
+                    'Could not compute size for "%s", original exception was "%s"'
+                    % (repr(ob), repr(exc)), request=getRequest())
             hits = sum(entry[2] for entry in self._data[ob].itervalues())
             older_date = min(entry[1] for entry in self._data[ob].itervalues())
             result.append({'path': ob,
