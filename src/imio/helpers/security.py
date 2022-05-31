@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 from App.config import getConfiguration
 from collective.fingerpointing.config import AUDIT_MESSAGE
 from collective.fingerpointing.logger import log_info
@@ -12,7 +13,9 @@ from random import seed
 from time import time
 from zope.app.publication.zopepublication import ZopePublication
 from zope.component import getMultiAdapter
+from zope.globalrequest import getRequest
 
+import inspect
 import logging
 import os
 import string
@@ -139,3 +142,16 @@ def set_site_from_package_config(product_name):
         setSite(site)
         return site
     return None
+
+
+def counted_logger(logger_name=''):
+    """ """
+    caller = inspect.stack()[1][3]
+    logger = logging.getLogger("{0} ({1})".format(
+        logger_name, inspect.stack()[1][3]))
+    request = getRequest()
+    req_key = "counter_logger__{0}".format(caller.replace(' ', ''))
+    counter = request.get(req_key, 0) + 1
+    request.set(req_key, counter)
+    logger.info("Counter {0}".format(counter))
+    return logger
