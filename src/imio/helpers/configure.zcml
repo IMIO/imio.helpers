@@ -13,6 +13,7 @@
     <include package="plone.memoize" />
     <include package=".browser" />
     <include package=".fancytree" />
+    <include file="events.zcml" />
 
     <i18n:registerTranslations directory="locales" />
 
