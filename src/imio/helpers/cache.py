@@ -214,7 +214,7 @@ def get_current_user_id(request=None):
 
 def get_plone_groups_for_user_cachekey(method, user_id=None, the_objects=False):
     """cachekey method for self.get_plone_groups_for_user."""
-    date = get_cachekey_volatile('Products.PloneMeeting.ToolPloneMeeting._users_groups_value')
+    date = get_cachekey_volatile('_users_groups_value')
     return (date,
             user_id or get_current_user_id(getRequest()),
             the_objects)
