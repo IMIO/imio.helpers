@@ -21,3 +21,13 @@ def onPrincipalAddedToGroup(event):
 def onPrincipalRemovedFromGroup(event):
     """Invalidate the cachekey that manages users/groups associations."""
     invalidate_cachekey_volatile_for('_users_groups_value', get_again=True)
+
+
+def onGroupCreated(event):
+    """Invalidate the cachekey that manages users/groups associations."""
+    invalidate_cachekey_volatile_for('_users_groups_value', get_again=True)
+
+
+def onGroupDeleted(event):
+    """Invalidate the cachekey that manages users/groups associations."""
+    invalidate_cachekey_volatile_for('_users_groups_value', get_again=True)
