@@ -17,7 +17,7 @@ def get_cachekey1(method, self, principal):
     req = getRequest()
     if req is None:
         raise pmram.DontCache
-    date = get_cachekey_volatile('Products.PloneMeeting.ToolPloneMeeting._users_groups_value')
+    date = get_cachekey_volatile('_users_groups_value')
     return date, principal and principal.getId()
 
 
@@ -25,7 +25,7 @@ def get_cachekey2(method, self, principal, request=None):
     req = request or getRequest()
     if req is None:
         raise pmram.DontCache
-    date = get_cachekey_volatile('Products.PloneMeeting.ToolPloneMeeting._users_groups_value')
+    date = get_cachekey_volatile('_users_groups_value')
     return date, principal and principal.getId(), repr(req)
 
 
@@ -34,7 +34,7 @@ def get_cachekey3(method, self, principal, request=None, **kwargs):
     if req is None:
         raise pmram.DontCache
     try:
-        date = get_cachekey_volatile('Products.PloneMeeting.ToolPloneMeeting._users_groups_value')
+        date = get_cachekey_volatile('_users_groups_value')
     except api.portal.CannotGetPortalError:
         raise pmram.DontCache
     return date, principal and principal.getId()
@@ -45,7 +45,7 @@ def get_cachekey4(method, self, plugins, user_id, name=None, request=None):
     if req is None:
         raise pmram.DontCache
     try:
-        date = get_cachekey_volatile('Products.PloneMeeting.ToolPloneMeeting._users_groups_value')
+        date = get_cachekey_volatile('_users_groups_value')
     except api.portal.CannotGetPortalError:
         raise pmram.DontCache
     return date, repr(plugins), user_id, name, str(req and req._debug or '')
@@ -56,7 +56,7 @@ def get_cachekey5(method, self, plugins, user_id=None, login=None):
     if req is None:
         raise pmram.DontCache
 
-    date = get_cachekey_volatile('Products.PloneMeeting.ToolPloneMeeting._users_groups_value')
+    date = get_cachekey_volatile('_users_groups_value')
     return date, repr(plugins), user_id, login
 
 
@@ -65,7 +65,7 @@ def get_cachekey6(method, self, group_id):
     if req is None:
         raise pmram.DontCache
 
-    date = get_cachekey_volatile('Products.PloneMeeting.ToolPloneMeeting._users_groups_value')
+    date = get_cachekey_volatile('_users_groups_value')
     return date, group_id
 
 
