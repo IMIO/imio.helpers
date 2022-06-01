@@ -6,6 +6,9 @@ Changelog
 
 - `content.uuidToObject` will now return `None` instead an empty list if uuid not found.
   [gbastien]
+- Remove zope.app.publication dependency in `security.set_site_from_package_config` as it is now
+  removed since Plone >= 5.2.6
+  [aduchene]
 
 0.56 (2022-05-13)
 -----------------

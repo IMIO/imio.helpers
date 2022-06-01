@@ -11,7 +11,6 @@ from random import choice
 from random import sample
 from random import seed
 from time import time
-from zope.app.publication.zopepublication import ZopePublication
 from zope.component import getMultiAdapter
 from zope.globalrequest import getRequest
 
@@ -133,7 +132,7 @@ def set_site_from_package_config(product_name):
     if package_config and package_config.get('plone-path'):  # can be set on instance1 only or not at all
         db = Zope2.DB
         connection = db.open()
-        root_folder = connection.root().get(ZopePublication.root_name, None)
+        root_folder = connection.root().get('Application', None)
         site = root_folder.unrestrictedTraverse(package_config['plone-path'])
         try:
             from zope.app.component.hooks import setSite
