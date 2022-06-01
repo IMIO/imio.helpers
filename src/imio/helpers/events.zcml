@@ -8,9 +8,12 @@
     i18n_domain="imio.helpers">
 
   <!-- PAS events -->
+  <subscriber for="Products.PluggableAuthService.interfaces.events.IPrincipalCreatedEvent"
+              handler=".events.onPrincipalCreated" />
+  <subscriber for="Products.PluggableAuthService.interfaces.events.IPrincipalDeletedEvent"
+              handler=".events.onPrincipalDeleted" />
   <subscriber for="Products.PluggableAuthService.interfaces.events.IPrincipalAddedToGroupEvent"
               handler=".events.onPrincipalAddedToGroup" />
   <subscriber for="Products.PluggableAuthService.interfaces.events.IPrincipalRemovedFromGroupEvent"
               handler=".events.onPrincipalRemovedFromGroup" />
-
 </configure>
