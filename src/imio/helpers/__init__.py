@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from Acquisition import aq_get
 from imio.helpers.cache import get_cachekey_volatile
+from plone import api
 from plone.memoize import ram as pmram
 from Products.PlonePAS.plugins.role import GroupAwareRoleManager
 from Products.PlonePAS.tools.groups import GroupsTool
@@ -18,31 +18,36 @@ def get_cachekey1(method, self, principal):
     if req is None:
         raise pmram.DontCache
     date = get_cachekey_volatile('Products.PloneMeeting.ToolPloneMeeting._users_groups_value')
-
-    return date, principal.id
+    return date, principal and principal.getId()
 
 
 def get_cachekey2(method, self, principal, request=None):
-    req = getRequest()
+    req = request or getRequest()
     if req is None:
         raise pmram.DontCache
     date = get_cachekey_volatile('Products.PloneMeeting.ToolPloneMeeting._users_groups_value')
-    return date, principal.id
+    return date, principal and principal.getId(), repr(req)
 
 
 def get_cachekey3(method, self, principal, request=None, **kwargs):
-    req = getRequest()
+    req = request or getRequest()
     if req is None:
         raise pmram.DontCache
-    date = get_cachekey_volatile('Products.PloneMeeting.ToolPloneMeeting._users_groups_value')
-    return date, principal.id
+    try:
+        date = get_cachekey_volatile('Products.PloneMeeting.ToolPloneMeeting._users_groups_value')
+    except api.portal.CannotGetPortalError:
+        raise pmram.DontCache
+    return date, principal and principal.getId()
 
 
 def get_cachekey4(method, self, plugins, user_id, name=None, request=None):
-    req = getRequest()
+    req = request or getRequest()
     if req is None:
         raise pmram.DontCache
-    date = get_cachekey_volatile('Products.PloneMeeting.ToolPloneMeeting._users_groups_value')
+    try:
+        date = get_cachekey_volatile('Products.PloneMeeting.ToolPloneMeeting._users_groups_value')
+    except api.portal.CannotGetPortalError:
+        raise pmram.DontCache
     return date, repr(plugins), user_id, name, str(req and req._debug or '')
 
 
