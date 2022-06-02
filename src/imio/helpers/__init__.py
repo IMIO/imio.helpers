@@ -13,7 +13,7 @@ from zope.i18nmessageid import MessageFactory
 _ = MessageFactory('imio.helpers')
 
 
-def get_cachekey1(method, self, principal):
+def GroupsTool__getGroupsForPrincipal_cachekey(method, self, principal):
     req = getRequest()
     if req is None:
         raise pmram.DontCache
@@ -21,7 +21,7 @@ def get_cachekey1(method, self, principal):
     return date, principal and principal.getId()
 
 
-def get_cachekey2(method, self, principal, request=None):
+def GroupAwareRoleManager__getRolesForPrincipal_cachekey(method, self, principal, request=None):
     req = request or getRequest()
     if req is None:
         raise pmram.DontCache
@@ -29,7 +29,7 @@ def get_cachekey2(method, self, principal, request=None):
     return date, principal and principal.getId(), repr(req)
 
 
-def get_cachekey3(method, self, principal, request=None, **kwargs):
+def PluggableAuthService__getGroupsForPrincipal_cachekey(method, self, principal, request=None, **kwargs):
     req = request or getRequest()
     if req is None:
         raise pmram.DontCache
@@ -40,7 +40,7 @@ def get_cachekey3(method, self, principal, request=None, **kwargs):
     return date, principal and principal.getId()
 
 
-def get_cachekey4(method, self, plugins, user_id, name=None, request=None):
+def PluggableAuthService__findUser_cachekey(method, self, plugins, user_id, name=None, request=None):
     req = request or getRequest()
     if req is None:
         raise pmram.DontCache
@@ -51,7 +51,7 @@ def get_cachekey4(method, self, plugins, user_id, name=None, request=None):
     return date, repr(plugins), user_id, name, str(req and req._debug or '')
 
 
-def get_cachekey5(method, self, plugins, user_id=None, login=None):
+def PluggableAuthService__verifyUser_cachekey(method, self, plugins, user_id=None, login=None):
     req = getRequest()
     if req is None:
         raise pmram.DontCache
@@ -60,7 +60,7 @@ def get_cachekey5(method, self, plugins, user_id=None, login=None):
     return date, repr(plugins), user_id, login
 
 
-def get_cachekey6(method, self, group_id):
+def GroupsTool_getGroupById_cachekey(method, self, group_id):
     req = getRequest()
     if req is None:
         raise pmram.DontCache
@@ -69,15 +69,15 @@ def get_cachekey6(method, self, group_id):
     return date, group_id
 
 
-decorator = pmram.cache(get_cachekey1)
+decorator = pmram.cache(GroupsTool__getGroupsForPrincipal_cachekey)
 GroupsTool.getGroupsForPrincipal = decorator(GroupsTool.getGroupsForPrincipal)
-decorator = pmram.cache(get_cachekey2)
+decorator = pmram.cache(GroupAwareRoleManager__getRolesForPrincipal_cachekey)
 GroupAwareRoleManager.getRolesForPrincipal = decorator(GroupAwareRoleManager.getRolesForPrincipal)
-decorator = pmram.cache(get_cachekey3)
+decorator = pmram.cache(PluggableAuthService__getGroupsForPrincipal_cachekey)
 PluggableAuthService._getGroupsForPrincipal = decorator(PluggableAuthService._getGroupsForPrincipal)
-decorator = pmram.cache(get_cachekey4)
+decorator = pmram.cache(PluggableAuthService__findUser_cachekey)
 PluggableAuthService._findUser = decorator(PluggableAuthService._findUser)
-decorator = pmram.cache(get_cachekey5)
+decorator = pmram.cache(PluggableAuthService__verifyUser_cachekey)
 PluggableAuthService._verifyUser = decorator(PluggableAuthService._verifyUser)
-decorator = pmram.cache(get_cachekey6)
+decorator = pmram.cache(GroupsTool_getGroupById_cachekey)
 GroupsTool.getGroupById = decorator(GroupsTool.getGroupById)
