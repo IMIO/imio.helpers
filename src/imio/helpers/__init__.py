@@ -9,8 +9,11 @@ from Products.PluggableAuthService.PluggableAuthService import PluggableAuthServ
 from zope.globalrequest import getRequest
 from zope.i18nmessageid import MessageFactory
 
+import os
+import logging
 
 _ = MessageFactory('imio.helpers')
+logger = logging.getLogger('imio.helpers')
 
 
 def GroupsTool__getGroupsForPrincipal_cachekey(method, self, principal):
@@ -69,15 +72,17 @@ def GroupsTool_getGroupById_cachekey(method, self, group_id):
     return date, group_id
 
 
-decorator = pmram.cache(GroupsTool__getGroupsForPrincipal_cachekey)
-GroupsTool.getGroupsForPrincipal = decorator(GroupsTool.getGroupsForPrincipal)
-decorator = pmram.cache(GroupAwareRoleManager__getRolesForPrincipal_cachekey)
-GroupAwareRoleManager.getRolesForPrincipal = decorator(GroupAwareRoleManager.getRolesForPrincipal)
-decorator = pmram.cache(PluggableAuthService__getGroupsForPrincipal_cachekey)
-PluggableAuthService._getGroupsForPrincipal = decorator(PluggableAuthService._getGroupsForPrincipal)
-decorator = pmram.cache(PluggableAuthService__findUser_cachekey)
-PluggableAuthService._findUser = decorator(PluggableAuthService._findUser)
-decorator = pmram.cache(PluggableAuthService__verifyUser_cachekey)
-PluggableAuthService._verifyUser = decorator(PluggableAuthService._verifyUser)
-decorator = pmram.cache(GroupsTool_getGroupById_cachekey)
-GroupsTool.getGroupById = decorator(GroupsTool.getGroupById)
+if os.getenv('decorate_acl_methods', 'Nope') in ('True', 'true'):
+    logger.info('DECORATING various acl related methods with cache')
+    decorator = pmram.cache(GroupsTool__getGroupsForPrincipal_cachekey)
+    GroupsTool.getGroupsForPrincipal = decorator(GroupsTool.getGroupsForPrincipal)
+    decorator = pmram.cache(GroupAwareRoleManager__getRolesForPrincipal_cachekey)
+    GroupAwareRoleManager.getRolesForPrincipal = decorator(GroupAwareRoleManager.getRolesForPrincipal)
+    decorator = pmram.cache(PluggableAuthService__getGroupsForPrincipal_cachekey)
+    PluggableAuthService._getGroupsForPrincipal = decorator(PluggableAuthService._getGroupsForPrincipal)
+    decorator = pmram.cache(PluggableAuthService__findUser_cachekey)
+    PluggableAuthService._findUser = decorator(PluggableAuthService._findUser)
+    decorator = pmram.cache(PluggableAuthService__verifyUser_cachekey)
+    PluggableAuthService._verifyUser = decorator(PluggableAuthService._verifyUser)
+    decorator = pmram.cache(GroupsTool_getGroupById_cachekey)
+    GroupsTool.getGroupById = decorator(GroupsTool.getGroupById)

@@ -9,6 +9,11 @@ Changelog
 - Remove zope.app.publication dependency in `security.set_site_from_package_config` as it is now
   removed since Plone >= 5.2.6
   [aduchene]
+- Added `IMIORAMCache` using `IMIOStorage` to extend used cache duration and
+  improve displayed statistics
+  [gbastien]
+- Added cache on various acl methods following `decorate_acl_methods` env variable
+  [gbastien, sgeulette]
 
 0.56 (2022-05-13)
 -----------------
