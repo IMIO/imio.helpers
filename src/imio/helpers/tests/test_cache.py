@@ -23,6 +23,8 @@ from zope.component import getUtility
 from zope.component import queryUtility
 from zope.schema.interfaces import IVocabularyFactory
 
+import time
+
 
 memPropName = Memojito.propname
 
@@ -186,6 +188,13 @@ class TestCacheModule(IntegrationTestCase):
         invalidate_cachekey_volatile_for('test_cache.ramCachedMethod')
         # no cleanup, method still in cache storage
         self.assertTrue('imio.helpers.tests.test_cache.ramCachedMethod' in cache_data)
+
+    def test_get_cachekey_volatile_ttl(self):
+        """Check use of parameter "ttl"."""
+        date = get_cachekey_volatile("method")
+        time.sleep(2)
+        self.assertEqual(date, get_cachekey_volatile("method"))
+        self.assertNotEqual(date, get_cachekey_volatile("method", ttl=1))
 
     def test_invalidate_cachekey_volatile_for(self):
         """Helper method that will invalidate a given volatile."""

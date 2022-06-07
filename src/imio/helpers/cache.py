@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
+
 from datetime import datetime
+from datetime import timedelta
 from persistent.mapping import PersistentMapping
 from plone import api
 from plone.i18n.normalizer import IIDNormalizer
@@ -60,10 +62,11 @@ def cleanForeverCache():
     _memos.clear()
 
 
-def get_cachekey_volatile(name, method=None):
+def get_cachekey_volatile(name, method=None, ttl=0):
     """Helper for using a volatile corresponding to p_name
        to be used as cachekey stored in a volatile.
-       If it exists, we return the value, either we store datetime.now()."""
+       If it exists, we return the value, either we store datetime.now().
+       If p_ttl (time to live) is given, a cachekey older that ttl is updated."""
     portal = api.portal.get()
     # use max_length of VOLATILE_NAME_MAX_LENGTH to avoid cropped names
     # that could lead to having 2 names beginning with same part using same volatile...
@@ -75,8 +78,10 @@ def get_cachekey_volatile(name, method=None):
         portal._volatile_cache_keys = PersistentMapping()
         volatiles = portal._volatile_cache_keys
     date = volatiles.get(volatile_name)
-    if not date:
-        date = datetime.now()
+    now = datetime.now()
+    # compute new date if None or if using ttl and ttl is stale
+    if not date or (ttl and date + timedelta(seconds=ttl) < now):
+        date = now
         volatiles[volatile_name] = date
     # store caller method path so it will be invalidated in invalidate_cachekey_volatile_for
     if method:

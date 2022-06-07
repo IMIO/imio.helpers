@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
+
 from imio.helpers.interfaces import IListContainedDexterityObjectsForDisplay
 from plone import api
+from plone.app.caching.browser.controlpanel import RAMCache
 from plone.batching import Batch
 from plone.dexterity.browser.view import DefaultView
 from Products.Five import BrowserView
@@ -53,3 +55,11 @@ class ContainerFolderListingView(BrowserView):
 
     def update_table(self):
         return self.context.restrictedTraverse('@@imio-folder-listing-table').index()
+
+
+class IMIORAMCache(RAMCache):
+    """ """
+
+    def update(self):
+        super(IMIORAMCache, self).update()
+        self.stats = self.ramCache.getStatistics()

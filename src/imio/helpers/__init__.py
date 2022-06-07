@@ -9,8 +9,9 @@ from Products.PluggableAuthService.PluggableAuthService import PluggableAuthServ
 from zope.globalrequest import getRequest
 from zope.i18nmessageid import MessageFactory
 
-import os
 import logging
+import os
+
 
 _ = MessageFactory('imio.helpers')
 logger = logging.getLogger('imio.helpers')

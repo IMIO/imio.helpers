@@ -64,4 +64,15 @@
     <utility component=".vocabularies.SortedUsersFactory"
              name="imio.helpers.SortedUsers" />
 
+    <!-- Upgrade steps -->
+    <genericsetup:upgradeSteps
+      source="1"
+      destination="2"
+      profile="imio.helpers:default">
+      <genericsetup:upgradeDepends
+          title="Register BrowserLayer"
+          description=""
+          import_steps="browserlayer" />
+    </genericsetup:upgradeSteps>
+
 </configure>

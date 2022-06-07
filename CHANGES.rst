@@ -14,6 +14,15 @@ Changelog
   [gbastien]
 - Added cache on various acl methods following `decorate_acl_methods` env variable
   [gbastien, sgeulette]
+- Added IIMIOLayer BrowserLayer (need to execute upgrade step to 2).
+  [gbastien]
+- Override `caching-controlpanel-ramcache` to compute totals for `Hits`, `Misses`,
+  `Size` and `Entries`, display `Older entry`, do not break to display statistics
+  when a pickle error occurs but add a portal message.
+  [gbastien]
+- Added parameter `ttl=0` to `cache.get_cachekey_volatile` this way a date older
+  than given `ttl` (in seconds) will be recomputed.
+  [gbastien]
 
 0.56 (2022-05-13)
 -----------------
