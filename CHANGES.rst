@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.57 (unreleased)
+0.57 (2022-06-10)
 -----------------
 
 - Added `NoEscapeLinkColumn` as base for link column rendering html.
