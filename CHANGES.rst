@@ -4,6 +4,9 @@ Changelog
 0.57 (unreleased)
 -----------------
 
+- Added `NoEscapeLinkColumn` as base for link column rendering html.
+  Escape must be done in inherited column.
+  [sgeulette]
 - `content.uuidToObject` will now return `None` instead an empty list if uuid not found.
   [gbastien]
 - Remove zope.app.publication dependency in `security.set_site_from_package_config` as it is now
