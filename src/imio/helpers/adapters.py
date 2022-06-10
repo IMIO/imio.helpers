@@ -90,3 +90,23 @@ class MissingTerms(MissingTermsMixin):
             if term.token == token:
                 return term
         raise LookupError(token)
+
+
+try:
+    from z3c.table.column import LinkColumn
+    from html import escape
+
+    class NoEscapeLinkColumn(LinkColumn):
+        """Do not escape link content (made in z3c.table >= 2.1.1)"""
+
+        def renderCell(self, item):
+            # setup a tag
+            return '<a href="%s"%s%s%s>%s</a>' % (
+                escape(self.getLinkURL(item)),
+                self.getLinkTarget(item),
+                self.getLinkCSS(item),
+                self.getLinkTitle(item),  # internally escaped
+                self.getLinkContent(item),  # originally escaped
+            )
+except ImportError:
+    pass
