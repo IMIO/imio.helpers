@@ -1,15 +1,18 @@
 # -*- coding: utf-8 -*-
 
+from App.config import _config
 from imio.helpers.security import fplog
 from imio.helpers.security import generate_password
 from imio.helpers.security import get_environment
 from imio.helpers.security import get_user_from_criteria
 from imio.helpers.security import get_zope_root
 from imio.helpers.security import is_develop_environment
+from imio.helpers.security import set_site_from_package_config
 from imio.helpers.security import setup_logger
 from imio.helpers.testing import IntegrationTestCase
 from OFS.Application import Application
 from plone import api
+from Products.CMFPlone.Portal import PloneSite
 
 import os
 import re
@@ -69,3 +72,11 @@ class TestSecurityModule(IntegrationTestCase):
     def test_get_zope_root(self):
         app = get_zope_root()
         self.assertIsInstance(app, Application)
+
+    def test_set_site_from_package_config(self):
+        # no config
+        self.assertIsNone(set_site_from_package_config('imio.helpers'))
+        # we add config
+        _config.product_config = {'imio.helpers': {'plone-path': 'plone'}}
+        site = set_site_from_package_config('imio.helpers')
+        self.assertIsInstance(site, PloneSite)
