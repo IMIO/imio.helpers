@@ -6,18 +6,6 @@ Changelog
 
 - Added `get_zope_root` to get zope app.
   [sgeulette]
-
-0.57 (2022-06-10)
------------------
-
-- Added `NoEscapeLinkColumn` as base for link column rendering html.
-  Escape must be done in inherited column.
-  [sgeulette]
-- `content.uuidToObject` will now return `None` instead an empty list if uuid not found.
-  [gbastien]
-- Remove zope.app.publication dependency in `security.set_site_from_package_config` as it is now
-  removed since Plone >= 5.2.6
-  [aduchene]
 - Added `IMIORAMCache` using `IMIOStorage` to extend used cache duration and
   improve displayed statistics
   [gbastien]
@@ -32,6 +20,18 @@ Changelog
 - Added parameter `ttl=0` to `cache.get_cachekey_volatile` this way a date older
   than given `ttl` (in seconds) will be recomputed.
   [gbastien]
+
+0.57 (2022-06-10)
+-----------------
+
+- Added `NoEscapeLinkColumn` as base for link column rendering html.
+  Escape must be done in inherited column.
+  [sgeulette]
+- `content.uuidToObject` will now return `None` instead an empty list if uuid not found.
+  [gbastien]
+- Remove zope.app.publication dependency in `security.set_site_from_package_config` as it is now
+  removed since Plone >= 5.2.6
+  [aduchene]
 
 0.56 (2022-05-13)
 -----------------
