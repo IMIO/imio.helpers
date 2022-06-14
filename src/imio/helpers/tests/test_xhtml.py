@@ -839,14 +839,14 @@ class TestXHTMLModule(IntegrationTestCase):
             '<table><tr><td>Text <span class="to-hide">hidden</span></td>' \
             '<td>Text not hidden</td></tr></table>'
         expected = '<p>Text <span class="to-hide"></span> some other text.</p>' \
-            '<p>Text <span class="to-hide"><span></span></span> some other text.</p>' \
+            '<p>Text <span class="to-hide"></span> some other text.</p>' \
             '<p><span class="to-hide"></span> some other text.</p>' \
             '<p><span class="to-hide"></span></p>' \
             '<p><span class="to-hide"></span></p>' \
             '<table><tr><td>Text <span class="to-hide"></span></td>' \
             '<td>Text not hidden</td></tr></table>'
         expected_new_content = '<p>Text <span class="to-hide">replaced</span> some other text.</p>' \
-            '<p>Text <span class="to-hide">replaced<span></span></span> some other text.</p>' \
+            '<p>Text <span class="to-hide">replaced</span> some other text.</p>' \
             '<p><span class="to-hide">replaced</span> some other text.</p>' \
             '<p><span class="to-hide">replaced</span></p>' \
             '<p><span class="to-hide">replaced</span></p>' \
@@ -857,7 +857,7 @@ class TestXHTMLModule(IntegrationTestCase):
         res = replace_content(text, css_class="to-hide", new_content=u"replaced")
         self.assertEqual(res, expected_new_content)
         text_link = '<p>Text <span class="to-hide">hidden <strong>hidden</strong></span></p>'
-        expected_link = '<p>Text <span class="to-hide"><span></span>' \
+        expected_link = '<p>Text <span class="to-hide">' \
             '<a href="https://python.org" title="Explanation">replaced</a></span></p>'
         res = replace_content(
             text_link,
@@ -867,3 +867,12 @@ class TestXHTMLModule(IntegrationTestCase):
                 "href": "https://python.org",
                 "title": u"Explanation"})
         self.assertEqual(res, expected_link)
+        # every sub content is removed
+        text_with_sub = '<p>Text <span class="to-hide"><span class="highlight">hidden</span>' \
+            '</span> some other text.</p>'
+        expected_text_with_sub = '<p>Text <span class="to-hide">replaced</span> some other text.</p>'
+        res = replace_content(
+            text_with_sub,
+            css_class="to-hide",
+            new_content=u"replaced")
+        self.assertEqual(res, expected_text_with_sub)

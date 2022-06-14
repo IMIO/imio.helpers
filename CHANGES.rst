@@ -8,6 +8,9 @@ Changelog
   [sgeulette]
 - Added `zope_app` parameter in `set_site_from_package_config`.
   [sgeulette]
+- Fixed `xhtml.replace_content`, make sure the entire content is replaced
+  including sub tags.
+  [gbastien]
 
 0.57 (2022-06-10)
 -----------------
