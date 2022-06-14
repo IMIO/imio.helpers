@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.58 (unreleased)
+0.58 (2022-06-14)
 -----------------
 
 - Added `get_zope_root` to get zope app.
