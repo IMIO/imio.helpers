@@ -4,8 +4,8 @@ Changelog
 0.58 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Added `get_zope_root` to get zope app.
+  [sgeulette]
 
 0.57 (2022-06-10)
 -----------------

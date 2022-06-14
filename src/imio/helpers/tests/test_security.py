@@ -4,9 +4,11 @@ from imio.helpers.security import fplog
 from imio.helpers.security import generate_password
 from imio.helpers.security import get_environment
 from imio.helpers.security import get_user_from_criteria
+from imio.helpers.security import get_zope_root
 from imio.helpers.security import is_develop_environment
 from imio.helpers.security import setup_logger
 from imio.helpers.testing import IntegrationTestCase
+from OFS.Application import Application
 from plone import api
 
 import os
@@ -63,3 +65,7 @@ class TestSecurityModule(IntegrationTestCase):
     def test_setup_logger(self):
         # just call it to check that it is not broken
         self.assertIsNone(setup_logger())
+
+    def test_get_zope_root(self):
+        app = get_zope_root()
+        self.assertIsInstance(app, Application)
