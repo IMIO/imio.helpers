@@ -116,6 +116,15 @@ def get_user_from_criteria(context, email=None, fullname=None):
     return hunter.searchUsers(**criteria)
 
 
+def get_zope_root():
+    """Get zope root from nowhere.
+    Can be useful in IProcessStarting subscriber...
+    """
+    db = Zope2.DB
+    connection = db.open()
+    return connection.root().get('Application', None)
+
+
 def set_site_from_package_config(product_name):
     """Set site context from plone-path given a product-config zope config.
     Can be used in an IProcessStarting subscriber...
@@ -130,9 +139,7 @@ def set_site_from_package_config(product_name):
     config = getattr(getConfiguration(), 'product_config', {})
     package_config = config.get(product_name)
     if package_config and package_config.get('plone-path'):  # can be set on instance1 only or not at all
-        db = Zope2.DB
-        connection = db.open()
-        root_folder = connection.root().get('Application', None)
+        root_folder = get_zope_root()
         site = root_folder.unrestrictedTraverse(package_config['plone-path'])
         try:
             from zope.app.component.hooks import setSite

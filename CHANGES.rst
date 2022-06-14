@@ -1,7 +1,13 @@
 Changelog
 =========
 
-0.57 (unreleased)
+0.58 (unreleased)
+-----------------
+
+- Added `get_zope_root` to get zope app.
+  [sgeulette]
+
+0.57 (2022-06-10)
 -----------------
 
 - Added `NoEscapeLinkColumn` as base for link column rendering html.
