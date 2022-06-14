@@ -122,7 +122,7 @@ def get_zope_root():
     return connection.root().get('Application', None)
 
 
-def set_site_from_package_config(product_name):
+def set_site_from_package_config(product_name, zope_app=None):
     """Set site context from plone-path given a product-config zope config.
     Can be used in an IProcessStarting subscriber...
 
@@ -131,13 +131,15 @@ def set_site_from_package_config(product_name):
     </product-config>
 
     :param product_name: configured product name string
+    :param zope_app: zope application (to avoid to open a second connection if not necessary)
     :return: portal object if defined or None
     """
     config = getattr(getConfiguration(), 'product_config', {})
     package_config = config.get(product_name)
     if package_config and package_config.get('plone-path'):  # can be set on instance1 only or not at all
-        root_folder = get_zope_root()
-        site = root_folder.unrestrictedTraverse(package_config['plone-path'])
+        if not zope_app:
+            zope_app = get_zope_root()
+        site = zope_app.unrestrictedTraverse(package_config['plone-path'])
         try:
             from zope.app.component.hooks import setSite
         except ImportError:

@@ -6,6 +6,8 @@ Changelog
 
 - Added `get_zope_root` to get zope app.
   [sgeulette]
+- Added `zope_app` parameter in `set_site_from_package_config`.
+  [sgeulette]
 
 0.57 (2022-06-10)
 -----------------
