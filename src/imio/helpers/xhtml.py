@@ -110,6 +110,9 @@ def replace_content(xhtml_content,
         elts = [elt for elt in main_elt.iter()]
         for elt in elts:
             is_main_elt = elt == main_elt
+            # make sure elt does not contain sub element
+            for sub_elt in elt.getchildren():
+                elt.remove(sub_elt)
             if is_main_elt:
                 if new_content_link:
                     elt.text = u""

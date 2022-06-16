@@ -1,13 +1,9 @@
 Changelog
 =========
 
-0.58 (unreleased)
+0.59 (unreleased)
 -----------------
 
-- Added `get_zope_root` to get zope app.
-  [sgeulette]
-- Added `zope_app` parameter in `set_site_from_package_config`.
-  [sgeulette]
 - Added `IMIORAMCache` using `IMIOStorage` to extend used cache duration and
   improve displayed statistics
   [gbastien]
@@ -21,6 +17,17 @@ Changelog
   [gbastien]
 - Added parameter `ttl=0` to `cache.get_cachekey_volatile` this way a date older
   than given `ttl` (in seconds) will be recomputed.
+
+
+0.58 (2022-06-14)
+-----------------
+
+- Added `get_zope_root` to get zope app.
+  [sgeulette]
+- Added `zope_app` parameter in `set_site_from_package_config`.
+  [sgeulette]
+- Fixed `xhtml.replace_content`, make sure the entire content is replaced
+  including sub tags.
   [gbastien]
 
 0.57 (2022-06-10)
