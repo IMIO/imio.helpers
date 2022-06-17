@@ -430,13 +430,16 @@ def storeImagesLocally(context,
                        store_external_images=True,
                        store_internal_images=True,
                        pretty_print=False,
-                       force_resolve_uid=False):
+                       force_resolve_uid=False,
+                       replace_not_found_image=True):
     """If images are found in the given p_xhtmlContent,
        we download it and stored it in p_context, this way we ensure that it will
        always be available in case the external/internal image image disappear.
        If p_store_external_images is True, we retrieve external image and store it
        in p_context, if p_store_internal_images is True, we do the same for internal
-       images."""
+       images.
+       If p_replace_not_found_image is True, an image holding text "Image not available"
+       will be used if the image could not be retrieved."""
 
     def _handle_internal_image(img_src):
         """ """
@@ -553,7 +556,13 @@ def storeImagesLocally(context,
             filename, data = _handle_internal_image(img_src)
 
         if not filename:
-            continue
+            if replace_not_found_image:
+                filename = "imageNotFound.jpg"
+                f = open(os.path.join(os.path.dirname(__file__), filename), 'r')
+                data = f.read()
+                f.close()
+            else:
+                continue
         changed = True
 
         # create image
