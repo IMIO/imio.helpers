@@ -4,8 +4,8 @@ Changelog
 0.59 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Added `escaped=True` param on `xhtml.object_link`.
+  [sgeulette]
 
 0.58 (2022-06-14)
 -----------------
