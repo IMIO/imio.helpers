@@ -6,6 +6,8 @@ Changelog
 
 - Added `escaped=True` param on `xhtml.object_link`.
   [sgeulette]
+- Require a version of `future` recent enough so `html.escape` is available.
+  [gbastien]
 
 0.58 (2022-06-14)
 -----------------
