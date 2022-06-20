@@ -8,6 +8,12 @@ Changelog
   [sgeulette]
 - Require a version of `future` recent enough so `html.escape` is available.
   [gbastien]
+- Added parameter `replace_not_found_image=True` to `xhtml.storeImagesLocally`,
+  when `True` (default) and an image could not be retrieved,
+  a `Not found` image will be used. This solves problem when copy/paste a private
+  image from another site, available in the browser because of shared
+  authentication but not retrievable.
+  [gbastien]
 
 0.58 (2022-06-14)
 -----------------
