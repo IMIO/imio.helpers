@@ -6,6 +6,8 @@ Changelog
 
 - Added `escaped=True` param on `xhtml.object_link`.
   [sgeulette]
+- Require a version of `future` recent enough so `html.escape` is available.
+  [gbastien]
 - Added parameter `replace_not_found_image=True` to `xhtml.storeImagesLocally`,
   when `True` (default) and an image could not be retrieved,
   a `Not found` image will be used. This solves problem when copy/paste a private
