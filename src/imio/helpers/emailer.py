@@ -8,8 +8,6 @@ from email.utils import parseaddr
 from imio.helpers import _
 from imio.helpers.content import safe_encode
 from plone import api
-from Products.CMFDefault.exceptions import EmailAddressInvalid
-from Products.CMFDefault.utils import checkEmailAddress
 from Products.CMFPlone.utils import safe_unicode
 from smtplib import SMTPException
 from zope import schema
@@ -19,6 +17,13 @@ import csv
 import logging
 import socket
 
+
+try:
+    from Products.CMFDefault.exceptions import EmailAddressInvalid
+    from Products.CMFDefault.utils import checkEmailAddress
+except ImportError:
+    from Products.CMFPlone.RegistrationTool import checkEmailAddress
+    from Products.CMFPlone.RegistrationTool import EmailAddressInvalid
 
 logger = logging.getLogger("imio.helpers")
 EMAIL_CHARSET = 'utf-8'
