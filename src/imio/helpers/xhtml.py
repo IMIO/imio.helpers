@@ -528,10 +528,12 @@ def storeImagesLocally(context,
            ';base64,' not in original_img_src:
             continue
         filename = data = None
+        handled = False
         # external images
         if store_external_images and not original_img_src.startswith(portal_url) and \
            'resolveuid' not in original_img_src:
             filename, data = _handle_external_image(original_img_src)
+            handled = True
 
         # image in portal but not already stored in context
         # handle images using resolveuid
@@ -554,15 +556,20 @@ def storeImagesLocally(context,
            img_src.startswith(portal_url) and \
            not img_src.startswith(context_url):
             filename, data = _handle_internal_image(img_src)
+            handled = True
 
         if not filename:
-            if replace_not_found_image:
-                filename = "imageNotFound.jpg"
-                f = open(os.path.join(os.path.dirname(__file__), filename), 'r')
-                data = f.read()
-                f.close()
+            if handled:
+                if replace_not_found_image:
+                    filename = "imageNotFound.jpg"
+                    f = open(os.path.join(os.path.dirname(__file__), filename), 'r')
+                    data = f.read()
+                    f.close()
+                else:
+                    continue
             else:
                 continue
+
         changed = True
 
         # create image
