@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.59 (unreleased)
+0.59 (2022-06-21)
 -----------------
 
 - Added `escaped=True` param on `xhtml.object_link`.
