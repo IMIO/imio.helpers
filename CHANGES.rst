@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.60 (unreleased)
+0.60 (2022-06-24)
 -----------------
 
 - Handled unfound site in `set_site_from_package_config`.
