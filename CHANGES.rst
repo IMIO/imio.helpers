@@ -4,8 +4,8 @@ Changelog
 0.60 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Handled unfound site in `set_site_from_package_config`.
+  [sgeulette]
 
 0.59 (2022-06-21)
 -----------------

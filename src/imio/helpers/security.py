@@ -139,7 +139,10 @@ def set_site_from_package_config(product_name, zope_app=None):
     if package_config and package_config.get('plone-path'):  # can be set on instance1 only or not at all
         if not zope_app:
             zope_app = get_zope_root()
-        site = zope_app.unrestrictedTraverse(package_config['plone-path'])
+        try:
+            site = zope_app.unrestrictedTraverse(package_config['plone-path'])
+        except KeyError:  # site not found
+            return None
         try:
             from zope.app.component.hooks import setSite
         except ImportError:
