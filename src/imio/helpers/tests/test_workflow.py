@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
+from imio.helpers.testing import IntegrationTestCase
+from imio.helpers.workflow import do_transitions
 from imio.helpers.workflow import get_state_infos
 from imio.helpers.workflow import get_transitions
-from imio.helpers.workflow import do_transitions
-from imio.helpers.testing import IntegrationTestCase
 from plone import api
 
 
