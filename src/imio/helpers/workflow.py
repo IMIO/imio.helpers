@@ -11,6 +11,21 @@ import logging
 logger = logging.getLogger('imio.helpers.content')
 
 
+def do_transitions(obj, transitions, warn=False):
+    """
+        Apply multiple transitions on obj
+    """
+    wkf_tool = api.portal.get_tool("portal_workflow")
+    if not isinstance(transitions, (list, tuple)):
+        transitions = [transitions]
+    for tr in transitions:
+        try:
+            wkf_tool.doActionFor(obj, tr)
+        except WorkflowException as exc:
+            if warn:
+                logger.warn("Cannot apply transition '%s' on obj '%s': '%s'" % (tr, obj, exc))
+
+
 def get_state_infos(obj):
     """ """
     wkf_tool = api.portal.get_tool('portal_workflow')
@@ -56,18 +71,3 @@ def load_workflow_from_package(wkf_name, profile_id):
         logger.error("Cannot import xml: '{}'".format(err))
         return False
     return True
-
-
-def do_transitions(obj, transitions, warn=False):
-    """
-        Apply multiple transitions on obj
-    """
-    wkf_tool = api.portal.get_tool("portal_workflow")
-    if not isinstance(transitions, (list, tuple)):
-        transitions = [transitions]
-    for tr in transitions:
-        try:
-            wkf_tool.doActionFor(obj, tr)
-        except WorkflowException as exc:
-            if warn:
-                logger.warn("Cannot apply transition '%s' on obj '%s': '%s'" % (tr, obj, exc))
