@@ -2,6 +2,7 @@
 from plone import api
 from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.CMFPlone.utils import safe_unicode
+from Products.GenericSetup.utils import importObjects
 from zope.i18n import translate
 
 import logging
@@ -29,6 +30,34 @@ def get_transitions(obj):
        the available transitions."""
     wf_tool = api.portal.get_tool('portal_workflow')
     return [tr["id"] for tr in wf_tool.getTransitionsFor(obj)]
+
+
+def load_workflow_from_package(wkf_name, profile_id):
+    """Loads a workflow from his xml definition.
+    :param wkf_name: workflow id
+    :param profile_id: package profile id
+    :return: status as boolean
+    """
+    wkf_tool = api.portal.get_tool('portal_workflow')
+    wkf_obj = wkf_tool.get(wkf_name)
+    if wkf_obj is None:
+        logger.error("Cannot find '{}' workflow name in portal".format(wkf_name))
+        return False
+    ps_tool = api.portal.get_tool('portal_setup')
+    try:
+        context = ps_tool._getImportContext(profile_id, True)
+    except KeyError:
+        logger.error("Cannot find '{}' profile id".format(profile_id))
+        return False
+    # ps_tool.applyContext(context)  # necessary ?
+    try:
+        importObjects(wkf_obj, 'workflows/', context)
+    except Exception as err:
+        logger.error("Cannot import xml: '{}'".format(err))
+        return False
+    return True
+
+
 
 
 def do_transitions(obj, transitions, warn=False):

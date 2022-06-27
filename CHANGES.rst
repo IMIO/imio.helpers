@@ -6,6 +6,8 @@ Changelog
 
 - Moved workflow related functions from content to workflow module.
   [sgeulette]
+- Added `workflow.load_workflow_from_package` to reload a single workflow.
+  [sgeulette]
 
 0.60 (2022-06-24)
 -----------------
