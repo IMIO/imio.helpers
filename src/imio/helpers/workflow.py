@@ -58,8 +58,6 @@ def load_workflow_from_package(wkf_name, profile_id):
     return True
 
 
-
-
 def do_transitions(obj, transitions, warn=False):
     """
         Apply multiple transitions on obj
