@@ -4,8 +4,8 @@ Changelog
 0.61 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Moved workflow related functions from content to workflow module.
+  [sgeulette]
 
 0.60 (2022-06-24)
 -----------------

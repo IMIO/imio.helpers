@@ -12,8 +12,6 @@ from imio.helpers.content import get_from_annotation
 from imio.helpers.content import get_object
 from imio.helpers.content import get_relations
 from imio.helpers.content import get_schema_fields
-from imio.helpers.content import get_state_infos
-from imio.helpers.content import get_transitions
 from imio.helpers.content import get_user_fullname
 from imio.helpers.content import get_vocab
 from imio.helpers.content import get_vocab_values
@@ -25,7 +23,6 @@ from imio.helpers.content import richtextval
 from imio.helpers.content import safe_delattr
 from imio.helpers.content import safe_encode
 from imio.helpers.content import set_to_annotation
-from imio.helpers.content import transitions
 from imio.helpers.content import uuidsToCatalogBrains
 from imio.helpers.content import uuidsToObjects
 from imio.helpers.content import uuidToCatalogBrain
@@ -78,18 +75,6 @@ class TestContentModule(IntegrationTestCase):
         # All parameters
         self.assertEqual(obj, get_object(ptype='Document', oid='mydoc', title='My document', parent='folder'))
         self.assertEqual(obj, get_object(ptype='Document', oid='mydoc', title='My document', obj_path='folder/mydoc'))
-
-    def test_transitions(self):
-        obj = api.content.create(container=self.portal.folder, id='mydoc', type='Document')
-        self.assertEqual(api.content.get_state(obj), 'internal')
-        # apply one transition
-        transitions(obj, 'submit')
-        self.assertEqual(api.content.get_state(obj), 'pending')
-        # apply multiple transitions
-        transitions(obj, ['publish_internally', 'publish_externally'])
-        self.assertEqual(api.content.get_state(obj), 'external')
-        transitions(obj, ['submit', 'retract', 'hide'])
-        self.assertEqual(api.content.get_state(obj), 'private')
 
     def test_add_image(self):
         current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -340,13 +325,6 @@ class TestContentModule(IntegrationTestCase):
         self.assertTrue(u"Folder" in values)
         self.assertTrue(u"Page" in values)
 
-    def test_get_state_infos(self):
-        self.portal.portal_workflow.setChainForPortalTypes(('Document', ), ('intranet_workflow', ))
-        obj = api.content.create(container=self.portal.folder, id='mydoc', title='My document', type='Document')
-        self.assertDictEqual(get_state_infos(obj), {'state_title': u'Internal draft', 'state_name': 'internal'})
-        transitions(obj, 'submit')
-        self.assertDictEqual(get_state_infos(obj), {'state_title': u'Pending review', 'state_name': 'pending'})
-
     def test_safe_delattr(self):
         attr_name = 'testing_attr_name'
         setattr(self.portal, attr_name, attr_name)
@@ -422,16 +400,6 @@ class TestContentModule(IntegrationTestCase):
         self.assertEqual(get_user_fullname("user1"), 'Stéphan Smith')
         self.assertEqual(user1.getProperty("fullname"), get_user_fullname("user1"))
         self.assertEqual(get_user_fullname("user2"), 'user2')
-
-    def test_get_transitions(self):
-        obj = api.content.create(container=self.portal.folder, id='mydoc', type='Document')
-        self.assertEqual(get_transitions(obj),
-                         ['publish_internally', 'hide', 'submit'])
-        transitions(obj, 'submit')
-        self.assertEqual(get_transitions(obj),
-                         ['publish_internally', 'retract', 'publish_externally', 'reject'])
-        transitions(obj, 'publish_externally')
-        self.assertEqual(get_transitions(obj), ['retract'])
 
     def test_base_getattr(self):
         obj = api.content.create(container=self.portal.folder, id='mydoc', type='Document')
