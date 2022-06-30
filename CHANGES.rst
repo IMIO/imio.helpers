@@ -8,6 +8,8 @@ Changelog
   [sgeulette]
 - Added `workflow.load_workflow_from_package` to reload a single workflow.
   [sgeulette]
+- Be defensive in JS function `toggleDetails` if tag is not available.
+  [gbastien]
 
 0.60 (2022-06-24)
 -----------------
