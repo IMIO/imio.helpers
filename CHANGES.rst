@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.61 (unreleased)
+0.61 (2022-07-01)
 -----------------
 
 - Moved workflow related functions from content to workflow module.
