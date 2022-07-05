@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from imio.helpers.interfaces import IContainerOfUnindexedElementsMarker
+from imio.helpers.workflow import get_state_infos  # noqa backward import compatibility
+from imio.helpers.workflow import get_transitions  # noqa backward import compatibility
+from imio.helpers.workflow import do_transitions as transitions  # noqa backward import compatibility
 from persistent.list import PersistentList
 from plone import api
 from plone.api.content import _parse_object_provides_query
@@ -12,7 +15,6 @@ from plone.namedfile.file import NamedBlobFile
 from plone.namedfile.file import NamedBlobImage
 from plone.registry.interfaces import IRegistry
 from Products.CMFCore.interfaces import IPropertiesTool
-from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.CMFPlone.utils import base_hasattr
 from Products.CMFPlone.utils import getFSVersionTuple
 from Products.CMFPlone.utils import safe_unicode
@@ -20,7 +22,6 @@ from zc.relation.interfaces import ICatalog
 from zope.annotation import IAnnotations
 from zope.component import getUtility
 from zope.component import queryUtility
-from zope.i18n import translate
 from zope.interface.interfaces import IMethod
 from zope.intid.interfaces import IIntIds
 from zope.schema._field import Bool
@@ -81,21 +82,6 @@ def get_object(parent='', oid='', title='', ptype='', obj_path=''):
     if brains:
         return brains[0]._unrestrictedGetObject()
     return None
-
-
-def transitions(obj, transitions, warn=False):
-    """
-        Apply multiple transitions on obj
-    """
-    workflowTool = api.portal.get_tool("portal_workflow")
-    if not isinstance(transitions, (list, tuple)):
-        transitions = [transitions]
-    for tr in transitions:
-        try:
-            workflowTool.doActionFor(obj, tr)
-        except WorkflowException as exc:
-            if warn:
-                logger.warn("Cannot apply transition '%s' on obj '%s': '%s'" % (tr, obj, exc))
 
 
 def create_NamedBlob(filepath, typ='file'):
@@ -591,19 +577,6 @@ def get_vocab_values(context, vocab_name, attr_name='token', **kwargs):
             for term in vocab_factory(context, **kwargs)._terms]
 
 
-def get_state_infos(obj):
-    """ """
-    wfTool = api.portal.get_tool('portal_workflow')
-    review_state = wfTool.getInfoFor(obj, 'review_state')
-    wf = wfTool.getWorkflowsFor(obj)[0]
-    state = wf.states.get(review_state)
-    state_title = state and state.title or review_state
-    return {'state_name': review_state,
-            'state_title': translate(safe_unicode(state_title),
-                                     domain="plone",
-                                     context=obj.REQUEST)}
-
-
 def safe_delattr(obj, attr_name):
     """ """
     if base_hasattr(obj, attr_name):
@@ -731,11 +704,3 @@ def get_user_fullname(username):
                 fullname = data._identities['authentic-agents'].data['fullname']
             return fullname or username
     return username
-
-
-def get_transitions(obj):
-    """Return the ids of the available transitions as portal_workflow.getTransitionsFor
-       will actually return a list of dict with various infos (id, title, name, ...) of
-       the available transitions."""
-    wfTool = api.portal.get_tool('portal_workflow')
-    return [tr["id"] for tr in wfTool.getTransitionsFor(obj)]

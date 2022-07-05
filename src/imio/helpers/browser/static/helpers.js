@@ -68,9 +68,11 @@ function toggleDetails(id, toggle_parent_active=true, parent_tag=null, load_view
     }
     parent_tag.classList.toggle("active");
   }
-  inner_content_tag = $('div.collapsible-inner-content', tag)[0];
-  if (load_view && !inner_content_tag.dataset.loaded) {
-    loadContent(inner_content_tag, load_view, async=true, base_url, event_name="toggle_details_ajax_success")
+  if (load_view) {
+    inner_content_tag = $('div.collapsible-inner-content', tag);
+    if (inner_content_tag.length && !inner_content_tag[0].dataset.loaded) {
+      loadContent(inner_content_tag[0], load_view, async=true, base_url, event_name="toggle_details_ajax_success");
+    }
   }
 }
 

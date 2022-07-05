@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.59 (unreleased)
+0.62 (unreleased)
 -----------------
 
 - Added `IMIORAMCache` using `IMIOStorage` to extend used cache duration and
@@ -18,6 +18,36 @@ Changelog
 - Added parameter `ttl=0` to `cache.get_cachekey_volatile` this way a date older
   than given `ttl` (in seconds) will be recomputed.
 
+
+0.61 (2022-07-01)
+-----------------
+
+- Moved workflow related functions from content to workflow module.
+  [sgeulette]
+- Added `workflow.load_workflow_from_package` to reload a single workflow.
+  [sgeulette]
+- Be defensive in JS function `toggleDetails` if tag is not available.
+  [gbastien]
+
+0.60 (2022-06-24)
+-----------------
+
+- Handled unfound site in `set_site_from_package_config`.
+  [sgeulette]
+
+0.59 (2022-06-21)
+-----------------
+
+- Added `escaped=True` param on `xhtml.object_link`.
+  [sgeulette]
+- Require a version of `future` recent enough so `html.escape` is available.
+  [gbastien]
+- Added parameter `replace_not_found_image=True` to `xhtml.storeImagesLocally`,
+  when `True` (default) and an image could not be retrieved,
+  a `Not found` image will be used. This solves problem when copy/paste a private
+  image from another site, available in the browser because of shared
+  authentication but not retrievable.
+  [gbastien]
 
 0.58 (2022-06-14)
 -----------------

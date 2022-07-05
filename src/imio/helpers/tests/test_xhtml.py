@@ -517,10 +517,17 @@ class TestXHTMLModule(IntegrationTestCase):
 
         # link to unexisting external image, site exists but not image (error 404) nothing changed
         text = '<p>Unexisting external image <img src="http://www.imio.be/unexistingimage.png"/></p>.'
-        self.assertEqual(storeImagesLocally(doc, text), text)
+        self.assertEqual(storeImagesLocally(doc, text, replace_not_found_image=False), text)
 
         # link to unexisting site, nothing changed
         text = '<p>Unexisting external site <img src="http://www.unexistingsite.be/unexistingimage.png"/>.</p>'
+        self.assertEqual(storeImagesLocally(doc, text, replace_not_found_image=False), text)
+
+        # when using replace_not_found_image=True image is replaced by a "Not found" image
+        text = '<p>Unexisting external image <img src="http://nohost/plone/imagenotfound.jpg"></p>.'
+        self.assertEqual(storeImagesLocally(doc, text), text)
+        # calling it a second time will store it again because doc is not a container
+        text = '<p>Unexisting external image <img src="http://nohost/plone/imagenotfound-1.jpg"></p>.'
         self.assertEqual(storeImagesLocally(doc, text), text)
 
         # working example
@@ -556,6 +563,23 @@ class TestXHTMLModule(IntegrationTestCase):
         logo = self.portal.folder.get('image-1.png')
         self.assertTrue(IImageContent.providedBy(logo))
 
+        # if context is a container, an "Not found" image is only added one time
+        testFolderId = self.portal.invokeFactory('Folder', id='testfolder', title='Test folder')
+        testfolder = getattr(self.portal, testFolderId)
+        text = '<p>Unexisting external site <img src="http://www.unexistingsite.be/unexistingimage.png"/>.</p>'
+        expected = '<p>Unexisting external site <img src="http://nohost/plone/testfolder/imagenotfound.jpg">.</p>'
+        self.assertEqual(testfolder.objectIds(), [])
+        self.assertEqual(storeImagesLocally(testfolder, text), expected)
+        self.assertEqual(testfolder.objectIds(), ['imagenotfound.jpg'])
+        # calling it a second time with a not found image will retrieve it again
+        expected = '<p>Unexisting external site <img src="http://nohost/plone/testfolder/imagenotfound-1.jpg">.</p>'
+        self.assertEqual(storeImagesLocally(testfolder, text), expected)
+        self.assertEqual(testfolder.objectIds(), ['imagenotfound.jpg', 'imagenotfound-1.jpg'])
+        # but if image found, nothing is done
+        text = '<p>Unexisting external site <img src="http://nohost/plone/testfolder/imagenotfound.jpg">.</p>'
+        self.assertEqual(storeImagesLocally(testfolder, text), text)
+        self.assertEqual(testfolder.objectIds(), ['imagenotfound.jpg', 'imagenotfound-1.jpg'])
+
     def test_storeExternalImagesLocallyWithResolveUID(self):
         """ """
         # working example
@@ -581,21 +605,23 @@ class TestXHTMLModule(IntegrationTestCase):
         expected = '<p>Internal image <img src="{0}/folder/dot.gif">.</p>'.format(self.portal_url)
         # image was created in folder
         self.assertEqual(
-            storeImagesLocally(self.portal.folder, text),
-            expected)
+            storeImagesLocally(self.portal.folder, text), expected)
         image = self.portal.folder.get('dot.gif')
         self.assertTrue(IImageContent.providedBy(image))
 
         # nothing changed if image already stored to context
         self.assertEqual(
-            storeImagesLocally(self.portal.folder, expected),
-            expected)
+            storeImagesLocally(self.portal.folder, expected), expected)
 
         # now check when internal image does not exist
         text = '<p>Internal image <img src="{0}/unknown.gif">.</p>'.format(self.portal_url)
-        # in case an internal image is not found, nothing is done
+        # with replace_not_found_image=False in case an internal image is not found, nothing is done
         self.assertEqual(
-            storeImagesLocally(self.portal.folder, text),
+            storeImagesLocally(self.portal.folder, text, replace_not_found_image=False),
+            text)
+        text = '<p>Internal image <img src="http://nohost/plone/folder/imagenotfound.jpg">.</p>'
+        self.assertEqual(
+            storeImagesLocally(self.portal.folder, text, replace_not_found_image=True),
             text)
 
     def test_storeInternalImagesLocallyWithResolveUID(self):
@@ -672,13 +698,17 @@ class TestXHTMLModule(IntegrationTestCase):
         text = '<p>Text <img src="{0}"style="width: 50px; height: 50px;"/>.</p>'.format(
             self.portal.absolute_url())
         # nothing was changed
-        self.assertEqual(storeImagesLocally(self.portal.folder, text), text)
+        self.assertEqual(
+            storeImagesLocally(self.portal.folder, text, replace_not_found_image=False),
+            text)
 
         # src to a non Image, Portal
         text = '<p>Text <img src="{0}"style="width: 50px; height: 50px;"/>.</p>'.format(
             self.portal.folder.absolute_url())
         # nothing was changed
-        self.assertEqual(storeImagesLocally(self.portal.folder2, text), text)
+        self.assertEqual(
+            storeImagesLocally(self.portal.folder2, text, replace_not_found_image=False),
+            text)
 
     def test_storeImagesLocallyWithImgPathStoredInFolderStartingWithContextURL(self):
         """Make sure an image stored in a folder that have same id as begining
@@ -699,7 +729,7 @@ class TestXHTMLModule(IntegrationTestCase):
     def test_storeExternalImagesLocallyImageURLWithNonASCIIChars(self):
         """URL to image may contain non ASCII chars."""
         text = '<p>External image with special chars <img src="http://www.imio.be/émage.png">.</p>'
-        result = storeImagesLocally(self.portal, text, force_resolve_uid=True)
+        result = storeImagesLocally(self.portal, text, force_resolve_uid=True, replace_not_found_image=False)
         # in this case, image is ignored
         self.assertEqual(result, text)
 
@@ -730,6 +760,11 @@ class TestXHTMLModule(IntegrationTestCase):
                          u'<a href="http://nohost/plone/folder/edit"></a>')
         self.assertEqual(object_link(obj, view='edit', attribute='Description', target='_blank'),
                          u'<a href="http://nohost/plone/folder/edit" target="_blank"></a>')
+        obj.setTitle(u'Folder title <script />')
+        self.assertEqual(object_link(obj),
+                         u'<a href="http://nohost/plone/folder/view">Folder title &lt;script /&gt;</a>')
+        self.assertEqual(object_link(obj, escaped=False),
+                         u'<a href="http://nohost/plone/folder/view">Folder title <script /></a>')
 
     def test_separate_images(self):
         # no image, content is returned as is
