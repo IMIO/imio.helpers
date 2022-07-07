@@ -4,8 +4,8 @@ Changelog
 0.62 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Added 'none_if_no_user' param in `content.get_user_fullname`.
+  [sgeulette]
 
 0.61 (2022-07-01)
 -----------------
