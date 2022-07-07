@@ -17,7 +17,8 @@ Changelog
   [gbastien]
 - Added parameter `ttl=0` to `cache.get_cachekey_volatile` this way a date older
   than given `ttl` (in seconds) will be recomputed.
-
+- Added 'none_if_no_user' param in `content.get_user_fullname`.
+  [sgeulette]
 
 0.61 (2022-07-01)
 -----------------

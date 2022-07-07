@@ -392,7 +392,9 @@ class TestContentModule(IntegrationTestCase):
 
     def test_user_fullname(self):
         self.assertIsNone(get_user_fullname(None))
+        self.assertEqual(get_user_fullname("", none_if_no_user=True), None)
         self.assertEqual(get_user_fullname(""), "")
+        self.assertEqual(get_user_fullname("unknown_user", none_if_no_user=True), None)
         self.assertEqual(get_user_fullname("unknown_user"), "unknown_user")
         # create some users
         user1 = api.user.create('a@b.be', 'user1', '12345', properties={'fullname': 'Stéphan Smith'})
@@ -400,6 +402,9 @@ class TestContentModule(IntegrationTestCase):
         self.assertEqual(get_user_fullname("user1"), 'Stéphan Smith')
         self.assertEqual(user1.getProperty("fullname"), get_user_fullname("user1"))
         self.assertEqual(get_user_fullname("user2"), 'user2')
+        # group
+        self.assertEqual(get_user_fullname("Reviewers", none_if_no_user=True), None)
+        self.assertEqual(get_user_fullname("Reviewers"), 'Reviewers')
 
     def test_base_getattr(self):
         obj = api.content.create(container=self.portal.folder, id='mydoc', type='Document')
