@@ -684,8 +684,13 @@ def object_ids(context, class_names):
 
 def get_user_fullname(userid, none_if_no_user=False):
     """Get fullname without using getMemberInfo that is slow slow slow...
-       We get it only from mutable_properties or authentic.
-       If no fullname, return userid instead nothing."""
+    We get it only from mutable_properties or authentic.
+
+   :param userid: principal id
+   :param none_if_no_user: return None if principal is not a user or is not found
+   :return: fullname or userid if fullname is empty.
+    """
+    userid = safe_unicode(userid)
     acl_users = api.portal.get_tool('acl_users')
     storages = [acl_users.mutable_properties._storage, ]
     # if authentic is available check it first
@@ -695,7 +700,7 @@ def get_user_fullname(userid, none_if_no_user=False):
     for storage in storages:
         data = storage.get(userid, None)
         if data is not None:
-            fullname = ""
+            fullname = u""
             # mutable_properties
             if hasattr(data, 'get'):
                 if not data.get('isGroup'):
@@ -712,4 +717,4 @@ def get_user_fullname(userid, none_if_no_user=False):
         if none_if_no_user:
             return None
         return userid
-    return fullname or userid
+    return safe_unicode(fullname) or userid
