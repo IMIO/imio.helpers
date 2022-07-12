@@ -23,6 +23,8 @@ Changelog
   [sgeulette]
 - Added `test_helpers.ImioTestHelpers` class with useful methods from iA.delib
   [sgeulette]
+- Added `vocabularies.SimplySortedUsers` and modified `vocabularies.SortedUsers`
+  [sgeulette]
 
 0.61 (2022-07-01)
 -----------------

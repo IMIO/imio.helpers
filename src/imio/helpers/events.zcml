@@ -12,6 +12,8 @@
               handler=".events.onPrincipalCreated" />
   <subscriber for="Products.PluggableAuthService.interfaces.events.IPrincipalDeletedEvent"
               handler=".events.onPrincipalDeleted" />
+  <subscriber for="Products.PluggableAuthService.interfaces.events.IPropertiesUpdatedEvent"
+              handler=".events.onPrincipalModified" />
   <subscriber for="Products.PluggableAuthService.interfaces.events.IPrincipalAddedToGroupEvent"
               handler=".events.onPrincipalAddedToGroup" />
   <subscriber for="Products.PluggableAuthService.interfaces.events.IPrincipalRemovedFromGroupEvent"

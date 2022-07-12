@@ -64,6 +64,9 @@
     <utility component=".vocabularies.SortedUsersFactory"
              name="imio.helpers.SortedUsers" />
 
+    <utility component=".vocabularies.SimplySortedUsersFactory"
+             name="imio.helpers.SimplySortedUsers" />
+
     <!-- Upgrade steps -->
     <genericsetup:upgradeSteps
       source="1"
