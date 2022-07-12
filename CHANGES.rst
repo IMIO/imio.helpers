@@ -19,6 +19,8 @@ Changelog
   than given `ttl` (in seconds) will be recomputed.
 - Added 'none_if_no_user' param in `content.get_user_fullname`.
   [sgeulette]
+- Always return unicode in `content.get_user_fullname`.
+  [sgeulette]
 - Added `test_helpers.ImioTestHelpers` class with useful methods from iA.delib
   [sgeulette]
 

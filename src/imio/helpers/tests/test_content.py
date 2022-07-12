@@ -399,12 +399,12 @@ class TestContentModule(IntegrationTestCase):
         # create some users
         user1 = api.user.create('a@b.be', 'user1', '12345', properties={'fullname': 'Stéphan Smith'})
         api.user.create('a@b.be', 'user2', '12345', properties={'fullname': ''})
-        self.assertEqual(get_user_fullname("user1"), 'Stéphan Smith')
-        self.assertEqual(user1.getProperty("fullname"), get_user_fullname("user1"))
-        self.assertEqual(get_user_fullname("user2"), 'user2')
+        self.assertEqual(get_user_fullname("user1"), u'Stéphan Smith')
+        self.assertEqual(user1.getProperty("fullname").decode('utf8'), get_user_fullname("user1"))
+        self.assertEqual(get_user_fullname("user2"), u'user2')
         # group
         self.assertEqual(get_user_fullname("Reviewers", none_if_no_user=True), None)
-        self.assertEqual(get_user_fullname("Reviewers"), 'Reviewers')
+        self.assertEqual(get_user_fullname("Reviewers"), u'Reviewers')
 
     def test_base_getattr(self):
         obj = api.content.create(container=self.portal.folder, id='mydoc', type='Document')
