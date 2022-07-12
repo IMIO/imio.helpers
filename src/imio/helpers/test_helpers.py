@@ -9,12 +9,10 @@ from plone.testing.z2 import Browser
 
 
 class ImioTestHelpers():  # noqa
-    """
-    Helper class for tests.
-    """
+    """Helper class for tests.
 
-    def setUp(self):
-        self.portal = self.layer['portal']
+    Assuming that self.layer, self.portal are defined in another class setUp...
+    """
 
     def add_principal_to_groups(self, principal_id, group_ids):
         """We need to changeUser so getGroups is updated.
@@ -34,7 +32,7 @@ class ImioTestHelpers():  # noqa
             login(self.layer['app'], username)
         else:
             login(self.portal, username)
-        self.member = api.user.get_current()
+        self.member = api.user.get_current()  # noqa
         self.portal.REQUEST['AUTHENTICATED_USER'] = self.member
 
     def create_user(self, username, pwd='humpf', roles=('Member', ), groups=(), mb_area=False):
