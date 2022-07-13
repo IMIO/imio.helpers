@@ -10,7 +10,7 @@ from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
 
 
-def voc_cache_key(method, self, context, query=''):
+def voc_cache_key(method, self, context=None, query=''):
     """Returns a persistent portal stored date following the given cache key.
 
     Must be programatically invalidated."""
@@ -47,7 +47,7 @@ class SortedUsers(UsersFactory):
     Append ' (userid)' to term title."""
 
     @ram.cache(voc_cache_key)
-    def SortedUsers__call__(self, context, query=''):
+    def SortedUsers__call__(self, context=None, query=''):
         return get_users_voc(True)
 
     __call__ = SortedUsers__call__
@@ -60,7 +60,7 @@ class SimplySortedUsers(SortedUsers):
     """With userid as value and fullname as title"""
 
     @ram.cache(voc_cache_key)
-    def SimplySortedUsers__call__(self, context, query=''):
+    def SimplySortedUsers__call__(self, context=None, query=''):
         return get_users_voc(False)
 
     __call__ = SimplySortedUsers__call__
