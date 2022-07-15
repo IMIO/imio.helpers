@@ -3,7 +3,6 @@ from imio.helpers.testing import IntegrationTestCase
 from imio.helpers.workflow import do_transitions
 from imio.helpers.workflow import get_state_infos
 from imio.helpers.workflow import get_transitions
-from imio.helpers.workflow import load_workflow_from_package
 from plone import api
 
 
@@ -43,15 +42,3 @@ class TestWorkflowModule(IntegrationTestCase):
                          ['publish_internally', 'retract', 'publish_externally', 'reject'])
         do_transitions(obj, 'publish_externally')
         self.assertEqual(get_transitions(obj), ['retract'])
-
-    def test_load_workflow_from_package(self):
-        wkf_tool = api.portal.get_tool('portal_workflow')
-        wkf_obj = wkf_tool.get('intranet_workflow')
-        states = wkf_obj.states
-        self.assertIn('internal', states)
-        states.deleteStates(['internal'])
-        self.assertNotIn('internal', states)
-        self.assertTrue(load_workflow_from_package('intranet_workflow', 'profile-Products.CMFPlone:plone'))
-        wkf_obj = wkf_tool.get('intranet_workflow')
-        states = wkf_obj.states
-        self.assertIn('internal', states)
