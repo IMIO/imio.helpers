@@ -27,10 +27,11 @@ def GroupsTool__getGroupsForPrincipal_cachekey(method, self, principal):
 
 def GroupAwareRoleManager__getRolesForPrincipal_cachekey(method, self, principal, request=None):
     req = request or getRequest()
-    if req is None:
-        raise pmram.DontCache
+    # if req is None:
+    #     raise pmram.DontCache
     date = get_cachekey_volatile('_users_groups_value')
-    return date, principal and principal.getId(), repr(req)
+    return (date, principal and principal.getId(), repr(req), req and (req.get('__ignore_direct_roles__', False),
+            req.get('__ignore_group_roles__', False)) or (None, None))
 
 
 def PluggableAuthService__getGroupsForPrincipal_cachekey(method, self, principal, request=None, **kwargs):
