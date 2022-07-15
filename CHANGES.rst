@@ -25,6 +25,8 @@ Changelog
   [sgeulette]
 - Added `vocabularies.SimplySortedUsers` and modified `vocabularies.SortedUsers`
   [sgeulette]
+- Added `cache.get_users_in_plone_groups`
+  [sgeulette]
 
 0.61 (2022-07-01)
 -----------------
