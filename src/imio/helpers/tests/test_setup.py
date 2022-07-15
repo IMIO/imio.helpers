@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from imio.helpers.testing import IntegrationTestCase
 from imio.helpers.setup import load_type_from_package
 from imio.helpers.setup import load_workflow_from_package
+from imio.helpers.testing import IntegrationTestCase
 from plone import api
 
 
