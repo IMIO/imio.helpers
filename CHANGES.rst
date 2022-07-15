@@ -4,6 +4,8 @@ Changelog
 0.62 (unreleased)
 -----------------
 
+- Added 'none_if_no_user' param in `content.get_user_fullname`.
+  [sgeulette]
 - Added `setup.load_type_from_package` to reload a single type.
   Moved `workflow.load_workflow_from_package` to `setup.load_workflow_from_package`.
   [gbastien]
