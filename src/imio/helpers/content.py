@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from imio.helpers.interfaces import IContainerOfUnindexedElementsMarker
+from imio.helpers.workflow import do_transitions as transitions  # noqa backward import compatibility
 from imio.helpers.workflow import get_state_infos  # noqa backward import compatibility
 from imio.helpers.workflow import get_transitions  # noqa backward import compatibility
-from imio.helpers.workflow import do_transitions as transitions  # noqa backward import compatibility
 from persistent.list import PersistentList
 from plone import api
 from plone.api.content import _parse_object_provides_query

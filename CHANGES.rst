@@ -27,6 +27,9 @@ Changelog
   [sgeulette]
 - Added `cache.get_users_in_plone_groups`
   [sgeulette]
+- Added `setup.load_type_from_package` to reload a single type.
+  Moved `workflow.load_workflow_from_package` to `setup.load_workflow_from_package`.
+  [gbastien]
 
 0.61 (2022-07-01)
 -----------------
