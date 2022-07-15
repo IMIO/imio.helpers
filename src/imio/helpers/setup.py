@@ -27,10 +27,9 @@ def load_workflow_from_package(wkf_name, profile_id):
         logger.error("Cannot find '{}' profile id".format(profile_id))
         return False
     # ps_tool.applyContext(context)  # necessary ?
-    try:
-        importObjects(wkf_obj, 'workflows/', context)
-    except Exception as err:
-        logger.error("Cannot import xml: '{}'".format(err))
+    importObjects(wkf_obj, 'workflows/', context)
+    if wkf_obj._p_changed is False:
+        logger.error("Could not update '{}' using profile '{}'".format(wkf_name, profile_id))
         return False
     return True
 
@@ -53,9 +52,8 @@ def load_type_from_package(type_name, profile_id):
         logger.error("Cannot find '{}' profile id".format(profile_id))
         return False
     # ps_tool.applyContext(context)  # necessary ?
-    try:
-        importObjects(portal_type, 'types/', context)
-    except Exception as err:
-        logger.error("Cannot import xml: '{}'".format(err))
+    importObjects(portal_type, 'types/', context)
+    if portal_type._p_changed is False:
+        logger.error("Could not update '{}' using profile '{}'".format(type_name, profile_id))
         return False
     return True
