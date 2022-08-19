@@ -35,4 +35,13 @@
         attribute="update_table"
         permission="zope2.View" />
 
+    <!-- Override @@caching-controlpanel-ramcache -->
+    <browser:page
+        name="caching-controlpanel-ramcache"
+        for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+        class=".views.IMIORAMCache"
+        template="ramcache.pt"
+        layer="imio.helpers.interfaces.IIMIOHelpersLayer"
+        permission="cmf.ManagePortal" />
+
 </configure>

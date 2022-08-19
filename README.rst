@@ -22,3 +22,10 @@ Requirements
 The barcode generation method uses zint tool (https://sourceforge.net/projects/zint/).
 
 You have to install zint version >= 2.6.0.
+
+
+Caching
+-------
+
+Use cache.get_plone_groups_for_user(the_objects=True) instead portal_groups.getGroupsForPrincipal
+Avoid portal_groups.getGroupById but use source_groups.get

@@ -4,7 +4,28 @@ Changelog
 0.62 (unreleased)
 -----------------
 
+- Added `IMIORAMCache` using `IMIOStorage` to extend used cache duration and
+  improve displayed statistics
+  [gbastien]
+- Added cache on various acl methods following `decorate_acl_methods` env variable
+  [gbastien, sgeulette]
+- Added IIMIOLayer BrowserLayer (need to execute upgrade step to 2).
+  [gbastien]
+- Override `caching-controlpanel-ramcache` to compute totals for `Hits`, `Misses`,
+  `Size` and `Entries`, display `Older entry`, do not break to display statistics
+  when a pickle error occurs but add a portal message.
+  [gbastien]
+- Added parameter `ttl=0` to `cache.get_cachekey_volatile` this way a date older
+  than given `ttl` (in seconds) will be recomputed.
 - Added 'none_if_no_user' param in `content.get_user_fullname`.
+  [sgeulette]
+- Always return unicode in `content.get_user_fullname`.
+  [sgeulette]
+- Added `test_helpers.ImioTestHelpers` class with useful methods from iA.delib
+  [sgeulette]
+- Added `vocabularies.SimplySortedUsers` and modified `vocabularies.SortedUsers`
+  [sgeulette]
+- Added `cache.get_users_in_plone_groups`
   [sgeulette]
 - Added `setup.load_type_from_package` to reload a single type.
   Moved `workflow.load_workflow_from_package` to `setup.load_workflow_from_package`.

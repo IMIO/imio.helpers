@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
+
 from datetime import datetime
+from datetime import timedelta
 from persistent.mapping import PersistentMapping
 from plone import api
 from plone.i18n.normalizer import IIDNormalizer
@@ -12,6 +14,7 @@ from types import FunctionType
 from zope.component import getAllUtilitiesRegisteredFor
 from zope.component import getUtility
 from zope.component import queryUtility
+from zope.globalrequest import getRequest
 from zope.ramcache.interfaces.ram import IRAMCache
 from zope.schema.interfaces import IVocabularyFactory
 
@@ -59,10 +62,11 @@ def cleanForeverCache():
     _memos.clear()
 
 
-def get_cachekey_volatile(name, method=None):
+def get_cachekey_volatile(name, method=None, ttl=0):
     """Helper for using a volatile corresponding to p_name
        to be used as cachekey stored in a volatile.
-       If it exists, we return the value, either we store datetime.now()."""
+       If it exists, we return the value, either we store datetime.now().
+       If p_ttl (time to live) is given, a cachekey older that ttl is updated."""
     portal = api.portal.get()
     # use max_length of VOLATILE_NAME_MAX_LENGTH to avoid cropped names
     # that could lead to having 2 names beginning with same part using same volatile...
@@ -74,8 +78,10 @@ def get_cachekey_volatile(name, method=None):
         portal._volatile_cache_keys = PersistentMapping()
         volatiles = portal._volatile_cache_keys
     date = volatiles.get(volatile_name)
-    if not date:
-        date = datetime.now()
+    now = datetime.now()
+    # compute new date if None or if using ttl and ttl is stale
+    if not date or (ttl and date + timedelta(seconds=ttl) < now):
+        date = now
         volatiles[volatile_name] = date
     # store caller method path so it will be invalidated in invalidate_cachekey_volatile_for
     if method:
@@ -196,3 +202,61 @@ def setup_ram_cache(max_entries=100000, max_age=2400, cleanup_interval=600):
     logger.info('=> Setting ramcache parameters (maxEntries=%s, maxAge=%s, cleanupInterval=%s)' %
                 (max_entries, max_age, cleanup_interval))
     ramcache.update(maxEntries=max_entries, maxAge=max_age, cleanupInterval=cleanup_interval)
+
+
+def get_current_user_id(request=None):
+    """Try to get user_id from REQUEST or fallback to plone.api."""
+    user_id = None
+    try:
+        if request is None:
+            request = getRequest()
+        user_id = request["AUTHENTICATED_USER"].getId()
+    except Exception:
+        user_id = api.user.get_current().getId()
+    return user_id
+
+
+def get_plone_groups_for_user_cachekey(method, user_id=None, user=None, the_objects=False):
+    """cachekey method for self.get_plone_groups_for_user."""
+    date = get_cachekey_volatile('_users_groups_value')
+    return (date,
+            user and user.id or user_id or get_current_user_id(getRequest()),
+            the_objects)
+
+
+@ram.cache(get_plone_groups_for_user_cachekey)
+def get_plone_groups_for_user(user_id=None, user=None, the_objects=False):
+    """Just return user.getGroups but cached."""
+    if api.user.is_anonymous():
+        return []
+    if user is None:
+        user = user_id and api.user.get(user_id) or api.user.get_current()
+    if not hasattr(user, "getGroups"):
+        return []
+    if the_objects:
+        pg = api.portal.get_tool("portal_groups")
+        user_groups = pg.getGroupsByUserId(user.id)
+    else:
+        user_groups = user.getGroups()
+    return sorted(user_groups)
+
+
+def get_users_in_plone_groups_cachekey(method, group_id=None, group=None, the_objects=False):
+    """cachekey method for self.get_users_in_plone_groups."""
+    date = get_cachekey_volatile('_users_groups_value')
+    return (date,
+            group and group.id or group_id,
+            the_objects)
+
+
+@ram.cache(get_users_in_plone_groups_cachekey)
+def get_users_in_plone_groups(group_id=None, group=None, the_objects=False):
+    """Just return group.getGroupMembers but cached."""
+    if not group and group_id:
+        group = api.group.get(group_id)
+    if group is None:
+        return []
+    members = group.getGroupMembers()
+    if not the_objects:
+        members = [m.id for m in members]
+    return sorted(members)
