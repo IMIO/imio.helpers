@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.62 (unreleased)
+0.62 (2022-08-19)
 -----------------
 
 - Added `IMIORAMCache` using `IMIOStorage` to extend used cache duration and
