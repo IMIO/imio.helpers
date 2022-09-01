@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-
+from imio.helpers.cache import invalidate_cachekey_volatile_for
+from Products.PlonePAS.plugins.role import GroupAwareRoleManager
+from Products.PluggableAuthService.plugins.ZODBRoleManager import ZODBRoleManager
 from smtplib import SMTP_SSL
 from zope.sendmail.mailer import SMTPMailer
 
@@ -29,3 +31,21 @@ def ssl_makeMailer(self):
     if self.smtp_port in (465, '465'):
         mailer.smtp = SMTP_SSL
     return mailer
+
+
+def assignRolesToPrincipal(self, roles, principal_id, REQUEST=None):  # noqa
+    GroupAwareRoleManager._old_assignRolesToPrincipal(self, roles, principal_id, REQUEST)
+    # we need to invalidate cachekey
+    invalidate_cachekey_volatile_for('_users_groups_value')
+
+
+def assignRoleToPrincipal(self, role_id, principal_id):
+    ZODBRoleManager._old_assignRoleToPrincipal(self, role_id, principal_id)
+    # we need to invalidate cachekey
+    invalidate_cachekey_volatile_for('_users_groups_value')
+
+
+def removeRoleFromPrincipal(self, role_id, principal_id):
+    ZODBRoleManager._old_removeRoleFromPrincipal(self, role_id, principal_id)
+    # we need to invalidate cachekey
+    invalidate_cachekey_volatile_for('_users_groups_value')

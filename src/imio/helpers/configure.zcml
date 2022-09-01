@@ -61,6 +61,27 @@
         replacement=".patches.ssl_makeMailer"
         preserveOriginal="true" />
 
+    <monkey:patch
+        description="Invalidate '_users_groups_value' volatile after principal role change"
+        class="Products.PlonePAS.plugins.role.GroupAwareRoleManager"
+        original="assignRolesToPrincipal"
+        replacement=".patches.assignRolesToPrincipal"
+        preserveOriginal="true" />
+
+    <monkey:patch
+        description="Invalidate '_users_groups_value' volatile after principal role change"
+        class="Products.PluggableAuthService.plugins.ZODBRoleManager.ZODBRoleManager"
+        original="assignRoleToPrincipal"
+        replacement=".patches.assignRoleToPrincipal"
+        preserveOriginal="true" />
+
+    <monkey:patch
+        description="Invalidate '_users_groups_value' volatile after principal role change"
+        class="Products.PluggableAuthService.plugins.ZODBRoleManager.ZODBRoleManager"
+        original="removeRoleFromPrincipal"
+        replacement=".patches.removeRoleFromPrincipal"
+        preserveOriginal="true" />
+
     <utility component=".vocabularies.SortedUsersFactory"
              name="imio.helpers.SortedUsers" />
 

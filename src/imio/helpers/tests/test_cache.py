@@ -23,6 +23,7 @@ from zope.component import getUtility
 from zope.component import queryUtility
 from zope.schema.interfaces import IVocabularyFactory
 
+import os
 import time
 
 
@@ -289,3 +290,30 @@ class TestCacheModule(IntegrationTestCase):
             'c',
             volatile_with_parameters_cached(self.portal, 'b'),
         )
+
+
+class TestCachedMethods(IntegrationTestCase):
+    """
+    Test methods that have been dynamically cached in __init__.
+    """
+
+    def setUp(self):
+        super(TestCachedMethods, self).setUp()
+        self.prm = self.portal['acl_users']['portal_role_manager']
+        self.user = api.user.create('a@b.be', 'user1', '12345', properties={'fullname': 'Stéphan Smith'})
+
+    def test_getRolesForPrincipal(self):
+        self.assertIn(os.getenv('decorate_acl_methods', 'Nope'), ('True', 'true'))
+        self.assertTupleEqual(self.prm.getRolesForPrincipal(self.user),
+                              ('Member',))
+        self.prm.assignRolesToPrincipal(('Member', 'Reviewer',), 'user1')
+        self.assertTupleEqual(self.prm.getRolesForPrincipal(self.user),
+                              ('Member', 'Reviewer'))
+        self.prm.assignRoleToPrincipal('Contributor', 'user1')
+        self.assertTupleEqual(self.prm.getRolesForPrincipal(self.user),
+                              ('Member', 'Reviewer', 'Contributor'))
+        self.prm.removeRoleFromPrincipal('Reviewer', 'user1')
+        self.assertTupleEqual(self.prm.getRolesForPrincipal(self.user),
+                              ('Member', 'Contributor'))
+
+    # TODO Add tests for other cached methods
