@@ -4,8 +4,8 @@ Changelog
 0.63 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Removed duplicated classifiers.
+  [sgeulette]
 
 0.62 (2022-08-19)
 -----------------
