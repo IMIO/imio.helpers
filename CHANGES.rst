@@ -4,6 +4,9 @@ Changelog
 0.63 (unreleased)
 -----------------
 
+- Invalidated '_users_groups_value' volatile after a call of `GroupAwareRoleManager.assignRolesToPrincipal` and
+  `GroupAwareRoleManager.assignRoleToPrincipal`
+  [sgeulette]
 - Removed duplicated classifiers.
   [sgeulette]
 
