@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.63 (unreleased)
+0.63 (2022-09-01)
 -----------------
 
 - Invalidated '_users_groups_value' volatile after a call of `GroupAwareRoleManager.assignRolesToPrincipal`,
