@@ -70,9 +70,16 @@
 
     <monkey:patch
         description="Invalidate '_users_groups_value' volatile after new role set"
-        class="Products.PlonePAS.plugins.role.GroupAwareRoleManager"
+        class="Products.PluggableAuthService.plugins.ZODBRoleManager.ZODBRoleManager"
         original="assignRoleToPrincipal"
         replacement=".patches.assignRoleToPrincipal"
+        preserveOriginal="true" />
+
+    <monkey:patch
+        description="Invalidate '_users_groups_value' volatile after new role set"
+        class="Products.PluggableAuthService.plugins.ZODBRoleManager.ZODBRoleManager"
+        original="removeRoleFromPrincipal"
+        replacement=".patches.removeRoleFromPrincipal"
         preserveOriginal="true" />
 
     <utility component=".vocabularies.SortedUsersFactory"

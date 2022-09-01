@@ -4,8 +4,8 @@ Changelog
 0.63 (unreleased)
 -----------------
 
-- Invalidated '_users_groups_value' volatile after a call of `GroupAwareRoleManager.assignRolesToPrincipal` and
-  `GroupAwareRoleManager.assignRoleToPrincipal`
+- Invalidated '_users_groups_value' volatile after a call of `GroupAwareRoleManager.assignRolesToPrincipal`,
+  `ZODBRoleManager.assignRoleToPrincipal` and `ZODBRoleManager.removeRoleFromPrincipal`
   [sgeulette]
 - Removed duplicated classifiers.
   [sgeulette]
