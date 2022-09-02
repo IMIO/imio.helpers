@@ -299,21 +299,40 @@ class TestCachedMethods(IntegrationTestCase):
 
     def setUp(self):
         super(TestCachedMethods, self).setUp()
-        self.prm = self.portal['acl_users']['portal_role_manager']
-        self.user = api.user.create('a@b.be', 'user1', '12345', properties={'fullname': 'Stéphan Smith'})
+        self.acl = self.portal['acl_users']
+        api.user.create('a@b.be', 'user1', '12345', properties={'fullname': 'Stéphan Smith'})  # Returns MemberData
+        self.user = self.acl.getUserById('user1')  # Returns PloneUser
+
+    def test_getGroupsForPrincipal(self):
+        pgr = self.portal['portal_groups']
+        self.assertListEqual(pgr.getGroupsForPrincipal(self.user),
+                             ['AuthenticatedUsers'])
+        pgr.addPrincipalToGroup('user1', 'Administrators')
+        self.assertListEqual(pgr.getGroupsForPrincipal(self.user),
+                             ['Administrators', 'AuthenticatedUsers'])
+        api.group.add_user(groupname='Reviewers', user=self.user)
+        self.assertListEqual(pgr.getGroupsForPrincipal(self.user),
+                             ['Administrators', 'Reviewers', 'AuthenticatedUsers'])
+        api.group.remove_user(groupname='Administrators', user=self.user)
+        self.assertListEqual(pgr.getGroupsForPrincipal(self.user),
+                             ['Reviewers', 'AuthenticatedUsers'])
+        pgr.removePrincipalFromGroup('user1', 'Reviewers')
+        self.assertListEqual(pgr.getGroupsForPrincipal(self.user),
+                             ['AuthenticatedUsers'])
 
     def test_getRolesForPrincipal(self):
         self.assertIn(os.getenv('decorate_acl_methods', 'Nope'), ('True', 'true'))
-        self.assertTupleEqual(self.prm.getRolesForPrincipal(self.user),
+        prm = self.acl['portal_role_manager']
+        self.assertTupleEqual(prm.getRolesForPrincipal(self.user),
                               ('Member',))
-        self.prm.assignRolesToPrincipal(('Member', 'Reviewer',), 'user1')
-        self.assertTupleEqual(self.prm.getRolesForPrincipal(self.user),
+        prm.assignRolesToPrincipal(('Member', 'Reviewer',), 'user1')
+        self.assertTupleEqual(prm.getRolesForPrincipal(self.user),
                               ('Member', 'Reviewer'))
-        self.prm.assignRoleToPrincipal('Contributor', 'user1')
-        self.assertTupleEqual(self.prm.getRolesForPrincipal(self.user),
+        prm.assignRoleToPrincipal('Contributor', 'user1')
+        self.assertTupleEqual(prm.getRolesForPrincipal(self.user),
                               ('Member', 'Reviewer', 'Contributor'))
-        self.prm.removeRoleFromPrincipal('Reviewer', 'user1')
-        self.assertTupleEqual(self.prm.getRolesForPrincipal(self.user),
+        prm.removeRoleFromPrincipal('Reviewer', 'user1')
+        self.assertTupleEqual(prm.getRolesForPrincipal(self.user),
                               ('Member', 'Contributor'))
 
     # TODO Add tests for other cached methods

@@ -4,8 +4,8 @@ Changelog
 0.64 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Added more tests on cached methods.
+  [sgeulette]
 
 0.63 (2022-09-01)
 -----------------
