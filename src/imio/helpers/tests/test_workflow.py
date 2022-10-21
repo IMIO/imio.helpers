@@ -47,11 +47,13 @@ class TestWorkflowModule(IntegrationTestCase):
     def test_remove_state_transitions(self):
         wf_tool = api.portal.get_tool('portal_workflow')
         wf = wf_tool['intranet_workflow']
+        self.assertFalse(remove_state_transitions('intranet_workflow', 'unknown_state'))
         self.assertTupleEqual(wf.states['internal'].transitions, ('hide', 'publish_internally', 'submit'))
-        remove_state_transitions('intranet_workflow', 'internal', ['hide', 'submit'])
+        self.assertFalse(remove_state_transitions('intranet_workflow', 'internal'))  # nothing removed
+        self.assertTrue(remove_state_transitions('intranet_workflow', 'internal', ['hide', 'submit']))  # removed
         self.assertTupleEqual(wf.states['internal'].transitions, ('publish_internally',))
         # add duplicates to simulate bad manipulation
         wf.states['internal'].transitions = tuple(['publish_internally', 'submit', 'submit'])
         self.assertTupleEqual(wf.states['internal'].transitions, ('publish_internally', 'submit', 'submit'))
-        remove_state_transitions('intranet_workflow', 'internal', [])
+        self.assertTrue(remove_state_transitions('intranet_workflow', 'internal'))
         self.assertTupleEqual(wf.states['internal'].transitions, ('publish_internally', 'submit'))
