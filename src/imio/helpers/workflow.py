@@ -45,3 +45,18 @@ def get_transitions(obj):
        the available transitions."""
     wf_tool = api.portal.get_tool('portal_workflow')
     return [tr["id"] for tr in wf_tool.getTransitionsFor(obj)]
+
+
+def remove_state_transitions(wf_name, state_id, remv_trs=[]):
+    wf_tool = api.portal.get_tool('portal_workflow')
+    # if wf_name not in wf_tool:  # prefer an exception...
+    wf = wf_tool[wf_name]
+    if state_id not in wf.states:
+        return
+    state = wf.states[state_id]
+    orig_len = len(state.transitions)
+    trs = []
+    # keep right transitions and remove duplicates
+    [trs.append(tr) for tr in list(state.transitions) if tr not in remv_trs and tr not in trs]
+    if len(trs) != orig_len:
+        state.transitions = tuple(trs)

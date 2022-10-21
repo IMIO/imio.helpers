@@ -3,6 +3,7 @@ from imio.helpers.testing import IntegrationTestCase
 from imio.helpers.workflow import do_transitions
 from imio.helpers.workflow import get_state_infos
 from imio.helpers.workflow import get_transitions
+from imio.helpers.workflow import remove_state_transitions
 from plone import api
 
 
@@ -42,3 +43,15 @@ class TestWorkflowModule(IntegrationTestCase):
                          ['publish_internally', 'retract', 'publish_externally', 'reject'])
         do_transitions(obj, 'publish_externally')
         self.assertEqual(get_transitions(obj), ['retract'])
+
+    def test_remove_state_transitions(self):
+        wf_tool = api.portal.get_tool('portal_workflow')
+        wf = wf_tool['intranet_workflow']
+        self.assertTupleEqual(wf.states['internal'].transitions, ('hide', 'publish_internally', 'submit'))
+        remove_state_transitions('intranet_workflow', 'internal', ['hide', 'submit'])
+        self.assertTupleEqual(wf.states['internal'].transitions, ('publish_internally',))
+        # add duplicates to simulate bad manipulation
+        wf.states['internal'].transitions = tuple(['publish_internally', 'submit', 'submit'])
+        self.assertTupleEqual(wf.states['internal'].transitions, ('publish_internally', 'submit', 'submit'))
+        remove_state_transitions('intranet_workflow', 'internal', [])
+        self.assertTupleEqual(wf.states['internal'].transitions, ('publish_internally', 'submit'))
