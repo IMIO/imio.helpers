@@ -396,7 +396,7 @@ def uuidToCatalogBrain(uuid,
 
 
 def _contained_objects(obj, only_unindexed=False):
-    """Return every elements contained in p_obj, incuding sub_elements.
+    """Return every elements contained in p_obj, including sub_elements.
        If p_only_unindexed=True, then we only return elements that are not indexed"""
     if only_unindexed and not IContainerOfUnindexedElementsMarker.providedBy(obj):
         return []
@@ -698,7 +698,7 @@ def get_user_fullname(userid, none_if_no_user=False):
         storages.insert(0, acl_users.authentic._useridentities_by_userid)
 
     for storage in storages:
-        data = storage.get(userid, None)
+        data = storage.get(userid, None)  # do not find a ldap user with a space in it !
         if data is not None:
             fullname = u""
             # mutable_properties
