@@ -5,7 +5,15 @@ import subprocess
 
 
 def generate_barcode(data, executable='zint', barcode=92, scale=2, filetype='PNG'):
-    """Generate a barcode with zint in StringIO and return it"""
+    """Generate a barcode with zint in StringIO and return it
+
+    :param data: barcode content string
+    :param executable: executable used to generate barcode
+    :param barcode: barcode type number
+    :param scale: scale of generated output
+    :param filetype: image type
+    :return: StringIO handler
+    """
     output = cStringIO.StringIO()
     command = [
         executable,
