@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.64 (unreleased)
+0.64 (2022-10-28)
 -----------------
 
 - Added `workflow.remove_state_transitions` function do remove transitions on a state and clean duplicates
