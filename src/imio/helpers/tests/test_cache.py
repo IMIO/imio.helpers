@@ -215,6 +215,9 @@ class TestCacheModule(IntegrationTestCase):
         # it is created with datetime.now()
         second_date = get_cachekey_volatile(method_name)
         self.assertTrue(first_date < second_date)
+        # when get_again=True, a new date is computed
+        new_date = invalidate_cachekey_volatile_for(method_name, get_again=True)
+        self.assertEqual(new_date, get_cachekey_volatile(method_name))
 
     def test_generate_params_key(self):
         """Test _generate_params_key function"""

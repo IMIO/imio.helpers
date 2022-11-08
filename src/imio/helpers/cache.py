@@ -105,10 +105,9 @@ def invalidate_cachekey_volatile_for(name, get_again=False, invalidate_cache=Tru
     volatiles = getattr(portal, VOLATILE_ATTR, {})
     if volatile_name in volatiles:
         del volatiles[volatile_name]
-    # when the key is invalidated, get_cachekey_volatile so it
-    # stores a new date and it avoids a second write
-    if get_again:
-        get_cachekey_volatile(volatile_name)
+    # if get_again=True, when the key is invalidated,
+    # get_cachekey_volatile so it stores a new date and it avoids a second write
+    date = get_cachekey_volatile(volatile_name) if get_again else None
     # when date is invalidated, every cache using it is stale
     # so we may either specifically invalidate this cached methods
     # or just wait for ram.cache to do it's cleanup itself
@@ -118,6 +117,7 @@ def invalidate_cachekey_volatile_for(name, get_again=False, invalidate_cache=Tru
             for method in mapping[name]:
                 cleanRamCacheFor(method)
             mapping.pop(name)
+    return date
 
 
 def _generate_params_key(*args, **kwargs):

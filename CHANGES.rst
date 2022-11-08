@@ -4,8 +4,9 @@ Changelog
 0.65 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Return new date when `cache.invalidate_cachekey_volatile_for` is called with
+  `get_again=True`.
+  [gbastien]
 
 0.64 (2022-10-28)
 -----------------
