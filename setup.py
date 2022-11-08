@@ -61,7 +61,7 @@ setup(
             'reportlab',
         ],
         'lxml': [
-            'cssselect',
+            'cssselect<1.2',
         ],
     },
     entry_points="""
