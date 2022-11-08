@@ -61,7 +61,7 @@ setup(
             'reportlab',
         ],
         'lxml': [
-            'cssselect<1.2',
+            'cssselect<1.2; python_version == "2.7"',
         ],
     },
     entry_points="""
