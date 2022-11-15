@@ -45,6 +45,7 @@ setup(
         'plone.app.relationfield',
         'plone.dexterity',
         'setuptools',
+        'six',
         'Plone',
         'z3c.unconfigure',
     ],

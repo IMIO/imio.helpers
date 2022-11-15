@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from cPickle import dumps
 from DateTime import DateTime
 from plone import api
+from six.moves.cPickle import dumps
 from time import time
 from zope.globalrequest import getRequest
 from zope.ramcache.ram import caches
