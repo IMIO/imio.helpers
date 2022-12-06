@@ -26,7 +26,7 @@ def addOrUpdateIndexes(portal, indexInfos={}, catalog_id='portal_catalog'):
     catalog = api.portal.get_tool(catalog_id)
     zopeCatalog = catalog._catalog
     addedIndexes = []
-    for indexName, indexInfo in indexInfos.iteritems():
+    for indexName, indexInfo in indexInfos.items():
         indexType, extra = indexInfo
         if indexType == 'ZCTextIndex' and not extra:
             extra = ZCTextIndexInfo()

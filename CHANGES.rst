@@ -7,6 +7,8 @@ Changelog
 - Return new date when `cache.invalidate_cachekey_volatile_for` is called with
   `get_again=True`.
   [gbastien]
+- Use `dict.items` instead `dict.iteritems` for Py2/Py3 compatibility.
+  [gbastien]
 
 0.64 (2022-10-28)
 -----------------
