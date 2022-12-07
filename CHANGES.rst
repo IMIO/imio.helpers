@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.65 (unreleased)
+0.65 (2022-12-07)
 -----------------
 
 - Return new date when `cache.invalidate_cachekey_volatile_for` is called with
