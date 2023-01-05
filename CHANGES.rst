@@ -4,8 +4,8 @@ Changelog
 0.66 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Added `transmogrifier` module with `get_main_path` and `relative_path` functions.
+  [sgeulette]
 
 0.65 (2022-12-07)
 -----------------
