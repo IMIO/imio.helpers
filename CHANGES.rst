@@ -6,6 +6,9 @@ Changelog
 
 - Added `transmogrifier` module with `get_main_path` and `relative_path` functions.
   [sgeulette]
+- Added parameter `onsuccess=false` to JS function `callViewAndReload` so it is
+  possible to trigger custom JS code after a success.
+  [gbastien]
 
 0.65 (2022-12-07)
 -----------------
