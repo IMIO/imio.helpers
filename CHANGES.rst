@@ -6,6 +6,8 @@ Changelog
 
 - Added `transmogrifier` module with `get_main_path` and `relative_path` functions.
   [sgeulette]
+- Added `none_if_unfound` parameter in `get_user_fullname` function
+  [sgeulette]
 
 0.65 (2022-12-07)
 -----------------
