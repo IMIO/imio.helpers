@@ -22,6 +22,7 @@ from plone.memoize.interfaces import ICacheChooser
 from zope.component import getUtility
 from zope.component import queryUtility
 from zope.schema.interfaces import IVocabularyFactory
+from zope.ramcache.interfaces.ram import IRAMCache
 
 import os
 import time
@@ -357,5 +358,22 @@ class TestCachedMethods(IntegrationTestCase):
         pgr.removePrincipalFromGroup('user1', 'Reviewers')
         self.assertListEqual(self.acl._getGroupsForPrincipal(self.user),
                              ['AuthenticatedUsers'])
+
+    def test_imio_global_cache(self):
+        ramcache = queryUtility(IRAMCache)
+        self.assertEqual(ramcache.getStatistics(), ())
+        ramCachedMethod(self.portal, param='1', pass_volatile_method=True)
+        stats = ramcache.getStatistics()
+        self.assertEqual(len(stats), 1)
+        self.assertEqual(stats[0]['path'], 'imio.helpers.tests.test_cache.ramCachedMethod')
+        self.assertEqual(stats[0]['hits'], 0)
+        self.assertTrue('older_date' in stats[0])
+        # hit again
+        ramCachedMethod(self.portal, param='1', pass_volatile_method=True)
+        stats = ramcache.getStatistics()
+        self.assertEqual(len(stats), 1)
+        self.assertEqual(stats[0]['path'], 'imio.helpers.tests.test_cache.ramCachedMethod')
+        self.assertEqual(stats[0]['hits'], 1)
+        self.assertTrue('older_date' in stats[0])
 
 # TODO Add tests for other cached methods
