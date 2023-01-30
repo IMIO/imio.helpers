@@ -19,8 +19,8 @@ from Products.ATContentTypes.interfaces import IImageContent
 import urllib
 
 
-picsum_image1_url = 'https://i.picsum.photos/id/10/200/300.jpg?hmac=94QiqvBcKJMHpneU69KYg2pky8aZ6iBzKrAuhSUBB9s'
-picsum_image2_url = 'https://i.picsum.photos/id/1082/200/200.jpg?hmac=3usO1ziO7kCseIG52ruhRigxyk39W_L9eECWe1Hs6fY'
+picsum_image1_url = 'https://fastly.picsum.photos/id/10/200/300.jpg?hmac=94QiqvBcKJMHpneU69KYg2pky8aZ6iBzKrAuhSUBB9s'
+picsum_image2_url = 'https://fastly.picsum.photos/id/1082/200/200.jpg?hmac=3usO1ziO7kCseIG52ruhRigxyk39W_L9eECWe1Hs6fY'
 
 base64_img_data = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAADWElEQVQ4ja2VX2yTBRTFj2QP" \
     "JGtoLWWMZWN/tDBW1oQSoatuUNycNnWYMV1M9nVrJgRit6msVWuBj5fhQkhB5jagIqDQP2MmkKyDbToSKjSAo2yYInUhuiFEohghcQH7HR9M" \
