@@ -8,6 +8,9 @@ Changelog
   [sgeulette]
 - Added `none_if_unfound` parameter in `get_user_fullname` function
   [sgeulette]
+- Added parameter `onsuccess=false` to JS function `callViewAndReload` so it is
+  possible to trigger custom JS code after a success.
+  [gbastien]
 
 0.65 (2022-12-07)
 -----------------

@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 """Base module for unittesting."""
+from imio.helpers.cache import setup_ram_cache
+from imio.helpers.ram import imio_global_cache
 from plone.app.testing import applyProfile
 from plone.app.testing import FunctionalTesting
 from plone.app.testing import IntegrationTesting
@@ -10,6 +12,8 @@ from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
 from plone.app.testing import TEST_USER_NAME
 from plone.testing import z2
+from zope.component import getSiteManager
+from zope.ramcache.interfaces.ram import IRAMCache
 
 import imio.helpers
 import logging
@@ -91,3 +95,8 @@ class IntegrationTestCase(unittest.TestCase):
         self.portal = self.layer['portal']
         self.portal_url = self.portal.absolute_url()
         self.catalog = self.portal.portal_catalog
+
+        sml = getSiteManager(self.portal)
+        sml.unregisterUtility(provided=IRAMCache)
+        sml.registerUtility(component=imio_global_cache, provided=IRAMCache)
+        setup_ram_cache()

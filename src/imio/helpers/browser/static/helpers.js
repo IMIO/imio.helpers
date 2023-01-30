@@ -24,7 +24,7 @@ function has_faceted() {
 }
 
 // ajax call managing a call to a given p_view_name and reload taking faceted into account
-function callViewAndReload(baseUrl, view_name, params, force_faceted=false) {
+function callViewAndReload(baseUrl, view_name, params, force_faceted=false, onsuccess=null) {
   redirect = '0';
   if (!force_faceted && !has_faceted()) {
     redirect = '1';
@@ -41,7 +41,11 @@ function callViewAndReload(baseUrl, view_name, params, force_faceted=false) {
             Faceted.URLHandler.hash_changed();
         }
         else {
-            window.location.href = data;
+            if (onsuccess) {
+                return onsuccess(data);
+            } else {
+                window.location.href = data;
+                }
         }
     },
     error: function(jqXHR, textStatus, errorThrown) {
