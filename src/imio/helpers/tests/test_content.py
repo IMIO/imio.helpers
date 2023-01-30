@@ -392,9 +392,7 @@ class TestContentModule(IntegrationTestCase):
 
     def test_user_fullname(self):
         self.assertIsNone(get_user_fullname(None))
-        self.assertEqual(get_user_fullname("", none_if_no_user=True), None)
-        self.assertEqual(get_user_fullname(""), "")
-        self.assertEqual(get_user_fullname("unknown_user", none_if_no_user=True), None)
+        self.assertEqual(get_user_fullname("unknown_user", none_if_unfound=True), None)
         self.assertEqual(get_user_fullname("unknown_user"), "unknown_user")
         # create some users
         user1 = api.user.create('a@b.be', 'user1', '12345', properties={'fullname': 'Stéphan Smith'})

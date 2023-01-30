@@ -682,12 +682,13 @@ def object_ids(context, class_names):
     return res
 
 
-def get_user_fullname(userid, none_if_no_user=False):
+def get_user_fullname(userid, none_if_no_user=False, none_if_unfound=False):
     """Get fullname without using getMemberInfo that is slow slow slow...
     We get it only from mutable_properties or authentic.
 
    :param userid: principal id
-   :param none_if_no_user: return None if principal is not a user or is not found
+   :param none_if_no_user: return None if principal is not a user
+   :param none_if_unfound: return None if principal is not found
    :return: fullname or userid if fullname is empty.
     """
     userid = safe_unicode(userid)
@@ -714,7 +715,7 @@ def get_user_fullname(userid, none_if_no_user=False):
                 fullname = data._identities['authentic-agents'].data['fullname']
             break
     else:  # we didn't find this userid
-        if none_if_no_user:
+        if none_if_unfound:
             return None
         return userid
     return safe_unicode(fullname) or userid
