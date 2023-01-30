@@ -360,6 +360,8 @@ class TestCachedMethods(IntegrationTestCase):
                              ['AuthenticatedUsers'])
 
     def test_imio_global_cache(self):
+        from zope.ramcache.ram import caches
+        caches.clear()
         ramcache = queryUtility(IRAMCache)
         self.assertEqual(ramcache.getStatistics(), ())
         ramCachedMethod(self.portal, param='1', pass_volatile_method=True)
