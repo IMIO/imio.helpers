@@ -21,8 +21,8 @@ from plone.memoize.instance import Memojito
 from plone.memoize.interfaces import ICacheChooser
 from zope.component import getUtility
 from zope.component import queryUtility
-from zope.schema.interfaces import IVocabularyFactory
 from zope.ramcache.interfaces.ram import IRAMCache
+from zope.schema.interfaces import IVocabularyFactory
 
 import os
 import time
