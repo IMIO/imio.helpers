@@ -32,3 +32,19 @@ def relative_path(portal, fullpath):
     if not fullpath.startswith(portal_path):
         return fullpath
     return fullpath[len(portal_path) + 1:]
+
+
+def text_int_to_bool(item, key, log_method, log_params={}):
+    """Changed to bool the value of item[key].
+
+    :param item: yielded item (usually dict)
+    :param key: dict key
+    :param log_method: special log method (as log_error in imio.transmogrifier.iadocs.utils)
+    :param log_params: log method parameters
+    :return: the boolean value
+    """
+    try:
+        return bool(int(item[key] or 0))
+    except Exception:  # noqa
+        log_method(item, u"Cannot change '{}' key value '{}' to bool".format(key, item[key]), **log_params)
+    return False
