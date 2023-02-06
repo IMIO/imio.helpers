@@ -4,6 +4,7 @@ from imio.helpers.xhtml import addClassToContent
 from imio.helpers.xhtml import addClassToLastChildren
 from imio.helpers.xhtml import imagesToData
 from imio.helpers.xhtml import imagesToPath
+from imio.helpers.xhtml import is_html
 from imio.helpers.xhtml import markEmptyTags
 from imio.helpers.xhtml import object_link
 from imio.helpers.xhtml import removeBlanks
@@ -911,3 +912,11 @@ class TestXHTMLModule(IntegrationTestCase):
             css_class="to-hide",
             new_content=u"replaced")
         self.assertEqual(res, expected_text_with_sub)
+
+    def test_is_html(self):
+        """ """
+        self.assertFalse(is_html(None))
+        self.assertFalse(is_html(""))
+        self.assertFalse(is_html("None"))
+        self.assertTrue(is_html("<p>My text</p>"))
+        self.assertTrue(is_html("<p>My text <span>text 2</span>.</p>"))

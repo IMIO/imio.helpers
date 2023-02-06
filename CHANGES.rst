@@ -12,6 +12,8 @@ Changelog
 - Added parameter `onsuccess=false` to JS function `callViewAndReload` so it is
   possible to trigger custom JS code after a success.
   [gbastien]
+- Added `xhtml.is_html` that will return True or False if given text is HTML or not.
+  [gbastien]
 
 0.65 (2022-12-07)
 -----------------

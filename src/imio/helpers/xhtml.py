@@ -656,3 +656,16 @@ def object_link(obj, view='view', attribute='Title', content='', target='', esca
     if escaped:
         content = escape(content)
     return u'<a href="%s"%s>%s</a>' % (href, target, safe_unicode(content))
+
+
+def is_html(text):
+    """Check that given p_text is HTML."""
+    text = text or ''
+    mtr = api.portal.get_tool('mimetypes_registry')
+    # taken from Products.Archetypes/Field.py
+    try:
+        d, f, mimetype = mtr(text[:8096], mimetype=None)
+    except UnicodeDecodeError:
+        d, f, mimetype = mtr(len(text) < 8096 and text or '', mimetype=None)
+        mimetype = str(mimetype).split(';')[0].strip()
+    return str(mimetype).split(';')[0].strip() == 'text/html'
