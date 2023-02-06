@@ -667,5 +667,4 @@ def is_html(text):
         d, f, mimetype = mtr(text[:8096], mimetype=None)
     except UnicodeDecodeError:
         d, f, mimetype = mtr(len(text) < 8096 and text or '', mimetype=None)
-        mimetype = str(mimetype).split(';')[0].strip()
     return str(mimetype).split(';')[0].strip() == 'text/html'
