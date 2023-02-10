@@ -100,6 +100,8 @@ class TestEmail(IntegrationTestCase):
         self.assertListEqual(validate_email_addresses(u'name@domain.org'), [(u'', u'name@domain.org')])
         self.assertListEqual(validate_email_addresses('"Real Name" <name@domain.org>'),
                              [(u'Real Name', u'name@domain.org')])
+        self.assertListEqual(validate_email_addresses(u'"Stéphan G" <stephan.g@police.belgium.eu>'),
+                             [(u'Stéphan G', u'stephan.g@police.belgium.eu')])
         self.assertListEqual(validate_email_addresses('Real Name <name@domain.org>'),
                              [(u'Real Name', u'name@domain.org')])
         self.assertListEqual(validate_email_addresses('name@domain.org (Real Name)'),
