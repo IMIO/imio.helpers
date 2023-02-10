@@ -216,7 +216,7 @@ def validate_email_addresses(value):
     # we need to multiply doublequotes, otherwise they are removed by csv
     value = value.replace('"', '"""')
     # split addresses using csv
-    for line in csv.reader([value], delimiter=',', quotechar='"', skipinitialspace=True):
+    for line in csv.reader([safe_encode(value)], delimiter=',', quotechar='"', skipinitialspace=True):
         for eml in line:
             ret.append(validate_email_address(eml))
     return ret
