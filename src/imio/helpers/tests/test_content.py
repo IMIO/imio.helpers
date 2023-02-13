@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from future.types.newstr import unicode
 from imio.helpers.content import add_file
 from imio.helpers.content import add_image
 from imio.helpers.content import add_to_annotation

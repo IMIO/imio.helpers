@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from future.types.newstr import unicode
 from imio.helpers.interfaces import IContainerOfUnindexedElementsMarker
 from imio.helpers.workflow import do_transitions as transitions  # noqa backward import compatibility
 from imio.helpers.workflow import get_state_infos  # noqa backward import compatibility
