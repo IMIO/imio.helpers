@@ -3,11 +3,13 @@
 *.pyc
 .installed.cfg
 .mr.developer.cfg
+.plone.versioncheck.*
 .project
 .pydevproject
 .settings/
 bin/
 buildout-cache/
+checkversion*.html
 develop-eggs/
 htmlcov/
 include/

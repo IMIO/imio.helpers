@@ -21,5 +21,9 @@ run:
 test: buildout
 	bin/test
 
+.PHONY: vcr
+vcr:  ## Shows requirements in checkversion-r.html
+	bin/versioncheck -rbo checkversion-r.html ${cfg}
+
 cleanall:
 	rm -fr bin develop-eggs htmlcov include .installed.cfg lib .mr.developer.cfg parts downloads eggs
