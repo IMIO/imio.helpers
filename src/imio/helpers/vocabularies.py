@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from future.types.newstr import unicode
 from imio.helpers import get_cachekey_volatile
 from imio.helpers.content import get_user_fullname
 from natsort import humansorted
