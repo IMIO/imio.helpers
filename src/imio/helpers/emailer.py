@@ -10,6 +10,7 @@ from imio.helpers.content import safe_encode
 from plone import api
 from Products.CMFPlone.utils import safe_unicode
 from smtplib import SMTPException
+from unidecode import unidecode
 from zope import schema
 from zope.component import getMultiAdapter
 
@@ -176,6 +177,18 @@ class InvalidEmailAddress(schema.ValidationError):
         return _(u"Invalid email address: '${eml}'", mapping={'eml': self.eml})
 
 
+class InvalidEmailAddressCharacters(schema.ValidationError):
+    """Exception for invalid realname.
+       `doc` method is used to return a dynamic message with real tested address.
+    """
+
+    def __init__(self, value, *args, **kwargs):
+        self.value = value
+
+    def doc(self):
+        return _(u"Realname: '${value}' cannot contain accented or special characters", mapping={'value': self.value})
+
+
 def validate_email_address(value):
     """Email validator for email address with possible real name part.
 
@@ -194,6 +207,8 @@ def validate_email_address(value):
         realname, eml = parseaddr(eml)
         if not realname and not eml:
             raise InvalidEmailAddressFormat(value)
+        if realname != unidecode(realname):
+            raise InvalidEmailAddressCharacters(realname)
         # we check if the email has not been corrected by parseaddr, removing some characters like space
         if eml not in value:
             raise InvalidEmailAddress(u"'{}' => '{}' ?".format(value, eml))
@@ -216,7 +231,7 @@ def validate_email_addresses(value):
     # we need to multiply doublequotes, otherwise they are removed by csv
     value = value.replace('"', '"""')
     # split addresses using csv
-    for line in csv.reader([value], delimiter=',', quotechar='"', skipinitialspace=True):
+    for line in csv.reader([safe_encode(value)], delimiter=',', quotechar='"', skipinitialspace=True):
         for eml in line:
             ret.append(validate_email_address(eml))
     return ret

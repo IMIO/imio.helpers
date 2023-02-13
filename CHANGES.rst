@@ -14,6 +14,8 @@ Changelog
   [gbastien]
 - Added `xhtml.is_html` that will return True or False if given text is HTML or not.
   [gbastien]
+- Raised validation error when email realname contains an accented character
+  [sgeulette]
 
 0.65 (2022-12-07)
 -----------------

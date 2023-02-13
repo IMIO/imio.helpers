@@ -5,6 +5,7 @@ from imio.helpers.emailer import add_attachment
 from imio.helpers.emailer import create_html_email
 from imio.helpers.emailer import get_mail_host
 from imio.helpers.emailer import InvalidEmailAddress
+from imio.helpers.emailer import InvalidEmailAddressCharacters
 from imio.helpers.emailer import InvalidEmailAddressFormat
 from imio.helpers.emailer import send_email
 from imio.helpers.emailer import validate_email_address
@@ -94,6 +95,8 @@ class TestEmail(IntegrationTestCase):
         self.assertRaises(InvalidEmailAddress, validate_email_address, 'na<me@domain.org')
         self.assertRaises(InvalidEmailAddress, validate_email_address, 'name@domain.or(g')
         self.assertRaises(InvalidEmailAddress, validate_email_address, 'name@domain.or)g')
+        # errors on realname
+        self.assertRaises(InvalidEmailAddressCharacters, validate_email_address, 'Stéphan <stephan@domain.org>')
 
     def test_validate_email_addresses(self):
         self.assertListEqual(validate_email_addresses('name@domain.org'), [(u'', u'name@domain.org')])
@@ -129,3 +132,5 @@ class TestEmail(IntegrationTestCase):
         self.assertRaises(InvalidEmailAddress, validate_email_addresses, 'na<me@domain.org')
         self.assertRaises(InvalidEmailAddress, validate_email_addresses, 'name@domain.or(g')
         self.assertRaises(InvalidEmailAddress, validate_email_addresses, 'name@domain.or)g')
+        # errors on realname
+        self.assertRaises(InvalidEmailAddressCharacters, validate_email_addresses, 'Stéphan <stephan@domain.org>')
