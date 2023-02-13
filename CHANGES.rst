@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.66 (unreleased)
+0.66 (2023-02-13)
 -----------------
 
 - Added `transmogrifier` module with `get_main_path`, `relative_path` and
