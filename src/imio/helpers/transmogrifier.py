@@ -1,7 +1,23 @@
 # -*- coding: utf-8 -*-
+from copy import deepcopy
 
 import os
 import re
+
+
+def filter_keys(item, keys):
+    """Return a copy of item with only given keys.
+
+    :param item: yielded item (dict)
+    :param keys: keys to keep
+    :return: filtered item
+    """
+    if not keys:
+        return deepcopy(item)
+    new_item = {}
+    for key in keys:
+        new_item[key] = item[key]
+    return new_item
 
 
 def get_main_path(path='', subpath=''):

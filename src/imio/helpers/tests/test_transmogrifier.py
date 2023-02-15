@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from imio.helpers.testing import IntegrationTestCase
+from imio.helpers.transmogrifier import filter_keys
 from imio.helpers.transmogrifier import get_main_path
 from imio.helpers.transmogrifier import relative_path
 from imio.helpers.transmogrifier import text_int_to_bool
@@ -9,6 +10,15 @@ import os
 
 
 class TestTesting(IntegrationTestCase):
+
+    def test_filter_keys(self):
+        dic = {'a': 1, 'b': 2, 'c': 3}
+        self.assertListEqual(['a', 'b', 'c'], sorted(filter_keys(dic, []).keys()))
+        self.assertListEqual([1, 2, 3], sorted(filter_keys(dic, []).values()))
+        self.assertListEqual(['a', 'b', 'c'], sorted(filter_keys(dic, ['a', 'b', 'c']).keys()))
+        self.assertListEqual([1, 2, 3], sorted(filter_keys(dic, ['a', 'b', 'c']).values()))
+        self.assertListEqual(['a', 'c'], sorted(filter_keys(dic, ['a', 'c']).keys()))
+        self.assertListEqual([1, 3], sorted(filter_keys(dic, ['a', 'c']).values()))
 
     def test_get_main_path(self):
         orig_home = os.getenv('INSTANCE_HOME')

@@ -4,8 +4,8 @@ Changelog
 0.67 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Added `filter_keys` in transmogrifier module.
+  [sgeulette]
 
 0.66 (2023-02-13)
 -----------------
