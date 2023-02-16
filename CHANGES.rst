@@ -6,6 +6,8 @@ Changelog
 
 - Added `filter_keys` in transmogrifier module.
   [sgeulette]
+- Replaced `text_int_to_bool` by `text_to_bool`
+  [sgeulette]
 
 0.66 (2023-02-13)
 -----------------

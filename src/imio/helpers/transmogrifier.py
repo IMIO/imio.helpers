@@ -50,8 +50,8 @@ def relative_path(portal, fullpath):
     return fullpath[len(portal_path) + 1:]
 
 
-def text_int_to_bool(item, key, log_method, log_params={}):
-    """Changed to bool the value of item[key].
+def text_to_bool(item, key, log_method, log_params=None):
+    """Changed to bool the text value of item[key].
 
     :param item: yielded item (usually dict)
     :param key: dict key
@@ -59,6 +59,12 @@ def text_int_to_bool(item, key, log_method, log_params={}):
     :param log_params: log method parameters
     :return: the boolean value
     """
+    if log_params is None:
+        log_params = {}
+    if item[key] in (u'True', u'true'):
+        return True
+    elif item[key] in (u'False', u'false'):
+        return False
     try:
         return bool(int(item[key] or 0))
     except Exception:  # noqa
