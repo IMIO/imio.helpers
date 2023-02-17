@@ -5,6 +5,16 @@ import os
 import re
 
 
+def correct_path(portal, path):
+    """ Check if a path already exists on obj """
+    original = path
+    i = 1
+    while portal.unrestrictedTraverse(path, default=None) is not None:  # path exists
+        path = '{}-{:d}'.format(original, i)
+        i += 1
+    return path
+
+
 def filter_keys(item, keys):
     """Return a copy of item with only given keys.
 

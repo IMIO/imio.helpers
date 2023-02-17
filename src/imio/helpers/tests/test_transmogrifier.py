@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-
 from imio.helpers.testing import IntegrationTestCase
+from imio.helpers.transmogrifier import correct_path
 from imio.helpers.transmogrifier import filter_keys
 from imio.helpers.transmogrifier import get_main_path
 from imio.helpers.transmogrifier import relative_path
@@ -10,6 +10,17 @@ import os
 
 
 class TestTesting(IntegrationTestCase):
+
+    def test_correct_path(self):
+        self.assertEquals(correct_path(self.portal, 'abcde'), 'abcde')
+        self.assertIn('folder', self.portal.objectIds())
+        self.assertEquals(correct_path(self.portal, 'folder'), 'folder-1')
+        self.assertEquals(correct_path(self.portal, 'folder/abcde'), 'folder/abcde')
+        self.portal.folder.invokeFactory('Document', id='abcde', title='Document')
+        self.assertEquals(correct_path(self.portal, 'folder/abcde'), 'folder/abcde-1')
+        self.portal.folder.invokeFactory('Document', id='abcde-1', title='Document')
+        self.assertEquals(correct_path(self.portal, 'folder/abcde'), 'folder/abcde-2')
+
 
     def test_filter_keys(self):
         dic = {'a': 1, 'b': 2, 'c': 3}
