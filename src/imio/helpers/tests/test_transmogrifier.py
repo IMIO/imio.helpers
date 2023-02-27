@@ -3,6 +3,7 @@ from imio.helpers.testing import IntegrationTestCase
 from imio.helpers.transmogrifier import correct_path
 from imio.helpers.transmogrifier import filter_keys
 from imio.helpers.transmogrifier import get_main_path
+from imio.helpers.transmogrifier import pool_tuples
 from imio.helpers.transmogrifier import relative_path
 from imio.helpers.transmogrifier import text_to_bool
 
@@ -43,6 +44,14 @@ class TestTesting(IntegrationTestCase):
         self.assertEquals(get_main_path('/', 'etc'), '/etc')
         os.environ['INSTANCE_HOME'] = orig_home
         os.environ['PWD'] = orig_pwd
+
+    def test_pool_tuples(self):
+        lst = [1, 2, 3, 4, 5, 6]
+        self.assertListEqual(pool_tuples(lst, 1), [(1,), (2,), (3,), (4,), (5,), (6,)])
+        self.assertListEqual(pool_tuples(lst, 2), [(1, 2), (3, 4), (5, 6)])
+        self.assertListEqual(pool_tuples(lst, 3), [(1, 2, 3), (4, 5, 6)])
+        self.assertListEqual(pool_tuples(lst, 4), [(1, 2, 3, 4)])
+        self.assertListEqual(pool_tuples(lst, 6), [(1, 2, 3, 4, 5, 6)])
 
     def test_relative_path(self):
         self.assertEquals(relative_path(self.portal, '/plone/directory'), 'directory')

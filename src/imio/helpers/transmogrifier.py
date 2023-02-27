@@ -47,6 +47,13 @@ def get_main_path(path='', subpath=''):
     raise Exception("Path '{}' doesn't exist".format(path))
 
 
+def pool_tuples(iterable, pool_len=2):
+    """Returns the iterable as tuples"""
+    l_iter = iter(iterable)
+    args = [l_iter for x in range(0, pool_len)]
+    return zip(*args)
+
+
 def relative_path(portal, fullpath):
     """Returns relative path following given portal (without leading slash).
 
