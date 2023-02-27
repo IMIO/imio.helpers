@@ -378,4 +378,48 @@ class TestCachedMethods(IntegrationTestCase):
         self.assertEqual(stats[0]['hits'], 1)
         self.assertTrue('older_date' in stats[0])
 
+    def test__users_groups_value_invalidation(self):
+        """Invalidated whenever any operation on user:
+           - user created;
+           - user modified;
+           - user deleted;
+           - user added to group;
+           - user removed from group;
+           - group created;
+           - group removed."""
+        value1 = get_cachekey_volatile('_users_groups_value')
+        # create user
+        user = api.user.create(username='new_user', email='test@test.be')
+        value2 = get_cachekey_volatile('_users_groups_value')
+        self.assertNotEqual(value1, value2)
+        # modify user
+        user.setMemberProperties({'email': 'test2@test.be'})
+        value3 = get_cachekey_volatile('_users_groups_value')
+        self.assertNotEqual(value2, value3)
+        # create group
+        group = api.group.create('new_group')
+        value4 = get_cachekey_volatile('_users_groups_value')
+        self.assertNotEqual(value3, value4)
+        # modify group, WILL NOT BE INVALIDATED
+        group.setGroupProperties({'title': 'Group title'})
+        value5 = get_cachekey_volatile('_users_groups_value')
+        self.assertEqual(value4, value5)
+        # add user to group
+        api.group.add_user(group=group, user=user)
+        value6 = get_cachekey_volatile('_users_groups_value')
+        self.assertNotEqual(value5, value6)
+        # remove user from group
+        api.group.remove_user(group=group, user=user)
+        value7 = get_cachekey_volatile('_users_groups_value')
+        self.assertNotEqual(value6, value7)
+        # delete user
+        api.user.delete(user=user)
+        value8 = get_cachekey_volatile('_users_groups_value')
+        self.assertNotEqual(value7, value8)
+        # delete group
+        api.group.delete(group=group)
+        value9 = get_cachekey_volatile('_users_groups_value')
+        self.assertNotEqual(value8, value9)
+
+
 # TODO Add tests for other cached methods

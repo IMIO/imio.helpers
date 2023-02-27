@@ -5,3 +5,4 @@ omit =
     */test*
     src/imio/__init__.py
     src/imio/helpers/__init__.py
+    src/imio/helpers/browser/*
