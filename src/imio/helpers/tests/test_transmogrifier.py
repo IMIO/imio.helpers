@@ -21,7 +21,6 @@ class TestTesting(IntegrationTestCase):
         self.portal.folder.invokeFactory('Document', id='abcde-1', title='Document')
         self.assertEquals(correct_path(self.portal, 'folder/abcde'), 'folder/abcde-2')
 
-
     def test_filter_keys(self):
         dic = {'a': 1, 'b': 2, 'c': 3}
         self.assertListEqual(['a', 'b', 'c'], sorted(filter_keys(dic, []).keys()))
