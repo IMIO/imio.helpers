@@ -47,8 +47,13 @@ def get_main_path(path='', subpath=''):
     raise Exception("Path '{}' doesn't exist".format(path))
 
 
-def pool_tuples(iterable, pool_len=2):
+def pool_tuples(iterable, pool_len=2, e_msg=''):
     """Returns the iterable as tuples"""
+    if not iterable:
+        return iterable
+    if len(iterable) % pool_len:
+        raise Exception("{}: the given iterable must contain a multiple of {} elements: value = '{}'".format(
+                        e_msg, pool_len, iterable))
     l_iter = iter(iterable)
     args = [l_iter for x in range(0, pool_len)]
     return zip(*args)
