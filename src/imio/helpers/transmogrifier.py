@@ -52,8 +52,8 @@ def pool_tuples(iterable, pool_len=2, e_msg=''):
     if not iterable:
         return iterable
     if len(iterable) % pool_len:
-        raise Exception("{}: the given iterable must contain a multiple of {} elements: value = '{}'".format(
-                        e_msg, pool_len, iterable))
+        raise ValueError("{}: the given iterable must contain a multiple of {} elements: value = '{}'".format(
+                         e_msg, pool_len, iterable))
     l_iter = iter(iterable)
     args = [l_iter for x in range(0, pool_len)]
     return zip(*args)
