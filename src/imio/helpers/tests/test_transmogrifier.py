@@ -54,11 +54,12 @@ class TestTesting(IntegrationTestCase):
 
     def test_pool_tuples(self):
         lst = [1, 2, 3, 4, 5, 6]
+        self.assertEqual(pool_tuples(None, 1), None)
         self.assertListEqual(pool_tuples([], 1), [])
-        self.assertListEqual(pool_tuples(lst, 1), [(1,), (2,), (3,), (4,), (5,), (6,)])
-        self.assertListEqual(pool_tuples(lst, 2), [(1, 2), (3, 4), (5, 6)])
-        self.assertListEqual(pool_tuples(lst, 3), [(1, 2, 3), (4, 5, 6)])
-        self.assertListEqual(pool_tuples(lst, 6), [(1, 2, 3, 4, 5, 6)])
+        self.assertListEqual([t for t in pool_tuples(lst, 1)], [(1,), (2,), (3,), (4,), (5,), (6,)])
+        self.assertListEqual([t for t in pool_tuples(lst, 2)], [(1, 2), (3, 4), (5, 6)])
+        self.assertListEqual([t for t in pool_tuples(lst, 3)], [(1, 2, 3), (4, 5, 6)])
+        self.assertListEqual([t for t in pool_tuples(lst, 6)], [(1, 2, 3, 4, 5, 6)])
         with self.assertRaises(Exception) as cm:
             pool_tuples([1, 2, 3], 2, e_msg=u'My pool')
         self.assertEqual(str(cm.exception), "My pool: the given iterable must contain a multiple of 2 elements: "

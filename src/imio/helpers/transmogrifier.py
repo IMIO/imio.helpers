@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from copy import deepcopy
 from datetime import datetime
+from future.builtins import zip
 
 import os
 import re
@@ -54,7 +55,7 @@ def pool_tuples(iterable, pool_len=2, e_msg=''):
     :param iterable: a list or tuple
     :param pool_len: len of output pool tuples
     :param e_msg: prefix message when the iterable has not a correct len
-    :return: a list of tuples
+    :return: an iterator giving pool tuples
     """
     if not iterable:
         return iterable
