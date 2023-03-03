@@ -6,9 +6,9 @@ Changelog
 
 - Added `filter_keys`, `correct_path`, `pool_tuples` in transmogrifier module.
   [sgeulette]
-- Added `valid_date` in transmogrifier module.
+- Added `str_to_date` in transmogrifier module.
   [sgeulette]
-- Replaced `text_int_to_bool` by `text_to_bool`
+- Renamed `text_int_to_bool` to `str_to_bool`
   [sgeulette]
 
 0.66 (2023-02-13)

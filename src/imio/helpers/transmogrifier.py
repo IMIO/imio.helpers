@@ -49,7 +49,13 @@ def get_main_path(path='', subpath=''):
 
 
 def pool_tuples(iterable, pool_len=2, e_msg=''):
-    """Returns the iterable as tuples"""
+    """Returns the iterable as tuples
+
+    :param iterable: a list or tuple
+    :param pool_len: len of output pool tuples
+    :param e_msg: prefix message when the iterable has not a correct len
+    :return: a list of tuples
+    """
     if not iterable:
         return iterable
     if len(iterable) % pool_len:
@@ -73,13 +79,13 @@ def relative_path(portal, fullpath):
     return fullpath[len(portal_path) + 1:]
 
 
-def text_to_bool(item, key, log_method, **log_params):
+def str_to_bool(item, key, log_method, **log_params):
     """Changed to bool the text value of item[key].
 
     :param item: yielded item (usually dict)
     :param key: dict key
     :param log_method: special log method (as log_error in imio.transmogrifier.iadocs.utils)
-    :param log_params: log method parameters
+    :param log_params: log method keyword parameters
     :return: the boolean value
     """
     if log_params is None:
@@ -95,7 +101,18 @@ def text_to_bool(item, key, log_method, **log_params):
     return False
 
 
-def valid_date(item, key, log_method, fmt='%Y/%m/%d', can_be_empty=True, as_date=True, **log_params):
+def str_to_date(item, key, log_method, fmt='%Y/%m/%d', can_be_empty=True, as_date=True, **log_params):
+    """Changed to date or datetime the text value of item[key]
+
+    :param item: yielded item (usually dict)
+    :param key: dict key
+    :param log_method: special log method (as log_error in imio.transmogrifier.iadocs.utils)
+    :param fmt: formatting date string
+    :param can_be_empty: value can be empty or None
+    :param as_date: return a date, otherwise a datetime
+    :param log_params: log method keyword parameters
+    :return: the date or datetime value
+    """
     val = item.get(key)
     if not val and can_be_empty:
         return None

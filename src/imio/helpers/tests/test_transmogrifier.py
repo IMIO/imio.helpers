@@ -5,8 +5,8 @@ from imio.helpers.transmogrifier import filter_keys
 from imio.helpers.transmogrifier import get_main_path
 from imio.helpers.transmogrifier import pool_tuples
 from imio.helpers.transmogrifier import relative_path
-from imio.helpers.transmogrifier import text_to_bool
-from imio.helpers.transmogrifier import valid_date
+from imio.helpers.transmogrifier import str_to_bool
+from imio.helpers.transmogrifier import str_to_date
 
 import datetime
 import os
@@ -68,32 +68,32 @@ class TestTesting(IntegrationTestCase):
         self.assertEquals(relative_path(self.portal, '/plone/directory'), 'directory')
         self.assertEquals(relative_path(self.portal, '/alone/directory'), '/alone/directory')
 
-    def test_text_to_bool(self):
+    def test_str_to_bool(self):
         dic = {'True': 'True', 'true': 'true', 'False': 'False', 'false': 'false',
                '0': '0', 0: 0, '1': '1', 123: 123,
                'a': 'a', 'errors': 0}
-        self.assertTrue(text_to_bool(dic, 'True', logger))
-        self.assertTrue(text_to_bool(dic, 'true', logger))
-        self.assertFalse(text_to_bool(dic, 'False', logger))
-        self.assertFalse(text_to_bool(dic, 'false', logger))
-        self.assertFalse(text_to_bool(dic, '0', logger))  # using fake log method to test error
-        self.assertFalse(text_to_bool(dic, 0, logger))
-        self.assertTrue(text_to_bool(dic, '1', logger))
-        self.assertTrue(text_to_bool(dic, 123, logger))
+        self.assertTrue(str_to_bool(dic, 'True', logger))
+        self.assertTrue(str_to_bool(dic, 'true', logger))
+        self.assertFalse(str_to_bool(dic, 'False', logger))
+        self.assertFalse(str_to_bool(dic, 'false', logger))
+        self.assertFalse(str_to_bool(dic, '0', logger))  # using fake log method to test error
+        self.assertFalse(str_to_bool(dic, 0, logger))
+        self.assertTrue(str_to_bool(dic, '1', logger))
+        self.assertTrue(str_to_bool(dic, 123, logger))
         self.assertEquals(dic['errors'], 0)
-        self.assertFalse(text_to_bool(dic, 'a', logger))
+        self.assertFalse(str_to_bool(dic, 'a', logger))
         self.assertEquals(dic['errors'], 1)
 
-    def test_valid_date(self):
+    def test_str_to_date(self):
         dic = {1: '2023/03/03', 2: '2023/03/03 09:29', 'errors': 0}
-        # valid_date(item, key, log_method, fmt='%Y/%m/%d', can_be_empty=True, as_date=True, **log_params):
-        self.assertIsNone(valid_date(dic, 'bad_key', logger))
-        self.assertRaises(TypeError, valid_date, dic, 'bad_key', logger, can_be_empty=False)
-        ret = valid_date(dic, 1, logger)
+        # str_to_date(item, key, log_method, fmt='%Y/%m/%d', can_be_empty=True, as_date=True, **log_params):
+        self.assertIsNone(str_to_date(dic, 'bad_key', logger))
+        self.assertRaises(TypeError, str_to_date, dic, 'bad_key', logger, can_be_empty=False)
+        ret = str_to_date(dic, 1, logger)
         self.assertIsInstance(ret, datetime.date)
         self.assertEqual(str(ret), '2023-03-03')
-        ret = valid_date(dic, 2, logger, fmt='%Y/%m/%d %H:%M', as_date=False)
+        ret = str_to_date(dic, 2, logger, fmt='%Y/%m/%d %H:%M', as_date=False)
         self.assertIsInstance(ret, datetime.datetime)
         self.assertEqual(str(ret), '2023-03-03 09:29:00')
-        ret = valid_date(dic, 2, logger, fmt='%Y/%m/%d %M:%H', as_date=False)
+        ret = str_to_date(dic, 2, logger, fmt='%Y/%m/%d %M:%H', as_date=False)
         self.assertEquals(dic['errors'], 1)
