@@ -80,6 +80,16 @@ def relative_path(portal, fullpath):
     return fullpath[len(portal_path) + 1:]
 
 
+def key_val(key, dic):
+    """ Return a dic value or the key
+
+    :param key: given key
+    :param dic: dict
+    :return: value or key
+    """
+    return dic.get(key, key)
+
+
 def str_to_bool(item, key, log_method, **log_params):
     """Changed to bool the text value of item[key].
 

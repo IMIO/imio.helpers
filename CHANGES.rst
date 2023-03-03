@@ -4,7 +4,7 @@ Changelog
 0.67 (unreleased)
 -----------------
 
-- Added `filter_keys`, `correct_path`, `pool_tuples` in transmogrifier module.
+- Added `correct_path`, `filter_keys`, `key_val`, `pool_tuples` in transmogrifier module.
   [sgeulette]
 - Added `str_to_date` in transmogrifier module.
   [sgeulette]

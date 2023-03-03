@@ -3,6 +3,7 @@ from imio.helpers.testing import IntegrationTestCase
 from imio.helpers.transmogrifier import correct_path
 from imio.helpers.transmogrifier import filter_keys
 from imio.helpers.transmogrifier import get_main_path
+from imio.helpers.transmogrifier import key_val
 from imio.helpers.transmogrifier import pool_tuples
 from imio.helpers.transmogrifier import relative_path
 from imio.helpers.transmogrifier import str_to_bool
@@ -51,6 +52,11 @@ class TestTesting(IntegrationTestCase):
         self.assertEquals(get_main_path('/', 'etc'), '/etc')
         os.environ['INSTANCE_HOME'] = orig_home
         os.environ['PWD'] = orig_pwd
+
+    def test_key_val(self):
+        dic = {'key': 'val'}
+        self.assertEqual(key_val('key', dic), 'val')
+        self.assertEqual(key_val('unknown', dic), 'unknown')
 
     def test_pool_tuples(self):
         lst = [1, 2, 3, 4, 5, 6]
