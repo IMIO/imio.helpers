@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from copy import deepcopy
+from datetime import datetime
 
 import os
 import re
@@ -72,7 +73,7 @@ def relative_path(portal, fullpath):
     return fullpath[len(portal_path) + 1:]
 
 
-def text_to_bool(item, key, log_method, log_params=None):
+def text_to_bool(item, key, log_method, **log_params):
     """Changed to bool the text value of item[key].
 
     :param item: yielded item (usually dict)
@@ -92,3 +93,17 @@ def text_to_bool(item, key, log_method, log_params=None):
     except Exception:  # noqa
         log_method(item, u"Cannot change '{}' key value '{}' to bool".format(key, item[key]), **log_params)
     return False
+
+
+def valid_date(item, key, log_method, fmt='%Y/%m/%d', can_be_empty=True, as_date=True, **log_params):
+    val = item.get(key)
+    if not val and can_be_empty:
+        return None
+    try:
+        dt = datetime.strptime(val, fmt)
+        if as_date:
+            dt = dt.date()
+    except ValueError as ex:
+        log_method(item, u"not a valid date '{}' in key '{}': {}".format(val, key, ex), **log_params)
+        return None
+    return dt
