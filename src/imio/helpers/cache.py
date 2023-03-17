@@ -226,7 +226,9 @@ def get_plone_groups_for_user_cachekey(method, user_id=None, user=None, the_obje
 
 @ram.cache(get_plone_groups_for_user_cachekey)
 def get_plone_groups_for_user(user_id=None, user=None, the_objects=False):
-    """Just return user.getGroups but cached."""
+    """Just return user.getGroups but cached.
+       This method is tested in
+       Products.PloneMeeting.tests.testToolPloneMeeting.test_pm_Get_plone_groups_for_user."""
     if api.user.is_anonymous():
         return []
     if user is None:
