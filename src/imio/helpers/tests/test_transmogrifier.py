@@ -4,6 +4,7 @@ from imio.helpers.transmogrifier import clean_value
 from imio.helpers.transmogrifier import correct_path
 from imio.helpers.transmogrifier import filter_keys
 from imio.helpers.transmogrifier import get_main_path
+from imio.helpers.transmogrifier import get_obj_from_path
 from imio.helpers.transmogrifier import key_val
 from imio.helpers.transmogrifier import pool_tuples
 from imio.helpers.transmogrifier import relative_path
@@ -51,6 +52,15 @@ class TestTesting(IntegrationTestCase):
         self.assertListEqual([1, 2, 3], sorted(filter_keys(dic, ['a', 'b', 'c']).values()))
         self.assertListEqual(['a', 'c'], sorted(filter_keys(dic, ['a', 'c']).keys()))
         self.assertListEqual([1, 3], sorted(filter_keys(dic, ['a', 'c']).values()))
+
+    def test_get_obj_from_path(self):
+        folder = self.portal.folder
+        self.assertEqual(get_obj_from_path(self.portal, path='/folder'), folder)
+        self.assertEqual(get_obj_from_path(self.portal, path='folder'), folder)
+        self.assertEqual(get_obj_from_path(self.portal, path=u'folder'), folder)
+        self.assertEqual(get_obj_from_path(self.portal, {'key': 'folder'}, path_key='key'), folder)
+        self.assertIsNone(get_obj_from_path(self.portal, {}, path_key='unknown_key'))
+        self.assertIsNone(get_obj_from_path(self.portal, path='in_va_lid'))
 
     def test_get_main_path(self):
         orig_home = os.getenv('INSTANCE_HOME')

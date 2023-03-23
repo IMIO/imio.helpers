@@ -2,6 +2,8 @@
 from copy import deepcopy
 from datetime import datetime
 from future.builtins import zip
+from imio.helpers.content import safe_encode
+from plone.api.validation import at_least_one_of
 
 import os
 import re
@@ -54,6 +56,29 @@ def filter_keys(item, keys):
     for key in keys:
         new_item[key] = item[key]
     return new_item
+
+
+@at_least_one_of('path_key', 'path')
+def get_obj_from_path(root, item={}, path_key=None, path=None):
+    """Gets object from path stored in item (dic) or from given path
+
+    :param root: root object from where the search is done
+    :param item: dict containing the path
+    :param path_key: dict key to access the path value
+    :param path: path value
+    :return: the object or None if not found
+    """
+    if not path:
+        path = item.get(path_key)
+    if not path:
+        return None
+    path = safe_encode(path)
+    if path.startswith('/'):
+        path = path[1:]
+    try:
+        return root.unrestrictedTraverse(path)
+    except KeyError:
+        return None
 
 
 def get_main_path(path='', subpath=''):
