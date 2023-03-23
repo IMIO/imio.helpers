@@ -3,7 +3,6 @@ from copy import deepcopy
 from datetime import datetime
 from future.builtins import zip
 from imio.helpers.content import safe_encode
-from plone.api.validation import at_least_one_of
 
 import os
 import re
@@ -58,8 +57,7 @@ def filter_keys(item, keys):
     return new_item
 
 
-@at_least_one_of('path_key', 'path')
-def get_obj_from_path(root, item={}, path_key=None, path=None):
+def get_obj_from_path(root, item={}, path_key='_path', path=None):
     """Gets object from path stored in item (dic) or from given path
 
     :param root: root object from where the search is done
