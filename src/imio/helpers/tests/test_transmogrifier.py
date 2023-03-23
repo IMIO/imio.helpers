@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from imio.helpers.testing import IntegrationTestCase
+from imio.helpers.transmogrifier import clean_value
 from imio.helpers.transmogrifier import correct_path
 from imio.helpers.transmogrifier import filter_keys
 from imio.helpers.transmogrifier import get_main_path
@@ -19,6 +20,18 @@ def logger(item, msg):
 
 
 class TestTesting(IntegrationTestCase):
+
+    def test_clean_value(self):
+        self.assertEqual(clean_value(None), None)
+        self.assertEqual(clean_value(u'  strip  '), u'strip')
+        self.assertEqual(clean_value(u' | strip  ', strip=u' |'), u'strip')
+        self.assertEqual(clean_value(u' strip  \n  strip  '), u'strip\nstrip')
+        self.assertEqual(clean_value(u' strip  \n  strip  ', osep=u'\r\n'), u'strip\r\nstrip')
+        self.assertEqual(clean_value(u' strip  |  strip  ', isep=u'|'), u'strip|strip')
+        self.assertEqual(clean_value(u'  \n strip  \n '), u'strip')
+        self.assertEqual(clean_value(u' strip  \n "', strip=u' "'), u'strip')
+        self.assertEqual(clean_value(u' strip  \n "', patterns=[r'"']), u'strip')
+        self.assertEqual(clean_value(u' strip  \n "\'"', patterns=[r'^["\']+$']), u'strip')
 
     def test_correct_path(self):
         self.assertEquals(correct_path(self.portal, 'abcde'), 'abcde')

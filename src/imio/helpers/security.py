@@ -26,7 +26,7 @@ logger = logging.getLogger("imio.helpers")
 
 def is_develop_environment():
     """
-        Test if the environment variable named IS_DEV_ENV is added by the buildout and get the value
+        Test if the environment variable named ENV is added by the buildout and get the value
     """
     TRUISMS = ['yes', 'y', 'true', 'on']
     var = os.getenv('IS_DEV_ENV', 'false')

@@ -7,6 +7,30 @@ import os
 import re
 
 
+def clean_value(value, isep=u'\n', strip=u' ', patterns=[], osep=None):
+    """Clean multiline value
+
+    :param value: input string
+    :param isep: input separator
+    :param strip: chars to strip on each "line"
+    :param patterns: line patterns to remove ("line" evaluation)
+    :param osep: output separator
+    :return: string
+    """
+    parts = []
+    if not value:
+        return value
+    if osep is None:
+        osep = isep
+    for part in value.split(isep):
+        part = part.strip(strip)
+        for pattern in patterns:
+            part = re.sub(pattern, u'', part)
+        if part:
+            parts.append(part)
+    return osep.join(parts)
+
+
 def correct_path(portal, path):
     """ Check if a path already exists on obj """
     original = path
