@@ -75,7 +75,7 @@ def get_obj_from_path(root, item={}, path_key='_path', path=None):
         path = path[1:]
     try:
         return root.unrestrictedTraverse(path)
-    except KeyError:
+    except (KeyError, AttributeError):
         return None
 
 
