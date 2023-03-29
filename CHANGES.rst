@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.67 (unreleased)
+0.67 (2023-03-29)
 -----------------
 
 - Added `clean_value`, `correct_path`, `filter_keys`, `get_obj_from_path` in transmogrifier module.
