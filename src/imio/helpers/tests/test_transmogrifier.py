@@ -8,6 +8,7 @@ from imio.helpers.transmogrifier import get_obj_from_path
 from imio.helpers.transmogrifier import key_val
 from imio.helpers.transmogrifier import pool_tuples
 from imio.helpers.transmogrifier import relative_path
+from imio.helpers.transmogrifier import split_text
 from imio.helpers.transmogrifier import str_to_bool
 from imio.helpers.transmogrifier import str_to_date
 
@@ -97,6 +98,16 @@ class TestTesting(IntegrationTestCase):
     def test_relative_path(self):
         self.assertEquals(relative_path(self.portal, '/plone/directory'), 'directory')
         self.assertEquals(relative_path(self.portal, '/alone/directory'), '/alone/directory')
+
+    def test_split_text(self):
+        self.assertTupleEqual(split_text('aa bb cc dd éé', 50), (u'aa bb cc dd éé', u''))
+        self.assertTupleEqual(split_text(u'aa bb cc dd ee', 50), (u'aa bb cc dd ee', u''))
+        self.assertTupleEqual(split_text(u'aa bb cc dd ee', 0), (u'', u'aa bb cc dd ee'))
+        self.assertTupleEqual(split_text(u'aa bb cc dd ee', 7), (u'aa bb ', u'cc dd ee'))
+        self.assertTupleEqual(split_text(u'aa bb cc dd ee', 8), (u'aa bb cc', u' dd ee'))
+        self.assertTupleEqual(split_text(u'aa bb cc dd ee', 9), (u'aa bb cc ', u'dd ee'))
+        # space before the middle
+        self.assertTupleEqual(split_text(u'aa bbccddee', 9), (u'aa bbccdd', u'ee'))
 
     def test_str_to_bool(self):
         dic = {'True': 'True', 'true': 'true', 'False': 'False', 'false': 'false',

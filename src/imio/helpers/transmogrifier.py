@@ -7,6 +7,8 @@ from imio.helpers.content import safe_encode
 import os
 import re
 
+from Products.CMFPlone.utils import safe_unicode
+
 
 def clean_value(value, isep=u'\n', strip=u' ', patterns=[], osep=None):
     """Clean multiline value
@@ -157,6 +159,21 @@ def str_to_bool(item, key, log_method, **log_params):
     except Exception:  # noqa
         log_method(item, u"Cannot change '{}' key value '{}' to bool".format(key, item[key]), **log_params)
     return False
+
+
+def split_text(text, length):
+    """Split text on a word boundary at max length"""
+    part1 = text = safe_unicode(text)
+    part2 = u''
+    if len(text) > length:
+        part1 = text[:length]
+        part2 = text[length:]
+        if part2[:1] != u' ':  # cut in a word
+            s_i = part1.rfind(u' ')
+            if s_i > length / 2:  # space after the middle of the part1
+                part1 = part1[:s_i + 1]
+                part2 = text[s_i + 1:]
+    return part1, part2
 
 
 def str_to_date(item, key, log_method, fmt='%Y/%m/%d', can_be_empty=True, as_date=True, **log_params):

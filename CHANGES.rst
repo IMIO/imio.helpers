@@ -4,8 +4,8 @@ Changelog
 0.68 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Added `split_text` in transmogrifier module.
+  [sgeulette]
 
 0.67 (2023-03-29)
 -----------------
