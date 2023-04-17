@@ -163,6 +163,8 @@ def str_to_bool(item, key, log_method, **log_params):
 
 def split_text(text, length):
     """Split text on a word boundary at max length"""
+    if text is None:
+        return u'', u''
     part1 = text = safe_unicode(text)
     part2 = u''
     if len(text) > length:

@@ -100,6 +100,7 @@ class TestTesting(IntegrationTestCase):
         self.assertEquals(relative_path(self.portal, '/alone/directory'), '/alone/directory')
 
     def test_split_text(self):
+        self.assertTupleEqual(split_text(None, 50), (u'', u''))
         self.assertTupleEqual(split_text('aa bb cc dd éé', 50), (u'aa bb cc dd éé', u''))
         self.assertTupleEqual(split_text(u'aa bb cc dd ee', 50), (u'aa bb cc dd ee', u''))
         self.assertTupleEqual(split_text(u'aa bb cc dd ee', 0), (u'', u'aa bb cc dd ee'))
