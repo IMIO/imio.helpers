@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from imio.helpers.testing import IntegrationTestCase
 from imio.helpers.workflow import do_transitions
+from imio.helpers.workflow import get_leading_transitions
 from imio.helpers.workflow import get_state_infos
 from imio.helpers.workflow import get_transitions
 from imio.helpers.workflow import remove_state_transitions
@@ -57,3 +58,11 @@ class TestWorkflowModule(IntegrationTestCase):
         self.assertTupleEqual(wf.states['internal'].transitions, ('publish_internally', 'submit', 'submit'))
         self.assertTrue(remove_state_transitions('intranet_workflow', 'internal'))
         self.assertTupleEqual(wf.states['internal'].transitions, ('publish_internally', 'submit'))
+
+    def test_get_leading_transitions(self):
+        wf_tool = api.portal.get_tool('portal_workflow')
+        wf = wf_tool['intranet_workflow']
+        self.assertEqual(get_leading_transitions(wf, None), [])
+        self.assertEqual(get_leading_transitions(wf, "unknown"), [])
+        self.assertEqual(get_leading_transitions(wf, "external"),
+                         [wf.transitions['publish_externally']])

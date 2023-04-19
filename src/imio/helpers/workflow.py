@@ -47,6 +47,15 @@ def get_transitions(obj):
     return [tr["id"] for tr in wf_tool.getTransitionsFor(obj)]
 
 
+def get_leading_transitions(wf, state_id):
+    """For given p_state_id, return the transition id leading to it."""
+    res = []
+    for tr in wf.transitions.values():
+        if tr.new_state_id == state_id:
+            res.append(tr)
+    return res
+
+
 def remove_state_transitions(wf_name, state_id, remv_trs=[]):
     """Removes transitions defined on a state and possible duplicates
 

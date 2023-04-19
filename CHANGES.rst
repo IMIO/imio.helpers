@@ -6,6 +6,9 @@ Changelog
 
 - Added `split_text` in transmogrifier module.
   [sgeulette]
+- Added `workflow.get_leading_transitions` that will return every WF transitions
+  leading to a given `state_id`.
+  [gbastien]
 
 0.67 (2023-03-29)
 -----------------
