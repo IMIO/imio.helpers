@@ -33,7 +33,7 @@ jobs:
       - name: Setup Env
         run: |
           sudo apt-get update -qqy
-          sudo apt-get install -qqy g++ libpng-dev cmake libqt4-dev libqt5widgets5 qttools5-dev
+          sudo apt-get install -qqy g++ libpng-dev cmake libqt5widgets5 qttools5-dev
           wget -t 3 -T 60 --waitretry 5 -O zint-2.8.0.tar.gz https://sourceforge.net/projects/zint/files/zint/2.8.0/zint-2.8.0.tar.gz/download
           tar -xf zint-2.8.0.tar.gz
           cd zint-2.8.0
@@ -75,7 +75,7 @@ jobs:
       - name: Setup Env
         run: |
           sudo apt-get update -qqy
-          sudo apt-get install -qqy g++ libpng-dev cmake libqt4-dev libqt5widgets5 qttools5-dev
+          sudo apt-get install -qqy g++ libpng-dev cmake libqt5widgets5 qttools5-dev
           wget -t 3 -T 60 --waitretry 5 -O zint-2.8.0.tar.gz https://sourceforge.net/projects/zint/files/zint/2.8.0/zint-2.8.0.tar.gz/download
           tar -xf zint-2.8.0.tar.gz
           cd zint-2.8.0
