@@ -3,11 +3,10 @@ from copy import deepcopy
 from datetime import datetime
 from future.builtins import zip
 from imio.helpers.content import safe_encode
+from Products.CMFPlone.utils import safe_unicode
 
 import os
 import re
-
-from Products.CMFPlone.utils import safe_unicode
 
 
 def clean_value(value, isep=u'\n', strip=u' ', patterns=[], osep=None):
