@@ -47,11 +47,18 @@ def get_transitions(obj):
     return [tr["id"] for tr in wf_tool.getTransitionsFor(obj)]
 
 
-def get_leading_transitions(wf, state_id):
-    """For given p_state_id, return the transition id leading to it."""
+def get_leading_transitions(wf, state_id, not_starting_with=None):
+    """Returns transitions leading to a WF state.
+
+    :param wf: wf object
+    :param state_id: leading state id
+    :param not_starting_with: transition id starting string
+    :return: a list of WFtransitions
+    """
     res = []
     for tr in wf.transitions.values():
-        if tr.new_state_id == state_id:
+        if tr.new_state_id == state_id and \
+           (not_starting_with is None or not tr.id.startswith(not_starting_with)):
             res.append(tr)
     return res
 

@@ -66,3 +66,7 @@ class TestWorkflowModule(IntegrationTestCase):
         self.assertEqual(get_leading_transitions(wf, "unknown"), [])
         self.assertEqual(get_leading_transitions(wf, "external"),
                          [wf.transitions['publish_externally']])
+        # not_starting_with parameter will let ignore some transitions
+        self.assertEqual(get_leading_transitions(wf, "external", not_starting_with="publish_"), [])
+        self.assertEqual(get_leading_transitions(wf, "external", not_starting_with="suffix_"),
+                         [wf.transitions['publish_externally']])
