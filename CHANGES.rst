@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.68 (unreleased)
+0.68 (2023-05-12)
 -----------------
 
 - Added `split_text` in transmogrifier module.
