@@ -34,6 +34,8 @@ class TestTesting(IntegrationTestCase):
         self.assertEqual(clean_value(u' strip  \n "', strip=u' "'), u'strip')
         self.assertEqual(clean_value(u' strip  \n "', patterns=[r'"']), u'strip')
         self.assertEqual(clean_value(u' strip  \n "\'"', patterns=[r'^["\']+$']), u'strip')
+        self.assertEqual(clean_value(u' strip  \n ', patterns=[]), u'strip')
+        self.assertEqual(clean_value(u' strip  \n line2', patterns=[], osep=u'-'), u'strip-line2')
 
     def test_correct_path(self):
         self.assertEquals(correct_path(self.portal, 'abcde'), 'abcde')
