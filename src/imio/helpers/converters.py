@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from cgi import escape
 from ZPublisher.Converters import type_converters
+
+try:
+    from cgi import escape  # Python 2.x
+except ImportError:
+    from html import escape
 
 import json
 

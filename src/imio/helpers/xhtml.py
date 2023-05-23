@@ -1,14 +1,26 @@
 # -*- coding: utf-8 -*-
+
 from Acquisition import aq_base
 from html import escape
+from imio.helpers import HAS_PLONE_5_AND_MORE
+from imio.helpers.utils import create_image_content
 from os import path
 from plone import api
-from plone.app.imaging.scale import ImageScale
 from plone.outputfilters.browser.resolveuid import uuidToURL
 from plone.outputfilters.filters.resolveuid_and_caption import ResolveUIDAndCaptionFilter
 from Products.CMFPlone.utils import safe_unicode
 from zExceptions import NotFound
 from zope.container.interfaces import INameChooser
+
+if HAS_PLONE_5_AND_MORE:
+    from plone.namedfile.scaling import ImageScale
+else:
+    from plone.app.imaging.scale import ImageScale
+
+try:
+    from urllib.request import urlretrieve  # python3
+except ImportError:
+    from urllib import urlretrieve
 
 import base64
 import cgi
@@ -16,8 +28,8 @@ import logging
 import lxml.html
 import os
 import pkg_resources
+import six
 import types
-import urllib
 
 
 logger = logging.getLogger('imio.helpers:xhtml')
@@ -42,7 +54,10 @@ def xhtmlContentIsEmpty(xhtmlContent, tagWithAttributeIsNotEmpty=True):
        be considered not empty.'''
 
     # first check if xhtmlContent is not simply None or so
-    isStr = isinstance(xhtmlContent, types.StringType) or isinstance(xhtmlContent, types.NoneType)
+    if six.PY3:
+        isStr = isinstance(xhtmlContent, str) or isinstance(xhtmlContent, type(None))
+    else:
+        isStr = isinstance(xhtmlContent, types.StringType) or isinstance(xhtmlContent, types.NoneType)
     if isStr and (not xhtmlContent or not xhtmlContent.strip()):
         return True
 
@@ -75,17 +90,19 @@ def removeBlanks(xhtmlContent, pretty_print=False):
     tree = _turnToLxmlTree(xhtmlContent)
     if not isinstance(tree, lxml.html.HtmlElement):
         return xhtmlContent
-
     for el in tree.getchildren():
         # el can be a subtree, like <ul><li>...</li></ul> we must consider entire rendering of it
         if xhtmlContentIsEmpty(el, tagWithAttributeIsNotEmpty=False):
             el.getparent().remove(el)
-    # only return children of the <special_tag>
-    return ''.join([lxml.html.tostring(x,
-                                       encoding='ascii',
-                                       pretty_print=pretty_print,
-                                       method='html')
-                    for x in tree.iterchildren()])
+    # Will only return children of the <special_tag>
+    result = [lxml.html.tostring(x,
+                        encoding='ascii',
+                        pretty_print=pretty_print,
+                        method='html')
+              for x in tree.iterchildren()]
+    if six.PY3:
+        return ''.join([r.decode('utf-8') for r in result])
+    return ''.join(result)
 
 
 def replace_content(xhtml_content,
@@ -128,13 +145,21 @@ def replace_content(xhtml_content,
                 elt.tag = "span"
                 elt.text = u""
                 elt.tail = u""
-
-    # only return children of the <special_tag>
-    return ''.join([lxml.html.tostring(x,
+    if six.PY3:
+        result = [lxml.html.tostring(x,
+                                       encoding='ascii',
+                                       pretty_print=pretty_print,
+                                       method='html').decode()
+                    for x in tree.iterchildren()]
+    else:
+        result = [lxml.html.tostring(x,
                                        encoding='ascii',
                                        pretty_print=pretty_print,
                                        method='html')
-                    for x in tree.iterchildren()])
+                    for x in tree.iterchildren()]
+
+    # only return children of the <special_tag>
+    return ''.join(result)
 
 
 def _turnToLxmlTree(xhtmlContent):
@@ -169,11 +194,18 @@ def addClassToContent(xhtmlContent, css_class, pretty_print=False):
                 cssClass = css_class
             child.attrib['class'] = cssClass
 
-    # use encoding to 'ascii' so HTML entities are translated to something readable
-    res = ''.join([lxml.html.tostring(x,
+    if six.PY3:
+        result = [lxml.html.tostring(x,
                                       encoding='ascii',
                                       pretty_print=pretty_print,
-                                      method='html') for x in children])
+                                      method='html').decode() for x in children]
+    else:
+        result = [lxml.html.tostring(x,
+                                      encoding='ascii',
+                                      pretty_print=pretty_print,
+                                      method='html') for x in children]
+    # use encoding to 'ascii' so HTML entities are translated to something readable
+    res = ''.join(result)
     return res
 
 
@@ -239,11 +271,18 @@ def addClassToLastChildren(xhtmlContent,
     # call recursive method 'adaptTree' that whill adapt children and subchildren
     adaptTree(children)
 
+    if six.PY3:
+        result = [lxml.html.tostring(x,
+                                    encoding='ascii',
+                                    pretty_print=pretty_print,
+                                    method='html').decode() for x in tree.iterchildren()]
+    else:
+        result = [lxml.html.tostring(x,
+                                    encoding='ascii',
+                                    pretty_print=pretty_print,
+                                    method='html') for x in tree.iterchildren()]
     # use encoding to 'ascii' so HTML entities are translated to something readable
-    res = ''.join([lxml.html.tostring(x,
-                                      encoding='ascii',
-                                      pretty_print=pretty_print,
-                                      method='html') for x in tree.iterchildren()])
+    res = ''.join(result)
     return res
 
 
@@ -277,11 +316,17 @@ def markEmptyTags(xhtmlContent,
         # add a title to the tag if necessary
         if tagTitle:
             child.attrib['title'] = tagTitle
-    return ''.join([lxml.html.tostring(x,
-                                       encoding='utf-8',
-                                       pretty_print=pretty_print,
-                                       method='html')
-                    for x in tree.iterchildren()])
+    if six.PY3:
+        result = [lxml.html.tostring(x,
+                                    encoding='utf-8',
+                                    pretty_print=pretty_print,
+                                    method='html').decode() for x in tree.iterchildren()]
+    else:
+        result = [lxml.html.tostring(x,
+                                    encoding='utf-8',
+                                    pretty_print=pretty_print,
+                                    method='html') for x in tree.iterchildren()]
+    return ''.join(result)
 
 
 def removeCssClasses(xhtmlContent,
@@ -298,11 +343,17 @@ def removeCssClasses(xhtmlContent,
             if 'class' in tag.attrib and tag.attrib['class'].strip() in css_classes:
                 del tag.attrib['class']
 
-    return ''.join([lxml.html.tostring(x,
-                                       encoding='utf-8',
-                                       pretty_print=pretty_print,
-                                       method='html')
-                    for x in tree.iterchildren()])
+    if six.PY3:
+        result = [lxml.html.tostring(x,
+                                    encoding='utf-8',
+                                    pretty_print=pretty_print,
+                                    method='html').decode() for x in tree.iterchildren()]
+    else:
+        result = [lxml.html.tostring(x,
+                                    encoding='utf-8',
+                                    pretty_print=pretty_print,
+                                    method='html') for x in tree.iterchildren()]
+    return ''.join(result)
 
 
 def _img_from_src(context, img, portal, portal_url):
@@ -331,6 +382,8 @@ def _img_from_src(context, img, portal, portal_url):
         except (KeyError, AttributeError, NotFound):
             return
 
+    # XXX ImageScale are not traversable anymore !!!!
+
     # maybe we have a ImageScale instead of the real Image object?
     if isinstance(imageObj, ImageScale):
         imageObj = imageObj.aq_inner.aq_parent
@@ -341,8 +394,13 @@ def _get_image_blob(imageObj):
     """Be defensinve in case this is a wrong <img> with a src
        to someting else than an image... """
     blob = None
-    if hasattr(aq_base(imageObj), 'getBlobWrapper') and imageObj.get_size():
-        blob = imageObj.getBlobWrapper()
+    if HAS_PLONE_5_AND_MORE:
+        if imageObj.image and imageObj.get_size():
+            blob = imageObj.image
+    else:
+        img_size = imageObj.get_size()
+        if hasattr(aq_base(imageObj), 'getBlobWrapper') and img_size:
+            blob = imageObj.getBlobWrapper()
     return blob
 
 
@@ -385,20 +443,39 @@ def _transform_images(context, xhtmlContent, pretty_print=False, transform_type=
         blob_path = None
         if blob:
             if transform_type == "path":
-                blob_path = blob.blob._p_blob_committed
+                if HAS_PLONE_5_AND_MORE:
+                    blob_path = blob._blob._p_blob_committed
+                else:
+                    blob_path = blob.blob._p_blob_committed
                 if blob_path:
                     img.attrib['src'] = blob_path
             elif transform_type == "data":
-                blob_path = blob.blob._p_blob_committed
-                if blob_path and blob.content_type.startswith('image/'):
-                    img.attrib['src'] = "data:{0};base64,{1}".format(
-                        blob.content_type, base64.b64encode(blob.data))
-
-    # use encoding to 'ascii' so HTML entities are translated to something readable
-    return ''.join([lxml.html.tostring(x,
+                # blob_path = blob.blob._p_blob_committed
+                # blob_path and
+                if HAS_PLONE_5_AND_MORE:
+                    blob_content_type = blob.contentType
+                    if blob_content_type.startswith('image/'):
+                        # py3
+                        img.attrib['src'] = "data:{0};base64,{1}".format(
+                            blob_content_type, base64.b64encode(blob.data).decode("utf-8"))
+                else:
+                    blob_content_type = blob.content_type
+                    if blob_content_type.startswith('image/'):
+                        # py2.7
+                        img.attrib['src'] = "data:{0};base64,{1}".format(
+                            blob_content_type, base64.b64encode(blob.data))
+    if six.PY3:
+        result = [lxml.html.tostring(x,
                                        encoding='ascii',
                                        pretty_print=pretty_print,
-                                       method='html') for x in tree.iterchildren()])
+                                       method='html').decode("utf-8") for x in tree.iterchildren()]
+    else:
+        result = [lxml.html.tostring(x,
+                                       encoding='ascii',
+                                       pretty_print=pretty_print,
+                                       method='html') for x in tree.iterchildren()]
+    # use encoding to 'ascii' so HTML entities are translated to something readable
+    return ''.join(result)
 
 
 def imagesToPath(context, xhtmlContent, pretty_print=False):
@@ -465,25 +542,36 @@ def storeImagesLocally(context,
             return None, None
 
         filename = imageObj.getId()
-        data = imageObj.getBlobWrapper().data
+        if HAS_PLONE_5_AND_MORE:
+            data = imageObj.image.data
+        else:
+            # In Plone4 python 2.x : imageObj is <ATImage at /plone/dot.gif>
+            data = imageObj.getBlobWrapper().data
         return filename, data
 
     def _handle_external_image(img_src):
         """ """
         # right, we have an external image, download it, stores it in context and update img_src
         try:
-            downloaded_img_path, downloaded_img_infos = urllib.urlretrieve(img_src)
+            downloaded_img_path, downloaded_img_infos = urlretrieve(img_src)
         except (IOError, UnicodeError):
             # url not existing
             return None, None
 
         # not an image
-        if not downloaded_img_infos.maintype == 'image':
-            return None, None
+        if six.PY3:
+            if not downloaded_img_infos.get_content_type().split('/')[0] == 'image':
+                return None, None
+        else:
+            if not downloaded_img_infos.maintype == 'image':
+                return None, None
 
         # retrieve filename
         filename = 'image'
-        disposition = downloaded_img_infos.getheader('Content-Disposition')
+        if six.PY3:
+            disposition = downloaded_img_infos.get_content_disposition()
+        else:
+            disposition = downloaded_img_infos.getheader('Content-Disposition')
         # get real filename from 'Content-Disposition' if available
         if disposition:
             disp_value, disp_params = cgi.parse_header(disposition)
@@ -491,7 +579,7 @@ def storeImagesLocally(context,
         # if no 'Content-Disposition', at least try to get correct file extension
         elif hasattr(downloaded_img_infos, 'subtype'):
             filename = '{0}.{1}'.format(filename, downloaded_img_infos.subtype)
-        f = open(downloaded_img_path, 'r')
+        f = open(downloaded_img_path, 'rb')
         data = f.read()
         f.close()
         # close and delete temporary file
@@ -574,8 +662,15 @@ def storeImagesLocally(context,
 
         # create image
         name = name_chooser.chooseName(filename, context)
-        new_img_id = context.invokeFactory(imagePortalType, id=name, title=name, file=data)
-        new_img = getattr(context, new_img_id)
+        new_img = create_image_content(
+            container=context,
+            title=name,
+            id=name,
+            filename=name,
+            portal_type=imagePortalType,
+            data=data,
+        )
+
         # store a resolveuid if using it, the absolute_url to image if not
         if force_resolve_uid or \
            original_img_src.startswith('resolveuid') or \
@@ -592,11 +687,17 @@ def storeImagesLocally(context,
 
     if not changed:
         return xhtmlContent
-
-    return ''.join([lxml.html.tostring(x,
-                                       encoding='utf-8',
-                                       pretty_print=pretty_print,
-                                       method='html') for x in tree.iterchildren()])
+    if six.PY3:
+        result = [lxml.html.tostring(x,
+                                    encoding='utf-8',
+                                    pretty_print=pretty_print,
+                                    method='html').decode() for x in tree.iterchildren()]
+    else:
+        result = [lxml.html.tostring(x,
+                                    encoding='utf-8',
+                                    pretty_print=pretty_print,
+                                    method='html') for x in tree.iterchildren()]
+    return ''.join(result)
 
 
 def separate_images(xhtmlContent, pretty_print=False):
@@ -636,10 +737,17 @@ def separate_images(xhtmlContent, pretty_print=False):
     if not changed:
         return xhtmlContent
 
-    return ''.join([lxml.html.tostring(x,
-                                       encoding='utf-8',
-                                       pretty_print=pretty_print,
-                                       method='html') for x in tree.iterchildren()])
+    if six.PY3:
+        result = [lxml.html.tostring(x,
+                                    encoding='utf-8',
+                                    pretty_print=pretty_print,
+                                    method='html').decode() for x in tree.iterchildren()]
+    else:
+        result = [lxml.html.tostring(x,
+                                    encoding='utf-8',
+                                    pretty_print=pretty_print,
+                                    method='html') for x in tree.iterchildren()]
+    return ''.join(result)
 
 
 def object_link(obj, view='view', attribute='Title', content='', target='', escaped=True):

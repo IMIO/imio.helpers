@@ -90,5 +90,6 @@ class TestBaseRenderFancyTree(IntegrationTestCase):
                 ]
             }
         ])
-
+        expected = sorted(json.loads(expected))
+        output = sorted(json.loads(output))
         self.assertEqual(output, expected)

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from collections import OrderedDict
+from imio.helpers import HAS_PLONE_5_AND_MORE
 from imio.helpers.catalog import addOrUpdateColumns
 from imio.helpers.catalog import addOrUpdateIndexes
 from imio.helpers.catalog import get_intid
@@ -14,6 +15,8 @@ from plone import api
 from plone.app.testing import applyProfile
 from zope.component import getUtility
 from zope.intid.interfaces import IIntIds
+
+import six
 
 
 class TestCatalogModule(IntegrationTestCase):
@@ -47,7 +50,11 @@ class TestCatalogModule(IntegrationTestCase):
         # for now reversedUID index does not exist...
         self.assertTrue('reversedUID' not in self.catalog.indexes())
         # and add an existing index UID
-        self.assertTrue(self.catalog.Indexes['UID'].getTagName() == 'UUIDIndex')
+        if HAS_PLONE_5_AND_MORE:
+            tagname = self.catalog.Indexes['UID'].__class__.__name__
+        else:
+            tagname = self.catalog.Indexes['UID'].getTagName()
+        self.assertTrue(tagname == 'UUIDIndex')
         # add a document prior to adding the index
         priorDocument = api.content.create(type='Document',
                                            id='prior-document',
@@ -206,9 +213,13 @@ class TestCatalogModule(IntegrationTestCase):
 
     def test_reindexIndexes(self):
         self.assertFalse(self.portal.portal_catalog(Title='specific'))
-        obj = api.content.create(container=self.portal.folder, id='tt', type='testingtype')
+        obj = api.content.create(container=self.portal.folder, id='tt', type='testingtype', title='other')
         obj.title = 'specific'
-        self.assertFalse(self.portal.portal_catalog(Title='specific'))
+        if six.PY3:
+            # that it with Plone52py3 / Plone6py3
+            self.assertTrue(self.portal.portal_catalog(Title='specific'))
+        else:
+            self.assertFalse(self.portal.portal_catalog(Title='specific'))
         reindexIndexes(self.portal, ['Title'])
         res = self.portal.portal_catalog(Title='specific')
         self.assertEqual(len(res), 1)

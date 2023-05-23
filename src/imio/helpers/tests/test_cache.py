@@ -31,6 +31,12 @@ import time
 memPropName = Memojito.propname
 
 
+class Foo(object):
+
+    def bar(self):
+        pass
+
+
 def ramCachedMethod_cachekey(method, portal, param, pass_volatile_method=False):
     '''cachekey method for ramCachedMethod.'''
     # used for test_get_cachekey_volatile_method_cleanup
@@ -238,11 +244,6 @@ class TestCacheModule(IntegrationTestCase):
             generate_key(generate_key),
         )
 
-        class Foo(object):
-
-            def bar(self):
-                pass
-
         self.assertEqual(
             'imio.helpers.tests.test_cache.Foo.bar',
             generate_key(Foo.bar),
@@ -304,7 +305,7 @@ class TestCachedMethods(IntegrationTestCase):
     def setUp(self):
         super(TestCachedMethods, self).setUp()
         self.acl = self.portal['acl_users']
-        api.user.create('a@b.be', 'user1', '12345', properties={'fullname': 'Stéphan Smith'})  # Returns MemberData
+        api.user.create('a@b.be', 'user1', '123-45@6U78', properties={'fullname': 'Stéphan Smith'})  # Returns MemberData
         self.user = self.acl.getUserById('user1')  # Returns PloneUser
 
     def test_getGroupsForPrincipal(self):
@@ -331,14 +332,17 @@ class TestCachedMethods(IntegrationTestCase):
         self.assertTupleEqual(prm.getRolesForPrincipal(self.user),
                               ('Member',))
         prm.assignRolesToPrincipal(('Member', 'Reviewer',), 'user1')
-        self.assertTupleEqual(prm.getRolesForPrincipal(self.user),
+        sorted_roles = tuple(sorted(prm.getRolesForPrincipal(self.user), key=str.lower))
+        self.assertTupleEqual(sorted_roles,
                               ('Member', 'Reviewer'))
         prm.assignRoleToPrincipal('Contributor', 'user1')
-        self.assertTupleEqual(prm.getRolesForPrincipal(self.user),
-                              ('Member', 'Reviewer', 'Contributor'))
+        sorted_roles = tuple(sorted(prm.getRolesForPrincipal(self.user), key=str.lower))
+        self.assertTupleEqual(sorted_roles,
+                              ('Contributor', 'Member', 'Reviewer'))
         prm.removeRoleFromPrincipal('Reviewer', 'user1')
-        self.assertTupleEqual(prm.getRolesForPrincipal(self.user),
-                              ('Member', 'Contributor'))
+        sorted_roles = tuple(sorted(prm.getRolesForPrincipal(self.user), key=str.lower))
+        self.assertTupleEqual(sorted_roles,
+                              ('Contributor', 'Member'))
 
     def test__getGroupsForPrincipal(self):
         self.skipTest('Temporary skipped')

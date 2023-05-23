@@ -1,5 +1,11 @@
 # -*- coding: utf-8 -*-
+
+from imio.helpers import HAS_PLONE_5_AND_MORE
+from imio.helpers.testing import FUNCTIONAL
 from imio.helpers.testing import IntegrationTestCase
+from imio.helpers.tests.utils import get_file_data
+from imio.helpers.tests.utils import require_module
+from imio.helpers.utils import create_image_content
 from imio.helpers.xhtml import addClassToContent
 from imio.helpers.xhtml import addClassToLastChildren
 from imio.helpers.xhtml import imagesToData
@@ -13,10 +19,15 @@ from imio.helpers.xhtml import replace_content
 from imio.helpers.xhtml import separate_images
 from imio.helpers.xhtml import storeImagesLocally
 from imio.helpers.xhtml import xhtmlContentIsEmpty
-from os import path
-from plone import api
-from Products.ATContentTypes.interfaces import IImageContent
 
+try:
+    from Products.ATContentTypes.interfaces import IImageContent
+except ImportError:
+    print("require Archetypes")
+
+import os
+import six
+import transaction
 import urllib
 
 
@@ -55,6 +66,8 @@ class TestXHTMLModule(IntegrationTestCase):
     """
     Test all helper methods of xhtml module.
     """
+
+    layer = FUNCTIONAL
 
     def test_removeBlanks(self):
         """
@@ -275,14 +288,27 @@ class TestXHTMLModule(IntegrationTestCase):
         self.assertEqual(markEmptyTags(None), None)
         self.assertEqual(markEmptyTags("<p></p>"), '<p class="highlightBlankRow"></p>')
         self.assertEqual(markEmptyTags("<p> </p>"), '<p class="highlightBlankRow"> </p>')
-        self.assertEqual(markEmptyTags("<p>&nbsp;</p>"), '<p class="highlightBlankRow">\xc2\xa0</p>')
+        if six.PY3:
+            self.assertEqual(markEmptyTags("<p>&nbsp;</p>"), '<p class="highlightBlankRow">\xa0</p>')
+            self.assertEqual(markEmptyTags("<span>&nbsp;</span>"), '<span>\xa0</span>')
+            # result is not prettyfied (pretty_print=False) but if source was
+            # pretty, then the result is pretty also
+            self.assertEqual(markEmptyTags('<p>String with special chars: é</p>\n'),
+                             '<p>String with special chars: é</p>\n')
+        else:
+            self.assertEqual(markEmptyTags("<p>&nbsp;</p>"), '<p class="highlightBlankRow">\xc2\xa0</p>')
+            self.assertEqual(markEmptyTags("<span>&nbsp;</span>"), '<span>\xc2\xa0</span>')
+            # result is not prettyfied (pretty_print=False) but if source was
+            # pretty, then the result is pretty also
+            self.assertEqual(markEmptyTags(u'<p>Unicode string with special chars: \xe9</p>\n'),
+                             '<p>Unicode string with special chars: \xc3\xa9</p>\n')
+
         self.assertEqual(markEmptyTags("<p>Text</p>"), '<p>Text</p>')
         self.assertEqual(markEmptyTags("<p>Text</p><p></p>"), '<p>Text</p><p class="highlightBlankRow"></p>')
         # change markingClass
         self.assertEqual(markEmptyTags("<p> </p>", markingClass='customClass'), '<p class="customClass"> </p>')
         # "span" not handled by default
         self.assertEqual(markEmptyTags("<span></span>"), '<span></span>')
-        self.assertEqual(markEmptyTags("<span>&nbsp;</span>"), '<span>\xc2\xa0</span>')
         # but "span" could be handled if necessary
         self.assertEqual(markEmptyTags("<span></span>", tags=('span', )), '<span class="highlightBlankRow"></span>')
         # by default every empty tags are highlighted, but we can specify to highlight only trailing
@@ -301,12 +327,6 @@ class TestXHTMLModule(IntegrationTestCase):
         # we may mark Unicode as well as UTF-8 xhtmlContent
         self.assertEqual(markEmptyTags('<p>UTF-8 string with special chars: \xc3\xa9</p>'),
                          '<p>UTF-8 string with special chars: \xc3\xa9</p>')
-        self.assertEqual(markEmptyTags(u'<p>Unicode string with special chars: \xe9</p>'),
-                         '<p>Unicode string with special chars: \xc3\xa9</p>')
-        # result is not prettyfied (pretty_print=False) but if source was
-        # pretty, then the result is pretty also
-        self.assertEqual(markEmptyTags(u'<p>Unicode string with special chars: \xe9</p>\n'),
-                         '<p>Unicode string with special chars: \xc3\xa9</p>\n')
 
     def test_removeCssClasses(self):
         """
@@ -369,13 +389,17 @@ class TestXHTMLModule(IntegrationTestCase):
         img_without_blob = getattr(self.portal, img_without_blob_id)
         # no blob
         self.assertEqual(img_without_blob.get_size(), 0)
-        file_path = path.join(path.dirname(__file__), 'dot.gif')
-        data = open(file_path, 'r')
-        img = self.portal.invokeFactory('Image', id='img', title='Image', file=data.read())
-        img = getattr(self.portal, img)
+        data = get_file_data('dot.gif')
+        img = create_image_content(self.portal, 'Image', 'img', data, filename='dot.gif')
+        transaction.savepoint()
         # has a blob
         self.assertEqual(img.get_size(), 873)
-        img_blob_path = img.getBlobWrapper().blob._p_blob_committed
+        if HAS_PLONE_5_AND_MORE:
+            blob = img.image._blob
+        else:
+            blob = img.getBlobWrapper().blob
+        blob._p_activate()
+        img_blob_path = blob._p_blob_committed
         # folder with doc2 to test relative path
         subfolderId = self.portal.invokeFactory('Folder', id='subfolder', title='Folder')
         subfolder = getattr(self.portal, subfolderId)
@@ -484,17 +508,17 @@ class TestXHTMLModule(IntegrationTestCase):
         # create a document and an image
         docId = self.portal.invokeFactory('Document', id='doc', title='Document')
         doc = getattr(self.portal, docId)
-        file_path = path.join(path.dirname(__file__), 'dot.gif')
-        data = open(file_path, 'r')
-        img = self.portal.invokeFactory('Image', id='img', title='Image', file=data.read())
-        img = getattr(self.portal, img)
+        data = get_file_data('dot.gif')
+        img = create_image_content(self.portal, 'Image', 'img', data, filename='dot.gif')
         # has a blob
         self.assertEqual(img.get_size(), 873)
         text = '<p>Image <img src="{0}/img"> end of text.</p>'.format(self.portal_url)
+        transaction.savepoint()
         self.assertEqual(
             imagesToData(doc, text),
             '<p>Image <img src="{0}"> end of text.</p>'.format(base64_gif_img_data))
 
+    @require_module('Products.Archetypes')
     def test_storeExternalImagesLocally(self):
         """
           Test that images src contained in a XHTML that reference external images is
@@ -503,11 +527,8 @@ class TestXHTMLModule(IntegrationTestCase):
         # create a document and an image
         docId = self.portal.invokeFactory('Document', id='doc', title='Document')
         doc = getattr(self.portal, docId)
-        file_path = path.join(path.dirname(__file__), 'dot.gif')
-        data = open(file_path, 'r')
-        img = self.portal.invokeFactory('Image', id='img', title='Image', file=data.read())
-        data.close()
-        img = getattr(self.portal, img)
+        data = get_file_data('dot.gif')
+        img = create_image_content(self.portal, 'Image', 'img', data, filename='dot.gif')
 
         # does not break if xhtmlContent is empty
         self.assertEqual(storeImagesLocally(doc, ''), '')
@@ -593,15 +614,14 @@ class TestXHTMLModule(IntegrationTestCase):
             result,
             '<p>Working external image <img src="resolveuid/{0}">.</p>'.format(img.UID()))
 
+    @require_module('Products.Archetypes')
     def test_storeInternalImagesLocally(self):
         """
           Test that images src contained in a XHTML that reference internal images stored
           in another context are stored in current context.
         """
-        file_path = path.join(path.dirname(__file__), 'dot.gif')
-        data = open(file_path, 'r')
-        self.portal.invokeFactory('Image', id='dot.gif', title='Image', file=data.read())
-        data.close()
+        data = get_file_data('dot.gif')
+        create_image_content(self.portal, 'Image', 'dot.gif', data, filename='dot.gif')
         text = '<p>Internal image <img src="{0}/dot.gif">.</p>'.format(self.portal_url)
         expected = '<p>Internal image <img src="{0}/folder/dot.gif">.</p>'.format(self.portal_url)
         # image was created in folder
@@ -627,41 +647,15 @@ class TestXHTMLModule(IntegrationTestCase):
 
     def test_storeInternalImagesLocallyWithResolveUID(self):
         """ """
-        # create 2 images
-        file_path = path.join(path.dirname(__file__), 'dot.gif')
-        data = open(file_path, 'r')
-        api.content.create(
-            container=self.portal,
-            type='Image',
-            id='dot.gif',
-            title='Image',
-            file=data.read())
-        img2 = api.content.create(
-            container=self.portal,
-            type='Image',
-            id='dot2.gif',
-            title='Image 2',
-            file=data.read())
-        img3 = api.content.create(
-            container=self.portal,
-            type='Image',
-            id='dot3.gif',
-            title='Image 3',
-            file=data.read())
-        img4 = api.content.create(
-            container=self.portal,
-            type='Image',
-            id='dot4.gif',
-            title='Image 4',
-            file=data.read())
-        img5 = api.content.create(
-            container=self.portal,
-            type='Image',
-            id='dot5.gif',
-            title='Image 5',
-            file=data.read())
-        data.close()
-
+        file_path = os.path.join(os.path.dirname(__file__), 'dot.gif')
+        fd = open(file_path, 'rb')
+        data = fd.read()
+        create_image_content(self.portal, 'Image', 'dot.gif', data=data)
+        img2 = create_image_content(self.portal, 'Image 2', 'dot2.gif', data=data)
+        img3 = create_image_content(self.portal, 'Image 3', 'dot3.gif', data=data)
+        img4 = create_image_content(self.portal, 'Image 4', 'dot4.gif', data=data)
+        img5 = create_image_content(self.portal, 'Image 5', 'dot5.gif', data=data)
+        fd.close()
         text = '<p>Int img full url <img src="{0}/dot.gif"/>.</p>' \
             '<p>Int img resolveuid <img src="resolveuid/{1}"/>.</p>' \
             '<p>Int img resolveuid and image_preview <img src="resolveuid/{2}/image_preview"/>.</p>' \

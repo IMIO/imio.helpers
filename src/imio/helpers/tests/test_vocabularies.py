@@ -12,11 +12,11 @@ class TestVocabularies(IntegrationTestCase):
 
     def test_SortedUsers(self):
         """ """
-        api.user.create(email="test@test.org", username="a_new_user", password="secret")
-        api.user.create(email="test@test.org", username="b_new_user", password="secret")
-        api.user.create(email="test@test.org", username="new_user", password="secret")
-        api.user.create(email="test@test.org", username="A_new_user", password="secret")
-        api.user.create(email="test@test.org", username="B_new_user", password="secret")
+        api.user.create(email="test@test.org", username="a_new_user", password="secret1234")
+        api.user.create(email="test@test.org", username="b_new_user", password="secret1234")
+        api.user.create(email="test@test.org", username="new_user", password="secret1234")
+        api.user.create(email="test@test.org", username="A_new_user", password="secret1234")
+        api.user.create(email="test@test.org", username="B_new_user", password="secret1234")
         vocab = get_vocab(self.portal, "imio.helpers.SortedUsers")
         self.assertEqual(
             [term.title for term in vocab._terms],

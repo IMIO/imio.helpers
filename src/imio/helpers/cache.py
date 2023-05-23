@@ -139,7 +139,11 @@ def generate_key(func):
     path = [func.__module__]
     if hasattr(func, 'im_class'):
         path.append(func.im_class.__name__)
-    path.append(func.__name__)
+        path.append(func.__name__)
+    elif hasattr(func, '__qualname__'):
+        path.append(func.__qualname__)
+    else:
+        path.append(func.__name__)
     return '.'.join(path)
 
 

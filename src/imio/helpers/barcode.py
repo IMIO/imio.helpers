@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import cStringIO
+import six
 import subprocess
 
 
@@ -14,7 +14,9 @@ def generate_barcode(data, executable='zint', barcode=92, scale=2, filetype='PNG
     :param filetype: image type
     :return: StringIO handler
     """
-    output = cStringIO.StringIO()
+
+    output = six.BytesIO()
+
     command = [
         executable,
         # '--directpng',  # no more used in version 2.6.0, and replaced by 2 following parameters

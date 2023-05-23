@@ -14,15 +14,24 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - python: 2.7
-            PLONE_VERSION: 4
+          - python: '2.7'
+            PLONE_VERSION: '4.3'
             continue-on-error: false
-#           - python: 2.7
-#             PLONE_VERSION: 51
-#             continue-on-error: true
-          - python: 3.8
-            PLONE_VERSION: 52
-            continue-on-error: true
+          - python: '3.8'
+            PLONE_VERSION: '5.2'
+            continue-on-error: false
+          - python: '3.8'
+            PLONE_VERSION: '6.0'
+            continue-on-error: false
+          - python: '3.9'
+            PLONE_VERSION: '6.0'
+            continue-on-error: false
+          - python: '3.10'
+            PLONE_VERSION: '6.0'
+            continue-on-error: false
+          - python: '3.11'
+            PLONE_VERSION: '6.0'
+            continue-on-error: false
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -42,17 +51,17 @@ jobs:
           sudo make install
           cd ..
           mkdir -p buildout-cache/{eggs,downloads}
-          pip install -r requirements.txt coverage==5.3.1 wheel
+          pip install -r requirements_plone-${{matrix.PLONE_VERSION}}.x.txt coverage==5.3.1 wheel
       - name: Cache eggs
         uses: actions/cache@v2
         env:
           cache-name: cache-eggs
         with:
           path: ~/buildout-cache/eggs
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.PLONE_VERSION }}
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.python }}-${{ matrix.PLONE_VERSION }}
       - name: buildout
         run: |
-          cp test_plone${{matrix.PLONE_VERSION}}.cfg buildout.cfg
+          cp test_plone-${{matrix.PLONE_VERSION}}.x.cfg buildout.cfg
           buildout -c ci.cfg annotate
           buildout -c ci.cfg
       - name: test
@@ -64,7 +73,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        PLONE_VERSION: [4]
+        PLONE_VERSION: [4.3]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -84,7 +93,7 @@ jobs:
           sudo make install
           cd ..
           mkdir -p buildout-cache/{eggs,downloads}
-          pip install -r requirements.txt coverage==5.3.1 wheel
+          pip install -r requirements_plone-${{matrix.PLONE_VERSION}}.x.txt coverage==5.3.1 wheel
       - name: Cache eggs
         uses: actions/cache@v2
         env:
@@ -94,7 +103,7 @@ jobs:
           key: ${{ runner.os }}-build-${{ env.cache-name }}-coverage-${{ matrix.PLONE_VERSION }}
       - name: buildout
         run: |
-          cp test_plone${{matrix.PLONE_VERSION}}.cfg buildout.cfg
+          cp test_plone-${{matrix.PLONE_VERSION}}.x.cfg buildout.cfg
           buildout -c ci.cfg annotate
           buildout -c ci.cfg
       - name: code-analysis

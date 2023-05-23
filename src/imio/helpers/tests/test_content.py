@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from imio.helpers import HAS_PLONE_5_AND_MORE
 from imio.helpers.content import add_file
 from imio.helpers.content import add_image
 from imio.helpers.content import add_to_annotation
@@ -29,8 +30,11 @@ from imio.helpers.content import uuidToCatalogBrain
 from imio.helpers.content import uuidToObject
 from imio.helpers.content import validate_fields
 from imio.helpers.testing import IntegrationTestCase
+from imio.helpers.tests.utils import require_module
+from imio.helpers.tests.utils import unrequire_module
 from plone import api
 from plone.app.vocabularies.types import PortalTypesVocabulary
+from plone.registry.interfaces import IRegistry
 from z3c.relationfield.relation import RelationValue
 from zope.annotation import IAnnotations
 from zope.component import getUtility
@@ -40,7 +44,11 @@ from zope.lifecycleevent import ObjectModifiedEvent
 from zope.schema._bootstrapinterfaces import WrongType
 from zope.schema.vocabulary import SimpleVocabulary
 
+if HAS_PLONE_5_AND_MORE:
+    from Products.CMFPlone.interfaces import IEditingSchema
+
 import os
+import six
 
 
 class TestContentModule(IntegrationTestCase):
@@ -79,8 +87,12 @@ class TestContentModule(IntegrationTestCase):
     def test_add_image(self):
         current_dir = os.path.dirname(os.path.abspath(__file__))
         obj = api.content.create(container=self.portal.folder, id='tt', type='testingtype')
-        add_image(obj, filepath=os.path.join(current_dir, 'barcode.png'))
-        self.assertEqual(obj.image.filename, u'barcode.png')
+        if six.PY3:
+            barcode_resource = "barcode_python3_zint_60x60_156bytes.png"
+        else:
+            barcode_resource = "barcode_python2_zint_60x60_278bytes.png"
+        add_image(obj, filepath=os.path.join(current_dir, barcode_resource))
+        self.assertEqual(obj.image.filename, barcode_resource)
         obj1 = api.content.create(container=self.portal.folder, id='tt1', type='testingtype')
         add_image(obj1, img_obj=obj)
         self.assertEqual(obj.image, obj1.image)  # same image object
@@ -103,36 +115,62 @@ class TestContentModule(IntegrationTestCase):
         # cids & globl parameters
         conf = [{'cid': 2, 'cont': '/folder', 'type': 'Folder', 'id': 'folder1', 'title': 'Folder1'}]
         ret = create(conf, cids=ret, globl=True)
-        self.assertListEqual([1, 2], ret.keys())
+        self.assertListEqual([1, 2], list(ret.keys()))
         self.assertIn('folder1', self.portal.folder.objectIds())
         # bad cid format
         conf = [{'cid': 0, 'cont': '/folder', 'type': 'Folder', 'id': 'folder2', 'title': 'Folder2'}]
         with self.assertRaises(ValueError) as cm:
             create(conf)
-        self.assertEqual(cm.exception.message, "Dict nb 0: cid '0' must be an integer > 0")
-        conf = [{'cid': 'bad', 'cont': '/folder', 'type': 'Folder', 'id': 'folder2', 'title': 'Folder2'}]
-        with self.assertRaises(ValueError) as cm:
-            create(conf)
-        self.assertEqual(cm.exception.message, "Dict nb 0: cid 'bad' must be an integer > 0")
-        # bad container
-        conf = [{'cid': 3, 'cont': '/badfolder', 'type': 'Folder', 'id': 'folder2', 'title': 'Folder2'}]
-        with self.assertRaises(ValueError) as cm:
-            create(conf)
-        self.assertEqual(cm.exception.message, "Dict nb 0 (cid=3): cannot find container '/badfolder')")
-        conf = [{'cid': 3, 'cont': 10, 'type': 'Folder', 'id': 'folder2', 'title': 'Folder2'}]
-        with self.assertRaises(ValueError) as cm:
-            create(conf)
-        self.assertEqual(cm.exception.message, "Dict nb 0 (cid=3): cannot find container '10')")
-        # cid container
-        conf = [{'cid': 3, 'cont': 2, 'type': 'Document', 'id': 'doc1', 'title': 'Doc1'}]
-        ret = create(conf, globl=True)
-        self.assertIn(3, ret)
-        self.assertIn('doc1', self.portal.folder.folder1.objectIds())
-        # clean globl
-        conf = [{'cid': 4, 'cont': 2, 'type': 'Document', 'id': 'doc2', 'title': 'Doc2'}]
-        with self.assertRaises(ValueError) as cm:
-            create(conf, globl=True, clean_globl=True)
-        self.assertEqual(cm.exception.message, "Dict nb 0 (cid=4): cannot find container '2')")
+        if six.PY3:
+            self.assertEqual(cm.exception.args[0], "Dict nb 0: cid '0' must be an integer > 0")
+            conf = [{'cid': 'bad', 'cont': '/folder', 'type': 'Folder', 'id': 'folder2', 'title': 'Folder2'}]
+            with self.assertRaises(ValueError) as cm:
+                create(conf)
+            self.assertEqual(cm.exception.args[0], "Dict nb 0: cid 'bad' must be an integer > 0")
+            # bad container
+            conf = [{'cid': 3, 'cont': '/badfolder', 'type': 'Folder', 'id': 'folder2', 'title': 'Folder2'}]
+            with self.assertRaises(ValueError) as cm:
+                create(conf)
+            self.assertEqual(cm.exception.args[0], "Dict nb 0 (cid=3): cannot find container '/badfolder')")
+            conf = [{'cid': 3, 'cont': 10, 'type': 'Folder', 'id': 'folder2', 'title': 'Folder2'}]
+            with self.assertRaises(ValueError) as cm:
+                create(conf)
+            self.assertEqual(cm.exception.args[0], "Dict nb 0 (cid=3): cannot find container '10')")
+            # cid container
+            conf = [{'cid': 3, 'cont': 2, 'type': 'Document', 'id': 'doc1', 'title': 'Doc1'}]
+            ret = create(conf, globl=True)
+            self.assertIn(3, ret)
+            self.assertIn('doc1', self.portal.folder.folder1.objectIds())
+            # clean globl
+            conf = [{'cid': 4, 'cont': 2, 'type': 'Document', 'id': 'doc2', 'title': 'Doc2'}]
+            with self.assertRaises(ValueError) as cm:
+                create(conf, globl=True, clean_globl=True)
+            self.assertEqual(cm.exception.args[0], "Dict nb 0 (cid=4): cannot find container '2')")
+        else:
+            self.assertEqual(cm.exception.message, "Dict nb 0: cid '0' must be an integer > 0")
+            conf = [{'cid': 'bad', 'cont': '/folder', 'type': 'Folder', 'id': 'folder2', 'title': 'Folder2'}]
+            with self.assertRaises(ValueError) as cm:
+                create(conf)
+            self.assertEqual(cm.exception.message, "Dict nb 0: cid 'bad' must be an integer > 0")
+            # bad container
+            conf = [{'cid': 3, 'cont': '/badfolder', 'type': 'Folder', 'id': 'folder2', 'title': 'Folder2'}]
+            with self.assertRaises(ValueError) as cm:
+                create(conf)
+            self.assertEqual(cm.exception.message, "Dict nb 0 (cid=3): cannot find container '/badfolder')")
+            conf = [{'cid': 3, 'cont': 10, 'type': 'Folder', 'id': 'folder2', 'title': 'Folder2'}]
+            with self.assertRaises(ValueError) as cm:
+                create(conf)
+            self.assertEqual(cm.exception.message, "Dict nb 0 (cid=3): cannot find container '10')")
+            # cid container
+            conf = [{'cid': 3, 'cont': 2, 'type': 'Document', 'id': 'doc1', 'title': 'Doc1'}]
+            ret = create(conf, globl=True)
+            self.assertIn(3, ret)
+            self.assertIn('doc1', self.portal.folder.folder1.objectIds())
+            # clean globl
+            conf = [{'cid': 4, 'cont': 2, 'type': 'Document', 'id': 'doc2', 'title': 'Doc2'}]
+            with self.assertRaises(ValueError) as cm:
+                create(conf, globl=True, clean_globl=True)
+            self.assertEqual(cm.exception.message, "Dict nb 0 (cid=4): cannot find container '2')")
         # pos param
         conf = [{'cid': 4, 'cont': 10, 'type': 'Document', 'id': 'doc2', 'title': 'The first element'}]
         ret = create(conf, cids={10: self.portal.folder}, pos=True)
@@ -146,16 +184,16 @@ class TestContentModule(IntegrationTestCase):
                                  id='tt',
                                  type='testingtype',
                                  enabled='Should be a boolean')
-        self.assertListEqual([name for (name, fld) in get_schema_fields(obj=obj, behaviors=False)],
-                             ['text', 'enabled', 'mandatory_textline', 'relations', 'textline'])
-        self.assertListEqual([name for (name, fld) in get_schema_fields(obj=obj)],
-                             ['text', 'enabled', 'mandatory_textline', 'relations', 'textline',
+        self.assertListEqual(sorted([name for (name, fld) in get_schema_fields(obj=obj, behaviors=False)]),
+                             sorted(['text', 'enabled', 'mandatory_textline', 'relations', 'textline']))
+        self.assertListEqual(sorted([name for (name, fld) in get_schema_fields(obj=obj)]),
+                             sorted(['text', 'enabled', 'mandatory_textline', 'relations', 'textline',
                               'description', 'title', 'title',
-                              'tal_condition', 'roles_bypassing_talcondition'])
-        self.assertListEqual([name for (name, fld) in get_schema_fields(obj=obj, prefix=True)],
-                             ['text', 'enabled', 'mandatory_textline', 'relations', 'textline',
+                              'tal_condition', 'roles_bypassing_talcondition']))
+        self.assertListEqual(sorted([name for (name, fld) in get_schema_fields(obj=obj, prefix=True)]),
+                             sorted(['text', 'enabled', 'mandatory_textline', 'relations', 'textline',
                               'IBasic.description', 'IBasic.title', 'INameFromTitle.title',
-                              'ITALCondition.tal_condition', 'ITALCondition.roles_bypassing_talcondition'])
+                              'ITALCondition.tal_condition', 'ITALCondition.roles_bypassing_talcondition']))
         self.assertListEqual([name for (name, fld) in get_schema_fields(type_name='portnawak')],
                              [])
 
@@ -178,8 +216,12 @@ class TestContentModule(IntegrationTestCase):
         # not required fields other than Bool must contain something
         # else than None if field is required=True
         obj.mandatory_textline = None
-        self.assertEqual(validate_fields(obj),
-                         [WrongType(None, unicode, 'mandatory_textline')])
+        if six.PY3:
+            self.assertEqual(validate_fields(obj),
+                             [WrongType(None, str, 'mandatory_textline')])
+        else:
+            self.assertEqual(validate_fields(obj),
+                             [WrongType(None, unicode, 'mandatory_textline')])
         # validate_fields may raise a ValueError if raise_on_errors=True
         self.assertRaises(ValueError, validate_fields, obj, raise_on_errors=True)
         # back to correct value
@@ -294,16 +336,26 @@ class TestContentModule(IntegrationTestCase):
         self.assertIsNone(uuidToObject('unknown_uid'))
 
     def test_disable_link_integrity_checks(self):
-        self.assertTrue(self.portal.portal_properties.site_properties.enable_link_integrity_checks)
+        if HAS_PLONE_5_AND_MORE:
+            registry = getUtility(IRegistry)
+            settings = registry.forInterface(IEditingSchema, prefix="plone")
+        else:
+            settings = self.portal.portal_properties.site_properties
+        self.assertTrue(settings.enable_link_integrity_checks)
         disable_link_integrity_checks()
-        self.assertFalse(self.portal.portal_properties.site_properties.enable_link_integrity_checks)
+        self.assertFalse(settings.enable_link_integrity_checks)
 
     def test_restore_link_integrity_checks(self):
-        self.assertTrue(self.portal.portal_properties.site_properties.enable_link_integrity_checks)
+        if HAS_PLONE_5_AND_MORE:
+            registry = getUtility(IRegistry)
+            settings = registry.forInterface(IEditingSchema, prefix="plone")
+        else:
+            settings = self.portal.portal_properties.site_properties
+        self.assertTrue(settings.enable_link_integrity_checks)
         restore_link_integrity_checks(False)
-        self.assertFalse(self.portal.portal_properties.site_properties.enable_link_integrity_checks)
+        self.assertFalse(settings.enable_link_integrity_checks)
         restore_link_integrity_checks(True)
-        self.assertTrue(self.portal.portal_properties.site_properties.enable_link_integrity_checks)
+        self.assertTrue(settings.enable_link_integrity_checks)
 
     def test_get_vocab(self):
         vocab = get_vocab(self.portal, 'plone.app.vocabularies.PortalTypes')
@@ -363,10 +415,10 @@ class TestContentModule(IntegrationTestCase):
         self.assertEqual(obj1.text.raw, u"<p>My text</p>")
         self.assertEqual(obj1.text.output, u"<p>My text</p>")
         # use safe_html
-        text_with_link = '<p>My text <a href="resolveuid/{0}"</p>'.format(obj2.UID())
+        text_with_link = '<p>My text <a href="resolveuid/{0}">link</a></p>'.format(obj2.UID())
         obj1.text = richtextval(text_with_link)
         self.assertEqual(obj1.text.raw, text_with_link)
-        self.assertEqual(obj1.text.output, u'<p>My text <a href="http://nohost/plone/folder/tt2"></p>')
+        self.assertEqual(obj1.text.output, u'<p>My text <a href="http://nohost/plone/folder/tt2">link</a></p>')
 
     def test_normalize_name(self):
         request = self.portal.REQUEST
@@ -375,17 +427,30 @@ class TestContentModule(IntegrationTestCase):
         self.assertEqual(normalize_name(request, u'Héhé du texte'),
                          'hehe-du-texte')
 
-    def test_object_values(self):
-        self.assertEqual(object_values(self.portal, 'Folder'), [])
-        self.assertEqual(object_values(self.portal, 'ATFolder'),
-                         [self.portal.folder, self.portal.folder2])
+    @require_module('Products.Archetypes')
+    def test_at_object_values(self):
+        self.assertEqual(object_values(self.portal, 'ATFolder'), [self.portal.folder, self.portal.folder2])
         # may pass a list of class names
         self.assertEqual(object_values(self.portal, ['Folder', 'ATFolder']),
                          [self.portal.folder, self.portal.folder2])
 
-    def test_object_ids(self):
-        self.assertEqual(object_ids(self.portal, 'Folder'), [])
+    @unrequire_module('Products.Archetypes')
+    def test_object_values(self):
+        self.assertEqual(object_values(self.portal, 'Folder'), [self.portal.folder, self.portal.folder2])
+        # may pass a list of class names
+        self.assertEqual(object_values(self.portal, ['Folder', 'ATFolder']),
+                         [self.portal.folder, self.portal.folder2])
+
+    @require_module('Products.Archetypes')
+    def test_at_object_ids(self):
         self.assertEqual(object_ids(self.portal, 'ATFolder'), ['folder', 'folder2'])
+        # may pass a list of class names
+        self.assertEqual(object_ids(self.portal, ['Folder', 'ATFolder']),
+                         ['folder', 'folder2'])
+
+    @unrequire_module('Products.Archetypes')
+    def test_object_ids(self):
+        self.assertEqual(object_ids(self.portal, 'Folder'), ['folder', 'folder2'])
         # may pass a list of class names
         self.assertEqual(object_ids(self.portal, ['Folder', 'ATFolder']),
                          ['folder', 'folder2'])
@@ -395,21 +460,24 @@ class TestContentModule(IntegrationTestCase):
         self.assertEqual(get_user_fullname("unknown_user", none_if_unfound=True), None)
         self.assertEqual(get_user_fullname("unknown_user"), "unknown_user")
         # create some users
-        user1 = api.user.create('a@b.be', 'user1', '12345', properties={'fullname': 'Stéphan Smith'})
-        api.user.create('a@b.be', 'user2', '12345', properties={'fullname': ''})
+        user1 = api.user.create('a@b.be', 'user1', 'secret1234', properties={'fullname': 'Stéphan Smith'})
+        api.user.create('a@b.be', 'user2', 'secret1234', properties={'fullname': ''})
         self.assertEqual(get_user_fullname("user1"), u'Stéphan Smith')
-        self.assertEqual(user1.getProperty("fullname").decode('utf8'), get_user_fullname("user1"))
+        if six.PY3:
+            self.assertEqual(user1.getProperty("fullname"), get_user_fullname("user1"))
+        else:
+            self.assertEqual(user1.getProperty("fullname").decode('utf8'), get_user_fullname("user1"))
         self.assertEqual(get_user_fullname("user2"), u'user2')
         # group
         self.assertEqual(get_user_fullname("Reviewers", none_if_no_user=True), None)
         self.assertEqual(get_user_fullname("Reviewers"), u'Reviewers')
 
     def test_base_getattr(self):
-        obj = api.content.create(container=self.portal.folder, id='mydoc', type='Document')
-        self.assertTrue(self.portal.folder.getImmediatelyAddableTypes())
+        obj = api.content.create(container=self.portal.folder, id='mydoc', type='Document', title='My doc')
+        setattr(self.portal.folder, "dedana", True)
         # getattr uses acquisition
-        self.assertTrue(getattr(self.portal.folder, 'getImmediatelyAddableTypes'))
-        self.assertTrue(getattr(obj, 'getImmediatelyAddableTypes'))
+        self.assertTrue(getattr(self.portal.folder, 'dedana'))
+        self.assertTrue(getattr(obj, 'dedana'))
         # base_getattr does not use acquisition
-        self.assertTrue(base_getattr(self.portal.folder, 'getImmediatelyAddableTypes'))
-        self.assertIsNone(base_getattr(obj, 'getImmediatelyAddableTypes'))
+        self.assertTrue(base_getattr(self.portal.folder, 'dedana'))
+        self.assertIsNone(base_getattr(obj, 'dedana'))

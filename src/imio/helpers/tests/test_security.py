@@ -56,8 +56,8 @@ class TestSecurityModule(IntegrationTestCase):
         self.assertIsNotNone(re.search(r'[!#$%&*+<=>?@-]', pwd))
 
     def test_get_user_from_criteria(self):
-        api.user.create('elementary@mail.be', 'ssmith', '12345', properties={'fullname': 'Stéphan Smith'})
-        api.user.create('teacher@school.be', 'teacher', '12345', properties={'fullname': 'Paul Smith'})
+        api.user.create('elementary@mail.be', 'ssmith', 'secret1234', properties={'fullname': 'Stéphan Smith'})
+        api.user.create('teacher@school.be', 'teacher', 'secret1234', properties={'fullname': 'Paul Smith'})
         self.assertEqual(len(get_user_from_criteria(self.portal, email='unknown')), 0)
         self.assertEqual(len(get_user_from_criteria(self.portal, fullname='unknown')), 0)
         self.assertEqual(len(get_user_from_criteria(self.portal, email='mentary')), 1)

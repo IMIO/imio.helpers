@@ -16,6 +16,9 @@ import os
 _ = MessageFactory('imio.helpers')
 logger = logging.getLogger('imio.helpers')
 
+HAS_PLONE_5_AND_MORE = int(api.env.plone_version()[0]) >= 5
+PLONE_MAJOR_VERSION = int(api.env.plone_version()[0])
+
 
 def GroupsTool__getGroupsForPrincipal_cachekey(method, self, principal):
     req = getRequest()

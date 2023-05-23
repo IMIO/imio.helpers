@@ -6,6 +6,7 @@ from zope.component import getUtility
 from zope.intid.interfaces import IIntIds
 
 import logging
+import six
 
 
 logger = logging.getLogger('imio.helpers:catalog')
@@ -133,7 +134,12 @@ def merge_queries(queries):
     res = {}
     for query in queries:
         for k, v in query.items():
-            subkey, value = v.items()[0]
+            if six.PY3:
+                # Prevent python3 'dict_items' object is not subscriptable
+                lst = list(v.items())
+                subkey, value = lst[0]
+            else:
+                subkey, value = v.items()[0]
             # store value as a list so it can be extended
             if not isinstance(value, list):
                 value = [value]

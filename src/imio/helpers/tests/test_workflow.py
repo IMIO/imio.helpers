@@ -37,11 +37,13 @@ class TestWorkflowModule(IntegrationTestCase):
 
     def test_get_transitions(self):
         obj = api.content.create(container=self.portal.folder, id='mydoc', type='Document')
-        self.assertEqual(get_transitions(obj),
-                         ['publish_internally', 'hide', 'submit'])
+        sorted_obj_transitions = sorted(get_transitions(obj), key=str.lower)
+        self.assertEqual(sorted_obj_transitions,
+                         ['hide', 'publish_internally', 'submit'])
         do_transitions(obj, 'submit')
-        self.assertEqual(get_transitions(obj),
-                         ['publish_internally', 'retract', 'publish_externally', 'reject'])
+        sorted_obj_transitions = sorted(get_transitions(obj), key=str.lower)
+        self.assertEqual(sorted_obj_transitions,
+                         ['publish_externally', 'publish_internally', 'reject', 'retract'])
         do_transitions(obj, 'publish_externally')
         self.assertEqual(get_transitions(obj), ['retract'])
 
