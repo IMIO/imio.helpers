@@ -15,8 +15,6 @@ from imio.helpers.cache import volatile_cache_without_parameters
 from imio.helpers.testing import IntegrationTestCase
 from persistent.mapping import PersistentMapping
 from plone import api
-from plone.app.testing import login
-from plone.app.testing import logout
 from plone.memoize import forever
 from plone.memoize import ram
 from plone.memoize.instance import Memojito
