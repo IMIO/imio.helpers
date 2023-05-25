@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
+
+from imio.helpers.cache import get_cachekey_volatile
+from imio.helpers.cache import get_plone_groups_for_user
 from imio.helpers.cache import invalidate_cachekey_volatile_for
+from plone.memoize import ram
+from plone.api.exc import InvalidParameterError
 from Products.PlonePAS.plugins.role import GroupAwareRoleManager
 from Products.PluggableAuthService.plugins.ZODBRoleManager import ZODBRoleManager
 from smtplib import SMTP_SSL
@@ -49,3 +54,35 @@ def removeRoleFromPrincipal(self, role_id, principal_id):
     ZODBRoleManager._old_removeRoleFromPrincipal(self, role_id, principal_id)
     # we need to invalidate cachekey
     invalidate_cachekey_volatile_for('_users_groups_value')
+
+
+def _listAllowedRolesAndUsers_cachekey(method, self, user):
+    '''cachekey method for self._listAllowedRolesAndUsers.'''
+    date = get_cachekey_volatile('_users_groups_value')
+    return date, user.getId()
+
+
+@ram.cache(_listAllowedRolesAndUsers_cachekey)
+def _listAllowedRolesAndUsers(self, user):
+    """Monkeypatch to use get_plone_groups_for_user instead getGroups.
+       Moreover store this in the REQUEST."""
+    # Makes sure the list includes the user's groups.
+    result = user.getRoles()
+    if 'Anonymous' in result:
+        # The anonymous user has no further roles
+        return ['Anonymous']
+    result = list(result)
+    # XXX change, replaced getGroups by get_plone_groups_for_user
+    # if hasattr(aq_base(user), 'getGroups'):
+    #     groups = ['user:%s' % x for x in user.getGroups()]
+    try:
+        groups = get_plone_groups_for_user(user=user)
+    except InvalidParameterError:
+        groups = user.getGroups()
+    if groups:
+        groups = ['user:%s' % x for x in groups]
+        result = result + groups
+    # Order the arguments from small to large sets
+    result.insert(0, 'user:%s' % user.getId())
+    result.append('Anonymous')
+    return result

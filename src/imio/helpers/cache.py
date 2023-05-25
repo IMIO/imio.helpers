@@ -220,7 +220,9 @@ def get_plone_groups_for_user_cachekey(method, user_id=None, user=None, the_obje
     """cachekey method for self.get_plone_groups_for_user."""
     date = get_cachekey_volatile('_users_groups_value')
     return (date,
-            user and user.id or user_id or get_current_user_id(getRequest()),
+            # use user.getId() and not user.id because when user is a PloneUser instance
+            # it does not have a "id" and returns "acl_users" which break the invalidation
+            user and user.getId() or user_id or get_current_user_id(getRequest()),
             the_objects)
 
 
@@ -235,11 +237,13 @@ def get_plone_groups_for_user(user_id=None, user=None, the_objects=False):
         user = user_id and api.user.get(user_id) or api.user.get_current()
     if not hasattr(user, "getGroups"):
         return []
+    pg = api.portal.get_tool("portal_groups")
     if the_objects:
-        pg = api.portal.get_tool("portal_groups")
-        user_groups = pg.getGroupsByUserId(user.id)
+        user_groups = pg.getGroupsByUserId(user.getId())
     else:
-        user_groups = user.getGroups()
+        # make sure we get groups correctly, depending on user class we use getGroups
+        # or we will use portal_groups.getGroupsForPrincipal
+        user_groups = pg.getGroupsForPrincipal(user)
     return sorted(user_groups)
 
 
@@ -247,7 +251,7 @@ def get_users_in_plone_groups_cachekey(method, group_id=None, group=None, the_ob
     """cachekey method for self.get_users_in_plone_groups."""
     date = get_cachekey_volatile('_users_groups_value')
     return (date,
-            group and group.id or group_id,
+            group and group.getId() or group_id,
             the_objects)
 
 
@@ -260,5 +264,5 @@ def get_users_in_plone_groups(group_id=None, group=None, the_objects=False):
         return []
     members = group.getGroupMembers()
     if not the_objects:
-        members = [m.id for m in members]
+        members = [m.getId() for m in members]
     return sorted(members)

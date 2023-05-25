@@ -82,6 +82,13 @@
         replacement=".patches.removeRoleFromPrincipal"
         preserveOriginal="true" />
 
+    <monkey:patch
+        description="Monkeypatch _listAllowedRolesAndUsers to add ram.cache on '_users_groups_value'"
+        class="Products.CMFPlone.CatalogTool.CatalogTool"
+        original="_listAllowedRolesAndUsers"
+        replacement=".patches._listAllowedRolesAndUsers"
+        preserveOriginal="true" />
+
     <utility component=".vocabularies.SortedUsersFactory"
              name="imio.helpers.SortedUsers" />
 

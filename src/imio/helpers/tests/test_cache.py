@@ -15,6 +15,8 @@ from imio.helpers.cache import volatile_cache_without_parameters
 from imio.helpers.testing import IntegrationTestCase
 from persistent.mapping import PersistentMapping
 from plone import api
+from plone.app.testing import login
+from plone.app.testing import logout
 from plone.memoize import forever
 from plone.memoize import ram
 from plone.memoize.instance import Memojito
@@ -421,5 +423,9 @@ class TestCachedMethods(IntegrationTestCase):
         value9 = get_cachekey_volatile('_users_groups_value')
         self.assertNotEqual(value8, value9)
 
-
-# TODO Add tests for other cached methods
+    def test__listAllowedRolesAndUsers(self):
+        pgr = self.portal['portal_groups']
+        user = api.user.create(username='new_user', email='test@test.be')
+        value = self.catalog._listAllowedRolesAndUsers(user)
+        pgr.addPrincipalToGroup(user.id, 'Administrators')
+        self.assertNotEqual(value, self.catalog._listAllowedRolesAndUsers(user))
