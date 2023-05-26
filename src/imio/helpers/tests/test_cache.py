@@ -16,6 +16,7 @@ from imio.helpers.testing import IntegrationTestCase
 from persistent.mapping import PersistentMapping
 from plone import api
 from plone.app.testing import login
+from plone.app.testing import logout
 from plone.memoize import forever
 from plone.memoize import ram
 from plone.memoize.instance import Memojito
@@ -456,3 +457,9 @@ class TestCachedMethods(IntegrationTestCase):
             self.catalog._listAllowedRolesAndUsers(plone_user2),
             ['user:new_user', 'Member', 'Manager', 'Authenticated',
              'user:Administrators', 'user:AuthenticatedUsers', 'Anonymous'])
+        # as Anonymous
+        logout()
+        anon_user = _getAuthenticatedUser(self.portal)
+        self.assertEqual(
+            self.catalog._listAllowedRolesAndUsers(anon_user),
+            ['Anonymous'])
