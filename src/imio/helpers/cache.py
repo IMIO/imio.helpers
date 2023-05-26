@@ -237,13 +237,11 @@ def get_plone_groups_for_user(user_id=None, user=None, the_objects=False):
         user = user_id and api.user.get(user_id) or api.user.get_current()
     if not hasattr(user, "getGroups"):
         return []
-    pg = api.portal.get_tool("portal_groups")
     if the_objects:
+        pg = api.portal.get_tool("portal_groups")
         user_groups = pg.getGroupsByUserId(user.getId())
     else:
-        # make sure we get groups correctly, depending on user class we use getGroups
-        # or we will use portal_groups.getGroupsForPrincipal
-        user_groups = pg.getGroupsForPrincipal(user)
+        user_groups = user.getGroups()
     return sorted(user_groups)
 
 

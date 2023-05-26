@@ -432,10 +432,12 @@ class TestCachedMethods(IntegrationTestCase):
             ['user:new_user', 'Member', 'Authenticated',
              'user:AuthenticatedUsers', 'Anonymous'])
         pgr.addPrincipalToGroup(new_user.getId(), 'Administrators')
+        # get again, as we use "getGroups", it is stored on user instance
+        new_user = api.user.get(new_user.getId())
         self.assertEqual(
             self.catalog._listAllowedRolesAndUsers(new_user),
-            ['user:new_user', 'Member', 'Authenticated', 'user:Administrators',
-             'user:AuthenticatedUsers', 'Anonymous'])
+            ['user:new_user', 'Member', 'Manager', 'Authenticated',
+             'user:Administrators', 'user:AuthenticatedUsers', 'Anonymous'])
         # behaves correctly with a PloneUser because of id/getId
         plone_user1 = _getAuthenticatedUser(self.portal)
         self.assertTrue(isinstance(plone_user1, PloneUser))
@@ -452,5 +454,5 @@ class TestCachedMethods(IntegrationTestCase):
         self.assertEqual(plone_user2.getId(), "new_user")
         self.assertEqual(
             self.catalog._listAllowedRolesAndUsers(plone_user2),
-            ['user:new_user', 'Member', 'Authenticated', 'user:Administrators',
-             'user:AuthenticatedUsers', 'Anonymous'])
+            ['user:new_user', 'Member', 'Manager', 'Authenticated',
+             'user:Administrators', 'user:AuthenticatedUsers', 'Anonymous'])
