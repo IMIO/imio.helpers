@@ -15,10 +15,14 @@ from imio.helpers.cache import volatile_cache_without_parameters
 from imio.helpers.testing import IntegrationTestCase
 from persistent.mapping import PersistentMapping
 from plone import api
+from plone.app.testing import login
+from plone.app.testing import logout
 from plone.memoize import forever
 from plone.memoize import ram
 from plone.memoize.instance import Memojito
 from plone.memoize.interfaces import ICacheChooser
+from Products.CMFCore.utils import _getAuthenticatedUser
+from Products.PlonePAS.plugins.ufactory import PloneUser
 from zope.component import getUtility
 from zope.component import queryUtility
 from zope.ramcache.interfaces.ram import IRAMCache
@@ -421,5 +425,41 @@ class TestCachedMethods(IntegrationTestCase):
         value9 = get_cachekey_volatile('_users_groups_value')
         self.assertNotEqual(value8, value9)
 
-
-# TODO Add tests for other cached methods
+    def test__listAllowedRolesAndUsers(self):
+        pgr = self.portal['portal_groups']
+        new_user = api.user.create(username='new_user', email='test@test.be')
+        self.assertEqual(
+            self.catalog._listAllowedRolesAndUsers(new_user),
+            ['user:new_user', 'Member', 'Authenticated',
+             'user:AuthenticatedUsers', 'Anonymous'])
+        pgr.addPrincipalToGroup(new_user.getId(), 'Administrators')
+        # get again, as we use "getGroups", it is stored on user instance
+        new_user = api.user.get(new_user.getId())
+        self.assertEqual(
+            self.catalog._listAllowedRolesAndUsers(new_user),
+            ['user:new_user', 'Member', 'Manager', 'Authenticated',
+             'user:Administrators', 'user:AuthenticatedUsers', 'Anonymous'])
+        # behaves correctly with a PloneUser because of id/getId
+        plone_user1 = _getAuthenticatedUser(self.portal)
+        self.assertTrue(isinstance(plone_user1, PloneUser))
+        self.assertEqual(plone_user1.id, "acl_users")
+        self.assertEqual(plone_user1.getId(), "test_user_1_")
+        self.assertEqual(
+            self.catalog._listAllowedRolesAndUsers(plone_user1),
+            ['user:test_user_1_', 'Manager', 'Authenticated',
+             'user:AuthenticatedUsers', 'Anonymous'])
+        login(self.portal, new_user.getId())
+        plone_user2 = _getAuthenticatedUser(self.portal)
+        self.assertTrue(isinstance(plone_user2, PloneUser))
+        self.assertEqual(plone_user2.id, "acl_users")
+        self.assertEqual(plone_user2.getId(), "new_user")
+        self.assertEqual(
+            self.catalog._listAllowedRolesAndUsers(plone_user2),
+            ['user:new_user', 'Member', 'Manager', 'Authenticated',
+             'user:Administrators', 'user:AuthenticatedUsers', 'Anonymous'])
+        # as Anonymous
+        logout()
+        anon_user = _getAuthenticatedUser(self.portal)
+        self.assertEqual(
+            self.catalog._listAllowedRolesAndUsers(anon_user),
+            ['Anonymous'])
