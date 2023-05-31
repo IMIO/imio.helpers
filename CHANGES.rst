@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.69 (unreleased)
+0.69 (2023-05-31)
 -----------------
 
 - Monkeypatch `CatalogTool._listAllowedRolesAndUsers` to add `ram.cache` decorator.
