@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from App.config import _config
+from imio.helpers.security import check_zope_admin
 from imio.helpers.security import fplog
 from imio.helpers.security import generate_password
 from imio.helpers.security import get_environment
@@ -12,6 +13,9 @@ from imio.helpers.security import setup_logger
 from imio.helpers.testing import IntegrationTestCase
 from OFS.Application import Application
 from plone import api
+from plone.app.testing import login
+from Products.CMFCore.permissions import ManagePortal
+from Products.CMFCore.utils import _checkPermission
 from Products.CMFPlone.Portal import PloneSite
 
 import os
@@ -80,3 +84,14 @@ class TestSecurityModule(IntegrationTestCase):
         _config.product_config = {'imio.helpers': {'plone-path': 'plone'}}
         site = set_site_from_package_config('imio.helpers')
         self.assertIsInstance(site, PloneSite)
+
+    def test_check_zope_admin(self):
+        # create and login as siteadmin
+        self.portal.portal_membership.addMember('siteadmin', 'siteadmin', ['Manager'], [])
+        login(self.portal, 'siteadmin')
+        self.assertTrue(_checkPermission(ManagePortal, self.portal))
+        self.assertFalse(check_zope_admin())
+        # login as Zope admin
+        login(self.portal.aq_parent, 'admin')
+        self.assertTrue(_checkPermission(ManagePortal, self.portal))
+        self.assertTrue(check_zope_admin())

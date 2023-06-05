@@ -4,8 +4,8 @@ Changelog
 0.70 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Added `security.check_zope_admin` (moved from `Products.CPUtils`).
+  [gbastien]
 
 0.69 (2023-05-31)
 -----------------
