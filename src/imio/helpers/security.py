@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from AccessControl.SecurityManagement import getSecurityManager
 from App.config import getConfiguration
 from collective.fingerpointing.config import AUDIT_MESSAGE
 from collective.fingerpointing.logger import log_info
@@ -166,3 +167,17 @@ def counted_logger(logger_name=''):
     request.set(req_key, counter)
     logger.info("Counter {0}".format(counter))
     return logger
+
+
+def check_zope_admin():
+    """
+        Check if current user is the Zope admin.
+    """
+    user = getSecurityManager().getUser()
+    if user.has_role("Manager") and user.__module__ in (
+        "Products.PluggableAuthService.PropertiedUser",
+        "AccessControl.users",
+        "AccessControl.User",
+    ):
+        return True
+    return False
