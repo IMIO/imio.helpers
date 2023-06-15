@@ -85,3 +85,9 @@ def remove_state_transitions(wf_name, state_id, remv_trs=[]):
         state.transitions = tuple(trs)
         return True
     return False
+
+
+def update_role_mappings_for(wf, obj):
+    updated = wf.updateRoleMappingsFor(obj)
+    if updated:
+        obj.reindexObjectSecurity()
