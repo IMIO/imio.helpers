@@ -43,7 +43,7 @@ def correct_path(portal, path):
     return path
 
 
-def filter_keys(item, keys):
+def filter_keys(item, keys, unfound=None):
     """Return a copy of item with only given keys.
 
     :param item: yielded item (dict)
@@ -54,7 +54,7 @@ def filter_keys(item, keys):
         return deepcopy(item)
     new_item = {}
     for key in keys:
-        new_item[key] = item[key]
+        new_item[key] = item.get(key, unfound)
     return new_item
 
 

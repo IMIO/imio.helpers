@@ -190,6 +190,7 @@ def create(conf, cids={}, globl=False, pos=False, clean_globl=False):
         else:
             obj = get_object(parent=parent, ptype=dic['type'], title=dic.get('title'))
         if not obj:
+            # logger.info(u'Creating obj id={}, title={}'.format(dic.get('id'), safe_unicode(dic['title'])))
             obj = api.content.create(container=parent, type=dic['type'], title=safe_unicode(dic['title']),
                                      id=dic.get('id', None), safe_id=not bool(dic.get('id', '')),
                                      **dic.get('attrs', {}))

@@ -6,6 +6,8 @@ Changelog
 
 - Added `security.check_zope_admin` (moved from `Products.CPUtils`).
   [gbastien]
+- Improved `transmogrifier.filter_keys`
+  [sgeulette]
 
 0.69 (2023-05-31)
 -----------------
