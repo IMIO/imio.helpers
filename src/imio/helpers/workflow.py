@@ -85,3 +85,19 @@ def remove_state_transitions(wf_name, state_id, remv_trs=[]):
         state.transitions = tuple(trs)
         return True
     return False
+
+
+def update_role_mappings_for(obj, wf=None):
+    """Update role mappings regarding WF definition.
+       If updated, the security indexes are reindexed.
+
+     :param wf: the obj workflow
+     :param obj: object to update role mappings for
+     """
+    if not wf:
+        wf_tool = api.portal.get_tool('portal_workflow')
+        wf = wf_tool.getWorkflowsFor(obj)[0]
+    updated = wf.updateRoleMappingsFor(obj)
+    if updated:
+        obj.reindexObjectSecurity()
+    return updated
