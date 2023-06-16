@@ -7,6 +7,7 @@ from imio.helpers.workflow import get_transitions
 from imio.helpers.workflow import remove_state_transitions
 from imio.helpers.workflow import update_role_mappings_for
 from plone import api
+from Products.CMFCore.permissions import View
 
 
 class TestWorkflowModule(IntegrationTestCase):
@@ -74,6 +75,8 @@ class TestWorkflowModule(IntegrationTestCase):
 
     def test_update_role_mappings_for(self):
         obj = api.content.create(container=self.portal.folder, id='mydoc', type='Document')
+        wf = self.portal.portal_workflow.getWorkflowsFor(obj)[0]
+        wf.states.private.permission_roles[View] = ('Manager', )
         update_role_mappings_for(obj)
         # this is already tested in
         # collective.eeafaceted.batchactions.tests.test_forms.test_update_wf_role_mappings_action
