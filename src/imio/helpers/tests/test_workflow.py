@@ -75,8 +75,10 @@ class TestWorkflowModule(IntegrationTestCase):
 
     def test_update_role_mappings_for(self):
         obj = api.content.create(container=self.portal.folder, id='mydoc', type='Document')
-        wf = self.portal.portal_workflow.getWorkflowsFor(obj)[0]
-        wf.states.private.permission_roles[View] = ('Manager', )
+        wf_tool = api.portal.get_tool('portal_workflow')
+        self.assertEqual(wf_tool.getInfoFor(obj, 'review_state'), 'internal')
+        wf = wf_tool.getWorkflowsFor(obj)[0]
+        wf.states.internal.permission_roles[View] = ('Manager', )
         self.assertTrue(update_role_mappings_for(obj))
         # this is already tested in
         # collective.eeafaceted.batchactions.tests.test_forms.test_update_wf_role_mappings_action
