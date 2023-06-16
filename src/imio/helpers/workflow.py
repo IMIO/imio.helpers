@@ -100,3 +100,4 @@ def update_role_mappings_for(obj, wf=None):
     updated = wf.updateRoleMappingsFor(obj)
     if updated:
         obj.reindexObjectSecurity()
+    return updated
