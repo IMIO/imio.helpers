@@ -5,6 +5,7 @@ from imio.helpers.workflow import get_leading_transitions
 from imio.helpers.workflow import get_state_infos
 from imio.helpers.workflow import get_transitions
 from imio.helpers.workflow import remove_state_transitions
+from imio.helpers.workflow import update_role_mappings_for
 from plone import api
 
 
@@ -70,3 +71,9 @@ class TestWorkflowModule(IntegrationTestCase):
         self.assertEqual(get_leading_transitions(wf, "external", not_starting_with="publish_"), [])
         self.assertEqual(get_leading_transitions(wf, "external", not_starting_with="suffix_"),
                          [wf.transitions['publish_externally']])
+
+    def test_update_role_mappings_for(self):
+        obj = api.content.create(container=self.portal.folder, id='mydoc', type='Document')
+        update_role_mappings_for(obj)
+        # this is already tested in
+        # collective.eeafaceted.batchactions.tests.test_forms.test_update_wf_role_mappings_action
