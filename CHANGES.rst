@@ -6,6 +6,8 @@ Changelog
 
 - Added `security.check_zope_admin` (moved from `Products.CPUtils`).
   [gbastien]
+- Improved `transmogrifier.filter_keys`
+  [sgeulette]
 - Added `workflow.update_role_mappings_for` helper to update WF role mappings
   for a given object.
   [gbastien]
