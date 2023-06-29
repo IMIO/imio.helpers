@@ -4,8 +4,8 @@ Changelog
 0.71 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Modified `transmogrifier.relative_path` to add option to keep leading slash (True by default).
+  [sgeulette]
 
 0.70 (2023-06-21)
 -----------------

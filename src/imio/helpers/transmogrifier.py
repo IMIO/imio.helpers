@@ -115,17 +115,19 @@ def pool_tuples(iterable, pool_len=2, e_msg=''):
     return zip(*args)
 
 
-def relative_path(portal, fullpath):
-    """Returns relative path following given portal (without leading slash).
+def relative_path(portal, fullpath, with_slash=True):
+    """Returns relative path following given portal.
 
     :param portal: leading object to remove from path
     :param fullpath: path to update
+    :param with_slash: keep leadind slash
     :return: new path relative to portal object parameter
     """
     portal_path = '/'.join(portal.getPhysicalPath())  # not unicode, brain.getPath is also encoded
     if not fullpath.startswith(portal_path):
         return fullpath
-    return fullpath[len(portal_path) + 1:]
+    shift = not with_slash and 1 or 0
+    return fullpath[len(portal_path) + shift:]
 
 
 def key_val(key, dic):

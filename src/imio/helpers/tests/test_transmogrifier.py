@@ -102,7 +102,8 @@ class TestTesting(IntegrationTestCase):
                          "value = '[1, 2, 3]'")
 
     def test_relative_path(self):
-        self.assertEquals(relative_path(self.portal, '/plone/directory'), 'directory')
+        self.assertEquals(relative_path(self.portal, '/plone/directory'), '/directory')
+        self.assertEquals(relative_path(self.portal, '/plone/directory', False), 'directory')
         self.assertEquals(relative_path(self.portal, '/alone/directory'), '/alone/directory')
 
     def test_split_text(self):
