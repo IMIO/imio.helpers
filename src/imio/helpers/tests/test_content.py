@@ -390,7 +390,7 @@ class TestContentModule(IntegrationTestCase):
         self.assertEqual(object_ids(self.portal, ['Folder', 'ATFolder']),
                          ['folder', 'folder2'])
 
-    def test_user_fullname(self):
+    def test_get_user_fullname(self):
         self.assertIsNone(get_user_fullname(None))
         self.assertEqual(get_user_fullname("unknown_user", none_if_unfound=True), None)
         self.assertEqual(get_user_fullname("unknown_user"), "unknown_user")

@@ -4,8 +4,13 @@ Changelog
 0.71 (unreleased)
 -----------------
 
-- Modified `transmogrifier.relative_path` to add option to keep leading slash (True by default).
+- Modified `transmogrifier.relative_path` to add option to keep leading slash
+  (True by default).
   [sgeulette]
+- In `content.get_user_fullname`, if `fullname` not found at the end,
+  finally fallback to `portal_membership.getMemberInfo`, this is sometimes
+  necessary when using LDAP.
+  [gbastien]
 
 0.70 (2023-06-21)
 -----------------
