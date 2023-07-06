@@ -29,8 +29,7 @@ jobs:
       - name: Set up pyenv and Python
         uses: "gabrielfalcao/pyenv-action@v14"
         with:
-          default: 2.7.18
-          versions: 3.8.16
+          default: "${{ matrix.python }}"
           command: pyenv -v
       - name: Setup Env
         run: |
@@ -73,8 +72,7 @@ jobs:
       - name: Set up pyenv and Python
         uses: "gabrielfalcao/pyenv-action@v14"
         with:
-          default: 2.7.18
-          versions: 3.8.16
+          default: "${{ matrix.python }}"
           command: pyenv -v
       - name: Setup Env
         run: |
