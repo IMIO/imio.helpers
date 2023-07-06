@@ -11,6 +11,9 @@ Changelog
   finally fallback to `portal_membership.getMemberInfo`, this is sometimes
   necessary when using LDAP.
   [gbastien]
+- Removed backward compatible imports for `get_state_infos`, `get_transitions`
+  and `do_transitions` moved from `content` to `workflow`.
+  [gbastien]
 
 0.70 (2023-06-21)
 -----------------

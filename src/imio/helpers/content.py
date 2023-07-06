@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from imio.helpers.interfaces import IContainerOfUnindexedElementsMarker
-from imio.helpers.workflow import do_transitions as transitions  # noqa backward import compatibility
-from imio.helpers.workflow import get_state_infos  # noqa backward import compatibility
-from imio.helpers.workflow import get_transitions  # noqa backward import compatibility
+from imio.helpers.workflow import do_transitions
 from persistent.list import PersistentList
 from plone import api
 from plone.api.content import _parse_object_provides_query
@@ -198,7 +196,7 @@ def create(conf, cids={}, globl=False, pos=False, clean_globl=False):
                 fct(obj, *args, **kwargs)
         if cid:
             cids_l[cid] = obj
-        transitions(obj, dic.get('trans', []))
+        do_transitions(obj, dic.get('trans', []))
         # set at right position
         if pos and parent.getObjectPosition(obj.getId()) != i:
             parent.moveObjectToPosition(obj.getId(), i)
