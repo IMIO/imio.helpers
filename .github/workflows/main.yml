@@ -13,16 +13,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - python: 2.7
-            PLONE_VERSION: 4
-            continue-on-error: false
-#           - python: 2.7
-#             PLONE_VERSION: 51
-#             continue-on-error: true
-          - python: 3.8
-            PLONE_VERSION: 52
-            continue-on-error: true
+        - python: 2.7.18
+          PLONE_VERSION: 4
+          continue-on-error: false
+        - python: 3.8.16
+          PLONE_VERSION: 52
+          continue-on-error: true
     steps:
       - name: Checkout
         uses: actions/checkout@v2
