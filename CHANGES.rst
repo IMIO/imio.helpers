@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.71 (unreleased)
+0.71 (2023-07-07)
 -----------------
 
 - Modified `transmogrifier.relative_path` to add option to keep leading slash
