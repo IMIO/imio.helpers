@@ -4,8 +4,9 @@ Changelog
 0.72 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- In `submitFormHelperOnsuccessDefault` JS function, only manage `blob` if
+  `content-type` is `application/xxx`.
+  [gbastien]
 
 0.71 (2023-07-07)
 -----------------
