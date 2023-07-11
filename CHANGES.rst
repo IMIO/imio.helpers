@@ -8,7 +8,8 @@ Changelog
   `content-type` is `application/xxx`.
   [gbastien]
 - Added `content.sort_on_vocab_order` that will sort a list of `values`
-  respecting a given `vocabulary` terms order.
+  respecting a given `vocabulary` terms order. This relies on `sort_by_indexes`
+  from `imio.pyutils` that is now a dependency.
   [gbastien]
 
 0.71 (2023-07-07)
