@@ -7,6 +7,9 @@ Changelog
 - In `submitFormHelperOnsuccessDefault` JS function, only manage `blob` if
   `content-type` is `application/xxx`.
   [gbastien]
+- Added `content.sort_on_vocab_order` that will sort a list of `values`
+  respecting a given `vocabulary` terms order.
+  [gbastien]
 
 0.71 (2023-07-07)
 -----------------

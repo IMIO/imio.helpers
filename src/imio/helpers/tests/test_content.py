@@ -23,6 +23,7 @@ from imio.helpers.content import richtextval
 from imio.helpers.content import safe_delattr
 from imio.helpers.content import safe_encode
 from imio.helpers.content import set_to_annotation
+from imio.helpers.content import sort_on_vocab_order
 from imio.helpers.content import uuidsToCatalogBrains
 from imio.helpers.content import uuidsToObjects
 from imio.helpers.content import uuidToCatalogBrain
@@ -413,3 +414,14 @@ class TestContentModule(IntegrationTestCase):
         # base_getattr does not use acquisition
         self.assertTrue(base_getattr(self.portal.folder, 'getImmediatelyAddableTypes'))
         self.assertIsNone(base_getattr(obj, 'getImmediatelyAddableTypes'))
+
+    def test_sort_on_vocab_order(self):
+        self.assertEqual(
+            sort_on_vocab_order(('testingtype', 'Link', 'Document', 'File'),
+                                vocab_name='plone.app.vocabularies.PortalTypes'),
+            ['File', 'Link', 'Document', 'testingtype'])
+        vocab = get_vocab(self.portal, 'plone.app.vocabularies.PortalTypes')
+        self.assertEqual(
+            sort_on_vocab_order(('testingtype', 'Link', 'Document', 'File'),
+                                vocab=vocab),
+            ['File', 'Link', 'Document', 'testingtype'])

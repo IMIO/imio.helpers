@@ -2,6 +2,7 @@
 
 from imio.helpers.interfaces import IContainerOfUnindexedElementsMarker
 from imio.helpers.workflow import do_transitions
+from imio.pyutils.utils import sort_by_indexes
 from persistent.list import PersistentList
 from plone import api
 from plone.api.content import _parse_object_provides_query
@@ -721,5 +722,15 @@ def get_user_fullname(userid, none_if_no_user=False, none_if_unfound=False):
     # this is necessary sometimes when using LDAP
     if not fullname:
         mt = api.portal.get_tool('portal_membership')
-        fullname = mt.getMemberInfo(userid).get('fullname')
+        fullname = mt.getMemberInfo(userid).get('fullname', '')
     return safe_unicode(fullname) or userid
+
+
+def sort_on_vocab_order(values, vocab=None, obj=None, vocab_name=None):
+    """ """
+    if vocab is None:
+        vocab = get_vocab(obj, vocab_name)
+
+    ordered_values = [term.value for term in vocab._terms]
+    values_indexes = [ordered_values.index(value) for value in values]
+    return sort_by_indexes(list(values), values_indexes)
