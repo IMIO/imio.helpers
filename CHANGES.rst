@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.72 (unreleased)
+0.72 (2023-07-12)
 -----------------
 
 - In `submitFormHelperOnsuccessDefault` JS function, only manage `blob` if
