@@ -722,7 +722,9 @@ def get_user_fullname(userid, none_if_no_user=False, none_if_unfound=False):
     # this is necessary sometimes when using LDAP
     if not fullname:
         mt = api.portal.get_tool('portal_membership')
-        fullname = mt.getMemberInfo(userid).get('fullname', '')
+        info = mt.getMemberInfo(userid)
+        if info:
+            fullname = info.get('fullname', '')
     return safe_unicode(fullname) or userid
 
 

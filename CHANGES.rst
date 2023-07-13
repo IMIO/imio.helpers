@@ -4,8 +4,9 @@ Changelog
 0.73 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Be more defensive in `content.get_user_fullname`, in some case, a userid
+  is found in `mutable_properties` but there is no properties associated with it.
+  [gbastien]
 
 0.72 (2023-07-12)
 -----------------
