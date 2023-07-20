@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.73 (unreleased)
+0.73 (2023-07-20)
 -----------------
 
 - Be more defensive in `content.get_user_fullname`, in some case, a userid
