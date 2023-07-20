@@ -7,6 +7,8 @@ Changelog
 - Be more defensive in `content.get_user_fullname`, in some case, a userid
   is found in `mutable_properties` but there is no properties associated with it.
   [gbastien]
+- Improved `transmogrifier.clean_value` giving a replacement value
+  [sgeulette]
 
 0.72 (2023-07-12)
 -----------------

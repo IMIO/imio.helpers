@@ -10,12 +10,12 @@ import re
 
 
 def clean_value(value, isep=u'\n', strip=u' ', patterns=[], osep=None):
-    """Clean multiline value
+    """Clean unicode multiline value
 
     :param value: input string
     :param isep: input separator
     :param strip: chars to strip on each "line"
-    :param patterns: line patterns to remove ("line" evaluation)
+    :param patterns: tuple line patterns to remove ("line" evaluation) (tuple = search, replace)
     :param osep: output separator
     :return: string
     """
@@ -26,8 +26,8 @@ def clean_value(value, isep=u'\n', strip=u' ', patterns=[], osep=None):
         osep = isep
     for part in value.split(isep):
         part = part.strip(strip)
-        for pattern in patterns:
-            part = re.sub(pattern, u'', part)
+        for pattern, replace in patterns:
+            part = re.sub(pattern, replace, part, flags=re.U)
         if part:
             parts.append(part)
     return osep.join(parts)
