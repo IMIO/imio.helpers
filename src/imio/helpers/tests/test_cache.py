@@ -9,6 +9,7 @@ from imio.helpers.cache import cleanVocabularyCacheFor
 from imio.helpers.cache import generate_key
 from imio.helpers.cache import get_cachekey_volatile
 from imio.helpers.cache import invalidate_cachekey_volatile_for
+from imio.helpers.cache import obj_modified
 from imio.helpers.cache import VOLATILE_ATTR
 from imio.helpers.cache import volatile_cache_with_parameters
 from imio.helpers.cache import volatile_cache_without_parameters
@@ -23,6 +24,7 @@ from plone.memoize.instance import Memojito
 from plone.memoize.interfaces import ICacheChooser
 from Products.CMFCore.utils import _getAuthenticatedUser
 from Products.PlonePAS.plugins.ufactory import PloneUser
+from zope.annotation import IAnnotations
 from zope.component import getUtility
 from zope.component import queryUtility
 from zope.ramcache.interfaces.ram import IRAMCache
@@ -30,6 +32,7 @@ from zope.schema.interfaces import IVocabularyFactory
 
 import os
 import time
+import transaction
 
 
 memPropName = Memojito.propname
@@ -75,7 +78,7 @@ class TestCacheModule(IntegrationTestCase):
         """
         This helper method cleans instance.memoize cache defined on a vocabulary.
         """
-        self.portal.REQUEST.set('vocab_values', ('1', '2'))
+        self.request.set('vocab_values', ('1', '2'))
         vocab = queryUtility(IVocabularyFactory,
                              "imio.helpers.testing.testingvocabulary")
         # not cached for now
@@ -87,7 +90,7 @@ class TestCacheModule(IntegrationTestCase):
                           ['1', '2'])
 
         # change value but do not clean cache
-        self.portal.REQUEST.set('vocab_values', ('1', '2', '3'))
+        self.request.set('vocab_values', ('1', '2', '3'))
         self.assertEquals([term.token for term in vocab(self.portal)._terms],
                           ['1', '2'])
         # clean vocabulary cache
@@ -96,7 +99,7 @@ class TestCacheModule(IntegrationTestCase):
                           ['1', '2', '3'])
 
         # every existing vocabularies can also be cleaned if nothing passed to cleanVocabularyCacheFor
-        self.portal.REQUEST.set('vocab_values', ('1', '2', '3', '4'))
+        self.request.set('vocab_values', ('1', '2', '3', '4'))
         self.assertEquals([term.token for term in vocab(self.portal)._terms],
                           ['1', '2', '3'])
         # clean vocabulary cache
@@ -106,7 +109,7 @@ class TestCacheModule(IntegrationTestCase):
 
         # if cleanVocabularyCacheFor is called without parameter,
         # every registered vocabularies cache is cleaned
-        self.portal.REQUEST.set('vocab_values', ('1', '2', '3', '4', '5'))
+        self.request.set('vocab_values', ('1', '2', '3', '4', '5'))
         self.assertEquals([term.token for term in vocab(self.portal)._terms],
                           ['1', '2', '3', '4'])
         cleanVocabularyCacheFor()
@@ -117,10 +120,10 @@ class TestCacheModule(IntegrationTestCase):
         """
         This helper method invalidates all ram.cache.
         """
-        self.portal.REQUEST.set('ramcached', 'a')
+        self.request.set('ramcached', 'a')
         self.assertEquals(ramCachedMethod(self.portal, param='1'), 'a')
         # change value in REQUEST, as it is ram cached, it will still return 'a'
-        self.portal.REQUEST.set('ramcached', 'b')
+        self.request.set('ramcached', 'b')
         self.assertEquals(ramCachedMethod(self.portal, param='1'), 'a')
         # ram.cache works as expected if param changes
         self.assertEquals(ramCachedMethod(self.portal, param='2'), 'b')
@@ -134,10 +137,10 @@ class TestCacheModule(IntegrationTestCase):
         """
         This helper method invalidates ram.cache for given method.
         """
-        self.portal.REQUEST.set('ramcached', 'a')
+        self.request.set('ramcached', 'a')
         self.assertEquals(ramCachedMethod(self.portal, param='1'), 'a')
         # change value in REQUEST, as it is ram cached, it will still return 'a'
-        self.portal.REQUEST.set('ramcached', 'b')
+        self.request.set('ramcached', 'b')
         self.assertEquals(ramCachedMethod(self.portal, param='1'), 'a')
         # ram.cache works as expected if param changes
         self.assertEquals(ramCachedMethod(self.portal, param='2'), 'b')
@@ -255,9 +258,9 @@ class TestCacheModule(IntegrationTestCase):
     def test_volatile_cache_without_parameters(self):
         """Helper cache @volatile_cache_without_parameters"""
         generate_key(volatile_without_parameters_cached)
-        self.portal.REQUEST.set('volatile_without_parameters_cached', 'a')
+        self.request.set('volatile_without_parameters_cached', 'a')
         self.assertEqual('a', volatile_without_parameters_cached(self.portal))
-        self.portal.REQUEST.set('volatile_without_parameters_cached', 'b')
+        self.request.set('volatile_without_parameters_cached', 'b')
         self.assertEqual('a', volatile_without_parameters_cached(self.portal))
         # Test invalidation
         invalidate_cachekey_volatile_for(
@@ -267,12 +270,12 @@ class TestCacheModule(IntegrationTestCase):
 
     def test_volatile_cache_with_parameters(self):
         """Helper cache @volatile_cache_with_parameters"""
-        self.portal.REQUEST.set('volatile_with_parameters_cached', 'a')
+        self.request.set('volatile_with_parameters_cached', 'a')
         self.assertEqual(
             'a',
             volatile_with_parameters_cached(self.portal, 'a'),
         )
-        self.portal.REQUEST.set('volatile_with_parameters_cached', 'b')
+        self.request.set('volatile_with_parameters_cached', 'b')
         self.assertEqual(
             'a',
             volatile_with_parameters_cached(self.portal, 'a'),
@@ -281,7 +284,7 @@ class TestCacheModule(IntegrationTestCase):
             'b',
             volatile_with_parameters_cached(self.portal, 'b'),
         )
-        self.portal.REQUEST.set('volatile_with_parameters_cached', 'c')
+        self.request.set('volatile_with_parameters_cached', 'c')
         self.assertEqual(
             'b',
             volatile_with_parameters_cached(self.portal, 'b'),
@@ -298,6 +301,37 @@ class TestCacheModule(IntegrationTestCase):
             'c',
             volatile_with_parameters_cached(self.portal, 'b'),
         )
+
+    def test_obj_modified(self):
+        """ """
+        # init annotations
+        folder = self.portal.folder
+        ann = IAnnotations(folder)
+        ann['test'] = 0
+        transaction.commit()
+        ann = folder.__annotations__
+        modified = obj_modified(folder)
+        # changed when modified
+        folder.notifyModified()
+        modified2 = obj_modified(folder)
+        self.assertNotEqual(modified, modified2)
+        # changed when annotation changed
+        ann['test'] = 1
+        transaction.commit()
+        modified3 = obj_modified(folder)
+        self.assertNotEqual(modified2, modified3)
+        # also working when stored annotation is a dict and something changed into it
+        ann['test2'] = PersistentMapping({'key': 'value1'})
+        transaction.commit()
+        modified4 = obj_modified(folder)
+        self.assertNotEqual(modified3, modified4)
+        ann['test2']['key'] = 'value2'
+        transaction.commit()
+        modified5 = obj_modified(folder)
+        self.assertNotEqual(modified4, modified5)
+        # by default result is a datetime, can be float
+        self.assertEqual(type(obj_modified(folder)), datetime)
+        self.assertEqual(type(obj_modified(folder, asdatetime=False)), float)
 
 
 class TestCachedMethods(IntegrationTestCase):

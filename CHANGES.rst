@@ -4,8 +4,12 @@ Changelog
 0.74 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Fixed `cache.obj_modified` when checking annotations, take care that `_p_mtime`
+  is not changed on `__annotations__` when a value changes in a stored annotation
+  that is a `PersistentMapping`.
+  Also removed parameter `asstring=False`, when `asdatetime=False`, returned
+  value is float which is convenient to be used in a cachekey.
+  [gbastien]
 
 0.73 (2023-07-20)
 -----------------

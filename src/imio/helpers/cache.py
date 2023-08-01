@@ -175,18 +175,26 @@ def volatile_cache_without_parameters(func):
     return replacement
 
 
-def obj_modified(obj, asdatetime=True, check_annotation=True, asstring=False):
-    """Returns max value between obj.modified(), obj._p_mtime and __anotations__._p_mtime.
-
-       to check also attribute modification and annotation modification."""
+def obj_modified(obj, asdatetime=True, check_annotation=True):
+    """Returns max value between obj.modified(), obj._p_mtime and __anotations__._p_mtime
+       to check also attribute modification and annotation modification.
+       Returns a float when asdatetime=False.
+    """
+    modified = max(float(obj.modified()), obj._p_mtime)
     if check_annotation and base_hasattr(obj, '__annotations__'):
-        modified = max(float(obj.modified()), obj._p_mtime, obj.__annotations__._p_mtime)
-    else:
-        modified = max(float(obj.modified()), obj._p_mtime)
+        # when stored annotation is a PersistentMapping, we need to check _p_mtime
+        # of stored annotation because a change in the PersistentMapping will not change
+        # the __annotations__ _p_mtime
+        ann_max_time = max(
+            [obj.__annotations__._p_mtime] +
+            [obj.__annotations__[k]._p_mtime
+             for k in obj.__annotations__.keys()
+             if hasattr(obj.__annotations__[k], '_p_mtime')])
+        modified = max(float(obj.modified()),
+                       obj._p_mtime,
+                       ann_max_time)
     if asdatetime:
         modified = datetime.fromtimestamp(modified)
-    elif asstring:
-        modified = datetime.fromtimestamp(modified).strftime('%Y%m%d-%H%M%S-%f')
     return modified
 
 
