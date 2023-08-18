@@ -4,6 +4,12 @@ Changelog
 0.74 (unreleased)
 -----------------
 
+- Fixed `cache.obj_modified` when checking annotations, take care that `_p_mtime`
+  is not changed on `__annotations__` when a value changes in a stored annotation
+  that is a `PersistentMapping`.
+  Also removed parameter `asstring=False`, when `asdatetime=False`, returned
+  value is float which is convenient to be used in a cachekey.
+  [gbastien]
 - Add `catalog` parameter on `content.uuidsToObjects`, `content.uuidsToObject`,
   `content.uuidsToCatalogBrains` and `uuidsToCatalogBrain` to allow query on
   other catalogs (e.g. uid_catalog)
