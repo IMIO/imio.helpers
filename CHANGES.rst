@@ -4,7 +4,10 @@ Changelog
 0.74 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Add `catalog` parameter on `content.uuidsToObjects`, `content.uuidsToObject`,
+  `content.uuidsToCatalogBrains` and `uuidsToCatalogBrain` to allow query on
+  other catalogs (e.g. uid_catalog)
+  [mpeeters]
 
 
 0.73 (2023-07-20)

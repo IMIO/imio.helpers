@@ -352,14 +352,15 @@ def uuidsToCatalogBrains(uuids=[],
                          ordered=False,
                          query={},
                          check_contained_uids=False,
-                         unrestricted=False):
+                         unrestricted=False,
+                         catalog='portal_catalog'):
     """ Given a list of UUIDs, attempt to return catalog brains,
         keeping original uuids list order if p_ordered=True.
         If p_check_contained_uids=True, if we do not find brains using the UID
         index, we will try to get it using the contained_uids index, used when
         subelements are not indexed."""
 
-    catalog = api.portal.get_tool('portal_catalog')
+    catalog = api.portal.get_tool(catalog)
     searcher = catalog.searchResults
     if unrestricted:
         searcher = catalog.unrestrictedSearchResults
@@ -382,14 +383,16 @@ def uuidToCatalogBrain(uuid,
                        ordered=False,
                        query={},
                        check_contained_uids=False,
-                       unrestricted=False):
+                       unrestricted=False,
+                       catalog='portal_catalog'):
     """Shortcut to call uuidsToCatalogBrains to get one single element."""
     res = uuidsToCatalogBrains(
         uuids=[uuid],
         ordered=ordered,
         query=query,
         check_contained_uids=check_contained_uids,
-        unrestricted=unrestricted)
+        unrestricted=unrestricted,
+        catalog=catalog)
     if res:
         res = res[0]
     return res
@@ -411,7 +414,12 @@ def _contained_objects(obj, only_unindexed=False):
     return get_objs(obj)
 
 
-def uuidsToObjects(uuids=[], ordered=False, query={}, check_contained_uids=False, unrestricted=False):
+def uuidsToObjects(uuids=[],
+                   ordered=False,
+                   query={},
+                   check_contained_uids=False,
+                   unrestricted=False,
+                   catalog='portal_catalog'):
     """ Given a list of UUIDs, attempt to return content objects,
         keeping original uuids list order if p_ordered=True.
         If p_check_contained_uids=True, if we do not find brains using the UID
@@ -422,7 +430,8 @@ def uuidsToObjects(uuids=[], ordered=False, query={}, check_contained_uids=False
                                   ordered=not check_contained_uids and ordered or False,
                                   query=query,
                                   check_contained_uids=check_contained_uids,
-                                  unrestricted=unrestricted)
+                                  unrestricted=unrestricted,
+                                  catalog=catalog)
     res = []
     if check_contained_uids:
         need_reorder = False
@@ -450,14 +459,16 @@ def uuidToObject(uuid,
                  ordered=False,
                  query={},
                  check_contained_uids=False,
-                 unrestricted=False):
+                 unrestricted=False,
+                 catalog='portal_catalog'):
     """Shortcut to call uuidsToObjects to get one single element."""
     res = uuidsToObjects(
         uuids=[uuid],
         ordered=ordered,
         query=query,
         check_contained_uids=check_contained_uids,
-        unrestricted=unrestricted)
+        unrestricted=unrestricted,
+        catalog=catalog)
     if res:
         res = res[0]
     else:
