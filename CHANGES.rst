@@ -10,6 +10,11 @@ Changelog
   Also removed parameter `asstring=False`, when `asdatetime=False`, returned
   value is float which is convenient to be used in a cachekey.
   [gbastien]
+- Add `catalog` parameter on `content.uuidsToObjects`, `content.uuidsToObject`,
+  `content.uuidsToCatalogBrains` and `uuidsToCatalogBrain` to allow query on
+  other catalogs (e.g. uid_catalog)
+  [mpeeters]
+
 
 0.73 (2023-07-20)
 -----------------
