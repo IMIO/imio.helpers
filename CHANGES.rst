@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.74 (unreleased)
+0.74 (2023-08-24)
 -----------------
 
 - Fixed `cache.obj_modified` when checking annotations, take care that `_p_mtime`
