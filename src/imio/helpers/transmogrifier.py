@@ -179,7 +179,8 @@ def split_text(text, length):
     return part1, part2
 
 
-def str_to_date(item, key, log_method, fmt='%Y/%m/%d', can_be_empty=True, as_date=True, **log_params):
+def str_to_date(item, key, log_method, fmt='%Y/%m/%d', can_be_empty=True, as_date=True, min_val=None, max_val=None,
+                **log_params):
     """Changed to date or datetime the text value of item[key]
 
     :param item: yielded item (usually dict)
@@ -188,6 +189,8 @@ def str_to_date(item, key, log_method, fmt='%Y/%m/%d', can_be_empty=True, as_dat
     :param fmt: formatting date string
     :param can_be_empty: value can be empty or None
     :param as_date: return a date, otherwise a datetime
+    :param min_val: minimal date
+    :param max_val: maximum date
     :param log_params: log method keyword parameters
     :return: the date or datetime value
     """
@@ -198,6 +201,10 @@ def str_to_date(item, key, log_method, fmt='%Y/%m/%d', can_be_empty=True, as_dat
         dt = datetime.strptime(val, fmt)
         if as_date:
             dt = dt.date()
+        if min_val and dt < min_val:
+            raise(ValueError(u"Given date '{}' < minimal value '{}' => set to None".format(val, min_val)))
+        if max_val and dt > max_val:
+            raise (ValueError(u"Given date '{}' > maximum value '{}' => set to None".format(val, max_val)))
     except ValueError as ex:
         log_method(item, u"not a valid date '{}' in key '{}': {}".format(val, key, ex), **log_params)
         return None

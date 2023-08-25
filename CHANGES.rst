@@ -4,9 +4,11 @@ Changelog
 0.75 (unreleased)
 -----------------
 
-- Fixed setup.load_type_from_package when loading a Dexterity FTI because it fails to purge old values.
+- Fixed `setup.load_type_from_package` when loading a Dexterity FTI because it fails to purge old values.
   Purging is disabled for Dexterity FTI, we just manage removing actions manually so it is reloaded in correct order.
   [gbastien]
+- Improved `transmogrifier.str_to_date` with min and max
+  [sgeulette]
 
 0.74 (2023-08-24)
 -----------------

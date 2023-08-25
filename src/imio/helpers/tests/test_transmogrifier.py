@@ -140,6 +140,13 @@ class TestTesting(IntegrationTestCase):
         # str_to_date(item, key, log_method, fmt='%Y/%m/%d', can_be_empty=True, as_date=True, **log_params):
         self.assertIsNone(str_to_date(dic, 'bad_key', logger))
         self.assertRaises(TypeError, str_to_date, dic, 'bad_key', logger, can_be_empty=False)
+        self.assertIsNone(str_to_date(dic, 1, logger, min_val=datetime.date(2023, 4, 1)))
+        self.assertEquals(dic['errors'], 1)
+        self.assertIsNone(str_to_date(dic, 1, logger, max_val=datetime.date(2022, 4, 1)))
+        self.assertEquals(dic['errors'], 2)
+        self.assertIsNone(str_to_date(dic, 1, logger, min_val=datetime.date(2023, 4, 1),
+                                      max_val=datetime.date(2022, 4, 1)))
+        self.assertEquals(dic['errors'], 3)
         ret = str_to_date(dic, 1, logger)
         self.assertIsInstance(ret, datetime.date)
         self.assertEqual(str(ret), '2023-03-03')
@@ -147,4 +154,4 @@ class TestTesting(IntegrationTestCase):
         self.assertIsInstance(ret, datetime.datetime)
         self.assertEqual(str(ret), '2023-03-03 09:29:00')
         ret = str_to_date(dic, 2, logger, fmt='%Y/%m/%d %M:%H', as_date=False)
-        self.assertEquals(dic['errors'], 1)
+        self.assertEquals(dic['errors'], 4)
