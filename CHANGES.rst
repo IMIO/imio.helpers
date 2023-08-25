@@ -4,8 +4,9 @@ Changelog
 0.75 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Fixed setup.load_type_from_package when loading a Dexterity FTI because it fails to purge old values.
+  Purging is disabled for Dexterity FTI, we just manage removing actions manually so it is reloaded in correct order.
+  [gbastien]
 
 0.74 (2023-08-24)
 -----------------
