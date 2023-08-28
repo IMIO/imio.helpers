@@ -740,10 +740,20 @@ def get_user_fullname(userid, none_if_no_user=False, none_if_unfound=False):
 
 
 def sort_on_vocab_order(values, vocab=None, obj=None, vocab_name=None):
-    """ """
+    """Sort a given list of values depending on the order of these values
+       of a given vocabulary.
+
+    :param values: the list of values to sort
+    :param vocab: an optional vocabulary instance
+    :param obj: when vocab not given, will be used to get vocabulary from vocab_name
+    :param vocab_name: a vocabulayr name that will be used to get a vocabulary instance
+    :return: values sorted with order of vocablary terms.
+    """
     if vocab is None:
         vocab = get_vocab(obj, vocab_name)
 
     ordered_values = [term.value for term in vocab._terms]
-    values_indexes = [ordered_values.index(value) for value in values]
+    # do not fail a a value of values is not in ordered_values
+    values_indexes = [ordered_values.index(value) if value in ordered_values else 999
+                      for value in values]
     return sort_by_indexes(list(values), values_indexes)

@@ -425,3 +425,12 @@ class TestContentModule(IntegrationTestCase):
             sort_on_vocab_order(('testingtype', 'Link', 'Document', 'File'),
                                 vocab=vocab),
             ['File', 'Link', 'Document', 'testingtype'])
+        # not found values are moved to the end
+        self.assertEqual(
+            sort_on_vocab_order(('testingtype', 'unknown1', 'Link', 'Document', 'File'),
+                                vocab=vocab),
+            ['File', 'Link', 'Document', 'testingtype', 'unknown1'])
+        self.assertEqual(
+            sort_on_vocab_order(('testingtype', 'unknown2', 'Link', 'Document', 'File', 'unknown1'),
+                                vocab=vocab),
+            ['File', 'Link', 'Document', 'testingtype', 'unknown2', 'unknown1'])

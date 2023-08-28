@@ -11,6 +11,9 @@ Changelog
   [gbastien]
 - Improved `transmogrifier.str_to_date` with min and max
   [sgeulette]
+- Fixed `ValueError: 'value' is not in list` in `content.sort_on_vocab_order`
+  when a value of given `p_values` does not exist in the given `p_vocab`.
+  [gbastien]
 
 0.74 (2023-08-24)
 -----------------
