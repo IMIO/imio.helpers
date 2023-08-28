@@ -697,10 +697,10 @@ def get_user_fullname(userid, none_if_no_user=False, none_if_unfound=False):
     """Get fullname without using getMemberInfo that is slow slow slow...
     We get it only from mutable_properties or authentic.
 
-   :param userid: principal id
-   :param none_if_no_user: return None if principal is not a user
-   :param none_if_unfound: return None if principal is not found
-   :return: fullname or userid if fullname is empty.
+    :param userid: principal id
+    :param none_if_no_user: return None if principal is not a user
+    :param none_if_unfound: return None if principal is not found
+    :return: fullname or userid if fullname is empty.
     """
     userid = safe_unicode(userid)
     acl_users = api.portal.get_tool('acl_users')
