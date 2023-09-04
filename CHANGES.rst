@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.75 (unreleased)
+0.75 (2023-09-04)
 -----------------
 
 - Fixed `setup.load_type_from_package` when loading a Dexterity FTI because
