@@ -115,6 +115,19 @@ def reindexIndexes(portal, idxs=[], catalog_id='portal_catalog'):
     logger.info('Done.')
 
 
+def reindex_object(obj, idxs=[], no_idxs=[], update_metadata=1):
+    """Reimplement obj.reindexObject for AT and DX as p_update_metadata is not available.
+       p_idxs and p_no_idxs are mutually exclusive, passing indexes in p_no_idxs
+       means every indexes excepted these indexes."""
+    catalog = api.portal.get_tool('portal_catalog')
+    indexes = catalog.indexes()
+    if no_idxs:
+        idxs = [i for i in indexes if i not in no_idxs]
+    else:
+        idxs = [i for i in idxs if i in indexes]
+    catalog.catalog_object(obj, idxs=list(set(idxs)), update_metadata=update_metadata)
+
+
 def get_intid(obj, intids=None, create=True):
     """ Get intid value or create it if not found """
     if not intids:
