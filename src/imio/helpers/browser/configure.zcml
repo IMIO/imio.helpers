@@ -2,6 +2,7 @@
     xmlns="http://namespaces.zope.org/zope"
     xmlns:browser="http://namespaces.zope.org/browser"
     xmlns:plone="http://namespaces.plone.org/plone"
+    xmlns:zcml="http://namespaces.zope.org/zcml"
     i18n_domain="imio.helpers">
 
     <!-- Publish static files -->
@@ -43,20 +44,22 @@
         permission="cmf.ManagePortal" />
 
     <!-- Override @@render_collection_widget_term to add caching -->
-    <configure package="collective.eeafaceted.collectionwidget">
+    <configure zcml:condition="installed collective.eeafaceted.collectionwidget"
+               package="collective.eeafaceted.collectionwidget">
         <browser:page
             for="*"
             name="render_collection_widget_term"
-            class="imio.helpers.browser.views.IMIORenderTermView"
+            class="imio.helpers.browser.views.IMIORenderTermPortletView"
             template="browser/templates/term.pt"
             layer="imio.helpers.interfaces.IIMIOHelpersLayer"
             permission="zope2.View" />
     </configure>
-    <configure package="collective.eeafaceted.dashboard">
+    <configure zcml:condition="installed collective.eeafaceted.dashboard"
+               package="collective.eeafaceted.dashboard">
         <browser:page
             for="*"
             name="render_collection_widget_term_portlet"
-            class="imio.helpers.browser.views.IMIORenderTermView"
+            class="imio.helpers.browser.views.IMIORenderTermPortletView"
             template="browser/templates/term.pt"
             layer="imio.helpers.interfaces.IIMIOHelpersLayer"
             permission="zope2.View" />

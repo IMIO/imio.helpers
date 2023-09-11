@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from collective.eeafaceted.dashboard.browser.views import RenderTermPortletView
 from imio.helpers.cache import _generate_modified_portal_type_volatile_name
 from imio.helpers.cache import get_cachekey_volatile
 from imio.helpers.cache import get_plone_groups_for_user
+from imio.helpers.config import HAS_DASHBOARD
 from imio.helpers.interfaces import IListContainedDexterityObjectsForDisplay
 from imio.pyutils.utils import listify
 from plone import api
@@ -14,6 +14,11 @@ from plone.dexterity.browser.view import DefaultView
 from plone.memoize import ram
 from Products.Five import BrowserView
 from zope.component import getMultiAdapter
+
+
+# soft dependency on collective.eeafaceted.dashboard
+if HAS_DASHBOARD:
+    from collective.eeafaceted.dashboard.browser.views import RenderTermPortletView
 
 
 class ContainerView(DefaultView):
@@ -72,29 +77,30 @@ class IMIORAMCache(RAMCache):
         self.stats = self.ramCache.getStatistics()
 
 
-class IMIORenderTermView(RenderTermPortletView):
+if HAS_DASHBOARD:
+    class IMIORenderTermPortletView(RenderTermPortletView):
 
-    def _get_portal_types(self):
-        """By default, get the portal_type from the DashboardCollection query."""
-        query = queryparser.parseFormquery(self.context, self.context.query)
-        if not query.get('portal_type'):
-            raise ram.DontCache
-        return listify(query['portal_type']['query'])
+        def _get_portal_types(self):
+            """By default, get the portal_type from the DashboardCollection query."""
+            query = queryparser.parseFormquery(self.context, self.context.query)
+            if not query.get('portal_type'):
+                raise ram.DontCache
+            return listify(query['portal_type']['query'])
 
-    def number_of_items_cachekey(method, self, init=False):
-        '''cachekey method for self.number_of_items.'''
-        # cache until an obj of particular portal_type is modified
-        # a DashboardCollection may rely on several portal_types
-        dates = []
-        for portal_type in self._get_portal_types():
-            dates.append(
-                get_cachekey_volatile(
-                    _generate_modified_portal_type_volatile_name(
-                        portal_type), method))
-        # self.context is a DashboardCollection
-        return (repr(self.context), get_plone_groups_for_user(), init) + tuple(dates)
+        def number_of_items_cachekey(method, self, init=False):
+            '''cachekey method for self.number_of_items.'''
+            # cache until an obj of particular portal_type is modified
+            # a DashboardCollection may rely on several portal_types
+            dates = []
+            for portal_type in self._get_portal_types():
+                dates.append(
+                    get_cachekey_volatile(
+                        _generate_modified_portal_type_volatile_name(
+                            portal_type), method))
+            # self.context is a DashboardCollection
+            return (repr(self.context), get_plone_groups_for_user(), init) + tuple(dates)
 
-    @ram.cache(number_of_items_cachekey)
-    def number_of_items(self, init=False):
-        """Just added caching until an item is modified results will remain the same."""
-        return super(IMIORenderTermView, self).number_of_items(init=init)
+        @ram.cache(number_of_items_cachekey)
+        def number_of_items(self, init=False):
+            """Just added caching until an item is modified results will remain the same."""
+            return super(IMIORenderTermPortletView, self).number_of_items(init=init)

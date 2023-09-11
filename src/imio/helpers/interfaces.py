@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
-"""Module where all interfaces, events and exceptions live."""
 
-from collective.eeafaceted.collectionwidget.interfaces import ICollectiveEeafacetedCollectionwidgetLayer
-from collective.eeafaceted.dashboard.interfaces import IFacetedDashboardLayer
+from imio.helpers.config import HAS_DASHBOARD
 from zope.interface import Interface
+from zope.publisher.interfaces.browser import IDefaultBrowserLayer
 
 
 class IListContainedDexterityObjectsForDisplay(Interface):
@@ -16,5 +15,12 @@ class IContainerOfUnindexedElementsMarker(Interface):
        so elements that are not indexed in the portal_catalog."""
 
 
-class IIMIOHelpersLayer(ICollectiveEeafacetedCollectionwidgetLayer, IFacetedDashboardLayer):
-    """Marker interface that defines a browser layer."""
+if HAS_DASHBOARD:
+    from collective.eeafaceted.collectionwidget.interfaces import ICollectiveEeafacetedCollectionwidgetLayer
+    from collective.eeafaceted.dashboard.interfaces import IFacetedDashboardLayer
+
+    class IIMIOHelpersLayer(ICollectiveEeafacetedCollectionwidgetLayer, IFacetedDashboardLayer):
+        """Marker interface that defines a browser layer."""
+else:
+    class IIMIOHelpersLayer(IDefaultBrowserLayer):
+        """Marker interface that defines a browser layer."""
