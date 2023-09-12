@@ -25,23 +25,23 @@
 
   <!-- "modified" cache invalidation -->
   <!-- WF transition -->
-  <subscriber for="OFS.interfaces.IItem
+  <subscriber for="Products.CMFCore.interfaces._content.IContentish
                    Products.DCWorkflow.interfaces.IAfterTransitionEvent"
               handler=".events.onObjTransition" />
   <!-- Added -->
-  <subscriber for="OFS.interfaces.IItem
+  <subscriber for="Products.CMFCore.interfaces._content.IContentish
                    zope.lifecycleevent.IObjectAddedEvent"
               handler=".events.onObjAdded" />
   <!-- Initilized (for AT, plone.restapi calls it but not the "ObjectAdded" event) -->
-  <subscriber for="OFS.interfaces.IItem
+  <subscriber for="Products.CMFCore.interfaces._content.IContentish
                    Products.Archetypes.interfaces.IObjectInitializedEvent"
               handler=".events.onObjInitialized" />
   <!-- Modified -->
-  <subscriber for="OFS.interfaces.IItem
+  <subscriber for="Products.CMFCore.interfaces._content.IContentish
                    zope.lifecycleevent.IObjectModifiedEvent"
               handler=".events.onObjModified" />
   <!-- Removed -->
-  <subscriber for="OFS.interfaces.IItem
+  <subscriber for="Products.CMFCore.interfaces._content.IContentish
                    zope.container.interfaces.IObjectRemovedEvent"
               handler=".events.onObjRemoved" />
 
