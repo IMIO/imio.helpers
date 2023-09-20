@@ -33,6 +33,29 @@ def clean_value(value, isep=u'\n', strip=u' ', patterns=[], osep=None):
     return osep.join(parts)
 
 
+def correct_id(obj, oid, with_letter=False):
+    """ Modify an id already existing in obj.
+
+    :param obj: plone obj or dict or list
+    :param oid: id to check
+    :param with_letter: add a letter prefix
+    :return: unique id
+    """
+    # TODO handle more than 26 letters
+    letters = 'abcdefghijklmnopqrstuvwxyz'
+    original = oid
+    i = 0
+    pfx = with_letter and letters[i] or i + 1
+    while oid in obj:
+        oid = u'{}-{}'.format(original, pfx)
+        i += 1
+        if with_letter:
+            pfx = letters[i-1]
+        else:
+            pfx = i + 1
+    return oid
+
+
 def correct_path(portal, path):
     """ Check if a path already exists on obj """
     original = path

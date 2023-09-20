@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from imio.helpers.testing import IntegrationTestCase
 from imio.helpers.transmogrifier import clean_value
+from imio.helpers.transmogrifier import correct_id
 from imio.helpers.transmogrifier import correct_path
 from imio.helpers.transmogrifier import filter_keys
 from imio.helpers.transmogrifier import get_main_path
@@ -38,6 +39,28 @@ class TestTesting(IntegrationTestCase):
         self.assertEqual(clean_value(u' strip  \n line2', patterns=[], osep=u'-'), u'strip-line2')
         self.assertEqual(clean_value(u' stri    p  \n line  2', patterns=[(r'\s{2,}', u' ')], osep=u'-'),
                          u'stri p-line 2')
+
+    def test_correct_id(self):
+        self.assertEquals(correct_id(self.portal, 'abcde'), 'abcde')
+        self.assertIn('folder', self.portal.objectIds())
+        self.assertEquals(correct_id(self.portal, 'folder'), 'folder-1')
+        self.assertEquals(correct_id(self.portal, 'folder', with_letter=True), 'folder-a')
+        self.assertEquals(correct_id(self.portal.folder, 'abcde'), 'abcde')
+        self.portal.folder.invokeFactory('Document', id='abcde', title='Document')
+        self.assertEquals(correct_id(self.portal.folder, 'abcde'), 'abcde-1')
+        self.assertEquals(correct_id(self.portal.folder, 'abcde', True), 'abcde-a')
+        self.portal.folder.invokeFactory('Document', id='abcde-1', title='Document')
+        self.assertEquals(correct_id(self.portal.folder, 'abcde'), 'abcde-2')
+
+    def test_correct_id_dic(self):
+        lst = ['a']
+        self.assertEquals(correct_id(lst, 'z'), 'z')
+        self.assertEquals(correct_id(lst, 'a'), 'a-1')
+        self.assertEquals(correct_id(lst, 'a', True), 'a-a')
+        lst.extend(['a-1', 'a-a'])
+        self.assertEquals(correct_id(lst, 'a'), 'a-2')
+        self.assertEquals(correct_id(lst, 'a', True), 'a-b')
+
 
     def test_correct_path(self):
         self.assertEquals(correct_path(self.portal, 'abcde'), 'abcde')

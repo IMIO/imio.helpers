@@ -4,8 +4,8 @@ Changelog
 0.76 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Added `transmogrifier.correct_id` to generate a unexisting id with numbered or lettered suffix.
+  [sgeulette]
 
 0.75 (2023-09-04)
 -----------------
