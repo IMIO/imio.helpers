@@ -61,7 +61,6 @@ class TestTesting(IntegrationTestCase):
         self.assertEquals(correct_id(lst, 'a'), 'a-2')
         self.assertEquals(correct_id(lst, 'a', True), 'a-b')
 
-
     def test_correct_path(self):
         self.assertEquals(correct_path(self.portal, 'abcde'), 'abcde')
         self.assertIn('folder', self.portal.objectIds())

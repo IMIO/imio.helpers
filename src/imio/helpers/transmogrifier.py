@@ -50,7 +50,7 @@ def correct_id(obj, oid, with_letter=False):
         oid = u'{}-{}'.format(original, pfx)
         i += 1
         if with_letter:
-            pfx = letters[i-1]
+            pfx = letters[i - 1]
         else:
             pfx = i + 1
     return oid
