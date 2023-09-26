@@ -3,6 +3,7 @@ from copy import deepcopy
 from datetime import datetime
 from future.builtins import zip
 from imio.helpers.content import safe_encode
+from imio.pyutils.utils import letters_sequence
 from Products.CMFPlone.utils import safe_unicode
 
 import os
@@ -33,7 +34,23 @@ def clean_value(value, isep=u'\n', strip=u' ', patterns=(), osep=None):
     return osep.join(parts)
 
 
-def correct_id(obj, oid, with_letter=False):
+def filter_keys(item, keys, unfound=None):
+    """Return a copy of item with only given keys.
+
+    :param item: yielded item (dict)
+    :param keys: keys to keep
+    :param unfound: unfound value (default None)
+    :return: filtered item
+    """
+    if not keys:
+        return deepcopy(item)
+    new_item = {}
+    for key in keys:
+        new_item[key] = item.get(key, unfound)
+    return new_item
+
+
+def get_correct_id(obj, oid, with_letter=False):
     """ Modify an id already existing in obj.
 
     :param obj: plone obj or dict or list
@@ -41,18 +58,12 @@ def correct_id(obj, oid, with_letter=False):
     :param with_letter: add a letter prefix
     :return: unique id
     """
-    # TODO handle more than 26 letters
-    letters = 'abcdefghijklmnopqrstuvwxyz'
     original = oid
-    i = 0
-    pfx = with_letter and letters[i] or i + 1
+    i = 1
     while oid in obj:
-        oid = u'{}-{}'.format(original, pfx)
+        sfx = with_letter and letters_sequence(i) or i
+        oid = u'{}-{}'.format(original, sfx)
         i += 1
-        if with_letter:
-            pfx = letters[i - 1]
-        else:
-            pfx = i + 1
     return oid
 
 
@@ -64,21 +75,6 @@ def get_correct_path(portal, path):
         path = '{}-{:d}'.format(original, i)
         i += 1
     return path
-
-
-def filter_keys(item, keys, unfound=None):
-    """Return a copy of item with only given keys.
-
-    :param item: yielded item (dict)
-    :param keys: keys to keep
-    :return: filtered item
-    """
-    if not keys:
-        return deepcopy(item)
-    new_item = {}
-    for key in keys:
-        new_item[key] = item.get(key, unfound)
-    return new_item
 
 
 def get_obj_from_path(root, item={}, path_key='_path', path=None):
