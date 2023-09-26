@@ -9,13 +9,13 @@ import os
 import re
 
 
-def clean_value(value, isep=u'\n', strip=u' ', patterns=[], osep=None):
+def clean_value(value, isep=u'\n', strip=u' ', patterns=(), osep=None):
     """Clean unicode multiline value
 
     :param value: input string
     :param isep: input separator
     :param strip: chars to strip on each "line"
-    :param patterns: tuple line patterns to remove ("line" evaluation) (tuple = search, replace)
+    :param patterns: tuple line patterns list to remove ("line" evaluation) (tuple = search, replace)
     :param osep: output separator
     :return: string
     """
@@ -56,7 +56,7 @@ def correct_id(obj, oid, with_letter=False):
     return oid
 
 
-def correct_path(portal, path):
+def get_correct_path(portal, path):
     """ Check if a path already exists on obj """
     original = path
     i = 1

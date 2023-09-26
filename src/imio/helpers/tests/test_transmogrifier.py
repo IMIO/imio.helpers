@@ -2,8 +2,8 @@
 from imio.helpers.testing import IntegrationTestCase
 from imio.helpers.transmogrifier import clean_value
 from imio.helpers.transmogrifier import correct_id
-from imio.helpers.transmogrifier import correct_path
 from imio.helpers.transmogrifier import filter_keys
+from imio.helpers.transmogrifier import get_correct_path
 from imio.helpers.transmogrifier import get_main_path
 from imio.helpers.transmogrifier import get_obj_from_path
 from imio.helpers.transmogrifier import key_val
@@ -61,15 +61,15 @@ class TestTesting(IntegrationTestCase):
         self.assertEquals(correct_id(lst, 'a'), 'a-2')
         self.assertEquals(correct_id(lst, 'a', True), 'a-b')
 
-    def test_correct_path(self):
-        self.assertEquals(correct_path(self.portal, 'abcde'), 'abcde')
+    def test_get_correct_path(self):
+        self.assertEquals(get_correct_path(self.portal, 'abcde'), 'abcde')
         self.assertIn('folder', self.portal.objectIds())
-        self.assertEquals(correct_path(self.portal, 'folder'), 'folder-1')
-        self.assertEquals(correct_path(self.portal, 'folder/abcde'), 'folder/abcde')
+        self.assertEquals(get_correct_path(self.portal, 'folder'), 'folder-1')
+        self.assertEquals(get_correct_path(self.portal, 'folder/abcde'), 'folder/abcde')
         self.portal.folder.invokeFactory('Document', id='abcde', title='Document')
-        self.assertEquals(correct_path(self.portal, 'folder/abcde'), 'folder/abcde-1')
+        self.assertEquals(get_correct_path(self.portal, 'folder/abcde'), 'folder/abcde-1')
         self.portal.folder.invokeFactory('Document', id='abcde-1', title='Document')
-        self.assertEquals(correct_path(self.portal, 'folder/abcde'), 'folder/abcde-2')
+        self.assertEquals(get_correct_path(self.portal, 'folder/abcde'), 'folder/abcde-2')
 
     def test_filter_keys(self):
         dic = {'a': 1, 'b': 2, 'c': 3}

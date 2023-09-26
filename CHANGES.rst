@@ -5,6 +5,7 @@ Changelog
 -----------------
 
 - Added `transmogrifier.correct_id` to generate a unexisting id with numbered or lettered suffix.
+- Renamed `transmogrifier.correct_path` to `transmogrifier.get_correct_path`
   [sgeulette]
 
 0.75 (2023-09-04)
