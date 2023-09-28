@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.76 (unreleased)
+0.76 (2023-09-28)
 -----------------
 
 - Added `transmogrifier.get_correct_id` to generate a unexisting id with numbered or lettered suffix.
