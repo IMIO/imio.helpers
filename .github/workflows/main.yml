@@ -47,8 +47,8 @@ jobs:
           cache-name: cache-eggs
         with:
           path: ~/buildout-cache/eggs
-          key: ${{ runner.os }}-test-${{ env.cache-name }}-${{ matrix.plone }}
-          restore-keys: ${{ runner.os }}-test-${{ env.cache-name }}-${{ matrix.plone }}
+          key: ${{ runner.os }}-test-${{ env.cache-name }}-${{ matrix.python }}-${{ matrix.plone }}
+          restore-keys: ${{ runner.os }}-test-${{ env.cache-name }}-${{ matrix.python }}-${{ matrix.plone }}
       - name: buildout
         run: |
           sed -ie "s#test.cfg#test-${{matrix.plone}}.cfg#" gha.cfg
