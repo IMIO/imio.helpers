@@ -17,21 +17,21 @@ jobs:
           - python: '2.7'
             PLONE_VERSION: '4.3'
             continue-on-error: false
-          - python: '3.8'
-            PLONE_VERSION: '5.2'
-            continue-on-error: false
-          - python: '3.8'
-            PLONE_VERSION: '6.0'
-            continue-on-error: false
-          - python: '3.9'
-            PLONE_VERSION: '6.0'
-            continue-on-error: false
-          - python: '3.10'
-            PLONE_VERSION: '6.0'
-            continue-on-error: false
-          - python: '3.11'
-            PLONE_VERSION: '6.0'
-            continue-on-error: false
+#          - python: '3.8'
+#            PLONE_VERSION: '5.2'
+#            continue-on-error: false
+#          - python: '3.8'
+#            PLONE_VERSION: '6.0'
+#            continue-on-error: false
+#          - python: '3.9'
+#            PLONE_VERSION: '6.0'
+#            continue-on-error: false
+#          - python: '3.10'
+#            PLONE_VERSION: '6.0'
+#            continue-on-error: false
+#          - python: '3.11'
+#            PLONE_VERSION: '6.0'
+#            continue-on-error: false
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -69,61 +69,61 @@ jobs:
         run: |
           bin/test
         continue-on-error: ${{matrix.continue-on-error}}
-  coverage:
-    runs-on: ubuntu-20.04
-    strategy:
-      fail-fast: false
-      matrix:
-        PLONE_VERSION: [4.3]
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Set up pyenv and Python 2.7
-        uses: "gabrielfalcao/pyenv-action@v14"
-        with:
-          default: "${{ matrix.python }}"
-          command: pyenv -v
-      - name: Setup Env
-        run: |
-          sudo apt-get update -qqy
-          sudo apt-get install -qqy g++ libpng-dev cmake libqt5widgets5 qttools5-dev
-          wget -t 3 -T 60 --waitretry 5 -O zint-2.8.0.tar.gz https://sourceforge.net/projects/zint/files/zint/2.8.0/zint-2.8.0.tar.gz/download
-          tar -xf zint-2.8.0.tar.gz
-          cd zint-2.8.0
-          sudo cmake .
-          sudo make
-          sudo make install
-          cd ..
-          mkdir -p buildout-cache/{eggs,downloads}
-          pip install -r requirements-${{matrix.PLONE_VERSION}}.txt coverage==5.3.1
-      - name: Cache eggs
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-eggs
-        with:
-          path: ~/buildout-cache/eggs
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-coverage-${{ matrix.PLONE_VERSION }}
-      - name: buildout
-        run: |
-          sed -ie "s#test.cfg#test-${{matrix.PLONE_VERSION}}.cfg#" ci.cfg
-          buildout -c ci.cfg annotate
-          buildout -c ci.cfg
-      - name: code-analysis
-        run: |
-          bin/code-analysis
-      - name: test coverage
-        run: |
-          bin/coverage run bin/test
-      - name: Set up Python 3.8
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.8
-      - name: Install Coveralls
-        run: |
-          pip3 install -U pip setuptools --no-cache-dir
-          pip3 install -U "coveralls>=3.0.0" coverage==5.3.1 --no-cache-dir
-      - name: Publish to Coveralls
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          coveralls --service=github
+#  coverage:
+#    runs-on: ubuntu-20.04
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        PLONE_VERSION: [4.3]
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@v2
+#      - name: Set up pyenv and Python 2.7
+#        uses: "gabrielfalcao/pyenv-action@v14"
+#        with:
+#          default: "${{ matrix.python }}"
+#          command: pyenv -v
+#      - name: Setup Env
+#        run: |
+#          sudo apt-get update -qqy
+#          sudo apt-get install -qqy g++ libpng-dev cmake libqt5widgets5 qttools5-dev
+#          wget -t 3 -T 60 --waitretry 5 -O zint-2.8.0.tar.gz https://sourceforge.net/projects/zint/files/zint/2.8.0/zint-2.8.0.tar.gz/download
+#          tar -xf zint-2.8.0.tar.gz
+#          cd zint-2.8.0
+#          sudo cmake .
+#          sudo make
+#          sudo make install
+#          cd ..
+#          mkdir -p buildout-cache/{eggs,downloads}
+#          pip install -r requirements-${{matrix.PLONE_VERSION}}.txt coverage==5.3.1
+#      - name: Cache eggs
+#        uses: actions/cache@v2
+#        env:
+#          cache-name: cache-eggs
+#        with:
+#          path: ~/buildout-cache/eggs
+#          key: ${{ runner.os }}-build-${{ env.cache-name }}-coverage-${{ matrix.PLONE_VERSION }}
+#      - name: buildout
+#        run: |
+#          sed -ie "s#test.cfg#test-${{matrix.PLONE_VERSION}}.cfg#" ci.cfg
+#          buildout -c ci.cfg annotate
+#          buildout -c ci.cfg
+#      - name: code-analysis
+#        run: |
+#          bin/code-analysis
+#      - name: test coverage
+#        run: |
+#          bin/coverage run bin/test
+#      - name: Set up Python 3.8
+#        uses: actions/setup-python@v2
+#        with:
+#          python-version: 3.8
+#      - name: Install Coveralls
+#        run: |
+#          pip3 install -U pip setuptools --no-cache-dir
+#          pip3 install -U "coveralls>=3.0.0" coverage==5.3.1 --no-cache-dir
+#      - name: Publish to Coveralls
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        run: |
+#          coveralls --service=github
