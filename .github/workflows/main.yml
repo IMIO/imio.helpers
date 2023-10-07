@@ -52,7 +52,7 @@ jobs:
           sudo make install
           cd ..
           mkdir -p buildout-cache/{eggs,downloads}
-          pip install -r requirements-${{matrix.PLONE_VERSION}}.txt coverage==5.3.1 wheel
+          pip install -r requirements-${{matrix.PLONE_VERSION}}.txt coverage==5.3.1
       - name: Cache eggs
         uses: actions/cache@v2
         env:
@@ -95,7 +95,7 @@ jobs:
           sudo make install
           cd ..
           mkdir -p buildout-cache/{eggs,downloads}
-          pip install -r requirements-${{matrix.PLONE_VERSION}}.txt coverage==5.3.1 wheel
+          pip install -r requirements-${{matrix.PLONE_VERSION}}.txt coverage==5.3.1
       - name: Cache eggs
         uses: actions/cache@v2
         env:
