@@ -62,7 +62,7 @@ jobs:
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.python }}-${{ matrix.PLONE_VERSION }}
       - name: buildout
         run: |
-          cp test-${{matrix.PLONE_VERSION}}.cfg buildout.cfg
+          sed -ie "s#test.cfg#test-${{matrix.plone}}.cfg#" ci.cfg
           buildout -c ci.cfg annotate
           buildout -c ci.cfg
       - name: test
@@ -105,7 +105,7 @@ jobs:
           key: ${{ runner.os }}-build-${{ env.cache-name }}-coverage-${{ matrix.PLONE_VERSION }}
       - name: buildout
         run: |
-          cp test-${{matrix.PLONE_VERSION}}.cfg buildout.cfg
+          sed -ie "s#test.cfg#test-${{matrix.plone}}.cfg#" ci.cfg
           buildout -c ci.cfg annotate
           buildout -c ci.cfg
       - name: code-analysis
