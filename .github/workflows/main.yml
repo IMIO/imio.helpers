@@ -35,10 +35,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Set up Python ${{matrix.python}}
-        uses: actions/setup-python@v2
+      - name: Set up pyenv and Python ${{matrix.python}}
+        uses: "gabrielfalcao/pyenv-action@v14"
         with:
-          python-version: ${{matrix.python}}
+          default: "${{ matrix.python }}"
+          command: pyenv -v
       - name: Setup Env
         run: |
           sudo apt-get update -qqy
@@ -51,7 +52,7 @@ jobs:
           sudo make install
           cd ..
           mkdir -p buildout-cache/{eggs,downloads}
-          pip install -r requirements_plone-${{matrix.PLONE_VERSION}}.x.txt coverage==5.3.1 wheel
+          pip install -r requirements-${{matrix.PLONE_VERSION}}.txt coverage==5.3.1 wheel
       - name: Cache eggs
         uses: actions/cache@v2
         env:
@@ -61,7 +62,7 @@ jobs:
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.python }}-${{ matrix.PLONE_VERSION }}
       - name: buildout
         run: |
-          cp test_plone-${{matrix.PLONE_VERSION}}.x.cfg buildout.cfg
+          cp test-${{matrix.PLONE_VERSION}}.cfg buildout.cfg
           buildout -c ci.cfg annotate
           buildout -c ci.cfg
       - name: test
@@ -77,10 +78,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Set up Python 2.7
-        uses: actions/setup-python@v2
+      - name: Set up pyenv and Python 2.7
+        uses: "gabrielfalcao/pyenv-action@v14"
         with:
-          python-version: 2.7
+          default: "${{ matrix.python }}"
+          command: pyenv -v
       - name: Setup Env
         run: |
           sudo apt-get update -qqy
@@ -93,7 +95,7 @@ jobs:
           sudo make install
           cd ..
           mkdir -p buildout-cache/{eggs,downloads}
-          pip install -r requirements_plone-${{matrix.PLONE_VERSION}}.x.txt coverage==5.3.1 wheel
+          pip install -r requirements-${{matrix.PLONE_VERSION}}.txt coverage==5.3.1 wheel
       - name: Cache eggs
         uses: actions/cache@v2
         env:
@@ -103,7 +105,7 @@ jobs:
           key: ${{ runner.os }}-build-${{ env.cache-name }}-coverage-${{ matrix.PLONE_VERSION }}
       - name: buildout
         run: |
-          cp test_plone-${{matrix.PLONE_VERSION}}.x.cfg buildout.cfg
+          cp test-${{matrix.PLONE_VERSION}}.cfg buildout.cfg
           buildout -c ci.cfg annotate
           buildout -c ci.cfg
       - name: code-analysis
