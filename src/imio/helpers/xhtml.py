@@ -6,8 +6,8 @@ from plone import api
 from plone.app.imaging.scale import ImageScale
 from plone.outputfilters.browser.resolveuid import uuidToURL
 from plone.outputfilters.filters.resolveuid_and_caption import ResolveUIDAndCaptionFilter
-from six.moves.html_parser import HTMLParser
 from Products.CMFPlone.utils import safe_unicode
+from six.moves.html_parser import HTMLParser
 from zExceptions import NotFound
 from zope.container.interfaces import INameChooser
 
