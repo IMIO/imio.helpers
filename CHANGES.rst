@@ -4,7 +4,7 @@ Changelog
 0.77 (unreleased)
 -----------------
 
-- Added `xhtml.unescape_html` that will decode HTML entities of an HTML text.
+- Added `xhtml.unescape_html` that will decode HTML entities of a HTML text.
   [gbastien]
 
 0.76 (2023-09-28)
