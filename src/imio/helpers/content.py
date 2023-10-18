@@ -583,9 +583,8 @@ def get_vocab(context, vocab_name, only_factory=False, **kwargs):
 
 def get_vocab_values(context, vocab_name, attr_name='token', **kwargs):
     """ """
-    vocab_factory = getUtility(IVocabularyFactory, vocab_name)
-    return [getattr(term, attr_name)
-            for term in vocab_factory(context, **kwargs)._terms]
+    vocab = get_vocab(context, vocab_name, **kwargs)
+    return [getattr(term, attr_name) for term in vocab._terms]
 
 
 def safe_delattr(obj, attr_name):
