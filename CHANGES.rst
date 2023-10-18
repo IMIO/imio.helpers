@@ -1,11 +1,19 @@
 Changelog
 =========
 
-0.76 (unreleased)
+0.77 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Added `xhtml.unescape_html` that will decode HTML entities of a HTML text.
+  [gbastien]
 
+0.76 (2023-09-28)
+-----------------
+
+- Added `transmogrifier.get_correct_id` to generate a unexisting id with numbered or lettered suffix.
+  [sgeulette]
+- Renamed `transmogrifier.correct_path` to `transmogrifier.get_correct_path`
+  [sgeulette]
 
 0.75 (2023-09-04)
 -----------------

@@ -10,7 +10,7 @@ long_description = (
 
 setup(
     name='imio.helpers',
-    version='0.76.dev0',
+    version='0.77.dev0',
     description="Various helper methods for development.",
     long_description=long_description,
     # Get more from http://pypi.python.org/pypi?%3Aaction=list_classifiers
@@ -19,10 +19,12 @@ setup(
         "Environment :: Web Environment",
         "Framework :: Plone",
         "Framework :: Plone :: 4.3",
+        "Framework :: Plone :: 5.2",
         "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
         "Operating System :: OS Independent",
         "Programming Language :: Python",
         "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3.8",
     ],
     keywords='plone helpers utils dev imio',
     author='Simon Delcourt',
@@ -39,7 +41,7 @@ setup(
         'collective.fingerpointing',
         'collective.monkeypatcher',
         'future>=0.18.2',
-        'imio.pyutils',
+        'imio.pyutils>=0.31',
         'natsort<7',
         'plone.api>1.9.1',
         'plone.app.intid',

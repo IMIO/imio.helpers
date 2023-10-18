@@ -3,19 +3,20 @@ from copy import deepcopy
 from datetime import datetime
 from future.builtins import zip
 from imio.helpers.content import safe_encode
+from imio.pyutils.utils import letters_sequence
 from Products.CMFPlone.utils import safe_unicode
 
 import os
 import re
 
 
-def clean_value(value, isep=u'\n', strip=u' ', patterns=[], osep=None):
+def clean_value(value, isep=u'\n', strip=u' ', patterns=(), osep=None):
     """Clean unicode multiline value
 
     :param value: input string
     :param isep: input separator
     :param strip: chars to strip on each "line"
-    :param patterns: tuple line patterns to remove ("line" evaluation) (tuple = search, replace)
+    :param patterns: tuple line patterns list to remove ("line" evaluation) (tuple = search, replace)
     :param osep: output separator
     :return: string
     """
@@ -33,21 +34,12 @@ def clean_value(value, isep=u'\n', strip=u' ', patterns=[], osep=None):
     return osep.join(parts)
 
 
-def correct_path(portal, path):
-    """ Check if a path already exists on obj """
-    original = path
-    i = 1
-    while portal.unrestrictedTraverse(path, default=None) is not None:  # path exists
-        path = '{}-{:d}'.format(original, i)
-        i += 1
-    return path
-
-
 def filter_keys(item, keys, unfound=None):
     """Return a copy of item with only given keys.
 
     :param item: yielded item (dict)
     :param keys: keys to keep
+    :param unfound: unfound value (default None)
     :return: filtered item
     """
     if not keys:
@@ -56,6 +48,33 @@ def filter_keys(item, keys, unfound=None):
     for key in keys:
         new_item[key] = item.get(key, unfound)
     return new_item
+
+
+def get_correct_id(obj, oid, with_letter=False):
+    """ Modify an id already existing in obj.
+
+    :param obj: plone obj or dict or list
+    :param oid: id to check
+    :param with_letter: add a letter prefix
+    :return: unique id
+    """
+    original = oid
+    i = 1
+    while oid in obj:
+        sfx = with_letter and letters_sequence(i) or i
+        oid = u'{}-{}'.format(original, sfx)
+        i += 1
+    return oid
+
+
+def get_correct_path(portal, path):
+    """ Check if a path already exists on obj """
+    original = path
+    i = 1
+    while portal.unrestrictedTraverse(path, default=None) is not None:  # path exists
+        path = '{}-{:d}'.format(original, i)
+        i += 1
+    return path
 
 
 def get_obj_from_path(root, item={}, path_key='_path', path=None):

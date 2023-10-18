@@ -7,6 +7,7 @@ from plone.app.imaging.scale import ImageScale
 from plone.outputfilters.browser.resolveuid import uuidToURL
 from plone.outputfilters.filters.resolveuid_and_caption import ResolveUIDAndCaptionFilter
 from Products.CMFPlone.utils import safe_unicode
+from six.moves.html_parser import HTMLParser
 from zExceptions import NotFound
 from zope.container.interfaces import INameChooser
 
@@ -668,3 +669,13 @@ def is_html(text):
     except UnicodeDecodeError:
         d, f, mimetype = mtr(len(text) < 8096 and text or '', mimetype=None)
     return str(mimetype).split(';')[0].strip() == 'text/html'
+
+
+def unescape_html(html):
+    """Unescape an html text, turn HTML entities to encoded entities."""
+    if not html:
+        return html
+    is_unicode = isinstance(html, unicode)
+    parser = HTMLParser()
+    html = parser.unescape(html)
+    return html if is_unicode else html.encode('utf-8')
