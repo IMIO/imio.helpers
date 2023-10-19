@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.77 (unreleased)
+0.77 (2023-10-19)
 -----------------
 
 - Added `xhtml.unescape_html` that will decode HTML entities of a HTML text.
