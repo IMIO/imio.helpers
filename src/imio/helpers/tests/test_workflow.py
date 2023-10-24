@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from imio.helpers.testing import IntegrationTestCase
 from imio.helpers.workflow import do_transitions
+from imio.helpers.workflow import get_final_states
 from imio.helpers.workflow import get_leading_transitions
 from imio.helpers.workflow import get_state_infos
 from imio.helpers.workflow import get_transitions
@@ -82,3 +83,17 @@ class TestWorkflowModule(IntegrationTestCase):
         self.assertTrue(update_role_mappings_for(obj))
         # this is already tested in
         # collective.eeafaceted.batchactions.tests.test_forms.test_update_wf_role_mappings_action
+
+    def test_get_final_states(self):
+        wf_tool = api.portal.get_tool('portal_workflow')
+        wf = wf_tool.getWorkflowById('intranet_folder_workflow')
+        self.assertEqual(get_final_states(wf), [])
+        wf = wf_tool.getWorkflowById('one_state_workflow')
+        self.assertEqual(get_final_states(wf), ['published'])
+        wf = wf_tool.getWorkflowById('intranet_folder_workflow')
+        self.assertEqual(get_final_states(wf, ignored_transition_ids=['hide']),
+                         ['internal'])
+        wf = wf_tool.getWorkflowById('plone_workflow')
+        self.assertEqual(
+            get_final_states(wf, ignored_transition_ids=['reject', 'retract']),
+            ['published'])

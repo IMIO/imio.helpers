@@ -4,8 +4,8 @@ Changelog
 0.78 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Added `workflow.get_final_states` that will return a given WF final states.
+  [gbastien]
 
 0.77 (2023-10-19)
 -----------------
