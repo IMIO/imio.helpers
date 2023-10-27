@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.78 (unreleased)
+0.78 (2023-10-27)
 -----------------
 
 - Added `workflow.get_final_states` that will return a given WF final states.
