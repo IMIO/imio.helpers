@@ -68,6 +68,7 @@ class TestSecurityModule(IntegrationTestCase):
         self.assertEqual(len(get_user_from_criteria(self.portal, fullname='Stéph')), 1)
         self.assertEqual(len(get_user_from_criteria(self.portal, email='.be')), 2)
         self.assertEqual(len(get_user_from_criteria(self.portal, fullname='Smith')), 2)
+        self.assertEqual(len(get_user_from_criteria(self.portal, fullname='')), 3)
 
     def test_setup_logger(self):
         # just call it to check that it is not broken

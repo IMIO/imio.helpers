@@ -6,6 +6,7 @@ from collective.fingerpointing.config import AUDIT_MESSAGE
 from collective.fingerpointing.logger import log_info
 from collective.fingerpointing.utils import get_request_information
 from itertools import chain
+from plone import api
 from plone.api.validation import at_least_one_of
 from plone.api.validation import mutually_exclusive_parameters
 from random import choice
@@ -107,6 +108,10 @@ def get_user_from_criteria(context, email=None, fullname=None):
     :return: list of dict describing users
              [{'description': u'Bob Smith', 'title': u'Bob Smith', 'principal_type': 'user', 'userid': 'bsm',
                'email': 'bsm@mail.com', 'pluginid': 'mutable_properties', 'login': 'bsm', 'id': 'bsm'}]
+             [{'dn': 'CN=Luc.Oil,OU=Service_Social,OU=Utilisateurs,DC=cpas,DC=local', 'sAMAccountName':
+               'luc.oil', 'title': 'luc.oil', 'editurl': 'ldap-plugin/acl_users/manage_userrecords?user_dn=...'
+               'principal_type': 'user', 'userid': 'luc.oil', 'pluginid': 'ldap-plugin', 'sn': '', 'login': 'luc.oil',
+               'id': 'luc.oil', 'cn': ''}]
     """
     hunter = getMultiAdapter((context, context.REQUEST), name='pas_search')
     criteria = {}
@@ -114,7 +119,13 @@ def get_user_from_criteria(context, email=None, fullname=None):
         criteria['email'] = email
     if fullname:
         criteria['fullname'] = fullname
-    return hunter.searchUsers(**criteria)
+    res = hunter.searchUsers(**criteria)
+    for dic in res:
+        if 'email' not in dic or 'description' not in dic:  # ldap
+            member = api.user.get(userid=dic['userid'])
+            dic['email'] = member.getProperty('email', default='')  # following plonepas.plugins.property.enumerateUsers
+            dic['description'] = member.getProperty('fullname', default=dic['userid'])
+    return res
 
 
 def get_zope_root():

@@ -4,8 +4,8 @@ Changelog
 0.79 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Improved `security.get_user_from_criteria` to add email and description in ldap results.
+  [sgeulette]
 
 0.78 (2023-10-27)
 -----------------
