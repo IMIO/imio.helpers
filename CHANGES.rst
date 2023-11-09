@@ -6,6 +6,8 @@ Changelog
 
 - Improved `security.get_user_from_criteria` to add email and description in ldap results.
   [sgeulette]
+- Included Products.CMFCore permissions.zcml
+  [sgeulette]
 
 0.78 (2023-10-27)
 -----------------
