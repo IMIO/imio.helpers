@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.79 (unreleased)
+0.79 (2023-11-28)
 -----------------
 
 - Improved `security.get_user_from_criteria` to add email and description in ldap results.
