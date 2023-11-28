@@ -18,6 +18,7 @@ from imio.helpers.xhtml import removeCssClasses
 from imio.helpers.xhtml import replace_content
 from imio.helpers.xhtml import separate_images
 from imio.helpers.xhtml import storeImagesLocally
+from imio.helpers.xhtml import unescape_html
 from imio.helpers.xhtml import xhtmlContentIsEmpty
 
 try:
@@ -908,9 +909,17 @@ class TestXHTMLModule(IntegrationTestCase):
         self.assertEqual(res, expected_text_with_sub)
 
     def test_is_html(self):
-        """ """
         self.assertFalse(is_html(None))
         self.assertFalse(is_html(""))
         self.assertFalse(is_html("None"))
         self.assertTrue(is_html("<p>My text</p>"))
         self.assertTrue(is_html("<p>My text <span>text 2</span>.</p>"))
+
+    def test_unescape_html(self):
+        self.assertIsNone(unescape_html(None))
+        self.assertEqual(unescape_html(""), "")
+        self.assertEqual(unescape_html(u""), u"")
+        self.assertEqual(unescape_html("<p>Activit&#233; scolaire</p>"),
+                         "<p>Activit\xc3\xa9 scolaire</p>")
+        self.assertEqual(unescape_html(u"<p>Activit&#233; scolaire</p>"),
+                         u"<p>Activit\xe9 scolaire</p>")

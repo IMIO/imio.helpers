@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from imio.helpers.interfaces import IContainerOfUnindexedElementsMarker
-from imio.helpers.workflow import do_transitions as transitions  # noqa backward import compatibility
-from imio.helpers.workflow import get_state_infos  # noqa backward import compatibility
-from imio.helpers.workflow import get_transitions  # noqa backward import compatibility
+from imio.helpers.workflow import do_transitions
+from imio.pyutils.utils import sort_by_indexes
 from persistent.list import PersistentList
 from plone import api
 from plone.api.content import _parse_object_provides_query
@@ -191,6 +190,7 @@ def create(conf, cids={}, globl=False, pos=False, clean_globl=False):
         else:
             obj = get_object(parent=parent, ptype=dic['type'], title=dic.get('title'))
         if not obj:
+            # logger.info(u'Creating obj id={}, title={}'.format(dic.get('id'), safe_unicode(dic['title'])))
             obj = api.content.create(container=parent, type=dic['type'], title=safe_unicode(dic['title']),
                                      id=dic.get('id', None), safe_id=not bool(dic.get('id', '')),
                                      **dic.get('attrs', {}))
@@ -198,7 +198,7 @@ def create(conf, cids={}, globl=False, pos=False, clean_globl=False):
                 fct(obj, *args, **kwargs)
         if cid:
             cids_l[cid] = obj
-        transitions(obj, dic.get('trans', []))
+        do_transitions(obj, dic.get('trans', []))
         # set at right position
         if pos and parent.getObjectPosition(obj.getId()) != i:
             parent.moveObjectToPosition(obj.getId(), i)
@@ -354,14 +354,15 @@ def uuidsToCatalogBrains(uuids=[],
                          ordered=False,
                          query={},
                          check_contained_uids=False,
-                         unrestricted=False):
+                         unrestricted=False,
+                         catalog='portal_catalog'):
     """ Given a list of UUIDs, attempt to return catalog brains,
         keeping original uuids list order if p_ordered=True.
         If p_check_contained_uids=True, if we do not find brains using the UID
         index, we will try to get it using the contained_uids index, used when
         subelements are not indexed."""
 
-    catalog = api.portal.get_tool('portal_catalog')
+    catalog = api.portal.get_tool(catalog)
     searcher = catalog.searchResults
     if unrestricted:
         searcher = catalog.unrestrictedSearchResults
@@ -384,14 +385,16 @@ def uuidToCatalogBrain(uuid,
                        ordered=False,
                        query={},
                        check_contained_uids=False,
-                       unrestricted=False):
+                       unrestricted=False,
+                       catalog='portal_catalog'):
     """Shortcut to call uuidsToCatalogBrains to get one single element."""
     res = uuidsToCatalogBrains(
         uuids=[uuid],
         ordered=ordered,
         query=query,
         check_contained_uids=check_contained_uids,
-        unrestricted=unrestricted)
+        unrestricted=unrestricted,
+        catalog=catalog)
     if res:
         res = res[0]
     return res
@@ -413,7 +416,12 @@ def _contained_objects(obj, only_unindexed=False):
     return get_objs(obj)
 
 
-def uuidsToObjects(uuids=[], ordered=False, query={}, check_contained_uids=False, unrestricted=False):
+def uuidsToObjects(uuids=[],
+                   ordered=False,
+                   query={},
+                   check_contained_uids=False,
+                   unrestricted=False,
+                   catalog='portal_catalog'):
     """ Given a list of UUIDs, attempt to return content objects,
         keeping original uuids list order if p_ordered=True.
         If p_check_contained_uids=True, if we do not find brains using the UID
@@ -424,7 +432,8 @@ def uuidsToObjects(uuids=[], ordered=False, query={}, check_contained_uids=False
                                   ordered=not check_contained_uids and ordered or False,
                                   query=query,
                                   check_contained_uids=check_contained_uids,
-                                  unrestricted=unrestricted)
+                                  unrestricted=unrestricted,
+                                  catalog=catalog)
     res = []
     if check_contained_uids:
         need_reorder = False
@@ -452,14 +461,16 @@ def uuidToObject(uuid,
                  ordered=False,
                  query={},
                  check_contained_uids=False,
-                 unrestricted=False):
+                 unrestricted=False,
+                 catalog='portal_catalog'):
     """Shortcut to call uuidsToObjects to get one single element."""
     res = uuidsToObjects(
         uuids=[uuid],
         ordered=ordered,
         query=query,
         check_contained_uids=check_contained_uids,
-        unrestricted=unrestricted)
+        unrestricted=unrestricted,
+        catalog=catalog)
     if res:
         res = res[0]
     else:
@@ -574,9 +585,8 @@ def get_vocab(context, vocab_name, only_factory=False, **kwargs):
 
 def get_vocab_values(context, vocab_name, attr_name='token', **kwargs):
     """ """
-    vocab_factory = getUtility(IVocabularyFactory, vocab_name)
-    return [getattr(term, attr_name)
-            for term in vocab_factory(context, **kwargs)._terms]
+    vocab = get_vocab(context, vocab_name, **kwargs)
+    return [getattr(term, attr_name) for term in vocab._terms]
 
 
 def safe_delattr(obj, attr_name):
@@ -688,10 +698,10 @@ def get_user_fullname(userid, none_if_no_user=False, none_if_unfound=False):
     """Get fullname without using getMemberInfo that is slow slow slow...
     We get it only from mutable_properties or authentic.
 
-   :param userid: principal id
-   :param none_if_no_user: return None if principal is not a user
-   :param none_if_unfound: return None if principal is not found
-   :return: fullname or userid if fullname is empty.
+    :param userid: principal id
+    :param none_if_no_user: return None if principal is not a user
+    :param none_if_unfound: return None if principal is not found
+    :return: fullname or userid if fullname is empty.
     """
     userid = safe_unicode(userid)
     acl_users = api.portal.get_tool('acl_users')
@@ -720,4 +730,31 @@ def get_user_fullname(userid, none_if_no_user=False, none_if_unfound=False):
         if none_if_unfound:
             return None
         return userid
+    # finally if fullname was not found, use getMemberInfo
+    # this is necessary sometimes when using LDAP
+    if not fullname:
+        mt = api.portal.get_tool('portal_membership')
+        info = mt.getMemberInfo(userid)
+        if info:
+            fullname = info.get('fullname', '')
     return safe_unicode(fullname) or userid
+
+
+def sort_on_vocab_order(values, vocab=None, obj=None, vocab_name=None):
+    """Sort a given list of values depending on the order of these values
+       of a given vocabulary.
+
+    :param values: the list of values to sort
+    :param vocab: an optional vocabulary instance
+    :param obj: when vocab not given, will be used to get vocabulary from vocab_name
+    :param vocab_name: a vocabulayr name that will be used to get a vocabulary instance
+    :return: values sorted with order of vocablary terms.
+    """
+    if vocab is None:
+        vocab = get_vocab(obj, vocab_name)
+
+    ordered_values = [term.value for term in vocab._terms]
+    # do not fail a a value of values is not in ordered_values
+    values_indexes = [ordered_values.index(value) if value in ordered_values else 999
+                      for value in values]
+    return sort_by_indexes(list(values), values_indexes)

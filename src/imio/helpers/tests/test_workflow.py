@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 from imio.helpers.testing import IntegrationTestCase
 from imio.helpers.workflow import do_transitions
+from imio.helpers.workflow import get_final_states
 from imio.helpers.workflow import get_leading_transitions
 from imio.helpers.workflow import get_state_infos
 from imio.helpers.workflow import get_transitions
 from imio.helpers.workflow import remove_state_transitions
+from imio.helpers.workflow import update_role_mappings_for
 from plone import api
+from Products.CMFCore.permissions import View
 
 
 class TestWorkflowModule(IntegrationTestCase):
@@ -72,3 +75,27 @@ class TestWorkflowModule(IntegrationTestCase):
         self.assertEqual(get_leading_transitions(wf, "external", not_starting_with="publish_"), [])
         self.assertEqual(get_leading_transitions(wf, "external", not_starting_with="suffix_"),
                          [wf.transitions['publish_externally']])
+
+    def test_update_role_mappings_for(self):
+        obj = api.content.create(container=self.portal.folder, id='mydoc', type='Document')
+        wf_tool = api.portal.get_tool('portal_workflow')
+        self.assertEqual(wf_tool.getInfoFor(obj, 'review_state'), 'internal')
+        wf = wf_tool.getWorkflowsFor(obj)[0]
+        wf.states.internal.permission_roles[View] = ('Manager', )
+        self.assertTrue(update_role_mappings_for(obj))
+        # this is already tested in
+        # collective.eeafaceted.batchactions.tests.test_forms.test_update_wf_role_mappings_action
+
+    def test_get_final_states(self):
+        wf_tool = api.portal.get_tool('portal_workflow')
+        wf = wf_tool.getWorkflowById('intranet_folder_workflow')
+        self.assertEqual(get_final_states(wf), [])
+        wf = wf_tool.getWorkflowById('one_state_workflow')
+        self.assertEqual(get_final_states(wf), ['published'])
+        wf = wf_tool.getWorkflowById('intranet_folder_workflow')
+        self.assertEqual(get_final_states(wf, ignored_transition_ids=['hide']),
+                         ['internal'])
+        wf = wf_tool.getWorkflowById('plone_workflow')
+        self.assertEqual(
+            get_final_states(wf, ignored_transition_ids=['reject', 'retract']),
+            ['published'])

@@ -54,3 +54,9 @@ class TestSetupModule(IntegrationTestCase):
         # type not managed by given profile_id
         self.assertFalse(load_type_from_package(
             'testingtype', 'profile-Products.CMFPlone:plone'))
+        # reimport a Dexterity fti
+        self.assertTrue(load_type_from_package(
+            'testingtype', 'profile-imio.helpers:testing'))
+        # with purge_actions=True
+        self.assertTrue(load_type_from_package(
+            'testingtype', 'profile-imio.helpers:testing', purge_actions=True))

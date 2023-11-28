@@ -8,6 +8,7 @@
     i18n_domain="imio.helpers">
 
     <include package="z3c.unconfigure" file="meta.zcml"/>
+    <include package="Products.CMFCore" file="permissions.zcml" />
 
     <include package="plone.app.intid" />
     <include package="plone.memoize" />
@@ -80,6 +81,13 @@
         class="Products.PluggableAuthService.plugins.ZODBRoleManager.ZODBRoleManager"
         original="removeRoleFromPrincipal"
         replacement=".patches.removeRoleFromPrincipal"
+        preserveOriginal="true" />
+
+    <monkey:patch
+        description="Monkeypatch _listAllowedRolesAndUsers to add ram.cache on '_users_groups_value'"
+        class="Products.CMFPlone.CatalogTool.CatalogTool"
+        original="_listAllowedRolesAndUsers"
+        replacement=".patches._listAllowedRolesAndUsers"
         preserveOriginal="true" />
 
     <utility component=".vocabularies.SortedUsersFactory"

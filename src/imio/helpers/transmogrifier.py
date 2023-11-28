@@ -3,19 +3,20 @@ from copy import deepcopy
 from datetime import datetime
 from future.builtins import zip
 from imio.helpers.content import safe_encode
+from imio.pyutils.utils import letters_sequence
 from Products.CMFPlone.utils import safe_unicode
 
 import os
 import re
 
 
-def clean_value(value, isep=u'\n', strip=u' ', patterns=[], osep=None):
-    """Clean multiline value
+def clean_value(value, isep=u'\n', strip=u' ', patterns=(), osep=None):
+    """Clean unicode multiline value
 
     :param value: input string
     :param isep: input separator
     :param strip: chars to strip on each "line"
-    :param patterns: line patterns to remove ("line" evaluation)
+    :param patterns: tuple line patterns list to remove ("line" evaluation) (tuple = search, replace)
     :param osep: output separator
     :return: string
     """
@@ -26,14 +27,47 @@ def clean_value(value, isep=u'\n', strip=u' ', patterns=[], osep=None):
         osep = isep
     for part in value.split(isep):
         part = part.strip(strip)
-        for pattern in patterns:
-            part = re.sub(pattern, u'', part)
+        for pattern, replace in patterns:
+            part = re.sub(pattern, replace, part, flags=re.U)
         if part:
             parts.append(part)
     return osep.join(parts)
 
 
-def correct_path(portal, path):
+def filter_keys(item, keys, unfound=None):
+    """Return a copy of item with only given keys.
+
+    :param item: yielded item (dict)
+    :param keys: keys to keep
+    :param unfound: unfound value (default None)
+    :return: filtered item
+    """
+    if not keys:
+        return deepcopy(item)
+    new_item = {}
+    for key in keys:
+        new_item[key] = item.get(key, unfound)
+    return new_item
+
+
+def get_correct_id(obj, oid, with_letter=False):
+    """ Modify an id already existing in obj.
+
+    :param obj: plone obj or dict or list
+    :param oid: id to check
+    :param with_letter: add a letter prefix
+    :return: unique id
+    """
+    original = oid
+    i = 1
+    while oid in obj:
+        sfx = with_letter and letters_sequence(i) or i
+        oid = u'{}-{}'.format(original, sfx)
+        i += 1
+    return oid
+
+
+def get_correct_path(portal, path):
     """ Check if a path already exists on obj """
     original = path
     i = 1
@@ -41,21 +75,6 @@ def correct_path(portal, path):
         path = '{}-{:d}'.format(original, i)
         i += 1
     return path
-
-
-def filter_keys(item, keys):
-    """Return a copy of item with only given keys.
-
-    :param item: yielded item (dict)
-    :param keys: keys to keep
-    :return: filtered item
-    """
-    if not keys:
-        return deepcopy(item)
-    new_item = {}
-    for key in keys:
-        new_item[key] = item[key]
-    return new_item
 
 
 def get_obj_from_path(root, item={}, path_key='_path', path=None):
@@ -115,17 +134,19 @@ def pool_tuples(iterable, pool_len=2, e_msg=''):
     return zip(*args)
 
 
-def relative_path(portal, fullpath):
-    """Returns relative path following given portal (without leading slash).
+def relative_path(portal, fullpath, with_slash=True):
+    """Returns relative path following given portal.
 
     :param portal: leading object to remove from path
     :param fullpath: path to update
+    :param with_slash: keep leadind slash
     :return: new path relative to portal object parameter
     """
     portal_path = '/'.join(portal.getPhysicalPath())  # not unicode, brain.getPath is also encoded
     if not fullpath.startswith(portal_path):
         return fullpath
-    return fullpath[len(portal_path) + 1:]
+    shift = not with_slash and 1 or 0
+    return fullpath[len(portal_path) + shift:]
 
 
 def key_val(key, dic):
@@ -177,7 +198,8 @@ def split_text(text, length):
     return part1, part2
 
 
-def str_to_date(item, key, log_method, fmt='%Y/%m/%d', can_be_empty=True, as_date=True, **log_params):
+def str_to_date(item, key, log_method, fmt='%Y/%m/%d', can_be_empty=True, as_date=True, min_val=None, max_val=None,
+                **log_params):
     """Changed to date or datetime the text value of item[key]
 
     :param item: yielded item (usually dict)
@@ -186,6 +208,8 @@ def str_to_date(item, key, log_method, fmt='%Y/%m/%d', can_be_empty=True, as_dat
     :param fmt: formatting date string
     :param can_be_empty: value can be empty or None
     :param as_date: return a date, otherwise a datetime
+    :param min_val: minimal date
+    :param max_val: maximum date
     :param log_params: log method keyword parameters
     :return: the date or datetime value
     """
@@ -196,6 +220,10 @@ def str_to_date(item, key, log_method, fmt='%Y/%m/%d', can_be_empty=True, as_dat
         dt = datetime.strptime(val, fmt)
         if as_date:
             dt = dt.date()
+        if min_val and dt < min_val:
+            raise(ValueError(u"Given date '{}' < minimal value '{}' => set to None".format(val, min_val)))
+        if max_val and dt > max_val:
+            raise (ValueError(u"Given date '{}' > maximum value '{}' => set to None".format(val, max_val)))
     except ValueError as ex:
         log_method(item, u"not a valid date '{}' in key '{}': {}".format(val, key, ex), **log_params)
         return None

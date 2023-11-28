@@ -94,6 +94,7 @@ class IntegrationTestCase(unittest.TestCase):
         super(IntegrationTestCase, self).setUp()
         self.portal = self.layer['portal']
         self.portal_url = self.portal.absolute_url()
+        self.request = self.portal.REQUEST
         self.catalog = self.portal.portal_catalog
 
         sml = getSiteManager(self.portal)

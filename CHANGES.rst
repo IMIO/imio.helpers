@@ -1,11 +1,119 @@
 Changelog
 =========
 
-0.69 (unreleased)
+0.80 (unreleased)
 -----------------
 
 - Nothing changed yet.
 
+
+0.79 (2023-11-28)
+-----------------
+
+- Improved `security.get_user_from_criteria` to add email and description in ldap results.
+  [sgeulette]
+- Included Products.CMFCore permissions.zcml
+  [sgeulette]
+
+0.78 (2023-10-27)
+-----------------
+
+- Added `workflow.get_final_states` that will return a given WF final states.
+  [gbastien]
+
+0.77 (2023-10-19)
+-----------------
+
+- Added `xhtml.unescape_html` that will decode HTML entities of a HTML text.
+  [gbastien]
+
+0.76 (2023-09-28)
+-----------------
+
+- Added `transmogrifier.get_correct_id` to generate a unexisting id with numbered or lettered suffix.
+  [sgeulette]
+- Renamed `transmogrifier.correct_path` to `transmogrifier.get_correct_path`
+  [sgeulette]
+
+0.75 (2023-09-04)
+-----------------
+
+- Fixed `setup.load_type_from_package` when loading a Dexterity FTI because
+  it fails to purge old values.
+  Purging is disabled for `Dexterity FTI`, added new parameter `purge_actions=False`
+  that will remove the actions for a `Dexterity FTI` so it is reloaded in correct order.
+  [gbastien]
+- Improved `transmogrifier.str_to_date` with min and max
+  [sgeulette]
+- Fixed `ValueError: 'value' is not in list` in `content.sort_on_vocab_order`
+  when a value of given `p_values` does not exist in the given `p_vocab`.
+  [gbastien]
+
+0.74 (2023-08-24)
+-----------------
+
+- Fixed `cache.obj_modified` when checking annotations, take care that `_p_mtime`
+  is not changed on `__annotations__` when a value changes in a stored annotation
+  that is a `PersistentMapping`.
+  Also removed parameter `asstring=False`, when `asdatetime=False`, returned
+  value is float which is convenient to be used in a cachekey.
+  [gbastien]
+- Add `catalog` parameter on `content.uuidsToObjects`, `content.uuidsToObject`,
+  `content.uuidsToCatalogBrains` and `uuidsToCatalogBrain` to allow query on
+  other catalogs (e.g. uid_catalog)
+  [mpeeters]
+
+
+0.73 (2023-07-20)
+-----------------
+
+- Be more defensive in `content.get_user_fullname`, in some case, a userid
+  is found in `mutable_properties` but there is no properties associated with it.
+  [gbastien]
+- Improved `transmogrifier.clean_value` giving a replacement value
+  [sgeulette]
+
+0.72 (2023-07-12)
+-----------------
+
+- In `submitFormHelperOnsuccessDefault` JS function, only manage `blob` if
+  `content-type` is `application/xxx`.
+  [gbastien]
+- Added `content.sort_on_vocab_order` that will sort a list of `values`
+  respecting a given `vocabulary` terms order. This relies on `sort_by_indexes`
+  from `imio.pyutils` that is now a dependency.
+  [gbastien]
+
+0.71 (2023-07-07)
+-----------------
+
+- Modified `transmogrifier.relative_path` to add option to keep leading slash
+  (True by default).
+  [sgeulette]
+- In `content.get_user_fullname`, if `fullname` not found at the end,
+  finally fallback to `portal_membership.getMemberInfo`, this is sometimes
+  necessary when using LDAP.
+  [gbastien]
+- Removed backward compatible imports for `get_state_infos`, `get_transitions`
+  and `do_transitions` moved from `content` to `workflow`.
+  [gbastien]
+
+0.70 (2023-06-21)
+-----------------
+
+- Added `security.check_zope_admin` (moved from `Products.CPUtils`).
+  [gbastien]
+- Improved `transmogrifier.filter_keys`
+  [sgeulette]
+- Added `workflow.update_role_mappings_for` helper to update WF role mappings
+  for a given object.
+  [gbastien]
+
+0.69 (2023-05-31)
+-----------------
+
+- Monkeypatch `CatalogTool._listAllowedRolesAndUsers` to add `ram.cache` decorator.
+  [gbastien]
 
 0.68 (2023-05-12)
 -----------------

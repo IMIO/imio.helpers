@@ -179,18 +179,26 @@ def volatile_cache_without_parameters(func):
     return replacement
 
 
-def obj_modified(obj, asdatetime=True, check_annotation=True, asstring=False):
-    """Returns max value between obj.modified(), obj._p_mtime and __anotations__._p_mtime.
-
-       to check also attribute modification and annotation modification."""
+def obj_modified(obj, asdatetime=True, check_annotation=True):
+    """Returns max value between obj.modified(), obj._p_mtime and __anotations__._p_mtime
+       to check also attribute modification and annotation modification.
+       Returns a float when asdatetime=False.
+    """
+    modified = max(float(obj.modified()), obj._p_mtime)
     if check_annotation and base_hasattr(obj, '__annotations__'):
-        modified = max(float(obj.modified()), obj._p_mtime, obj.__annotations__._p_mtime)
-    else:
-        modified = max(float(obj.modified()), obj._p_mtime)
+        # when stored annotation is a PersistentMapping, we need to check _p_mtime
+        # of stored annotation because a change in the PersistentMapping will not change
+        # the __annotations__ _p_mtime
+        ann_max_time = max(
+            [obj.__annotations__._p_mtime] +
+            [obj.__annotations__[k]._p_mtime
+             for k in obj.__annotations__.keys()
+             if hasattr(obj.__annotations__[k], '_p_mtime')])
+        modified = max(float(obj.modified()),
+                       obj._p_mtime,
+                       ann_max_time)
     if asdatetime:
         modified = datetime.fromtimestamp(modified)
-    elif asstring:
-        modified = datetime.fromtimestamp(modified).strftime('%Y%m%d-%H%M%S-%f')
     return modified
 
 
@@ -224,7 +232,9 @@ def get_plone_groups_for_user_cachekey(method, user_id=None, user=None, the_obje
     """cachekey method for self.get_plone_groups_for_user."""
     date = get_cachekey_volatile('_users_groups_value')
     return (date,
-            user and user.id or user_id or get_current_user_id(getRequest()),
+            # use user.getId() and not user.id because when user is a PloneUser instance
+            # it does not have a "id" and returns "acl_users" which break the invalidation
+            user and user.getId() or user_id or get_current_user_id(getRequest()),
             the_objects)
 
 
@@ -241,7 +251,7 @@ def get_plone_groups_for_user(user_id=None, user=None, the_objects=False):
         return []
     if the_objects:
         pg = api.portal.get_tool("portal_groups")
-        user_groups = pg.getGroupsByUserId(user.id)
+        user_groups = pg.getGroupsByUserId(user.getId())
     else:
         user_groups = user.getGroups()
     return sorted(user_groups)
@@ -251,7 +261,7 @@ def get_users_in_plone_groups_cachekey(method, group_id=None, group=None, the_ob
     """cachekey method for self.get_users_in_plone_groups."""
     date = get_cachekey_volatile('_users_groups_value')
     return (date,
-            group and group.id or group_id,
+            group and group.getId() or group_id,
             the_objects)
 
 
@@ -264,5 +274,5 @@ def get_users_in_plone_groups(group_id=None, group=None, the_objects=False):
         return []
     members = group.getGroupMembers()
     if not the_objects:
-        members = [m.id for m in members]
+        members = [m.getId() for m in members]
     return sorted(members)

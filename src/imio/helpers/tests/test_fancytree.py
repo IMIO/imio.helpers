@@ -32,24 +32,24 @@ class TestBaseRenderFancyTree(IntegrationTestCase):
     """Test BaseRenderFancyTree view."""
 
     def test_label(self):
-        view = BaseRenderFancyTree(self.portal, self.portal.REQUEST)
+        view = BaseRenderFancyTree(self.portal, self.request)
         self.assertEqual(view.label(), 'Plone site')
 
     def test_redirect_url(self):
-        view = BaseRenderFancyTree(self.portal, self.portal.REQUEST)
+        view = BaseRenderFancyTree(self.portal, self.request)
         with self.assertRaises(NotImplementedError):
             view.redirect_url('some_uid')
 
     def test_get_query(self):
-        view = BaseRenderFancyTree(self.portal, self.portal.REQUEST)
+        view = BaseRenderFancyTree(self.portal, self.request)
         with self.assertRaises(NotImplementedError):
             view.get_query()
 
     def test_call(self):
-        view = RenderFancyTreeExample(self.portal, self.portal.REQUEST)
+        view = RenderFancyTreeExample(self.portal, self.request)
         self.assertEqual(view(), "index")
 
-        request = self.portal.REQUEST
+        request = self.request
         request.method = 'POST'
         request['uid'] = 'myuid'
         self.assertEqual(view(), '')
@@ -57,7 +57,7 @@ class TestBaseRenderFancyTree(IntegrationTestCase):
 
     def test_get_data(self):
         """Test get_data method."""
-        view = RenderFancyTreeExample(self.portal, self.portal.REQUEST)
+        view = RenderFancyTreeExample(self.portal, self.request)
         self.assertEqual(view.get_data(), '[]')
 
         # add some folders and documents
