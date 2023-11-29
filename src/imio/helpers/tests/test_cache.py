@@ -473,28 +473,27 @@ class TestCachedMethods(IntegrationTestCase):
         pgr.addPrincipalToGroup(new_user.getId(), 'Administrators')
         # get again, as we use "getGroups", it is stored on user instance
         new_user = api.user.get(new_user.getId())
-        self.assertEqual(
-            self.catalog._listAllowedRolesAndUsers(new_user),
-            ['user:new_user', 'Member', 'Manager', 'Authenticated',
-             'user:Administrators', 'user:AuthenticatedUsers', 'Anonymous'])
+        self.assertListEqual(
+            sorted(self.catalog._listAllowedRolesAndUsers(new_user)),
+            ['Anonymous', 'Authenticated', 'Manager', 'Member', 'user:Administrators', 'user:AuthenticatedUsers',
+             'user:new_user'])
         # behaves correctly with a PloneUser because of id/getId
         plone_user1 = _getAuthenticatedUser(self.portal)
         self.assertTrue(isinstance(plone_user1, PloneUser))
         self.assertEqual(plone_user1.id, "acl_users")
         self.assertEqual(plone_user1.getId(), "test_user_1_")
         self.assertEqual(
-            self.catalog._listAllowedRolesAndUsers(plone_user1),
-            ['user:test_user_1_', 'Manager', 'Authenticated',
-             'user:AuthenticatedUsers', 'Anonymous'])
+            sorted(self.catalog._listAllowedRolesAndUsers(plone_user1)),
+            ['Anonymous', 'Authenticated', 'Manager', 'user:AuthenticatedUsers', 'user:test_user_1_'])
         login(self.portal, new_user.getId())
         plone_user2 = _getAuthenticatedUser(self.portal)
         self.assertTrue(isinstance(plone_user2, PloneUser))
         self.assertEqual(plone_user2.id, "acl_users")
         self.assertEqual(plone_user2.getId(), "new_user")
         self.assertEqual(
-            self.catalog._listAllowedRolesAndUsers(plone_user2),
-            ['user:new_user', 'Member', 'Manager', 'Authenticated',
-             'user:Administrators', 'user:AuthenticatedUsers', 'Anonymous'])
+            sorted(self.catalog._listAllowedRolesAndUsers(plone_user2)),
+            ['Anonymous', 'Authenticated', 'Manager', 'Member', 'user:Administrators', 'user:AuthenticatedUsers',
+             'user:new_user'])
         # as Anonymous
         logout()
         anon_user = _getAuthenticatedUser(self.portal)

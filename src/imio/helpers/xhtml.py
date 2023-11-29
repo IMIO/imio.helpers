@@ -19,6 +19,7 @@ import cgi
 import logging
 import lxml.html
 import os
+import pathlib
 import pkg_resources
 import six
 
@@ -379,7 +380,7 @@ def _img_from_src(context, img, portal, portal_url):
         except (KeyError, AttributeError, NotFound):
             return
 
-    # XXX ImageScale are not traversable anymore !!!!
+    # BREAK: XXX ImageScale are not traversable anymore !!!!
 
     # maybe we have a ImageScale instead of the real Image object?
     if isinstance(imageObj, ImageScale):
@@ -569,12 +570,14 @@ def storeImagesLocally(context,
             disposition = downloaded_img_infos.get_content_disposition()
         else:
             disposition = downloaded_img_infos.getheader('Content-Disposition')
+        if hasattr(downloaded_img_infos, 'get_filename'):
+            filename = downloaded_img_infos.get_filename()
         # get real filename from 'Content-Disposition' if available
-        if disposition:
+        elif disposition:
             disp_value, disp_params = cgi.parse_header(disposition)
             filename = disp_params.get('filename', 'image')
-        # if no 'Content-Disposition', at least try to get correct file extension
-        elif hasattr(downloaded_img_infos, 'subtype'):
+        # if no extension, at least try to get correct file extension
+        if not pathlib.Path(filename).suffix and getattr(downloaded_img_infos, 'subtype', None):
             filename = '{0}.{1}'.format(filename, downloaded_img_infos.subtype)
         f = open(downloaded_img_path, 'rb')
         data = f.read()
@@ -781,5 +784,9 @@ def unescape_html(html):
         return html
     is_unicode = isinstance(html, six.text_type)
     parser = HTMLParser()
-    html = parser.unescape(html)
+    if hasattr(parser, 'unescape'):
+        html = parser.unescape(html)
+    elif six.PY3:
+        import html as htmllib
+        html = htmllib.unescape(html)
     return html if is_unicode else html.encode('utf-8')

@@ -919,7 +919,5 @@ class TestXHTMLModule(IntegrationTestCase):
         self.assertIsNone(unescape_html(None))
         self.assertEqual(unescape_html(""), "")
         self.assertEqual(unescape_html(u""), u"")
-        self.assertEqual(unescape_html("<p>Activit&#233; scolaire</p>"),
-                         "<p>Activit\xc3\xa9 scolaire</p>")
-        self.assertEqual(unescape_html(u"<p>Activit&#233; scolaire</p>"),
-                         u"<p>Activit\xe9 scolaire</p>")
+        self.assertEqual(unescape_html("<p>Activit&#233; scolaire</p>"), "<p>Activité scolaire</p>")
+        self.assertEqual(unescape_html(u"<p>Activit&#233; scolaire</p>"), u"<p>Activité scolaire</p>")
