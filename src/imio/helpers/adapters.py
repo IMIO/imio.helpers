@@ -94,7 +94,7 @@ class MissingTerms(MissingTermsMixin):
 
 try:
     from z3c.table.column import LinkColumn
-    from html import escape
+    from html import escape  # noqa
 
     class NoEscapeLinkColumn(LinkColumn):
         """Do not escape link content (made in z3c.table >= 2.1.1)"""

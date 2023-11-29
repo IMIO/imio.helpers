@@ -283,10 +283,7 @@ def safe_encode(value, encoding='utf-8'):
     """
         Converts a value to encoding, only when it is not already encoded.
     """
-    if not six.PY3:
-        if isinstance(value, unicode):
-            return value.encode(encoding)
-    return value
+    return six.ensure_str(value, encoding=encoding)
 
 
 @mutually_exclusive_parameters('obj', 'uid')

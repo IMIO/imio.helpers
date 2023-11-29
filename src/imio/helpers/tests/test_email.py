@@ -28,7 +28,10 @@ class TestEmail(IntegrationTestCase):
         self.assertIn('Content-Type: multipart/mixed;', estr)
         self.assertIn('Content-Type: multipart/alternative;', estr)
         self.assertIn('Content-Type: text/plain; charset="utf-8"', estr)
-        self.assertIn('Test =\n\n  Github site', estr)
+        if six.PY2:
+            self.assertIn('Test =\n\n  Github site', estr)
+        elif six.PY3:
+            self.assertIn('Test=20\n  Github site', estr)
         self.assertIn('Content-Type: text/html; charset="utf-8"', estr)
         self.assertIn('<h1>Test</h1>\n<p><a href=3D"https://github.com/">Github site</p>', estr)
 
@@ -46,7 +49,10 @@ class TestEmail(IntegrationTestCase):
         self.assertIn('Content-Type: multipart/mixed;', estr)
         self.assertIn('Content-Type: multipart/alternative;', estr)
         self.assertIn('Content-Type: text/plain; charset="utf-8"', estr)
-        self.assertIn('Test =\n\n  Github site', estr)
+        if six.PY2:
+            self.assertIn('Test =\n\n  Github site', estr)
+        elif six.PY3:
+            self.assertIn('Test=20\n  Github site', estr)
         self.assertIn('Content-Type: text/html; charset="utf-8"', estr)
         self.assertIn('<h1>Test</h1>\n<p><a href=3D"https://github.com/">Github site</p>', estr)
         self.assertIn('Content-Type: application/octet-stream', estr)

@@ -481,8 +481,8 @@ class TestContentModule(IntegrationTestCase):
         self.assertTrue(getattr(self.portal.folder, 'dedana'))
         self.assertTrue(getattr(obj, 'dedana'))
         # base_getattr does not use acquisition
-        self.assertTrue(base_getattr(self.portal.folder, 'getImmediatelyAddableTypes'))
-        self.assertIsNone(base_getattr(obj, 'getImmediatelyAddableTypes'))
+        self.assertTrue(base_getattr(self.portal.folder, 'dedana'))
+        self.assertIsNone(base_getattr(obj, 'dedana'))
 
     def test_sort_on_vocab_order(self):
         self.assertEqual(

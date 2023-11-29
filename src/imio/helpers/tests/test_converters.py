@@ -2,6 +2,8 @@
 
 from imio.helpers import HAS_PLONE_5_AND_MORE
 from imio.helpers.testing import IntegrationTestCase
+from unittest import makeSuite
+from unittest import TestSuite
 from ZPublisher.tests.testHTTPRequest import HTTPRequestTests
 
 import html
@@ -33,7 +35,6 @@ class TestConverters(IntegrationTestCase, HTTPRequestTests):
 
 
 def test_suite():
-    from unittest import TestSuite, makeSuite
     suite = TestSuite()
     # change prefix to avoid executing every tests of HTTPRequestTests
     suite.addTest(makeSuite(TestConverters, prefix='test_imiohelpers_'))
