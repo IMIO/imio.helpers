@@ -59,7 +59,7 @@ class IMIOStorage(Storage):
                 return data.value
 
     def getStatistics(self):
-        objects = self._data.keys()
+        objects = list(self._data.keys())
         if six.PY3:
             # prevent AttributeError: 'dict_keys' object has no attribute 'sort'
             objects = list(objects)

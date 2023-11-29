@@ -36,10 +36,7 @@ def get_users_voc(with_userid):
             userids.append(user_id)
             # bypass special characters, may happen when using LDAP
             try:
-                if six.PY3:
-                    str(user_id)
-                else:
-                    unicode(user_id)
+                six.text_type(user_id)
             except UnicodeDecodeError:
                 continue
             if with_userid:

@@ -85,7 +85,7 @@ def addOrUpdateColumns(portal, columns=(), update_metadata=True, catalog_id='por
         # update relevant metadata
         # there is no helper method in ZCatalog to update metadata
         # we need to get every catalogued objects and call reindexObject
-        paths = catalog._catalog.uids.keys()
+        paths = list(catalog._catalog.uids.keys())
         for path in paths:
             obj = catalog.resolve_path(path)
             if obj is None:
@@ -139,7 +139,7 @@ def merge_queries(queries):
                 lst = list(v.items())
                 subkey, value = lst[0]
             else:
-                subkey, value = v.items()[0]
+                subkey, value = list(v.items())[0]
             # store value as a list so it can be extended
             if not isinstance(value, list):
                 value = [value]

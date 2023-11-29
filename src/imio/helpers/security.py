@@ -21,6 +21,7 @@ import logging
 import os
 import string
 import Zope2
+from six.moves import range
 
 
 logger = logging.getLogger("imio.helpers")

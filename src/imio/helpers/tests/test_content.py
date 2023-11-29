@@ -222,7 +222,7 @@ class TestContentModule(IntegrationTestCase):
                              [WrongType(None, str, 'mandatory_textline')])
         else:
             self.assertEqual(validate_fields(obj),
-                             [WrongType(None, unicode, 'mandatory_textline')])
+                             [WrongType(None, six.text_type, 'mandatory_textline')])
         # validate_fields may raise a ValueError if raise_on_errors=True
         self.assertRaises(ValueError, validate_fields, obj, raise_on_errors=True)
         # back to correct value

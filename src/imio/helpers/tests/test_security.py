@@ -28,9 +28,9 @@ class TestSecurityModule(IntegrationTestCase):
     """
 
     def setUp(self):
-        if 'IS_DEV_ENV' in os.environ.keys():
+        if 'IS_DEV_ENV' in list(os.environ.keys()):
             del os.environ['IS_DEV_ENV']
-        if 'ENV' in os.environ.keys():
+        if 'ENV' in list(os.environ.keys()):
             del os.environ['ENV']
         self.portal = self.layer['portal']
 

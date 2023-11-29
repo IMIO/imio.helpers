@@ -4,6 +4,7 @@ from DateTime import DateTime
 from zope.i18n import translate
 
 import six
+from six.moves import range
 
 
 MONTHIDS = {1: 'month_jan', 2: 'month_feb', 3: 'month_mar', 4: 'month_apr',

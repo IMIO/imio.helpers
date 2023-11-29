@@ -10,6 +10,7 @@ from plone.outputfilters.browser.resolveuid import uuidToURL
 from plone.outputfilters.filters.resolveuid_and_caption import ResolveUIDAndCaptionFilter
 from Products.CMFPlone.utils import safe_unicode
 from six.moves.html_parser import HTMLParser
+from six.moves.urllib.request import urlretrieve
 from zExceptions import NotFound
 from zope.container.interfaces import INameChooser
 
@@ -17,11 +18,6 @@ if HAS_PLONE_5_AND_MORE:
     from plone.namedfile.scaling import ImageScale
 else:
     from plone.app.imaging.scale import ImageScale
-
-try:
-    from urllib.request import urlretrieve  # python3
-except ImportError:
-    from urllib import urlretrieve
 
 import base64
 import cgi
@@ -58,7 +54,7 @@ def xhtmlContentIsEmpty(xhtmlContent, tagWithAttributeIsNotEmpty=True):
     if six.PY3:
         isStr = isinstance(xhtmlContent, str) or isinstance(xhtmlContent, type(None))
     else:
-        isStr = isinstance(xhtmlContent, types.StringType) or isinstance(xhtmlContent, types.NoneType)
+        isStr = isinstance(xhtmlContent, bytes) or isinstance(xhtmlContent, type(None))
     if isStr and (not xhtmlContent or not xhtmlContent.strip()):
         return True
 
@@ -783,7 +779,7 @@ def unescape_html(html):
     """Unescape an html text, turn HTML entities to encoded entities."""
     if not html:
         return html
-    is_unicode = isinstance(html, unicode)
+    is_unicode = isinstance(html, six.text_type)
     parser = HTMLParser()
     html = parser.unescape(html)
     return html if is_unicode else html.encode('utf-8')

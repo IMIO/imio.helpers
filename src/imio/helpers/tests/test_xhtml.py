@@ -21,15 +21,15 @@ from imio.helpers.xhtml import storeImagesLocally
 from imio.helpers.xhtml import unescape_html
 from imio.helpers.xhtml import xhtmlContentIsEmpty
 
+import os
+import six
+import transaction
+
+
 try:
     from Products.ATContentTypes.interfaces import IImageContent
 except ImportError:
     print("require Archetypes")
-
-import os
-import six
-import transaction
-import urllib
 
 
 picsum_image1_url = 'https://fastly.picsum.photos/id/10/200/300.jpg?hmac=94QiqvBcKJMHpneU69KYg2pky8aZ6iBzKrAuhSUBB9s'
@@ -556,7 +556,7 @@ class TestXHTMLModule(IntegrationTestCase):
         # working example
         text = '<p>Working external image <img src="%s"/>.</p>' % picsum_image1_url
         # we have Content-Dispsition header
-        downloaded_img_path, downloaded_img_infos = urllib.urlretrieve(picsum_image1_url)
+        downloaded_img_path, downloaded_img_infos = six.moves.urllib.request.urlretrieve(picsum_image1_url)
         self.assertTrue(downloaded_img_infos.getheader('Content-Disposition'))
         # image object does not exist for now
         self.assertFalse('10-200x300.jpg' in self.portal.objectIds())
@@ -580,7 +580,7 @@ class TestXHTMLModule(IntegrationTestCase):
         # it is downloaded nevertheless but used filename will be 'image-1'
         text = '<p>External site <img src="http://www.imio.be/logo.png">.</p>'
         expected = '<p>External site <img src="{0}/folder/image-1.png">.</p>'.format(self.portal_url)
-        downloaded_img_path, downloaded_img_infos = urllib.urlretrieve('http://www.imio.be/logo.png')
+        downloaded_img_path, downloaded_img_infos = six.moves.urllib.request.urlretrieve('http://www.imio.be/logo.png')
         self.assertIsNone(downloaded_img_infos.getheader('Content-Disposition'))
         self.assertEqual(storeImagesLocally(self.portal.folder, text), expected)
         logo = self.portal.folder.get('image-1.png')
