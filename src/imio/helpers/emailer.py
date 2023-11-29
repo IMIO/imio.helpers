@@ -13,6 +13,11 @@ from unidecode import unidecode
 from zope import schema
 from zope.component import getMultiAdapter
 
+import csv
+import logging
+import socket
+
+
 try:
     from plone.base.utils import safe_text as safe_text
 except ImportError:
@@ -25,9 +30,6 @@ except ImportError:
     from Products.CMFPlone.RegistrationTool import checkEmailAddress
     from Products.CMFPlone.RegistrationTool import EmailAddressInvalid
 
-import csv
-import logging
-import socket
 
 logger = logging.getLogger("imio.helpers")
 EMAIL_CHARSET = 'utf-8'

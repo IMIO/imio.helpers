@@ -12,6 +12,7 @@ from plone.api.validation import mutually_exclusive_parameters
 from random import choice
 from random import sample
 from random import seed
+from six.moves import range
 from time import time
 from zope.component import getMultiAdapter
 from zope.globalrequest import getRequest
@@ -21,7 +22,6 @@ import logging
 import os
 import string
 import Zope2
-from six.moves import range
 
 
 logger = logging.getLogger("imio.helpers")

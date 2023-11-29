@@ -2,12 +2,13 @@
 
 from ZPublisher.Converters import type_converters
 
+import json
+
+
 try:
     from cgi import escape  # Python 2.x
 except ImportError:
     from html import escape
-
-import json
 
 
 # create type converter for :json

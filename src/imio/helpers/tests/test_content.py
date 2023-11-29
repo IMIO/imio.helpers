@@ -45,11 +45,12 @@ from zope.lifecycleevent import ObjectModifiedEvent
 from zope.schema._bootstrapinterfaces import WrongType
 from zope.schema.vocabulary import SimpleVocabulary
 
-if HAS_PLONE_5_AND_MORE:
-    from Products.CMFPlone.interfaces import IEditingSchema
-
 import os
 import six
+
+
+if HAS_PLONE_5_AND_MORE:
+    from Products.CMFPlone.interfaces import IEditingSchema
 
 
 class TestContentModule(IntegrationTestCase):

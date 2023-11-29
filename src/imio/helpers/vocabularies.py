@@ -9,12 +9,13 @@ from plone.memoize import ram
 from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
 
+import six
+
+
 try:
     from plone.app.vocabularies.principals import UsersFactory  # Plone6
 except ImportError:
     from plone.app.vocabularies.users import UsersFactory
-
-import six
 
 
 def voc_cache_key(method, self, context=None, query=''):

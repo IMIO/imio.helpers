@@ -14,11 +14,6 @@ from six.moves.urllib.request import urlretrieve
 from zExceptions import NotFound
 from zope.container.interfaces import INameChooser
 
-if HAS_PLONE_5_AND_MORE:
-    from plone.namedfile.scaling import ImageScale
-else:
-    from plone.app.imaging.scale import ImageScale
-
 import base64
 import cgi
 import logging
@@ -26,7 +21,12 @@ import lxml.html
 import os
 import pkg_resources
 import six
-import types
+
+
+if HAS_PLONE_5_AND_MORE:
+    from plone.namedfile.scaling import ImageScale
+else:
+    from plone.app.imaging.scale import ImageScale
 
 
 logger = logging.getLogger('imio.helpers:xhtml')
