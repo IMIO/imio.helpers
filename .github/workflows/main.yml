@@ -41,24 +41,31 @@ jobs:
           cd ..
           pip install --upgrade pip
           pip install -r requirements-${{ matrix.plone }}.txt
-      - name: Cache eggs restore
-        id: cache-restore
-        uses: actions/cache/restore@v3
+      - name: Cache eggs
+        uses: actions/cache@v3
         env:
           cache-name: cache-eggs
         with:
           path: ~/buildout-cache/eggs
           key: ${{ runner.os }}-test-${{ env.cache-name }}-${{ matrix.python }}-${{ matrix.plone }}
+#      - name: Cache eggs restore
+#        id: cache-restore
+#        uses: actions/cache/restore@v3
+#        env:
+#          cache-name: cache-eggs
+#        with:
+#          path: ~/buildout-cache/eggs
+#          key: ${{ runner.os }}-test-${{ env.cache-name }}-${{ matrix.python }}-${{ matrix.plone }}
       - name: buildout
         run: |
           sed -ie "s#test.cfg#test-${{matrix.plone}}.cfg#" gha.cfg
           buildout -c gha.cfg annotate
           buildout -c gha.cfg
-      - name: Cache eggs save
-        uses: actions/cache/save@v3
-        with:
-          path: ~/buildout-cache/eggs
-          key: ${{ steps.cache-restore.outputs.cache-primary-key }}
+#      - name: Cache eggs save
+#        uses: actions/cache/save@v3
+#        with:
+#          path: ~/buildout-cache/eggs
+#          key: ${{ steps.cache-restore.outputs.cache-primary-key }}
       - name: test
         run: |
           bin/test -t !robot
