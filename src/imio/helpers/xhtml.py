@@ -393,7 +393,7 @@ def _get_image_blob(imageObj):
        to someting else than an image... """
     blob = None
     if HAS_PLONE_5_AND_MORE:
-        if imageObj.image and imageObj.get_size():
+        if hasattr(imageObj, 'image') and imageObj.image and imageObj.get_size():
             blob = imageObj.image
     else:
         img_size = imageObj.get_size()
