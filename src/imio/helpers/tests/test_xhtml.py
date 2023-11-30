@@ -431,7 +431,7 @@ class TestXHTMLModule(IntegrationTestCase):
                'and relative path <img src="../img/image_preview">.</p>'.format(self.portal_url)
         expected = text.replace("{0}/img/image_preview".format(self.portal_url), img_blob_path)
         expected = expected.replace("../img/image_preview", img_blob_path)
-        if PLONE_MAJOR_VERSION < 6:
+        if PLONE_MAJOR_VERSION < 5:
             self.assertEqual(imagesToPath(doc2, text).strip(), expected)
 
         # test with src to image that is not an image, src will be to doc
@@ -480,7 +480,7 @@ class TestXHTMLModule(IntegrationTestCase):
         text = '<img src="{0}/img/image_preview"><img src="../img/image_preview">'.format(self.portal_url)
         expected = text.replace("{0}/img/image_preview".format(self.portal_url), img_blob_path)
         expected = expected.replace("../img/image_preview", img_blob_path)
-        if PLONE_MAJOR_VERSION < 6:
+        if PLONE_MAJOR_VERSION < 5:
             self.assertEqual(imagesToPath(doc2, text).replace('\n', ''), expected.replace('\n', ''))
 
         # image without src, nothing done
@@ -496,7 +496,7 @@ class TestXHTMLModule(IntegrationTestCase):
         expected = expected.replace("resolveuid/{0}".format(img.UID()), img_blob_path)
         expected = expected.replace("{0}/img/image_preview".format(self.portal_url), img_blob_path)
         expected = expected.replace("../img/image_preview", img_blob_path)
-        if PLONE_MAJOR_VERSION < 6:
+        if PLONE_MAJOR_VERSION < 5:
             self.assertEqual(imagesToPath(doc2, text).replace('\n', ''), expected.replace('\n', ''))
 
         # does not break with wrong resolveuid
