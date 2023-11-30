@@ -3,7 +3,6 @@
 from imio.helpers import barcode
 
 import os
-import six
 import unittest
 
 

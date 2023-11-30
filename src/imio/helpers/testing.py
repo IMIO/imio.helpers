@@ -2,6 +2,7 @@
 """Base module for unittesting."""
 from imio.helpers.cache import setup_ram_cache
 from imio.helpers.ram import imio_global_cache
+from imio.helpers.ram import IMIORAMCache
 from plone.app.testing import applyProfile
 from plone.app.testing import FunctionalTesting
 from plone.app.testing import IntegrationTesting
@@ -13,6 +14,7 @@ from plone.app.testing import TEST_USER_ID
 from plone.app.testing import TEST_USER_NAME
 from plone.testing import z2
 from zope.component import getSiteManager
+from zope.component import getUtility
 from zope.ramcache.interfaces.ram import IRAMCache
 
 import imio.helpers
@@ -59,6 +61,12 @@ class PloneWithHelpersLayer(PloneSandboxLayer):
         folder2_id = portal.invokeFactory('Folder', 'folder2')
         portal[folder2_id].reindexObject()
 
+        if not isinstance(getUtility(IRAMCache), IMIORAMCache):
+            sml = getSiteManager(portal)
+            sml.unregisterUtility(provided=IRAMCache)
+            sml.registerUtility(component=imio_global_cache, provided=IRAMCache)
+            setup_ram_cache()
+
         # Commit so that the test browser sees these objects
         import transaction
         transaction.commit()
@@ -85,19 +93,23 @@ FUNCTIONAL = FunctionalTesting(
 )
 
 
-class IntegrationTestCase(unittest.TestCase):
-    """Base class for integration tests."""
-
-    layer = INTEGRATION
+class CommonTestCase(unittest.TestCase):
 
     def setUp(self):
-        super(IntegrationTestCase, self).setUp()
+        super(CommonTestCase, self).setUp()
         self.portal = self.layer['portal']
         self.portal_url = self.portal.absolute_url()
         self.request = self.portal.REQUEST
         self.catalog = self.portal.portal_catalog
 
-        sml = getSiteManager(self.portal)
-        sml.unregisterUtility(provided=IRAMCache)
-        sml.registerUtility(component=imio_global_cache, provided=IRAMCache)
-        setup_ram_cache()
+
+class IntegrationTestCase(CommonTestCase):
+    """Base class for integration tests."""
+
+    layer = INTEGRATION
+
+
+class FunctionalTestCase(CommonTestCase):
+    """Base class for functional tests."""
+
+    layer = FUNCTIONAL

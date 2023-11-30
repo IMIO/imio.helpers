@@ -13,6 +13,7 @@ from imio.helpers.cache import obj_modified
 from imio.helpers.cache import VOLATILE_ATTR
 from imio.helpers.cache import volatile_cache_with_parameters
 from imio.helpers.cache import volatile_cache_without_parameters
+from imio.helpers.testing import FunctionalTestCase
 from imio.helpers.testing import IntegrationTestCase
 from persistent.mapping import PersistentMapping
 from plone import api
@@ -302,6 +303,12 @@ class TestCacheModule(IntegrationTestCase):
             'c',
             volatile_with_parameters_cached(self.portal, 'b'),
         )
+
+
+class TestCacheModuleFunctional(FunctionalTestCase):
+    """
+    Test all helper methods of cache module (commits allowed in functional layer).
+    """
 
     def test_obj_modified(self):
         """ """
