@@ -4,8 +4,9 @@ Changelog
 0.80 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Added parameter `with_user_id` to `content.get_user_fullname`, this will
+  include `userid` in brackets in result like `Firstname Lastname (userid)`.
+  [gbastien]
 
 0.79 (2023-11-28)
 -----------------
