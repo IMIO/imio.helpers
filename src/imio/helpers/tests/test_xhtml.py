@@ -852,14 +852,22 @@ class TestXHTMLModule(IntegrationTestCase):
         text = '<p><img src="http://plone/nohost/image1.png">&nbsp; &nbsp;' \
             '<img src="http://plone/nohost/image2.png"></p>'
         result = separate_images(text)
-        self.assertEqual(result, '<p><img src="http://plone/nohost/image1.png">\xc2\xa0 \xc2\xa0</p>'
-                         '<p><img src="http://plone/nohost/image2.png"></p>')
+        if six.PY2:
+            self.assertEqual(result, '<p><img src="http://plone/nohost/image1.png">\xc2\xa0 \xc2\xa0</p>'
+                             '<p><img src="http://plone/nohost/image2.png"></p>')
+        else:
+            self.assertEqual(result, '<p><img src="http://plone/nohost/image1.png">\xa0 \xa0</p>'
+                                     '<p><img src="http://plone/nohost/image2.png"></p>')
         # blanks and <br> are ignored as well
         text = '<p><img src="http://plone/nohost/image1.png">&nbsp; &nbsp;<br>' \
             '<img src="http://plone/nohost/image2.png"></p>'
         result = separate_images(text)
-        self.assertEqual(result, '<p><img src="http://plone/nohost/image1.png">\xc2\xa0 \xc2\xa0<br></p>'
-                         '<p><img src="http://plone/nohost/image2.png"></p>')
+        if six.PY2:
+            self.assertEqual(result, '<p><img src="http://plone/nohost/image1.png">\xc2\xa0 \xc2\xa0<br></p>'
+                             '<p><img src="http://plone/nohost/image2.png"></p>')
+        else:
+            self.assertEqual(result, '<p><img src="http://plone/nohost/image1.png">\xa0 \xa0<br></p>'
+                             '<p><img src="http://plone/nohost/image2.png"></p>')
 
     def test_replace_content(self):
         text = '<p>Text <span class="to-hide">hidden</span> some other text.</p>' \

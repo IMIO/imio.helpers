@@ -556,6 +556,8 @@ def storeImagesLocally(context,
             # url not existing
             return None, None
 
+        # BREAK : with base64 image, downloaded_img_infos is <email.message.Message object at 0x7f4e1e3b25f0> !!!
+
         # not an image
         if six.PY3:
             if not downloaded_img_infos.get_content_type().split('/')[0] == 'image':
@@ -565,7 +567,7 @@ def storeImagesLocally(context,
                 return None, None
 
         # retrieve filename
-        filename = 'image'
+        filename = None
         if six.PY3:
             disposition = downloaded_img_infos.get_content_disposition()
         else:
@@ -573,9 +575,11 @@ def storeImagesLocally(context,
         if hasattr(downloaded_img_infos, 'get_filename'):
             filename = downloaded_img_infos.get_filename()
         # get real filename from 'Content-Disposition' if available
-        elif disposition:
+        if not filename and disposition:
             disp_value, disp_params = cgi.parse_header(disposition)
             filename = disp_params.get('filename', 'image')
+        if not filename:
+            filename = 'image'
         # if no extension, at least try to get correct file extension
         if not pathlib.Path(filename).suffix and getattr(downloaded_img_infos, 'subtype', None):
             filename = '{0}.{1}'.format(filename, downloaded_img_infos.subtype)
