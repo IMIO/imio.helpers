@@ -19,9 +19,15 @@ import cgi
 import logging
 import lxml.html
 import os
-import pathlib
 import pkg_resources
 import six
+
+
+try:
+    import pathlib
+except ImportError:
+    # pathlib batckport for py2.7
+    import pathlib2 as pathlib
 
 
 if HAS_PLONE_5_AND_MORE:

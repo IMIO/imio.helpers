@@ -7,7 +7,7 @@ Changelog
 - Added parameter `with_user_id` to `content.get_user_fullname`, this will
   include `userid` in brackets in result like `Firstname Lastname (userid)`.
   [gbastien]
-- Require `pathlib` in `setup.py`.
+- Require `pathlib2` in `setup.py`, backport `pathlib` for `py2.7`.
   [gbastien]
 
 0.79 (2023-11-28)

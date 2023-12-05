@@ -43,7 +43,7 @@ setup(
         'future>=0.18.2',
         'imio.pyutils>=1.0.0a0',
         'natsort<7',
-        'pathlib',
+        'pathlib2',
         'plone.api>1.9.1',
         'plone.app.intid',
         'plone.app.relationfield',
