@@ -98,13 +98,14 @@ def fplog(action, extras):
     log_info(AUDIT_MESSAGE.format(user, ip, action, extras))
 
 
-@mutually_exclusive_parameters('email', 'fullname')
-@at_least_one_of('email', 'fullname')
-def get_user_from_criteria(context, email=None, fullname=None):
+@mutually_exclusive_parameters('email', 'fullname', 'userid')
+@at_least_one_of('email', 'fullname', 'userid')
+def get_user_from_criteria(context, email=None, fullname=None, userid=None):
     """
     :param context: context, with request as context.REQUEST
     :param email: part of user email
     :param fullname: part of user fullname
+    :param userid: part of userid
     :return: list of dict describing users
              [{'description': u'Bob Smith', 'title': u'Bob Smith', 'principal_type': 'user', 'userid': 'bsm',
                'email': 'bsm@mail.com', 'pluginid': 'mutable_properties', 'login': 'bsm', 'id': 'bsm'}]
@@ -113,12 +114,15 @@ def get_user_from_criteria(context, email=None, fullname=None):
                'principal_type': 'user', 'userid': 'luc.oil', 'pluginid': 'ldap-plugin', 'sn': '', 'login': 'luc.oil',
                'id': 'luc.oil', 'cn': ''}]
     """
+    # TODO check if cache is necessary ???
     hunter = getMultiAdapter((context, context.REQUEST), name='pas_search')
     criteria = {}
     if email:
         criteria['email'] = email
     if fullname:
         criteria['fullname'] = fullname
+    if userid:
+        criteria['id'] = userid
     res = hunter.searchUsers(**criteria)
     for dic in res:
         if 'email' not in dic or 'description' not in dic:  # ldap

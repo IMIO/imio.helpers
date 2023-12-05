@@ -7,6 +7,8 @@ Changelog
 - Added parameter `with_user_id` to `content.get_user_fullname`, this will
   include `userid` in brackets in result like `Firstname Lastname (userid)`.
   [gbastien]
+- Added parameter `userid` to `security.get_user_from_criteria`
+  [sgeulette]
 
 0.79 (2023-11-28)
 -----------------
