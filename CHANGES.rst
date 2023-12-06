@@ -9,6 +9,8 @@ Changelog
   [gbastien]
 - Require `pathlib2` in `setup.py`, backport `pathlib` for `py2.7`.
   [gbastien]
+- Added parameter `userid` to `security.get_user_from_criteria`
+  [sgeulette]
 
 0.79 (2023-11-28)
 -----------------
