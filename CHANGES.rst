@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.80 (unreleased)
+0.80 (2023-12-11)
 -----------------
 
 - Added parameter `with_user_id` to `content.get_user_fullname`, this will
