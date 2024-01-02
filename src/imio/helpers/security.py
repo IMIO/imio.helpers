@@ -13,8 +13,8 @@ from plone.api.validation import mutually_exclusive_parameters
 from random import choice
 from random import sample
 from random import seed
-from time import time
 from Testing import makerequest
+from time import time
 from zope.component import getMultiAdapter
 from zope.globalrequest import getRequest
 from zope.globalrequest import setRequest
@@ -24,6 +24,7 @@ import logging
 import os
 import string
 import Zope2
+
 
 logger = logging.getLogger("imio.helpers")
 
