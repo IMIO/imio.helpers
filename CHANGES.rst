@@ -6,6 +6,8 @@ Changelog
 
 - Require `pathlib2` in `setup.py`, backport `pathlib` for `py2.7`.
   [gbastien]
+- Added `security.setup_app` to be used in run scripts.
+  [sgeulette]
 
 0.80 (2023-12-11)
 -----------------

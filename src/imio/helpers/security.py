@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from AccessControl.SecurityManagement import getSecurityManager
+from AccessControl.SecurityManagement import newSecurityManager
 from App.config import getConfiguration
 from collective.fingerpointing.config import AUDIT_MESSAGE
 from collective.fingerpointing.logger import log_info
@@ -13,9 +14,11 @@ from random import choice
 from random import sample
 from random import seed
 from six.moves import range
+from Testing import makerequest
 from time import time
 from zope.component import getMultiAdapter
 from zope.globalrequest import getRequest
+from zope.globalrequest import setRequest
 
 import inspect
 import logging
@@ -76,6 +79,21 @@ def generate_password(length=10, digits=3, upper=2, lower=1, special=1, readable
     if not readable:
         password = sample(password, len(password))
     return "".join(password)
+
+
+def setup_app(app, username='admin', logger=None):
+    acl_users = app.acl_users
+    user = acl_users.getUser(username)
+    if user:
+        user = user.__of__(acl_users)
+        newSecurityManager(None, user)
+    elif logger:
+        logger.error("Cannot find zope user '%s'" % username)
+    app = makerequest.makerequest(app)
+    # support plone.subrequest
+    app.REQUEST['PARENTS'] = [app]
+    setRequest(app.REQUEST)
+    return user
 
 
 def setup_logger(level=20):
