@@ -642,6 +642,7 @@ def get_back_relations(obj, attribute=None):
 
 def get_intid(obj, intids=None):
     """Return the intid of an object from the intid-catalog"""
+    # TODO merge with catalog method ??
     if intids is None:
         intids = queryUtility(IIntIds)
     # check that the object has an intid, otherwise there's nothing to be done

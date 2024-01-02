@@ -4,8 +4,8 @@ Changelog
 0.81 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Added `security.setup_app` to be used in run scripts.
+[sgeulette]
 
 0.80 (2023-12-11)
 -----------------
