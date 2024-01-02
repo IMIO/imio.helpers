@@ -1,13 +1,17 @@
 Changelog
 =========
 
-0.80 (unreleased)
+0.81 (unreleased)
+-----------------
+
+- Require `pathlib2` in `setup.py`, backport `pathlib` for `py2.7`.
+  [gbastien]
+
+0.80 (2023-12-11)
 -----------------
 
 - Added parameter `with_user_id` to `content.get_user_fullname`, this will
   include `userid` in brackets in result like `Firstname Lastname (userid)`.
-  [gbastien]
-- Require `pathlib2` in `setup.py`, backport `pathlib` for `py2.7`.
   [gbastien]
 - Added parameter `userid` to `security.get_user_from_criteria`
   [sgeulette]
