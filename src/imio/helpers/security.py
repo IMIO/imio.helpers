@@ -13,7 +13,6 @@ from plone.api.validation import mutually_exclusive_parameters
 from random import choice
 from random import sample
 from random import seed
-from Testing import makerequest
 from time import time
 from zope.component import getMultiAdapter
 from zope.globalrequest import getRequest
@@ -83,6 +82,8 @@ def generate_password(length=10, digits=3, upper=2, lower=1, special=1, readable
 
 
 def setup_app(app, username='admin', logger=None):
+    # import here to avoid weird init making Data.fs not useable
+    from Testing.makerequest import makerequest
     acl_users = app.acl_users
     user = acl_users.getUser(username)
     if user:
@@ -90,7 +91,7 @@ def setup_app(app, username='admin', logger=None):
         newSecurityManager(None, user)
     elif logger:
         logger.error("Cannot find zope user '%s'" % username)
-    app = makerequest.makerequest(app)
+    app = makerequest(app)
     # support plone.subrequest
     app.REQUEST['PARENTS'] = [app]
     setRequest(app.REQUEST)
