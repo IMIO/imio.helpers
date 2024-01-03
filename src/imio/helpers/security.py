@@ -10,6 +10,7 @@ from itertools import chain
 from plone import api
 from plone.api.validation import at_least_one_of
 from plone.api.validation import mutually_exclusive_parameters
+from Products.CMFPlone.utils import safe_unicode
 from random import choice
 from random import sample
 from random import seed
@@ -131,7 +132,7 @@ def get_user_from_criteria(context, email=None, fullname=None, userid=None):
              [{'dn': 'CN=Luc.Oil,OU=Service_Social,OU=Utilisateurs,DC=cpas,DC=local', 'sAMAccountName':
                'luc.oil', 'title': 'luc.oil', 'editurl': 'ldap-plugin/acl_users/manage_userrecords?user_dn=...'
                'principal_type': 'user', 'userid': 'luc.oil', 'pluginid': 'ldap-plugin', 'sn': '', 'login': 'luc.oil',
-               'id': 'luc.oil', 'cn': ''}]
+               'id': 'luc.oil', 'cn': '', 'description': 'Luc.Oil', 'email': 'luc.oil@xx.com'}]
     """
     # TODO check if cache is necessary ???
     hunter = getMultiAdapter((context, context.REQUEST), name='pas_search')
@@ -147,7 +148,7 @@ def get_user_from_criteria(context, email=None, fullname=None, userid=None):
         if 'email' not in dic or 'description' not in dic:  # ldap
             member = api.user.get(userid=dic['userid'])
             dic['email'] = member.getProperty('email', default='')  # following plonepas.plugins.property.enumerateUsers
-            dic['description'] = member.getProperty('fullname', default=dic['userid'])
+            dic['description'] = safe_unicode(member.getProperty('fullname', default=dic['userid']))
     return res
 
 
