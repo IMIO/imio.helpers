@@ -2,13 +2,13 @@
     xmlns="http://namespaces.zope.org/zope"
     xmlns:browser="http://namespaces.zope.org/browser"
     xmlns:plone="http://namespaces.plone.org/plone"
+    xmlns:zcml="http://namespaces.zope.org/zcml"
     i18n_domain="imio.helpers">
 
     <!-- Publish static files -->
     <browser:resourceDirectory
       name="imio.helpers"
-      directory="static"
-      />
+      directory="static" />
 
     <!-- The view rendering imio-folder-listing -->
     <browser:page
@@ -16,8 +16,7 @@
         class="imio.helpers.browser.views.ContainerFolderListingView"
         name="imio-folder-listing"
         template="folder_listing.pt"
-        permission="zope2.View"
-        />
+        permission="zope2.View" />
 
     <!-- The view rendering the table displayed in imio-folder-listing, aka imio-folder-listing-table -->
     <browser:page
@@ -43,5 +42,27 @@
         template="ramcache.pt"
         layer="imio.helpers.interfaces.IIMIOHelpersLayer"
         permission="cmf.ManagePortal" />
+
+    <!-- Override @@render_collection_widget_term to add caching -->
+    <configure zcml:condition="installed collective.eeafaceted.collectionwidget"
+               package="collective.eeafaceted.collectionwidget">
+        <browser:page
+            for="*"
+            name="render_collection_widget_term"
+            class="imio.helpers.browser.views.IMIORenderTermPortletView"
+            template="browser/templates/term.pt"
+            layer="imio.helpers.interfaces.IIMIOHelpersLayer"
+            permission="zope2.View" />
+    </configure>
+    <configure zcml:condition="installed collective.eeafaceted.dashboard"
+               package="collective.eeafaceted.dashboard">
+        <browser:page
+            for="*"
+            name="render_collection_widget_term_portlet"
+            class="imio.helpers.browser.views.IMIORenderTermPortletView"
+            template="browser/templates/term.pt"
+            layer="imio.helpers.interfaces.IIMIOHelpersLayer"
+            permission="zope2.View" />
+    </configure>
 
 </configure>

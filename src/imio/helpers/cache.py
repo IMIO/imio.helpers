@@ -120,6 +120,11 @@ def invalidate_cachekey_volatile_for(name, get_again=False, invalidate_cache=Tru
     return date
 
 
+def _generate_modified_portal_type_volatile_name(portal_type):
+    """ """
+    return "imio.helpers.cache.{0}.modified".format(portal_type)
+
+
 def _generate_params_key(*args, **kwargs):
     items = []
     for item in kwargs.items():
