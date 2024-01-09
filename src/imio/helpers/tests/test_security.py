@@ -64,10 +64,15 @@ class TestSecurityModule(IntegrationTestCase):
         api.user.create('teacher@school.be', 'teacher', '12345', properties={'fullname': 'Paul Smith'})
         self.assertEqual(len(get_user_from_criteria(self.portal, email='unknown')), 0)
         self.assertEqual(len(get_user_from_criteria(self.portal, fullname='unknown')), 0)
+        self.assertEqual(len(get_user_from_criteria(self.portal, userid='unknown')), 0)
         self.assertEqual(len(get_user_from_criteria(self.portal, email='mentary')), 1)
         self.assertEqual(len(get_user_from_criteria(self.portal, fullname='Stéph')), 1)
         self.assertEqual(len(get_user_from_criteria(self.portal, email='.be')), 2)
+        self.assertEqual(len(get_user_from_criteria(self.portal, email='')), 3)
         self.assertEqual(len(get_user_from_criteria(self.portal, fullname='Smith')), 2)
+        self.assertEqual(len(get_user_from_criteria(self.portal, fullname='')), 3)
+        self.assertEqual(len(get_user_from_criteria(self.portal, userid='')), 3)
+        self.assertEqual(len(get_user_from_criteria(self.portal, userid='teach')), 1)
 
     def test_setup_logger(self):
         # just call it to check that it is not broken

@@ -1,19 +1,23 @@
 # -*- coding: utf-8 -*-
 
 from AccessControl.SecurityManagement import getSecurityManager
+from AccessControl.SecurityManagement import newSecurityManager
 from App.config import getConfiguration
 from collective.fingerpointing.config import AUDIT_MESSAGE
 from collective.fingerpointing.logger import log_info
 from collective.fingerpointing.utils import get_request_information
 from itertools import chain
+from plone import api
 from plone.api.validation import at_least_one_of
 from plone.api.validation import mutually_exclusive_parameters
+from Products.CMFPlone.utils import safe_unicode
 from random import choice
 from random import sample
 from random import seed
 from time import time
 from zope.component import getMultiAdapter
 from zope.globalrequest import getRequest
+from zope.globalrequest import setRequest
 
 import inspect
 import logging
@@ -78,6 +82,23 @@ def generate_password(length=10, digits=3, upper=2, lower=1, special=1, readable
     return "".join(password)
 
 
+def setup_app(app, username='admin', logger=None):
+    # import here to avoid weird init making Data.fs not useable
+    from Testing.makerequest import makerequest
+    acl_users = app.acl_users
+    user = acl_users.getUser(username)
+    if user:
+        user = user.__of__(acl_users)
+        newSecurityManager(None, user)
+    elif logger:
+        logger.error("Cannot find zope user '%s'" % username)
+    app = makerequest(app)
+    # support plone.subrequest
+    app.REQUEST['PARENTS'] = [app]
+    setRequest(app.REQUEST)
+    return user
+
+
 def setup_logger(level=20):
     """
         When running "bin/instance run ...", the logger level is 30 (warn).
@@ -97,24 +118,38 @@ def fplog(action, extras):
     log_info(AUDIT_MESSAGE.format(user, ip, action, extras))
 
 
-@mutually_exclusive_parameters('email', 'fullname')
-@at_least_one_of('email', 'fullname')
-def get_user_from_criteria(context, email=None, fullname=None):
+@mutually_exclusive_parameters('email', 'fullname', 'userid')
+@at_least_one_of('email', 'fullname', 'userid')
+def get_user_from_criteria(context, email=None, fullname=None, userid=None):
     """
     :param context: context, with request as context.REQUEST
     :param email: part of user email
     :param fullname: part of user fullname
+    :param userid: part of userid
     :return: list of dict describing users
              [{'description': u'Bob Smith', 'title': u'Bob Smith', 'principal_type': 'user', 'userid': 'bsm',
                'email': 'bsm@mail.com', 'pluginid': 'mutable_properties', 'login': 'bsm', 'id': 'bsm'}]
+             [{'dn': 'CN=Luc.Oil,OU=Service_Social,OU=Utilisateurs,DC=cpas,DC=local', 'sAMAccountName':
+               'luc.oil', 'title': 'luc.oil', 'editurl': 'ldap-plugin/acl_users/manage_userrecords?user_dn=...'
+               'principal_type': 'user', 'userid': 'luc.oil', 'pluginid': 'ldap-plugin', 'sn': '', 'login': 'luc.oil',
+               'id': 'luc.oil', 'cn': '', 'description': 'Luc.Oil', 'email': 'luc.oil@xx.com'}]
     """
+    # TODO check if cache is necessary ???
     hunter = getMultiAdapter((context, context.REQUEST), name='pas_search')
     criteria = {}
     if email:
         criteria['email'] = email
     if fullname:
         criteria['fullname'] = fullname
-    return hunter.searchUsers(**criteria)
+    if userid:
+        criteria['id'] = userid
+    res = hunter.searchUsers(**criteria)
+    for dic in res:
+        if 'email' not in dic or 'description' not in dic:  # ldap
+            member = api.user.get(userid=dic['userid'])
+            dic['email'] = member.getProperty('email', default='')  # following plonepas.plugins.property.enumerateUsers
+            dic['description'] = safe_unicode(member.getProperty('fullname', default=dic['userid']))
+    return res
 
 
 def get_zope_root():

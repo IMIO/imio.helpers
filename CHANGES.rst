@@ -1,7 +1,36 @@
 Changelog
 =========
 
-0.77 (unreleased)
+0.81 (unreleased)
+-----------------
+
+- Added `security.setup_app` to be used in run scripts.
+[sgeulette]
+
+0.80 (2023-12-11)
+-----------------
+
+- Added parameter `with_user_id` to `content.get_user_fullname`, this will
+  include `userid` in brackets in result like `Firstname Lastname (userid)`.
+  [gbastien]
+- Added parameter `userid` to `security.get_user_from_criteria`
+  [sgeulette]
+
+0.79 (2023-11-28)
+-----------------
+
+- Improved `security.get_user_from_criteria` to add email and description in ldap results.
+  [sgeulette]
+- Included Products.CMFCore permissions.zcml
+  [sgeulette]
+
+0.78 (2023-10-27)
+-----------------
+
+- Added `workflow.get_final_states` that will return a given WF final states.
+  [gbastien]
+
+0.77 (2023-10-19)
 -----------------
 
 - Added `xhtml.unescape_html` that will decode HTML entities of a HTML text.

@@ -91,9 +91,9 @@ def update_role_mappings_for(obj, wf=None):
     """Update role mappings regarding WF definition.
        If updated, the security indexes are reindexed.
 
-     :param wf: the obj workflow
-     :param obj: object to update role mappings for
-     """
+    :param wf: the obj workflow
+    :param obj: object to update role mappings for
+    """
     if not wf:
         wf_tool = api.portal.get_tool('portal_workflow')
         wf = wf_tool.getWorkflowsFor(obj)[0]
@@ -101,3 +101,24 @@ def update_role_mappings_for(obj, wf=None):
     if updated:
         obj.reindexObjectSecurity()
     return updated
+
+
+def get_final_states(wf, ignored_transition_prefix='back', ignored_transition_ids=[]):
+    """Return the final states of a workflow.
+       Final states are states with only "back" transitions.
+    :param wf: the obj workflow
+    :param ignored_transition_prefix: the prefix of transitions to ignore,
+    considered as "back" transitions
+    :param ignored_transition_ids: some specific transition ids to ignore
+    :return: True if removed
+    """
+    res = []
+    for state in wf.states.values():
+        not_final_transitions = [
+            tr for tr in state.transitions
+            if not tr.startswith(ignored_transition_prefix) and
+            tr not in ignored_transition_ids]
+        # no other transitions left, then it is a final state
+        if not not_final_transitions:
+            res.append(state.id)
+    return res

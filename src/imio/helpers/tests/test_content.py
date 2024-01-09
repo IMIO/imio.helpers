@@ -404,6 +404,9 @@ class TestContentModule(IntegrationTestCase):
         # group
         self.assertEqual(get_user_fullname("Reviewers", none_if_no_user=True), None)
         self.assertEqual(get_user_fullname("Reviewers"), u'Reviewers')
+        # with_user_id
+        self.assertEqual(get_user_fullname("user1", with_user_id=True), u'Stéphan Smith (user1)')
+        self.assertEqual(get_user_fullname("user2", with_user_id=True), u'user2 (user2)')
 
     def test_base_getattr(self):
         obj = api.content.create(container=self.portal.folder, id='mydoc', type='Document')

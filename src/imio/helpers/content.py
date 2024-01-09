@@ -583,9 +583,8 @@ def get_vocab(context, vocab_name, only_factory=False, **kwargs):
 
 def get_vocab_values(context, vocab_name, attr_name='token', **kwargs):
     """ """
-    vocab_factory = getUtility(IVocabularyFactory, vocab_name)
-    return [getattr(term, attr_name)
-            for term in vocab_factory(context, **kwargs)._terms]
+    vocab = get_vocab(context, vocab_name, **kwargs)
+    return [getattr(term, attr_name) for term in vocab._terms]
 
 
 def safe_delattr(obj, attr_name):
@@ -643,6 +642,7 @@ def get_back_relations(obj, attribute=None):
 
 def get_intid(obj, intids=None):
     """Return the intid of an object from the intid-catalog"""
+    # TODO merge with catalog method ??
     if intids is None:
         intids = queryUtility(IIntIds)
     # check that the object has an intid, otherwise there's nothing to be done
@@ -693,13 +693,14 @@ def object_ids(context, class_names):
     return res
 
 
-def get_user_fullname(userid, none_if_no_user=False, none_if_unfound=False):
+def get_user_fullname(userid, none_if_no_user=False, none_if_unfound=False, with_user_id=False):
     """Get fullname without using getMemberInfo that is slow slow slow...
     We get it only from mutable_properties or authentic.
 
     :param userid: principal id
     :param none_if_no_user: return None if principal is not a user
     :param none_if_unfound: return None if principal is not found
+    :param with_user_id: include user_id between () in the returned result
     :return: fullname or userid if fullname is empty.
     """
     userid = safe_unicode(userid)
@@ -736,7 +737,10 @@ def get_user_fullname(userid, none_if_no_user=False, none_if_unfound=False):
         info = mt.getMemberInfo(userid)
         if info:
             fullname = info.get('fullname', '')
-    return safe_unicode(fullname) or userid
+    fullname = safe_unicode(fullname) or userid
+    if with_user_id:
+        fullname = u'{0} ({1})'.format(fullname, userid)
+    return fullname
 
 
 def sort_on_vocab_order(values, vocab=None, obj=None, vocab_name=None):
