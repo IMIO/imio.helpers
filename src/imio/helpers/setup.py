@@ -11,7 +11,7 @@ logger = logging.getLogger('imio.helpers.setup')
 
 
 def load_workflow_from_package(wkf_name, profile_id):
-    """Loads a workflow from his xml definition.
+    """Updates a workflow from an xml definition.
     :param wkf_name: workflow id
     :param profile_id: package profile id
     :return: status as boolean
@@ -36,7 +36,7 @@ def load_workflow_from_package(wkf_name, profile_id):
 
 
 def load_type_from_package(type_name, profile_id, purge_actions=False):
-    """Loads a portal_type from his xml definition.
+    """Updates a portal_type from an xml definition.
     :param type_name: portal_type id
     :param profile_id: package profile id
     :return: status as boolean
