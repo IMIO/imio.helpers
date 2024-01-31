@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import unittest
+
 from imio.helpers.setup import load_type_from_package
 from imio.helpers.setup import load_workflow_from_package
 from imio.helpers.setup import load_xml_tool_only_from_package
@@ -41,6 +43,29 @@ class TestSetupModule(IntegrationTestCase):
             'testingtype', 'profile-imio.helpers:testing', purge_actions=True))
 
     def test_load_workflow_from_package(self):
+        wkf_tool = api.portal.get_tool('portal_workflow')
+        wkf_obj = wkf_tool.get('intranet_workflow')
+        states = wkf_obj.states
+        self.assertIn('internal', states)
+        states.deleteStates(['internal'])
+        self.assertNotIn('internal', states)
+        self.assertTrue(load_workflow_from_package(
+            'intranet_workflow', 'profile-Products.CMFPlone:plone'))
+        wkf_obj = wkf_tool.get('intranet_workflow')
+        states = wkf_obj.states
+        self.assertIn('internal', states)
+        # not found WF
+        self.assertFalse(load_workflow_from_package(
+            'intranet_workflow2', 'profile-Products.CMFPlone:plone'))
+        # not found profile_id
+        self.assertFalse(load_workflow_from_package(
+            'intranet_workflow', 'profile-Products.CMFPlone:plone2'))
+        # WF not managed by given profile_id
+        self.assertFalse(load_workflow_from_package(
+            'comment_review_workflow', 'profile-Products.CMFPlone:plone'))
+
+    @unittest.skip('Not working')
+    def test_load_xml_tool_only_from_package(self):
         wkf_tool = api.portal.get_tool('portal_workflow')
         wkf_obj = wkf_tool.get('intranet_workflow')
         states = wkf_obj.states

@@ -9,6 +9,7 @@ from zope.component import queryMultiAdapter
 
 import logging
 
+
 logger = logging.getLogger('imio.helpers.setup')
 
 
@@ -16,6 +17,7 @@ def load_type_from_package(type_name, profile_id, purge_actions=False):
     """Loads a portal_type from his xml definition.
     :param type_name: portal_type id
     :param profile_id: package profile id
+    :param purge_actions: empties type actions
     :return: status as boolean
     """
     types_tool = api.portal.get_tool('portal_types')
@@ -77,6 +79,7 @@ def load_xml_tool_only_from_package(tool_name, profile_id):
     :param profile_id: package profile id
     :return: status as boolean
     """
+    raise NotImplementedError
     try:
         tool = api.portal.get_tool(tool_name)
     except InvalidParameterError:
