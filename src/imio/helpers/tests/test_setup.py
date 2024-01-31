@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from imio.helpers.setup import load_type_from_package
 from imio.helpers.setup import load_workflow_from_package
+from imio.helpers.setup import load_xml_tool_only_from_package
 from imio.helpers.testing import IntegrationTestCase
 from plone import api
 
@@ -12,28 +13,6 @@ class TestSetupModule(IntegrationTestCase):
 
     def setUp(self):
         self.portal = self.layer['portal']
-
-    def test_load_workflow_from_package(self):
-        wkf_tool = api.portal.get_tool('portal_workflow')
-        wkf_obj = wkf_tool.get('intranet_workflow')
-        states = wkf_obj.states
-        self.assertIn('internal', states)
-        states.deleteStates(['internal'])
-        self.assertNotIn('internal', states)
-        self.assertTrue(load_workflow_from_package(
-            'intranet_workflow', 'profile-Products.CMFPlone:plone'))
-        wkf_obj = wkf_tool.get('intranet_workflow')
-        states = wkf_obj.states
-        self.assertIn('internal', states)
-        # not found WF
-        self.assertFalse(load_workflow_from_package(
-            'intranet_workflow2', 'profile-Products.CMFPlone:plone'))
-        # not found profile_id
-        self.assertFalse(load_workflow_from_package(
-            'intranet_workflow', 'profile-Products.CMFPlone:plone2'))
-        # WF not managed by given profile_id
-        self.assertFalse(load_workflow_from_package(
-            'comment_review_workflow', 'profile-Products.CMFPlone:plone'))
 
     def test_load_type_from_package(self):
         types_tool = api.portal.get_tool('portal_types')
@@ -60,3 +39,29 @@ class TestSetupModule(IntegrationTestCase):
         # with purge_actions=True
         self.assertTrue(load_type_from_package(
             'testingtype', 'profile-imio.helpers:testing', purge_actions=True))
+
+    def test_load_workflow_from_package(self):
+        wkf_tool = api.portal.get_tool('portal_workflow')
+        wkf_obj = wkf_tool.get('intranet_workflow')
+        states = wkf_obj.states
+        self.assertIn('internal', states)
+        self.assertTupleEqual(wkf_tool.getChainForPortalType('Image'), ())
+        self.assertTupleEqual(wkf_tool.getChainForPortalType('Document'), ('intranet_workflow',))
+        # some changes
+        states.deleteStates(['internal'])
+        self.assertNotIn('internal', states)
+        wkf_tool.setChainForPortalTypes(('Image',), ('one_state_workflow',))
+        wkf_tool.setChainForPortalTypes(('Document',), ('one_state_workflow',))
+        self.assertTupleEqual(wkf_tool.getChainForPortalType('Image'), ('one_state_workflow',))
+        self.assertTupleEqual(wkf_tool.getChainForPortalType('Document'), ('one_state_workflow',))
+        # we reload default config
+        self.assertTrue(load_xml_tool_only_from_package('portal_workflow', 'profile-Products.CMFPlone:plone'))
+        self.assertTupleEqual(wkf_tool.getChainForPortalType('Image'), ())  # chain is reset
+        self.assertTupleEqual(wkf_tool.getChainForPortalType('Document'), ('one_state_workflow',))  # not in xml
+        wkf_obj = wkf_tool.get('intranet_workflow')
+        states = wkf_obj.states
+        self.assertNotIn('internal', states)  # be sure it's not recursive
+        # not found tool
+        self.assertFalse(load_xml_tool_only_from_package('portal_workflow2', 'profile-Products.CMFPlone:plone'))
+        # not found profile_id
+        self.assertFalse(load_xml_tool_only_from_package('portal_workflow', 'profile-Products.CMFPlone:plone2'))

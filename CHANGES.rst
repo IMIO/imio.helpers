@@ -5,7 +5,9 @@ Changelog
 -----------------
 
 - Added `security.setup_app` to be used in run scripts.
-[sgeulette]
+  [sgeulette]
+- Added `setup.load_xml_tool_only_from_package` to load only main tool xml file.
+  [sgeulette]
 
 0.80 (2023-12-11)
 -----------------
