@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-import unittest
-
 from imio.helpers.setup import load_type_from_package
 from imio.helpers.setup import load_workflow_from_package
 from imio.helpers.setup import load_xml_tool_only_from_package
 from imio.helpers.testing import IntegrationTestCase
 from plone import api
+
+import unittest
 
 
 class TestSetupModule(IntegrationTestCase):
