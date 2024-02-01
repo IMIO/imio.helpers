@@ -107,3 +107,21 @@ def load_xml_tool_only_from_package(tool_name, profile_id):
         logger.error("Could not update '{}' using profile '{}'".format(tool_name, profile_id))
         return False
     return True
+
+
+def remove_gs_step(step_id, registry='_import_registry'):
+    """Remove a step from a generic setup registry.
+    :param step_id: import step id
+    :param registry: registry name (default: _import_registry)
+    :return: status as boolean
+    """
+    ps_tool = api.portal.get_tool('portal_setup')
+    if not hasattr(ps_tool, registry):
+        logger.error("Cannot find '{}' registry in portal_setup".format(registry))
+        return False
+    registry = getattr(ps_tool, registry)
+    if step_id in registry.listSteps():
+        registry.unregisterStep(step_id)
+        ps_tool._p_changed = True
+        return True
+    return False

@@ -2,6 +2,7 @@
 from imio.helpers.setup import load_type_from_package
 from imio.helpers.setup import load_workflow_from_package
 from imio.helpers.setup import load_xml_tool_only_from_package
+from imio.helpers.setup import remove_gs_step
 from imio.helpers.testing import IntegrationTestCase
 from plone import api
 
@@ -90,3 +91,10 @@ class TestSetupModule(IntegrationTestCase):
         self.assertFalse(load_xml_tool_only_from_package('portal_workflow2', 'profile-Products.CMFPlone:plone'))
         # not found profile_id
         self.assertFalse(load_xml_tool_only_from_package('portal_workflow', 'profile-Products.CMFPlone:plone2'))
+
+    def test_remove_gs_step(self):
+        ps_tool = api.portal.get_tool('portal_setup')
+        step_id = u'mockmailhost-various'
+        self.assertIn(step_id, ps_tool.getSortedImportSteps())
+        self.assertTrue(remove_gs_step(step_id))
+        self.assertNotIn(step_id, ps_tool.getSortedImportSteps())
