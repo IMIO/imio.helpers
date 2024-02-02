@@ -8,7 +8,6 @@ from email.utils import parseaddr
 from imio.helpers import _
 from imio.helpers.content import safe_encode
 from plone import api
-from Products.CMFPlone.utils import safe_unicode
 from smtplib import SMTPException
 from unidecode import unidecode
 from zope import schema
@@ -20,11 +19,17 @@ import socket
 
 
 try:
+    from plone.base.utils import safe_text as safe_text
+except ImportError:
+    from Products.CMFPlone.utils import safe_unicode as safe_text
+
+try:
     from Products.CMFDefault.exceptions import EmailAddressInvalid
     from Products.CMFDefault.utils import checkEmailAddress
 except ImportError:
     from Products.CMFPlone.RegistrationTool import checkEmailAddress
     from Products.CMFPlone.RegistrationTool import EmailAddressInvalid
+
 
 logger = logging.getLogger("imio.helpers")
 EMAIL_CHARSET = 'utf-8'
@@ -63,12 +68,12 @@ def create_html_email(html, with_plain=True):
     :rtype: MIMEMultipart
     """
     charset = get_email_charset()
-    html = safe_unicode(html, charset)
+    html = safe_text(html, charset)
 
     # Don't check possible body content charset ('US-ASCII', get_email_charset(), 'UTF-8')
     body_charset = charset
 
-    html = html.encode(body_charset, 'xmlcharrefreplace')
+    html = html.encode("ascii", 'xmlcharrefreplace')
     html_part = MIMEText(html, 'html', body_charset)
 
     # doing a multipart message content for text and html
@@ -78,7 +83,7 @@ def create_html_email(html, with_plain=True):
     if with_plain:
         portal_transforms = api.portal.get_tool('portal_transforms')
         plain = portal_transforms.convert('html_to_text', html).getData()
-        plain = safe_unicode(plain, charset)
+        plain = safe_text(plain, charset)
         plain = plain.encode(body_charset, 'replace')
         text_part = MIMEText(plain, 'plain', body_charset)
         email_content.attach(text_part)
@@ -139,7 +144,7 @@ def send_email(eml, subject, mfrom, mto, mcc=None, mbcc=None, replyto=None):
         return False, 'Mail host not well defined'
 
     charset = get_email_charset()
-    subject = safe_unicode(subject, charset)
+    subject = safe_text(subject, charset)
     kwargs = {}
     # put only as parameter if defined, so mockmailhost can be used in tests with secureSend as send patch
     if mcc is not None:
@@ -198,7 +203,7 @@ def validate_email_address(value):
     """
     if not value:
         return True
-    eml = safe_unicode(value)
+    eml = safe_text(value)
     realname = u''
     complex_form = True in [b in eml and e in eml for b, e in ('<>', '()')]
     # Use parseaddr only when necessary to avoid correction like 'a @d.c' => 'a@d.c'

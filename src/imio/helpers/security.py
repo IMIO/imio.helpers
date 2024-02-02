@@ -14,6 +14,7 @@ from Products.CMFPlone.utils import safe_unicode
 from random import choice
 from random import sample
 from random import seed
+from six.moves import range
 from time import time
 from zope.component import getMultiAdapter
 from zope.globalrequest import getRequest
@@ -60,12 +61,10 @@ def generate_password(length=10, digits=3, upper=2, lower=1, special=1, readable
         of digit, upper and lower case letters, special characters.
     """
     seed(time())
-
-    lowercase = string.lowercase.translate(None, "o")
-    uppercase = string.uppercase.translate(None, "O")
     # string.punctuation contains !"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~
     specials = '!#$%&*+-<=>?@'
-    # letters = "{0:s}{1:s}".format(lowercase, uppercase)
+    lowercase = 'abcdefghijklmnopqrstuvwxyz'
+    uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
     letters = "{0:s}".format(lowercase)
 
     password = list(

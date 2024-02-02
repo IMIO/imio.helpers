@@ -13,6 +13,7 @@ from imio.helpers.cache import obj_modified
 from imio.helpers.cache import VOLATILE_ATTR
 from imio.helpers.cache import volatile_cache_with_parameters
 from imio.helpers.cache import volatile_cache_without_parameters
+from imio.helpers.testing import FunctionalTestCase
 from imio.helpers.testing import IntegrationTestCase
 from persistent.mapping import PersistentMapping
 from plone import api
@@ -36,6 +37,12 @@ import transaction
 
 
 memPropName = Memojito.propname
+
+
+class Foo(object):
+
+    def bar(self):
+        pass
 
 
 def ramCachedMethod_cachekey(method, portal, param, pass_volatile_method=False):
@@ -245,11 +252,6 @@ class TestCacheModule(IntegrationTestCase):
             generate_key(generate_key),
         )
 
-        class Foo(object):
-
-            def bar(self):
-                pass
-
         self.assertEqual(
             'imio.helpers.tests.test_cache.Foo.bar',
             generate_key(Foo.bar),
@@ -302,6 +304,12 @@ class TestCacheModule(IntegrationTestCase):
             volatile_with_parameters_cached(self.portal, 'b'),
         )
 
+
+class TestCacheModuleFunctional(FunctionalTestCase):
+    """
+    Test all helper methods of cache module (commits allowed in functional layer).
+    """
+
     def test_obj_modified(self):
         """ """
         # init annotations
@@ -342,7 +350,7 @@ class TestCachedMethods(IntegrationTestCase):
     def setUp(self):
         super(TestCachedMethods, self).setUp()
         self.acl = self.portal['acl_users']
-        api.user.create('a@b.be', 'user1', '12345', properties={'fullname': 'Stéphan Smith'})  # Returns MemberData
+        api.user.create('a@b.be', 'user1', '123-45@6U78', properties={'fullname': 'Stéphan Smith'})  # Returns MemberData
         self.user = self.acl.getUserById('user1')  # Returns PloneUser
 
     def test_getGroupsForPrincipal(self):
@@ -369,14 +377,17 @@ class TestCachedMethods(IntegrationTestCase):
         self.assertTupleEqual(prm.getRolesForPrincipal(self.user),
                               ('Member',))
         prm.assignRolesToPrincipal(('Member', 'Reviewer',), 'user1')
-        self.assertTupleEqual(prm.getRolesForPrincipal(self.user),
+        sorted_roles = tuple(sorted(prm.getRolesForPrincipal(self.user), key=str.lower))
+        self.assertTupleEqual(sorted_roles,
                               ('Member', 'Reviewer'))
         prm.assignRoleToPrincipal('Contributor', 'user1')
-        self.assertTupleEqual(prm.getRolesForPrincipal(self.user),
-                              ('Member', 'Reviewer', 'Contributor'))
+        sorted_roles = tuple(sorted(prm.getRolesForPrincipal(self.user), key=str.lower))
+        self.assertTupleEqual(sorted_roles,
+                              ('Contributor', 'Member', 'Reviewer'))
         prm.removeRoleFromPrincipal('Reviewer', 'user1')
-        self.assertTupleEqual(prm.getRolesForPrincipal(self.user),
-                              ('Member', 'Contributor'))
+        sorted_roles = tuple(sorted(prm.getRolesForPrincipal(self.user), key=str.lower))
+        self.assertTupleEqual(sorted_roles,
+                              ('Contributor', 'Member'))
 
     def test__getGroupsForPrincipal(self):
         self.skipTest('Temporary skipped')
@@ -469,28 +480,27 @@ class TestCachedMethods(IntegrationTestCase):
         pgr.addPrincipalToGroup(new_user.getId(), 'Administrators')
         # get again, as we use "getGroups", it is stored on user instance
         new_user = api.user.get(new_user.getId())
-        self.assertEqual(
-            self.catalog._listAllowedRolesAndUsers(new_user),
-            ['user:new_user', 'Member', 'Manager', 'Authenticated',
-             'user:Administrators', 'user:AuthenticatedUsers', 'Anonymous'])
+        self.assertListEqual(
+            sorted(self.catalog._listAllowedRolesAndUsers(new_user)),
+            ['Anonymous', 'Authenticated', 'Manager', 'Member', 'user:Administrators', 'user:AuthenticatedUsers',
+             'user:new_user'])
         # behaves correctly with a PloneUser because of id/getId
         plone_user1 = _getAuthenticatedUser(self.portal)
         self.assertTrue(isinstance(plone_user1, PloneUser))
         self.assertEqual(plone_user1.id, "acl_users")
         self.assertEqual(plone_user1.getId(), "test_user_1_")
         self.assertEqual(
-            self.catalog._listAllowedRolesAndUsers(plone_user1),
-            ['user:test_user_1_', 'Manager', 'Authenticated',
-             'user:AuthenticatedUsers', 'Anonymous'])
+            sorted(self.catalog._listAllowedRolesAndUsers(plone_user1)),
+            ['Anonymous', 'Authenticated', 'Manager', 'user:AuthenticatedUsers', 'user:test_user_1_'])
         login(self.portal, new_user.getId())
         plone_user2 = _getAuthenticatedUser(self.portal)
         self.assertTrue(isinstance(plone_user2, PloneUser))
         self.assertEqual(plone_user2.id, "acl_users")
         self.assertEqual(plone_user2.getId(), "new_user")
         self.assertEqual(
-            self.catalog._listAllowedRolesAndUsers(plone_user2),
-            ['user:new_user', 'Member', 'Manager', 'Authenticated',
-             'user:Administrators', 'user:AuthenticatedUsers', 'Anonymous'])
+            sorted(self.catalog._listAllowedRolesAndUsers(plone_user2)),
+            ['Anonymous', 'Authenticated', 'Manager', 'Member', 'user:Administrators', 'user:AuthenticatedUsers',
+             'user:new_user'])
         # as Anonymous
         logout()
         anon_user = _getAuthenticatedUser(self.portal)

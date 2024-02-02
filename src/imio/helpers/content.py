@@ -28,6 +28,7 @@ from zope.schema.interfaces import IVocabularyFactory
 
 import logging
 import os
+import six
 
 
 HAS_PLONE5 = bool(getFSVersionTuple()[0] >= 5)
@@ -93,7 +94,7 @@ def create_NamedBlob(filepath, typ='file'):
     elif typ == 'img':
         klass = NamedBlobImage
     filename = os.path.basename(filepath)
-    fh = open(filepath, 'r')
+    fh = open(filepath, 'rb')
     namedblob = klass(data=fh.read(), filename=safe_unicode(filename))
     fh.close()
     return namedblob
@@ -282,9 +283,7 @@ def safe_encode(value, encoding='utf-8'):
     """
         Converts a value to encoding, only when it is not already encoded.
     """
-    if isinstance(value, unicode):
-        return value.encode(encoding)
-    return value
+    return six.ensure_str(value, encoding=encoding)
 
 
 @mutually_exclusive_parameters('obj', 'uid')

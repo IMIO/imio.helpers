@@ -83,8 +83,11 @@ class TestTesting(IntegrationTestCase):
         self.assertListEqual([1, 3], sorted(filter_keys(dic, ['a', 'c']).values()))
         del dic['c']
         self.assertListEqual(['a', 'b', 'c'], sorted(filter_keys(dic, ['a', 'b', 'c']).keys()))
-        self.assertListEqual([None, 1, 2], sorted(filter_keys(dic, ['a', 'b', 'c']).values()))
-        self.assertListEqual([1, 2, ''], sorted(filter_keys(dic, ['a', 'b', 'c'], unfound='').values()))
+        values = filter_keys(dic, ['a', 'b', 'c']).values()
+        self.assertIn(None, values)
+        self.assertListEqual([1, 2], sorted([v for v in values if v is not None]))  # in py3 sorted cannot handle None
+        self.assertListEqual(['', '1', '2'],
+                             sorted([str(v) for v in filter_keys(dic, ['a', 'b', 'c'], unfound='').values()]))
 
     def test_get_obj_from_path(self):
         folder = self.portal.folder

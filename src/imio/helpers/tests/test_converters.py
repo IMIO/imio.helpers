@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 
+from imio.helpers import HAS_PLONE_5_AND_MORE
 from imio.helpers.testing import IntegrationTestCase
+from unittest import makeSuite
+from unittest import TestSuite
 from ZPublisher.tests.testHTTPRequest import HTTPRequestTests
 
+import html
 import imio.helpers.converters  # noqa
 
 
@@ -23,12 +27,14 @@ class TestConverters(IntegrationTestCase, HTTPRequestTests):
             ('data:json', '{"key1": "value1, "key2": "value2"}'), )
         with self.assertRaises(ValueError) as cm:
             self._processInputs(inputs)
-        self.assertEqual(cm.exception.message,
-                         'Invalid json \'{"key1": "value1, "key2": "value2"}\'')
+        error_message = 'Invalid json \'{"key1": "value1, "key2": "value2"}\''
+        if HAS_PLONE_5_AND_MORE:
+            self.assertEqual(html.unescape(cm.exception.args[0]), error_message)
+        else:
+            self.assertEqual(cm.exception.message, error_message)
 
 
 def test_suite():
-    from unittest import TestSuite, makeSuite
     suite = TestSuite()
     # change prefix to avoid executing every tests of HTTPRequestTests
     suite.addTest(makeSuite(TestConverters, prefix='test_imiohelpers_'))

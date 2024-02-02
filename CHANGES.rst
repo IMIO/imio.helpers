@@ -4,6 +4,8 @@ Changelog
 0.81 (unreleased)
 -----------------
 
+- Require `pathlib2` in `setup.py`, backport `pathlib` for `py2.7`.
+  [gbastien]
 - Added `security.setup_app` to be used in run scripts.
   [sgeulette]
 - Added `setup.load_xml_tool_only_from_package` to load only main tool xml file.

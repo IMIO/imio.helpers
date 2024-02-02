@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 from copy import deepcopy
 from datetime import datetime
-from future.builtins import zip
 from imio.helpers.content import safe_encode
 from imio.pyutils.utils import letters_sequence
 from Products.CMFPlone.utils import safe_unicode
+from six.moves import range
+from six.moves import zip
 
 import os
 import re
@@ -131,7 +132,7 @@ def pool_tuples(iterable, pool_len=2, e_msg=''):
                          e_msg, pool_len, iterable))
     l_iter = iter(iterable)
     args = [l_iter for x in range(0, pool_len)]
-    return zip(*args)
+    return list(zip(*args))
 
 
 def relative_path(portal, fullpath, with_slash=True):
@@ -221,9 +222,11 @@ def str_to_date(item, key, log_method, fmt='%Y/%m/%d', can_be_empty=True, as_dat
         if as_date:
             dt = dt.date()
         if min_val and dt < min_val:
-            raise(ValueError(u"Given date '{}' < minimal value '{}' => set to None".format(val, min_val)))
+            # raise ValueError(u"Given date '{}' < minimal value '{}' => set to None".format(val, min_val))
+            raise ValueError
         if max_val and dt > max_val:
-            raise (ValueError(u"Given date '{}' > maximum value '{}' => set to None".format(val, max_val)))
+            # raise ValueError(u"Given date '{}' > maximum value '{}' => set to None".format(val, max_val))
+            raise ValueError
     except ValueError as ex:
         log_method(item, u"not a valid date '{}' in key '{}': {}".format(val, key, ex), **log_params)
         return None

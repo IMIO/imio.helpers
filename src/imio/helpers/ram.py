@@ -10,6 +10,8 @@ from zope.ramcache.ram import RAMCache
 from zope.ramcache.ram import Storage
 from zope.ramcache.ram import writelock
 
+import six
+
 
 class IMIORAMCache(RAMCache):
     """ """
@@ -40,16 +42,27 @@ class IMIOStorage(Storage):
             self._misses[ob] += 1
             raise
         else:
-            data[2] += 1                    # increment access count
-            # XXX begin change by imio.helpers, update timestamp
-            timestamp = time()
-            data[1] = timestamp
-            # XXX end change by PM
-
-            return data[0]
+            if isinstance(data, list):
+                # [data, ctime, access count]
+                data[2] += 1  # increment access count
+                # XXX begin change by imio.helpers, update timestamp
+                timestamp = time()
+                data[1] = timestamp
+                # XXX end change by PM
+                return data[0]
+            else:
+                data.access_count += 1  # increment access count
+                # XXX begin change by imio.helpers, update timestamp
+                timestamp = time()
+                data.ctime = timestamp
+                # XXX end change by PM
+                return data.value
 
     def getStatistics(self):
-        objects = self._data.keys()
+        objects = list(self._data.keys())
+        if six.PY3:
+            # prevent AttributeError: 'dict_keys' object has no attribute 'sort'
+            objects = list(objects)
         objects.sort()
         result = []
 
@@ -61,8 +74,18 @@ class IMIOStorage(Storage):
                 api.portal.show_message(
                     'Could not compute size for "%s", original exception was "%s"'
                     % (repr(ob), repr(exc)), request=getRequest())
-            hits = sum(entry[2] for entry in self._data[ob].itervalues())
-            older_date = min(entry[1] for entry in self._data[ob].itervalues())
+
+            hits = 0
+            older_date = None
+            for entry in six.itervalues(self._data[ob]):
+                if isinstance(entry, list):
+                    # [data, ctime, access count]
+                    hits += entry[2]
+                    older_date = older_date and min(older_date, entry[1]) or entry[1]
+                else:
+                    hits += entry.access_count
+                    older_date = older_date and min(older_date, entry.ctime) or entry.ctime
+
             result.append({'path': ob,
                            'hits': hits,
                            'misses': self._misses.get(ob, 0),

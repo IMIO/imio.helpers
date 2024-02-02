@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
+
 from DateTime import DateTime
+from six.moves import range
 from zope.i18n import translate
+
+import six
 
 
 MONTHIDS = {1: 'month_jan', 2: 'month_feb', 3: 'month_mar', 4: 'month_apr',
@@ -101,7 +105,9 @@ def wordizeDate(date, context=None, long_format=False):
             converted_time = u" {} {} {}".format(u"à",
                                                  converted_hour,
                                                  hour_word)
-    return converted_date.encode('utf-8') + converted_time.encode('utf-8')
+    if not six.PY3:
+        return converted_date.encode('utf-8') + converted_time.encode('utf-8')
+    return converted_date + converted_time
 
 
 def int2word(n):
@@ -122,7 +128,7 @@ def int2word(n):
                  u"unodécilliard ", u"duodécillion ", u"duodécilliard "]
 
     # quickly manage if n is < 10
-    if n < 10:
+    if int(n) < 10:
         ONES = [u"zéro ", "un ", "deux ", "trois ", "quatre ",
                 "cinq ", "six ", "sept ", "huit ", "neuf "]
         return ONES[n].strip()

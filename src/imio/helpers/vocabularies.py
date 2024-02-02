@@ -1,13 +1,21 @@
 # -*- coding: utf-8 -*-
+
 from imio.helpers import get_cachekey_volatile
 from imio.helpers.content import get_user_fullname
 from natsort import humansorted
 from operator import attrgetter
 from plone import api
-from plone.app.vocabularies.users import UsersFactory
 from plone.memoize import ram
 from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
+
+import six
+
+
+try:
+    from plone.app.vocabularies.principals import UsersFactory  # Plone6
+except ImportError:
+    from plone.app.vocabularies.users import UsersFactory
 
 
 def voc_cache_key(method, self, context=None, query=''):
@@ -29,7 +37,7 @@ def get_users_voc(with_userid):
             userids.append(user_id)
             # bypass special characters, may happen when using LDAP
             try:
-                unicode(user_id)
+                six.text_type(user_id)
             except UnicodeDecodeError:
                 continue
             if with_userid:

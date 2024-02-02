@@ -6,6 +6,7 @@ from zope.component import getUtility
 from zope.intid.interfaces import IIntIds
 
 import logging
+import six
 
 
 logger = logging.getLogger('imio.helpers:catalog')
@@ -84,7 +85,7 @@ def addOrUpdateColumns(portal, columns=(), update_metadata=True, catalog_id='por
         # update relevant metadata
         # there is no helper method in ZCatalog to update metadata
         # we need to get every catalogued objects and call reindexObject
-        paths = catalog._catalog.uids.keys()
+        paths = list(catalog._catalog.uids.keys())
         for path in paths:
             obj = catalog.resolve_path(path)
             if obj is None:
@@ -133,7 +134,12 @@ def merge_queries(queries):
     res = {}
     for query in queries:
         for k, v in query.items():
-            subkey, value = v.items()[0]
+            if six.PY3:
+                # Prevent python3 'dict_items' object is not subscriptable
+                lst = list(v.items())
+                subkey, value = lst[0]
+            else:
+                subkey, value = list(v.items())[0]
             # store value as a list so it can be extended
             if not isinstance(value, list):
                 value = [value]

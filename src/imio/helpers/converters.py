@@ -1,9 +1,14 @@
 # -*- coding: utf-8 -*-
 
-from cgi import escape
 from ZPublisher.Converters import type_converters
 
 import json
+
+
+try:
+    from cgi import escape  # Python 2.x
+except ImportError:
+    from html import escape
 
 
 # create type converter for :json

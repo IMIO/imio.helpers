@@ -137,9 +137,13 @@ def generate_key(func):
     if hasattr(func, '_cache_key'):
         return func._cache_key
     path = [func.__module__]
-    if hasattr(func, 'im_class'):
+    if hasattr(func, 'im_class'):  # unbounded func (no more in py3)
         path.append(func.im_class.__name__)
-    path.append(func.__name__)
+        path.append(func.__name__)
+    elif hasattr(func, '__qualname__'):
+        path.append(func.__qualname__)
+    else:
+        path.append(func.__name__)
     return '.'.join(path)
 
 

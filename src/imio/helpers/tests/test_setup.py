@@ -19,14 +19,14 @@ class TestSetupModule(IntegrationTestCase):
 
     def test_load_type_from_package(self):
         types_tool = api.portal.get_tool('portal_types')
-        portal_type = types_tool.get('Folder')
-        self.assertFalse(portal_type.filter_content_types)
-        portal_type.filter_content_types = True
+        portal_type = types_tool.get('Discussion Item')
         self.assertTrue(portal_type.filter_content_types)
-        self.assertTrue(load_type_from_package(
-            'Folder', 'profile-Products.CMFPlone:plone'))
-        portal_type = types_tool.get('Folder')
+        portal_type.filter_content_types = False
         self.assertFalse(portal_type.filter_content_types)
+        self.assertTrue(load_type_from_package(
+            'Discussion Item', 'profile-Products.CMFPlone:plone'))
+        portal_type = types_tool.get('Discussion Item')
+        self.assertTrue(portal_type.filter_content_types)
         # not found portal_type
         self.assertFalse(load_type_from_package(
             'Folder2', 'profile-Products.CMFPlone:plone'))

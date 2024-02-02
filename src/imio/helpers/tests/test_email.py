@@ -13,6 +13,7 @@ from imio.helpers.emailer import validate_email_addresses
 from imio.helpers.testing import IntegrationTestCase
 
 import os
+import six
 
 
 class TestEmail(IntegrationTestCase):
@@ -27,7 +28,10 @@ class TestEmail(IntegrationTestCase):
         self.assertIn('Content-Type: multipart/mixed;', estr)
         self.assertIn('Content-Type: multipart/alternative;', estr)
         self.assertIn('Content-Type: text/plain; charset="utf-8"', estr)
-        self.assertIn('Test =\n\n  Github site', estr)
+        if six.PY2:
+            self.assertIn('Test =\n\n  Github site', estr)
+        elif six.PY3:
+            self.assertIn('Test=20\n  Github site', estr)
         self.assertIn('Content-Type: text/html; charset="utf-8"', estr)
         self.assertIn('<h1>Test</h1>\n<p><a href=3D"https://github.com/">Github site</p>', estr)
 
@@ -35,13 +39,20 @@ class TestEmail(IntegrationTestCase):
         msg = '<h1>Test</h1>\n<p><a href="https://github.com/">Github site</p>'
         eml = create_html_email(msg)
         path = os.path.dirname(__file__)
-        filepath = os.path.join(path, 'barcode.png')
+        if six.PY3:
+            barcode_resource = "barcode_python3_zint_60x60_156bytes.png"
+        else:
+            barcode_resource = "barcode_python2_zint_60x60_278bytes.png"
+        filepath = os.path.join(path, barcode_resource)
         add_attachment(eml, 'barcode.png', filepath=filepath)
         estr = eml.as_string()
         self.assertIn('Content-Type: multipart/mixed;', estr)
         self.assertIn('Content-Type: multipart/alternative;', estr)
         self.assertIn('Content-Type: text/plain; charset="utf-8"', estr)
-        self.assertIn('Test =\n\n  Github site', estr)
+        if six.PY2:
+            self.assertIn('Test =\n\n  Github site', estr)
+        elif six.PY3:
+            self.assertIn('Test=20\n  Github site', estr)
         self.assertIn('Content-Type: text/html; charset="utf-8"', estr)
         self.assertIn('<h1>Test</h1>\n<p><a href=3D"https://github.com/">Github site</p>', estr)
         self.assertIn('Content-Type: application/octet-stream', estr)
@@ -52,24 +63,45 @@ class TestEmail(IntegrationTestCase):
         msg = '<h1>Test</h1>\n<p><a href="https://github.com/">Github site</p>'
         eml = create_html_email(msg)
         path = os.path.dirname(__file__)
-        filepath = os.path.join(path, 'barcode.png')
+        if six.PY3:
+            barcode_resource = "barcode_python3_zint_60x60_156bytes.png"
+        else:
+            barcode_resource = "barcode_python2_zint_60x60_278bytes.png"
+        filepath = os.path.join(path, barcode_resource)
         add_attachment(eml, 'barcode.png', filepath=filepath)
         mail_host = get_mail_host()
         MockMailHost.secureSend = MockMailHost.send
         mail_host.reset()
-        send_email(eml, 'Email subject hé hé', 'noréply@from.org', 'dèst@to.org')
-        self.assertIn('Subject: =?utf-8?q?Email_subject_h=C3=A9_h=C3=A9?=\n', mail_host.messages[0])
-        self.assertIn('From: nor\xc3\xa9ply@from.org\n', mail_host.messages[0])
-        self.assertIn('To: d\xc3\xa8st@to.org\n', mail_host.messages[0])
+        if six.PY3:
+            # Python 3 raises an error with accented characters in emails
+            # see https://github.com/zopefoundation/Products.MailHost/issues/29
+            # and https://stackoverflow.com/questions/52133735/how-do-i-send-email-to-addresses-with-non-ascii-characters-in-python
+            send_email(eml, 'Email subject hé hé', 'noreply@from.org', 'dest@to.org')
+            self.assertIn(b'Subject: =?utf-8?q?Email_subject_h=C3=A9_h=C3=A9?=\n', mail_host.messages[0])
+            self.assertIn(b'From: noreply@from.org\n', mail_host.messages[0])
+            self.assertIn(b'To: dest@to.org\n', mail_host.messages[0])
+        else:
+            send_email(eml, 'Email subject hé hé', 'noréply@from.org', 'dèst@to.org')
+            self.assertIn('Subject: =?utf-8?q?Email_subject_h=C3=A9_h=C3=A9?=\n', mail_host.messages[0])
+            self.assertIn('From: nor\xc3\xa9ply@from.org\n', mail_host.messages[0])
+            self.assertIn('To: d\xc3\xa8st@to.org\n', mail_host.messages[0])
         mail_host.reset()
         send_email(eml, u'Email subject', '<noreply@from.org>', ['dest@to.org', 'Stéphan Geulette <seg@to.org>'])
-        self.assertIn('To: dest@to.org, =?utf-8?q?St=C3=A9phan_Geulette?= <seg@to.org>\n', mail_host.messages[0])
+        if six.PY3:
+            self.assertIn(b'To: dest@to.org, =?utf-8?q?St=C3=A9phan_Geulette?= <seg@to.org>\n', mail_host.messages[0])
+        else:
+            self.assertIn('To: dest@to.org, =?utf-8?q?St=C3=A9phan_Geulette?= <seg@to.org>\n', mail_host.messages[0])
         mail_host.reset()
-        # unicode is ok if singles
-        self.assertTrue(send_email(eml, u'Email subject hé hé', u'noréply@from.org', u'dèst@to.org'))
-        # not ok if in list
-        self.assertRaises(UnicodeEncodeError, send_email, eml, u'Email subject', '<noreply@from.org>',
-                          ['dest@to.org', u'Stéphan Geulette <seg@to.org>'])
+        if six.PY3:
+            self.assertTrue(send_email(eml, u'Email subject hé hé', u'noreply@from.org', u'dest@to.org'))
+            self.assertTrue(send_email(eml, u'Email subject', '<noreply@from.org>',
+                                       ['dest@to.org', u'Stéphan Geulette <seg@to.org>']))
+        else:
+            # unicode is ok if singles
+            self.assertTrue(send_email(eml, u'Email subject hé hé', u'noréply@from.org', u'dèst@to.org'))
+            # not ok if in list
+            self.assertRaises(UnicodeEncodeError, send_email, eml, u'Email subject', '<noreply@from.org>',
+                              ['dest@to.org', u'Stéphan Geulette <seg@to.org>'])
 
     def test_validate_email_address(self):
         self.assertTupleEqual(validate_email_address('name@domain.org'), (u'', u'name@domain.org'))

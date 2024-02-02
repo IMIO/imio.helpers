@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 
 from imio.helpers.testing import IntegrationTestCase
+from imio.helpers.tests.utils import require_module
 from plone import api
 from plone.app.textfield.value import RichTextValue
 
 
 class TestAppyPod(IntegrationTestCase):
 
+    @require_module('Products.Archetypes')
     def test_load_appy_pod_sample_archetypes(self):
         """Test for Archetypes."""
         docId = self.portal.invokeFactory('Document',
