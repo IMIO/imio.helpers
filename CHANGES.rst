@@ -8,6 +8,10 @@ Changelog
   [gbastien]
 - Added `security.setup_app` to be used in run scripts.
   [sgeulette]
+- Added `setup.load_xml_tool_only_from_package` to load only main tool xml file.
+  [sgeulette]
+- Added `setup.test_remove_gs_step` to remove a generic setup step.
+  [sgeulette]
 
 0.80 (2023-12-11)
 -----------------
