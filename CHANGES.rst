@@ -1,8 +1,8 @@
 Changelog
 =========
 
-0.81 (unreleased)
------------------
+1.0.0 (unreleased)
+------------------
 
 - Require `pathlib2` in `setup.py`, backport `pathlib` for `py2.7`.
   [gbastien]
