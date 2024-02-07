@@ -6,6 +6,10 @@ from natsort import humansorted
 from operator import attrgetter
 from plone import api
 from plone.memoize import ram
+from Products.CMFPlone.utils import safe_unicode
+from zope.i18n import translate
+from zope.interface import implementer
+from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
 
@@ -82,3 +86,20 @@ class EnhancedTerm(SimpleTerm):
     def __init__(self, value, token=None, title=None, **attrs):
         super(EnhancedTerm, self).__init__(value, token=token, title=title)
         self.attrs = attrs
+
+
+@implementer(IVocabularyFactory)
+class YesNoForFacetedVocabulary(object):
+    """Vocabulary to be used with a faceted radio widget on a field index containing prefixed 0 and 1 strings."""
+
+    prefix = ''
+
+    def __call__(self, context):
+        """ """
+        res = [
+            SimpleTerm(self.prefix + '0', self.prefix + '0',
+                       safe_unicode(translate('yesno_value_false', domain='imio.helpers', context=context.REQUEST))),
+            SimpleTerm(self.prefix + '1', self.prefix + '1',
+                       safe_unicode(translate('yesno_value_true', domain='imio.helpers', context=context.REQUEST)))
+        ]
+        return SimpleVocabulary(res)

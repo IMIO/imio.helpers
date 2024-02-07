@@ -96,6 +96,9 @@
     <utility component=".vocabularies.SimplySortedUsersFactory"
              name="imio.helpers.SimplySortedUsers" />
 
+    <utility name="imio.helpers.YesNoForFacetedVocabulary"
+             factory="imio.helpers.vocabularies.YesNoForFacetedVocabulary" />
+
     <!-- Upgrade steps -->
     <genericsetup:upgradeSteps
       source="1"

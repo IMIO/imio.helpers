@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2023-02-10 10:37+0000\n"
+"POT-Creation-Date: 2024-02-07 12:20+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,15 +29,15 @@ msgstr ""
 msgid "Fields"
 msgstr ""
 
-#: ../emailer.py:165
+#: ../emailer.py:170
 msgid "Invalid email address format: 'real name <email>' or 'email (real name)'"
 msgstr ""
 
-#: ../emailer.py:177
+#: ../emailer.py:182
 msgid "Invalid email address: '${eml}'"
 msgstr ""
 
-#: ../emailer.py:189
+#: ../emailer.py:194
 msgid "Realname: '${value}' cannot contain accented or special characters"
 msgstr ""
 
@@ -53,11 +53,11 @@ msgstr ""
 msgid "Title"
 msgstr ""
 
-#: ../configure.zcml:45
+#: ../configure.zcml:46
 msgid "imio.helpers"
 msgstr ""
 
-#: ../configure.zcml:45
+#: ../configure.zcml:46
 msgid "imio.helpers default"
 msgstr ""
 
@@ -68,4 +68,12 @@ msgstr ""
 #. Default: "Contents"
 #: ../browser/folder_listing.pt:9
 msgid "legend_folder_listing"
+msgstr ""
+
+#: ../vocabularies.py
+msgid "yesno_value_false"
+msgstr ""
+
+#: ../vocabularies.py
+msgid "yesno_value_true"
 msgstr ""
