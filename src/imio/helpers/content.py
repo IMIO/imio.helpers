@@ -596,6 +596,8 @@ def base_getattr(obj, attr_name, default=None):
     """ """
     if base_hasattr(obj, attr_name):
         return getattr(obj, attr_name, default)
+    else:
+        return default
 
 
 def get_relations(obj, attribute=None, backrefs=False, as_obj=False):

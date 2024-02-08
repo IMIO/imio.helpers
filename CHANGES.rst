@@ -16,6 +16,9 @@ Changelog
   [sgeulette]
 - Added `imio.helpers.YesNoForFacetedVocabulary`
   [sgeulette]
+- Fixed `content.base_getattr` that was not returning the `default` if attribute
+  not existing.
+  [gbastien]
 
 0.80 (2023-12-11)
 -----------------
