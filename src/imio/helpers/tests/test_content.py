@@ -186,16 +186,19 @@ class TestContentModule(IntegrationTestCase):
                                  id='tt',
                                  type='testingtype',
                                  enabled='Should be a boolean')
-        self.assertListEqual(sorted([name for (name, fld) in get_schema_fields(obj=obj, behaviors=False)]),
-                             sorted(['text', 'enabled', 'mandatory_textline', 'relations', 'textline']))
-        self.assertListEqual(sorted([name for (name, fld) in get_schema_fields(obj=obj)]),
-                             sorted(['text', 'enabled', 'mandatory_textline', 'relations', 'textline',
-                              'description', 'title', 'title',
-                              'tal_condition', 'roles_bypassing_talcondition']))
-        self.assertListEqual(sorted([name for (name, fld) in get_schema_fields(obj=obj, prefix=True)]),
-                             sorted(['text', 'enabled', 'mandatory_textline', 'relations', 'textline',
-                              'IBasic.description', 'IBasic.title', 'INameFromTitle.title',
-                              'ITALCondition.tal_condition', 'ITALCondition.roles_bypassing_talcondition']))
+        self.assertListEqual(
+            sorted([name for (name, fld) in get_schema_fields(obj=obj, behaviors=False)]),
+            sorted(['text', 'enabled', 'mandatory_textline', 'relations', 'textline']))
+        self.assertListEqual(
+            sorted([name for (name, fld) in get_schema_fields(obj=obj)]),
+            sorted(['text', 'enabled', 'mandatory_textline', 'relations', 'textline',
+                    'description', 'title', 'title',
+                    'tal_condition', 'roles_bypassing_talcondition']))
+        self.assertListEqual(
+            sorted([name for (name, fld) in get_schema_fields(obj=obj, prefix=True)]),
+            sorted(['text', 'enabled', 'mandatory_textline', 'relations', 'textline',
+                    'IBasic.description', 'IBasic.title', 'INameFromTitle.title',
+                    'ITALCondition.tal_condition', 'ITALCondition.roles_bypassing_talcondition']))
         self.assertListEqual([name for (name, fld) in get_schema_fields(type_name='portnawak')],
                              [])
 
@@ -486,6 +489,8 @@ class TestContentModule(IntegrationTestCase):
         # base_getattr does not use acquisition
         self.assertTrue(base_getattr(self.portal.folder, 'dedana'))
         self.assertIsNone(base_getattr(obj, 'dedana'))
+        # returns default if given
+        self.assertEqual(base_getattr(obj, 'dedana', {}), {})
 
     def test_sort_on_vocab_order(self):
         self.assertEqual(
