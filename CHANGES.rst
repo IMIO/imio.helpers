@@ -1,8 +1,8 @@
 Changelog
 =========
 
-1.0.0 (unreleased)
-------------------
+1.0.0rc1 (unreleased)
+---------------------
 
 - Made compliant with Plone 4, Plone 5, Plone 6
   [boulch, laulaz, sgeulette]
