@@ -99,7 +99,7 @@ def batch_handle_key(key, batch_keys, config):
             transaction.commit()
         config['ldk'] = key
         dump_pickle(config['pf'], batch_keys)
-        logger.info("Batched %s / %s", len(batch_keys), config['ll'])
+        logger.info("BATCHED %s / %s, already done %s", config['lc'], config['ll'], len(batch_keys))
         if config['bl'] and not batch_globally_finished(batch_keys, config):
             logger.error('BATCHING MAYBE STOPPED TOO EARLY: %s / %s', len(batch_keys), config['ll'])
         return True
@@ -126,10 +126,12 @@ def batch_loop_else(key, batch_keys, config):
         return
     if key is None or (config.get('ldk') is not None and config['ldk'] == key):  # avoid if already done on last key
         return
+    logger.info("BATCHED %s / %s, already done %s", config['lc'], config['ll'], len(batch_keys))
+    if config['lc'] == 0:  # nothing was done
+        return
     if config['cn']:
         transaction.commit()
     dump_pickle(config['pf'], batch_keys)
-    logger.info("Batched %s / %s", len(batch_keys), config['ll'])
     if config['bl'] and not batch_globally_finished(batch_keys, config):
         logger.error('BATCHING MAYBE STOPPED TOO EARLY: %s / %s', len(batch_keys), config['ll'])
 

@@ -44,7 +44,7 @@ setup(
         'collective.fingerpointing',
         'collective.monkeypatcher',
         'future>=0.18.2',
-        'imio.pyutils>=1.0.0a1',
+        'imio.pyutils>=1.0.0',
         'natsort<7',
         "pathlib2;python_version<'3'",
         'plone.api>1.9.1',
