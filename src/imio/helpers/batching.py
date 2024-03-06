@@ -19,6 +19,7 @@ See `loop_process` function in `test_batching.py` file for a complete example.
 
 from datetime import datetime
 from imio.pyutils.system import dump_pickle
+from imio.pyutils.system import hashed_filename
 from imio.pyutils.system import load_pickle
 
 import logging
@@ -170,3 +171,17 @@ def batch_globally_finished(batch_keys, config):
     if config['ll']:
         return len(batch_keys) >= config['ll'] or config['lc'] == 0
     return config['lc'] == 0
+
+
+def batch_hashed_filename(filename, to_hash=(), add_dir=True):
+    """Returns a hashed filename.
+
+    :param filename: the filename
+    :param to_hash: a list of values to hash
+    :param add_dir: boolean to know if we must prefix with the INSTANCE_HOME directory
+    :return: the hashed filename
+    """
+    pklfile = hashed_filename(filename, '_'.join(map(repr, to_hash)))
+    if add_dir:
+        pklfile = os.path.join(os.getenv('INSTANCE_HOME', '.'), pklfile)
+    return pklfile

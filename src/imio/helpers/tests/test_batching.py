@@ -2,6 +2,7 @@
 from imio.helpers.batching import batch_delete_keys_file
 from imio.helpers.batching import batch_get_keys
 from imio.helpers.batching import batch_handle_key
+from imio.helpers.batching import batch_hashed_filename
 from imio.helpers.batching import batch_loop_else
 from imio.helpers.batching import batch_skip_key
 
@@ -163,3 +164,8 @@ class TestBatching(unittest.TestCase):
 
         transaction.commit = orig_tc_func
         logger.error = orig_le_func
+
+    def test_batch_hashed_filename(self):
+        nfn = batch_hashed_filename('file.txt')
+        self.assertTrue(len(os.path.dirname(nfn)) > 1)
+        self.assertEqual(os.path.basename(nfn), 'file_da39a3ee5e6b4b0d3255bfef95601890afd80709.txt')
