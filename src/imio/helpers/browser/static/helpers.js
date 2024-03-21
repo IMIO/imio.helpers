@@ -199,12 +199,18 @@ function submitFormHelperOnsuccessDefault(data, textStatus, request) {
   contentType = request.getResponseHeader('content-type');
   if (contentType && contentType.startsWith('application')) {
     data = new Uint8Array(data);
+    // to be able to download the blob and set a correct filename
+    // we need to add a fictious link (a), click on it then remove it...
     contentType = request.getResponseHeader('content-type');
+    fileName = request.getResponseHeader('Content-Disposition').split("filename=")[1];
     var blob = new Blob([data], {type: contentType});
-    var objectUrl = URL.createObjectURL(blob);
-    window.open(objectUrl);
+    var link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
     cancel_button.click();
-    URL.revokeObjectURL(objectUrl);
   } else {
     // close the overlay
     if (cancel_button) {

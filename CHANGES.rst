@@ -6,6 +6,9 @@ Changelog
 
 - Added batching module.
   [sgeulette]
+- Fixed the way JS function `submitFormHelperOnsuccessDefault` manages
+  returned result when it is a file, now we have a correct `filename`.
+  [gbastien]
 
 1.0.0rc1 (2024-02-08)
 ---------------------
