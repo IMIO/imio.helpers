@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from collective.transmogrifier.utils import Expression as OrigExpression
 from copy import deepcopy
 from datetime import datetime
 from imio.helpers.content import safe_encode
@@ -6,9 +7,14 @@ from imio.pyutils.utils import letters_sequence
 from Products.CMFPlone.utils import safe_unicode
 from six.moves import range
 from six.moves import zip
+from zope.tales.tales import CompilerError
 
+import logging
 import os
 import re
+
+
+logger = logging.getLogger('imio.helpers: transmogrifier')
 
 
 def clean_value(value, isep=u'\n', strip=u' ', patterns=(), osep=None):
@@ -33,6 +39,27 @@ def clean_value(value, isep=u'\n', strip=u' ', patterns=(), osep=None):
         if part:
             parts.append(part)
     return osep.join(parts)
+
+
+class Expression(OrigExpression):
+    """Call the expression and log the expression"""
+
+    def __init__(self, expression, transmogrifier, name, options, **extras):
+        try:
+            super(Expression, self).__init__(expression, transmogrifier, name, options, **extras)
+        except CompilerError as e:
+            logger.error("Error in expression: '{}': {}".format(expression, e))
+            raise e
+
+    def __call__(self, item, **extras):
+        return super(Expression, self).__call__(item, **extras)
+
+
+class Condition(Expression):
+    """A transmogrifier condition expression with logging"""
+
+    def __call__(self, item, **extras):
+        return bool(super(Condition, self).__call__(item, **extras))
 
 
 def filter_keys(item, keys, unfound=None):

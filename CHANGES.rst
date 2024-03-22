@@ -9,6 +9,8 @@ Changelog
 - Fixed the way JS function `submitFormHelperOnsuccessDefault` manages
   returned result when it is a file, now we have a correct `filename`.
   [gbastien]
+- Added transmogrifier Expression and Condition classes.
+  [sgeulette]
 
 1.0.0rc1 (2024-02-08)
 ---------------------
