@@ -248,11 +248,15 @@ try:
             try:
                 super(Expression, self).__init__(expression, transmogrifier, name, options, **extras)
             except CompilerError as e:
-                logger.error("Error in expression: '{}': {}".format(expression, e))
+                logger.error("Error in part '{}', expression: '{}': {}".format(name, expression, e))
                 raise e
 
         def __call__(self, item, **extras):
-            return super(Expression, self).__call__(item, **extras)
+            try:
+                return super(Expression, self).__call__(item, **extras)
+            except Exception as e:
+                logger.error("Error in part '{}', expression: '{}': {}".format(self.name, self.expression.text, e))
+                raise e
 
     class Condition(Expression):
         """A transmogrifier condition expression with logging"""
