@@ -16,6 +16,8 @@ Changelog
   Import it from `imio.pyutils` in `imio.helpers.content` for temporary backward
   compatibility, to be removed.
   [gbastien]
+- Overrided `@@folder_contents` to make it work with `DashboardCollection`.
+  [gbastien]
 
 1.0.0rc1 (2024-02-08)
 ---------------------

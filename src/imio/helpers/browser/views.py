@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 
+from Acquisition import aq_inner
 from imio.helpers.interfaces import IListContainedDexterityObjectsForDisplay
 from plone import api
 from plone.app.caching.browser.controlpanel import RAMCache
+from plone.app.content.browser.foldercontents import FolderContentsBrowserView
+from plone.app.content.browser.foldercontents import FolderContentsTable
+from plone.app.content.browser.foldercontents import FolderContentsView
 from plone.batching import Batch
 from plone.dexterity.browser.view import DefaultView
 from Products.Five import BrowserView
@@ -63,3 +67,28 @@ class IMIORAMCache(RAMCache):
     def update(self):
         super(IMIORAMCache, self).update()
         self.stats = self.ramCache.getStatistics()
+
+
+class IMIOFolderContentsTable(FolderContentsTable):
+    """Overrided so @@folder_contents work on a DashboardCollection."""
+
+    def contentsMethod(self):
+        context = aq_inner(self.context)
+
+        # use DashboardCollection.brains_results if available
+        contentsMethod = None
+        if hasattr(context.__class__, 'brains_results'):
+            contentsMethod = context.brains_results
+        return contentsMethod or super(IMIOFolderContentsTable, self).contentsMethod()
+
+
+class IMIOFolderContentsBrowserView(FolderContentsBrowserView):
+    table = IMIOFolderContentsTable
+
+
+class IMIOFolderContentsView(FolderContentsView):
+
+    def contents_table(self):
+        # override to use IMIOFolderContentsTable instead FolderContentsTable
+        table = IMIOFolderContentsTable(aq_inner(self.context), self.request)
+        return table.render()

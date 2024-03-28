@@ -44,4 +44,23 @@
         layer="imio.helpers.interfaces.IIMIOHelpersLayer"
         permission="cmf.ManagePortal" />
 
+    <!-- Override @@folder_contents to work with DashboardCollection -->
+    <!-- Folder contents -->
+    <configure package="plone.app.content">
+        <browser:page
+            for="*"
+            class="imio.helpers.browser.views.IMIOFolderContentsView"
+            name="folder_contents"
+            template="browser/folder_contents.pt"
+            layer="imio.helpers.interfaces.IIMIOHelpersLayer"
+            permission="cmf.ListFolderContents" />
+        <browser:page
+            for="*"
+            class="imio.helpers.browser.views.IMIOFolderContentsBrowserView"
+            attribute="update_table"
+            name="foldercontents_get_table"
+            layer="imio.helpers.interfaces.IIMIOHelpersLayer"
+            permission="cmf.ListFolderContents" />
+    </configure>
+
 </configure>
