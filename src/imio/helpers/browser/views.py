@@ -9,6 +9,7 @@ from plone.dexterity.browser.view import DefaultView
 from Products.Five import BrowserView
 from zope.component import getMultiAdapter
 
+
 HAS_PLONE_4 = api.env.plone_version().startswith('4')
 
 if HAS_PLONE_4:
