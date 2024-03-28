@@ -4,13 +4,23 @@ from Acquisition import aq_inner
 from imio.helpers.interfaces import IListContainedDexterityObjectsForDisplay
 from plone import api
 from plone.app.caching.browser.controlpanel import RAMCache
-from plone.app.content.browser.foldercontents import FolderContentsBrowserView
-from plone.app.content.browser.foldercontents import FolderContentsTable
-from plone.app.content.browser.foldercontents import FolderContentsView
 from plone.batching import Batch
 from plone.dexterity.browser.view import DefaultView
 from Products.Five import BrowserView
 from zope.component import getMultiAdapter
+
+import pkg_resources
+
+
+try:
+    pkg_resources.get_distribution('plone.app.content')
+    from plone.app.content.browser.foldercontents import FolderContentsBrowserView
+    from plone.app.content.browser.foldercontents import FolderContentsTable
+    from plone.app.content.browser.foldercontents import FolderContentsView
+except pkg_resources.DistributionNotFound:
+    FolderContentsBrowserView = object
+    FolderContentsTable = object
+    FolderContentsView = object
 
 
 class ContainerView(DefaultView):

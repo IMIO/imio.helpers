@@ -46,7 +46,7 @@
 
     <!-- Override @@folder_contents to work with DashboardCollection -->
     <!-- Folder contents -->
-    <configure package="plone.app.content">
+    <configure package="plone.app.content" zcml:condition="installed plone.app.content">
         <browser:page
             for="*"
             class="imio.helpers.browser.views.IMIOFolderContentsView"
