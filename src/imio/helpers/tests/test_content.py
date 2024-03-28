@@ -22,7 +22,6 @@ from imio.helpers.content import object_values
 from imio.helpers.content import restore_link_integrity_checks
 from imio.helpers.content import richtextval
 from imio.helpers.content import safe_delattr
-from imio.helpers.content import safe_encode
 from imio.helpers.content import set_to_annotation
 from imio.helpers.content import sort_on_vocab_order
 from imio.helpers.content import uuidsToCatalogBrains
@@ -232,12 +231,6 @@ class TestContentModule(IntegrationTestCase):
         # back to correct value
         obj.mandatory_textline = u'Some text'
         self.assertFalse(validate_fields(obj))
-
-    def test_safe_encode(self):
-        self.assertEqual(safe_encode('héhé'), 'héhé')
-        self.assertEqual(safe_encode(u'héhé'), 'héhé')
-        self.assertEqual(safe_encode(u'héhé', encoding='utf8'), 'héhé')
-        self.assertEqual(safe_encode('héhé', encoding='whatelse'), 'héhé')
 
     def test_add_and_remove_annotation(self):
         obj = api.content.create(container=self.portal.folder,

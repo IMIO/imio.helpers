@@ -6,7 +6,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.utils import parseaddr
 from imio.helpers import _
-from imio.helpers.content import safe_encode
+from imio.pyutils.utils import safe_encode
 from plone import api
 from smtplib import SMTPException
 from unidecode import unidecode

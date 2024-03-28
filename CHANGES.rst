@@ -9,8 +9,13 @@ Changelog
 - Fixed the way JS function `submitFormHelperOnsuccessDefault` manages
   returned result when it is a file, now we have a correct `filename`.
   [gbastien]
-- Added transmogrifier Expression and Condition classes to log expression compilation or interpretation errors.
+- Added transmogrifier Expression and Condition classes to log expression
+  compilation or interpretation errors.
   [sgeulette]
+- Removed `content.safe_encode` as already defined in `imio.pyutils`.
+  Import it from `imio.pyutils` in `imio.helpers.content` for temporary backward
+  compatibility, to be removed.
+  [gbastien]
 
 1.0.0rc1 (2024-02-08)
 ---------------------

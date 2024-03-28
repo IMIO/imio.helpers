@@ -2,6 +2,7 @@
 
 from imio.helpers.interfaces import IContainerOfUnindexedElementsMarker
 from imio.helpers.workflow import do_transitions
+from imio.pyutils.utils import safe_encode  # noqa, temporary import for backward compatibility as was also defined here
 from imio.pyutils.utils import sort_by_indexes
 from persistent.list import PersistentList
 from plone import api
@@ -28,7 +29,6 @@ from zope.schema.interfaces import IVocabularyFactory
 
 import logging
 import os
-import six
 
 
 HAS_PLONE5 = bool(getFSVersionTuple()[0] >= 5)
@@ -277,13 +277,6 @@ def validate_fields(obj, behaviors=True, raise_on_errors=False):
             obj.portal_type, obj.id, '\n'.join([repr(error) for error in errors]))
         raise ValueError(error_msg)
     return errors
-
-
-def safe_encode(value, encoding='utf-8'):
-    """
-        Converts a value to encoding, only when it is not already encoded.
-    """
-    return six.ensure_str(value, encoding=encoding)
 
 
 @mutually_exclusive_parameters('obj', 'uid')

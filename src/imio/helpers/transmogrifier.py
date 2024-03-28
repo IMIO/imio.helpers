@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
+
 from copy import deepcopy
 from datetime import datetime
-from imio.helpers.content import safe_encode
 from imio.pyutils.utils import letters_sequence
+from imio.pyutils.utils import safe_encode
 from Products.CMFPlone.utils import safe_unicode
 from six.moves import range
 from six.moves import zip
