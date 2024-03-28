@@ -9,15 +9,13 @@ from plone.dexterity.browser.view import DefaultView
 from Products.Five import BrowserView
 from zope.component import getMultiAdapter
 
-import pkg_resources
+HAS_PLONE_4 = api.env.plone_version().startswith('4')
 
-
-try:
-    pkg_resources.get_distribution('plone.app.content')
+if HAS_PLONE_4:
     from plone.app.content.browser.foldercontents import FolderContentsBrowserView
     from plone.app.content.browser.foldercontents import FolderContentsTable
     from plone.app.content.browser.foldercontents import FolderContentsView
-except pkg_resources.DistributionNotFound:
+else:
     FolderContentsBrowserView = object
     FolderContentsTable = object
     FolderContentsView = object
