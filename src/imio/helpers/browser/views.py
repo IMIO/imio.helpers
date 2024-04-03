@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from Acquisition import aq_inner
+from imio.helpers import HAS_PLONE_4
 from imio.helpers.interfaces import IListContainedDexterityObjectsForDisplay
 from plone import api
 from plone.app.caching.browser.controlpanel import RAMCache
@@ -9,8 +10,6 @@ from plone.dexterity.browser.view import DefaultView
 from Products.Five import BrowserView
 from zope.component import getMultiAdapter
 
-
-HAS_PLONE_4 = api.env.plone_version().startswith('4')
 
 if HAS_PLONE_4:
     from plone.app.content.browser.foldercontents import FolderContentsBrowserView

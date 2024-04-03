@@ -90,6 +90,13 @@
         replacement=".patches._listAllowedRolesAndUsers"
         preserveOriginal="true" />
 
+    <monkey:patch
+        description="Monkeypatch getVocabularyValues from plone.app.querystring to keep vocabulary order"
+        class="plone.app.querystring.registryreader.QuerystringRegistryReader"
+        original="getVocabularyValues"
+        replacement=".patches.getVocabularyValues"
+        preserveOriginal="true" />
+
     <utility component=".vocabularies.SortedUsersFactory"
              name="imio.helpers.SortedUsers" />
 

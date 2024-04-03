@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from imio.helpers import HAS_PLONE_5_AND_MORE
 from imio.helpers.interfaces import IContainerOfUnindexedElementsMarker
 from imio.helpers.workflow import do_transitions
 from imio.pyutils.utils import safe_encode  # noqa, temporary import for backward compatibility as was also defined here
@@ -31,8 +32,7 @@ import logging
 import os
 
 
-HAS_PLONE5 = bool(getFSVersionTuple()[0] >= 5)
-if HAS_PLONE5:
+if HAS_PLONE_5_AND_MORE:
     from Products.CMFPlone.interfaces import IEditingSchema
 
 logger = logging.getLogger('imio.helpers.content')
