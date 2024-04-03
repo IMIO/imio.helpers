@@ -16,6 +16,10 @@ import os
 _ = MessageFactory('imio.helpers')
 logger = logging.getLogger('imio.helpers')
 
+HAS_PLONE_4 = api.env.plone_version().startswith('4')
+HAS_PLONE_5 = api.env.plone_version().startswith('5')
+HAS_PLONE_5_1 = api.env.plone_version() > '5.1'
+HAS_PLONE_5_2 = api.env.plone_version() > '5.2'
 HAS_PLONE_5_AND_MORE = int(api.env.plone_version()[0]) >= 5
 PLONE_MAJOR_VERSION = int(api.env.plone_version()[0])
 
