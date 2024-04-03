@@ -19,7 +19,7 @@ Changelog
 - Overrided `@@folder_contents` to make it work with `DashboardCollection`.
   [gbastien]
 - Monkeypatched `plone.app.querystring.registryreader.getVocabularyValues`
-  to keep vocabulary order.
+  to keep vocabulary order onloy for Plone4, behavior is correct in Plone5+.
   Manage every `HAS_PLONE_X` values.
   [gbastien]
 
