@@ -90,7 +90,7 @@
         replacement=".patches._listAllowedRolesAndUsers"
         preserveOriginal="true" />
 
-    <monkey:patch
+    <monkey:patch zcml:condition="have plone-4"
         description="Monkeypatch getVocabularyValues from plone.app.querystring to keep vocabulary order"
         class="plone.app.querystring.registryreader.QuerystringRegistryReader"
         original="getVocabularyValues"
