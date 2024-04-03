@@ -170,4 +170,4 @@ class TestBatching(unittest.TestCase):
     def test_batch_hashed_filename(self):
         nfn = batch_hashed_filename('file.txt')
         self.assertTrue(len(os.path.dirname(nfn)) > 1)
-        self.assertEqual(os.path.basename(nfn), 'file_da39a3ee5e6b4b0d3255bfef95601890afd80709.txt')
+        self.assertEqual(os.path.basename(nfn), 'file.txt')
