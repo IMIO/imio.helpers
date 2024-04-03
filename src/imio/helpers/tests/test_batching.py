@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from imio.helpers.batching import batch_delete_keys_file
+from imio.helpers.batching import batch_delete_files
 from imio.helpers.batching import batch_get_keys
 from imio.helpers.batching import batch_handle_key
 from imio.helpers.batching import batch_hashed_filename
@@ -18,8 +18,10 @@ processed = {'keys': [], 'commits': 0, 'errors': 0}
 
 def loop_process(loop_len, batch_number, commit_number, a_set, last=False):
     """Process the loop using the batching module."""
-
-    batch_keys, config = batch_get_keys(INFILE, batch_number, last, commit_number, loop_len, a_set=a_set)
+    os.environ['BATCH'] = str(batch_number)
+    os.environ['COMMIT'] = str(commit_number)
+    os.environ['BATCH_LAST'] = str(int(last))
+    batch_keys, config = batch_get_keys(INFILE, loop_len, a_set=a_set)
     for key in range(1, loop_len + 1):
         if batch_skip_key(key, batch_keys, config):
             continue
@@ -28,8 +30,8 @@ def loop_process(loop_len, batch_number, commit_number, a_set, last=False):
             break
     else:
         batch_loop_else(config['lc'] > 1 and key or None, batch_keys, config)
-    if last:
-        batch_delete_keys_file(batch_keys, config, rename=False)
+    if config['bl']:
+        batch_delete_files(batch_keys, config, rename=False)
 
 
 def fake_transaction_commit():

@@ -19,6 +19,7 @@ See `loop_process` function in `test_batching.py` file for a complete example.
 
 from datetime import datetime
 from imio.pyutils.system import dump_pickle
+from imio.pyutils.system import dump_var
 from imio.pyutils.system import hashed_filename
 from imio.pyutils.system import load_pickle
 
@@ -31,28 +32,35 @@ logger = logging.getLogger('imio.helpers')
 
 
 # 1) we get a stored dictionary containing the treated keys (using load_pickle function)
-def batch_get_keys(infile, batch_number, batch_last, commit_number, loop_length=0, a_set=None):
+def batch_get_keys(infile, loop_length=0, a_set=None):
     """Returns the stored batched keys from the file.
     Must be used like this, before the loop:
     batch_keys, config = batch_get_keys(infile, batch_number, commit_number)
 
     :param infile: file name where the set is stored
-    :param batch_number: the batch number
-    :param batch_last: boolean to know if it's the last batch run
-    :param commit_number: the commit interval number
     :param loop_length: the loop length number
     :param a_set: a given data structure to get the stored keys
     :return: 2 parameters: 1) a_set fulled with pickled data,
-    2) a config dict {'bn': batch_number, 'cn': commit_number, 'lc': loop_count, 'pf': infile}
+    2) a config dict {'bn': batch_number, 'bl': batch_last, 'cn': commit_number, 'll': loop_length, 'lc': loop_count,
+                      'pf': infile, 'cf': config_file}
     """
     infile = os.path.abspath(infile)
+    commit_number = int(os.getenv('COMMIT', '0'))
+    batch_number = int(os.getenv('BATCH', '0'))
+    batch_last = bool(int(os.getenv('BATCH_LAST', '0')))
     if not batch_number:
         return None, {'bn': batch_number, 'bl': batch_last, 'cn': commit_number, 'll': loop_length, 'lc': 0,
-                      'pf': infile}
+                      'pf': infile, 'cf': None}
+    if not infile.endswith('.pkl'):
+        raise Exception("The giver file '{}' must be a pickle file ending with '.pkl'".format(infile))
     if a_set is None:
         a_set = set()
     load_pickle(infile, a_set)
-    return a_set, {'bn': batch_number, 'bl': batch_last, 'cn': commit_number, 'll': loop_length, 'lc': 0, 'pf': infile}
+    dic_file = infile.replace('.pkl', '_config.txt')
+    config = {'bn': batch_number, 'bl': batch_last, 'cn': commit_number, 'll': loop_length, 'lc': 0, 'pf': infile,
+              'cf': dic_file}
+    dump_var(dic_file, config)
+    return a_set, config
 
 
 # 2) if the key is already in the dictionary, we skip it (continue)
@@ -138,7 +146,7 @@ def batch_loop_else(key, batch_keys, config):
 
 
 # 7) when all the items are treated, we can delete the dictionary file
-def batch_delete_keys_file(batch_keys, config, rename=True):
+def batch_delete_files(batch_keys, config, rename=True):
     """Deletes the file containing the batched keys.
 
     :param batch_keys: the treated keys set
@@ -149,10 +157,12 @@ def batch_delete_keys_file(batch_keys, config, rename=True):
     if batch_keys is None:
         return
     try:
-        if rename:
-            os.rename(config['pf'], '{}.{}'.format(config['pf'], datetime.now().strftime('%Y%m%d-%H%M%S')))
-        else:
-            os.remove(config['pf'])
+        for key in ('pf', 'cf'):
+            if config[key] and os.path.exists(config[key]):
+                if rename:
+                    os.rename(config[key], '{}.{}'.format(config[key], datetime.now().strftime('%Y%m%d-%H%M%S')))
+                else:
+                    os.remove(config[key])
     except Exception as error:
         logger.exception('Error while deleting the file %s: %s', config['pf'], error)
 
