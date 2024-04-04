@@ -17,7 +17,6 @@ from plone.namedfile.file import NamedBlobImage
 from plone.registry.interfaces import IRegistry
 from Products.CMFCore.interfaces import IPropertiesTool
 from Products.CMFPlone.utils import base_hasattr
-from Products.CMFPlone.utils import getFSVersionTuple
 from Products.CMFPlone.utils import safe_unicode
 from zc.relation.interfaces import ICatalog
 from zope.annotation import IAnnotations
