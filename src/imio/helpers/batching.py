@@ -50,7 +50,7 @@ def batch_get_keys(infile, loop_length=0, a_set=None):
     batch_last = bool(int(os.getenv('BATCH_LAST', '0')))
     if not batch_number:
         return None, {'bn': batch_number, 'bl': batch_last, 'cn': commit_number, 'll': loop_length, 'lc': 0,
-                      'pf': infile, 'cf': None}
+                      'pf': infile, 'cf': None, 'kc': 0}
     if not infile.endswith('.pkl'):
         raise Exception("The giver file '{}' must be a pickle file ending with '.pkl'".format(infile))
     if a_set is None:
@@ -58,7 +58,7 @@ def batch_get_keys(infile, loop_length=0, a_set=None):
     load_pickle(infile, a_set)
     dic_file = infile.replace('.pkl', '_config.txt')
     config = {'bn': batch_number, 'bl': batch_last, 'cn': commit_number, 'll': loop_length, 'lc': 0, 'pf': infile,
-              'cf': dic_file}
+              'cf': dic_file, 'kc': len(a_set)}
     dump_var(dic_file, config)
     return a_set, config
 
@@ -107,16 +107,20 @@ def batch_handle_key(key, batch_keys, config):
         if config['cn']:
             transaction.commit()
         config['ldk'] = key
+        config['kc'] = len(batch_keys)
         dump_pickle(config['pf'], batch_keys)
-        logger.info("BATCHED %s / %s, already done %s", config['lc'], config['ll'], len(batch_keys))
+        dump_var(config['cf'], config)
+        logger.info("BATCHED %s / %s, already done %s", config['lc'], config['ll'], config['kc'])
         if config['bl'] and not batch_globally_finished(batch_keys, config):
-            logger.error('BATCHING MAYBE STOPPED TOO EARLY: %s / %s', len(batch_keys), config['ll'])
+            logger.error('BATCHING MAYBE STOPPED TOO EARLY: %s / %s', config['kc'], config['ll'])
         return True
     # commit time ?
     if config['cn'] and config['lc'] % config['cn'] == 0:
         transaction.commit()
         config['ldk'] = key
+        config['kc'] = len(batch_keys)
         dump_pickle(config['pf'], batch_keys)
+        dump_var(config['cf'], config)
     return False
 
 
@@ -140,9 +144,11 @@ def batch_loop_else(key, batch_keys, config):
         return
     if config['cn']:
         transaction.commit()
+    config['kc'] = len(batch_keys)
     dump_pickle(config['pf'], batch_keys)
+    dump_var(config['cf'], config)
     if config['bl'] and not batch_globally_finished(batch_keys, config):
-        logger.error('BATCHING MAYBE STOPPED TOO EARLY: %s / %s', len(batch_keys), config['ll'])
+        logger.error('BATCHING MAYBE STOPPED TOO EARLY: %s / %s', config['kc'], config['ll'])
 
 
 # 7) when all the items are treated, we can delete the dictionary file
