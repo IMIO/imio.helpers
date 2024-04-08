@@ -157,6 +157,7 @@ def send_email(eml, subject, mfrom, mto, mcc=None, mbcc=None, replyto=None):
         # secureSend is protected by permission 'Use mailhost'
         # secureSend is deprecated and patched in Products/CMFPlone/patches/securemailhost.py
         # send remove from headers bcc !!
+        # TODO replace securesend by send with headers
         mail_host.secureSend(eml, mto, mfrom, subject=subject, charset=charset, **kwargs)
     except (socket.error, SMTPException) as e:
         logger.error(u"Could not send email to '{}' with subject '{}': {}".format(mto, subject, e))
