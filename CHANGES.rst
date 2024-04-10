@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.0.0rc2 (unreleased)
+1.0.0rc2 (2024-04-10)
 ---------------------
 
 - Added batching module.
