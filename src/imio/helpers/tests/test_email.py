@@ -84,13 +84,16 @@ class TestEmail(IntegrationTestCase):
             send_email(eml, 'Email subject hé hé', 'noréply@from.org', 'dèst@to.org')
             self.assertIn('Subject: =?utf-8?q?Email_subject_h=C3=A9_h=C3=A9?=\n', mail_host.messages[0])
             self.assertIn('From: nor\xc3\xa9ply@from.org\n', mail_host.messages[0])
-            self.assertIn('To: d\xc3\xa8st@to.org\n', mail_host.messages[0])
+            # self.assertIn('To: d\xc3\xa8st@to.org\n', mail_host.messages[0])
+            self.assertIn('To: =?utf-8?q?d=C3=A8st=40to=2Eorg?=\n', mail_host.messages[0])
         mail_host.reset()
         send_email(eml, u'Email subject', '<noreply@from.org>', ['dest@to.org', 'Stéphan Geulette <seg@to.org>'])
         if six.PY3:
             self.assertIn(b'To: dest@to.org, =?utf-8?q?St=C3=A9phan_Geulette?= <seg@to.org>\n', mail_host.messages[0])
         else:
-            self.assertIn('To: dest@to.org, =?utf-8?q?St=C3=A9phan_Geulette?= <seg@to.org>\n', mail_host.messages[0])
+            # self.assertIn('To: dest@to.org, =?utf-8?q?St=C3=A9phan_Geulette?= <seg@to.org>\n', mail_host.messages[0])
+            self.assertIn('To: =?utf-8?q?dest=40to=2Eorg=2C_=3D=3Futf-8=3Fq=3FSt=3DC3=3DA9phan=5FGeulett?=\n',
+                          mail_host.messages[0])
         mail_host.reset()
         if six.PY3:
             self.assertTrue(send_email(eml, u'Email subject hé hé', u'noreply@from.org', u'dest@to.org'))

@@ -1,14 +1,20 @@
 # -*- coding: utf-8 -*-
 
 from email import encoders
+from email.header import Header
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from email.utils import formataddr
+from email.utils import getaddresses
 from email.utils import parseaddr
 from imio.helpers import _
 from imio.pyutils.utils import safe_encode
+from past.types import basestring
 from plone import api
 from smtplib import SMTPException
+from Products.MailHost.MailHost import _encode_address_string
+from six import iteritems
 from unidecode import unidecode
 from zope import schema
 from zope.component import getMultiAdapter
@@ -125,8 +131,8 @@ def add_attachment(eml, filename, filepath=None, content=None):
     eml.attach(part)
 
 
-def send_email(eml, subject, mfrom, mto, mcc=None, mbcc=None, replyto=None):
-    """ Sends an email with MailHost.
+def send_email(eml, subject, mfrom, mto, mcc=None, mbcc=None, replyto=None, immediate=False):
+    """ Sends an email with MailHost. Only tested on Plone 4
 
     :param eml: email instance
     :param subject: subject string
@@ -135,35 +141,68 @@ def send_email(eml, subject, mfrom, mto, mcc=None, mbcc=None, replyto=None):
     :param mcc: cc string or string list or (name, address) list
     :param mbcc: bcc string or string list or (name, address) list
     :param replyto: reply-to string or string list or (name, address) list
+    :param immediate: send email immediately without queuing (default False)
     :return: status
     :rtype: bool
     """
     mail_host = get_mail_host()
     if mail_host is None:
-        logger.error('Could not send email: mail host not well defined.')
+        logger.error('Cannot send email: mail host not well defined.')
         return False, 'Mail host not well defined'
 
     charset = get_email_charset()
     subject = safe_text(subject, charset)
-    kwargs = {}
-    # put only as parameter if defined, so mockmailhost can be used in tests with secureSend as send patch
-    if mcc is not None:
-        kwargs['mcc'] = mcc
-    if mbcc is not None:
-        kwargs['mbcc'] = mbcc
-    if replyto is not None:
-        kwargs['reply-to'] = replyto
+    # Convert all our address list inputs
+    addrs = {
+        'From': _email_list_to_string(mfrom, charset),
+        'To': _email_list_to_string(mto, charset),
+        'Cc': _email_list_to_string(mcc, charset),
+        'reply-to': _email_list_to_string(replyto, charset),
+    }
+    mbcc = _email_list_to_string(mbcc, charset)
+    # Add extra headers
+    _addHeaders(eml, Subject=Header(subject, charset),
+                **dict((k, Header(v, charset)) for k, v in iteritems(addrs) if v))
+    # Handle all recipients to add bcc, considered as bcc and not removed from header
+    all_recipients = [formataddr(pair) for pair in
+                      getaddresses([addrs['To'], addrs['Cc'], mbcc])]
     try:
-        # secureSend is protected by permission 'Use mailhost'
+        # send is protected by permission 'Use mailhost'
         # secureSend is deprecated and patched in Products/CMFPlone/patches/securemailhost.py
-        # send remove from headers bcc !!
-        # TODO replace securesend by send with headers
-        mail_host.secureSend(eml, mto, mfrom, subject=subject, charset=charset, **kwargs)
+        # send remove from headers bcc but if in all_recipients, it is handled as bcc in email ?!
+        # mail_host._send(addrs['From'], all_recipients, eml.as_string(), immediate=immediate)
+        # use send to work with MockMailHost
+        mail_host.send(eml.as_string(), all_recipients, addrs['From'], immediate=immediate, charset=charset)
     except (socket.error, SMTPException) as e:
-        logger.error(u"Could not send email to '{}' with subject '{}': {}".format(mto, subject, e))
+        logger.error(u"Cannot send email to '{}' with subject '{}': {}".format(mto, subject, e))
         return False, 'Could not send email : {}'.format(e)
     # sent successfully
     return True, ''
+
+
+def _email_list_to_string(addr_list, charset='utf8'):
+    """SecureMailHost's secureSend can take a list of email addresses
+    in addition to a simple string.  We convert any email input into a
+    properly encoded string."""
+    if addr_list is None:
+        return ''
+    if isinstance(addr_list, basestring):
+        addr_str = addr_list
+    else:
+        # if the list item is a string include it, otherwise assume it's a
+        # (name, address) tuple and turn it into an RFC compliant string
+
+        addresses = (isinstance(a, basestring) and a or formataddr(a)
+                     for a in addr_list)
+        addr_str = ', '.join(str(_encode_address_string(a, charset))
+                             for a in addresses)
+    return addr_str
+
+
+def _addHeaders(message, **kwargs):
+    for key, value in iteritems(kwargs):
+        del message[key]
+        message[key] = value
 
 
 class InvalidEmailAddressFormat(schema.ValidationError):
