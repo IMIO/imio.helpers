@@ -77,9 +77,9 @@ class TestEmail(IntegrationTestCase):
             # see https://github.com/zopefoundation/Products.MailHost/issues/29
             # and https://stackoverflow.com/questions/52133735/how-do-i-send-email-to-addresses-with-non-ascii-characters-in-python
             send_email(eml, 'Email subject hé hé', 'noreply@from.org', 'dest@to.org')
-            self.assertIn(b'Subject: =?utf-8?q?Email_subject_h=C3=A9_h=C3=A9?=\n', mail_host.messages[0])
-            self.assertIn(b'From: noreply@from.org\n', mail_host.messages[0])
-            self.assertIn(b'To: dest@to.org\n', mail_host.messages[0])
+            self.assertIn(b'Subject: =?utf-8?q?Email_subject_h=C3=A9_h=C3=A9?=', mail_host.messages[0])
+            self.assertIn(b'From: noreply@from.org', mail_host.messages[0])
+            self.assertIn(b'To: dest@to.org', mail_host.messages[0])
         else:
             send_email(eml, 'Email subject hé hé', 'noréply@from.org', 'dèst@to.org')
             self.assertIn('Subject: =?utf-8?q?Email_subject_h=C3=A9_h=C3=A9?=\n', mail_host.messages[0])
@@ -89,7 +89,7 @@ class TestEmail(IntegrationTestCase):
         mail_host.reset()
         send_email(eml, u'Email subject', '<noreply@from.org>', ['dest@to.org', 'Stéphan Geulette <seg@to.org>'])
         if six.PY3:
-            self.assertIn(b'To: dest@to.org, =?utf-8?q?St=C3=A9phan_Geulette?= <seg@to.org>\n', mail_host.messages[0])
+            self.assertIn(b'To: dest@to.org, =?utf-8?q?St=C3=A9phan_Geulette?= <seg@to.org>', mail_host.messages[0])
         else:
             # self.assertIn('To: dest@to.org, =?utf-8?q?St=C3=A9phan_Geulette?= <seg@to.org>\n', mail_host.messages[0])
             self.assertIn('To: =?utf-8?q?dest=40to=2Eorg=2C_=3D=3Futf-8=3Fq=3FSt=3DC3=3DA9phan=5FGeulett?=\n',
