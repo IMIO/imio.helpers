@@ -12,9 +12,9 @@ from imio.helpers import _
 from imio.pyutils.utils import safe_encode
 from past.types import basestring
 from plone import api
-from smtplib import SMTPException
 from Products.MailHost.MailHost import _encode_address_string
 from six import iteritems
+from smtplib import SMTPException
 from unidecode import unidecode
 from zope import schema
 from zope.component import getMultiAdapter
