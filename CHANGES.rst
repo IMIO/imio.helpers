@@ -4,8 +4,9 @@ Changelog
 1.0.0rc3 (unreleased)
 ---------------------
 
-- Nothing changed yet.
-
+- Added `temp_disable_link` JS helper that will disable a link for 2 seconds
+  and to avoid double clicks.
+  [gbastien]
 
 1.0.0rc2 (2024-04-10)
 ---------------------
