@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.0.0rc3 (unreleased)
+1.0.0rc3 (2024-06-07)
 ---------------------
 
 - Added `temp_disable_link` JS helper that will disable a link for 2 seconds
