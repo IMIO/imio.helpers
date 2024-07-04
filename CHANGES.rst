@@ -4,8 +4,8 @@ Changelog
 1.0.0rc4 (unreleased)
 ---------------------
 
-- Nothing changed yet.
-
+- Added "empty" variables to handle empty indexes searches.
+  [sgeulette]
 
 1.0.0rc3 (2024-06-07)
 ---------------------

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2024-02-07 12:20+0000\n"
+"POT-Creation-Date: 2024-07-04 13:56+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,15 +26,19 @@ msgstr "Description"
 msgid "Fields"
 msgstr "Champs de l'élément"
 
-#: ../emailer.py:170
+#: ../emailer.py:171
 msgid "Invalid email address format: 'real name <email>' or 'email (real name)'"
 msgstr "Format d'adresse email invalide: 'nom réel <email>' ou 'email (nom réel)'"
 
-#: ../emailer.py:182
+#: ../emailer.py:183
 msgid "Invalid email address: '${eml}'"
 msgstr "Adresse email invalide: '${eml}'"
 
-#: ../emailer.py:194
+#: ../__init__.py
+msgid "No value"
+msgstr "Aucune valeur"
+
+#: ../emailer.py:195
 msgid "Realname: '${value}' cannot contain accented or special characters"
 msgstr "Le nom complet '${value}' ne peut pas contenir de caractères accentués ou spéciaux"
 
