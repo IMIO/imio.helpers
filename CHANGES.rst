@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.0.0rc4 (unreleased)
+1.0.0rc4 (2024-07-08)
 ---------------------
 
 - Added "empty" variables to handle empty indexes searches.
