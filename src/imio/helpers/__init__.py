@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from datetime import date
+from datetime import datetime
 from imio.helpers.cache import get_cachekey_volatile
 from plone import api
 from plone.memoize import ram as pmram
@@ -27,6 +28,7 @@ PLONE_MAJOR_VERSION = int(api.env.plone_version()[0])
 EMPTY_TITLE = "No value"
 EMPTY_STRING = "__empty_string__"
 EMPTY_DATE = date(1950, 1, 1)
+EMPTY_DATETIME = datetime(1950, 1, 1, 12, 0)
 
 
 def GroupsTool__getGroupsForPrincipal_cachekey(method, self, principal):

@@ -4,8 +4,8 @@ Changelog
 1.0.0rc5 (unreleased)
 ---------------------
 
-- Nothing changed yet.
-
+- Added `EMPTY_DATETIME` value that corresponds to `01/01/1950 at 12:00`.
+  [gbastien]
 
 1.0.0rc4 (2024-07-08)
 ---------------------
