@@ -225,3 +225,11 @@ function submitFormHelperOnsuccessDefault(data, textStatus, request) {
     }
   }
 }
+
+function temp_disable_link(tag) {
+    // avoid double clicks
+    tag.style = "pointer-events:none;";
+    setTimeout(function() {
+        tag.style = "";
+    }, 2000);
+}

@@ -1,11 +1,26 @@
 Changelog
 =========
 
-1.0.0rc3 (unreleased)
+1.0.0rc5 (unreleased)
 ---------------------
 
 - Improved `emailer.send_email` to use send in place of securesend (not using queue).
   [sgeulette]
+- Added `EMPTY_DATETIME` value that corresponds to `01/01/1950 at 12:00`.
+  [gbastien]
+
+1.0.0rc4 (2024-07-08)
+---------------------
+
+- Added "empty" variables to handle empty indexes searches.
+  [sgeulette]
+
+1.0.0rc3 (2024-06-07)
+---------------------
+
+- Added `temp_disable_link` JS helper that will disable a link for 2 seconds
+  and to avoid double clicks.
+  [gbastien]
 
 1.0.0rc2 (2024-04-10)
 ---------------------
