@@ -132,7 +132,7 @@ def add_attachment(eml, filename, filepath=None, content=None):
 
 
 def send_email(eml, subject, mfrom, mto, mcc=None, mbcc=None, replyto=None, immediate=False):
-    """ Sends an email with MailHost. Only tested on Plone 4
+    """Sends an email with MailHost.
 
     :param eml: email instance
     :param subject: subject string
