@@ -211,3 +211,17 @@ def batch_hashed_filename(filename, to_hash=(), add_dir=True):
     if add_dir:
         pklfile = os.path.join(os.getenv('INSTANCE_HOME', '.'), pklfile)
     return pklfile
+
+
+def can_delete_batch_files(batch_keys, config):
+    """Returns True if the batch config files can be deleted.
+
+    :param batch_keys: the treated keys set
+    :param config: a config dict {'bn': batch_number, 'bl': batch_last, 'cn': commit_number, 'll': loop_length,
+                                  'lc': loop_count, 'pf': infile, 'cf': config_file, 'kc': keys_count, 'lk': last_key,
+                                  'ldk': last_dump_key, 'fr'; first_run_bool}
+    :return: boolean
+    """
+    if config["fr"] and os.getenv("IU_RUN1", "0") == "1":  # if first run by imio.updates, the config file is needed.
+        return False
+    return batch_globally_finished(batch_keys, config)

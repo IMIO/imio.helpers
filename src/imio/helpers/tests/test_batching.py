@@ -5,6 +5,7 @@ from imio.helpers.batching import batch_handle_key
 from imio.helpers.batching import batch_hashed_filename
 from imio.helpers.batching import batch_loop_else
 from imio.helpers.batching import batch_skip_key
+from imio.helpers.batching import can_delete_batch_files
 
 import logging
 import os
@@ -31,7 +32,7 @@ def loop_process(loop_len, batch_number, commit_number, a_set, last=False):
             break
     else:
         batch_loop_else(batch_keys, config)
-    if config['bl']:
+    if can_delete_batch_files(batch_keys, config):
         batch_delete_files(batch_keys, config, rename=False)
     return batch_keys, config
 
