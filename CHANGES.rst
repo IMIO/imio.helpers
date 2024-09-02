@@ -6,6 +6,10 @@ Changelog
 
 - Added `EMPTY_DATETIME` value that corresponds to `01/01/1950 at 12:00`.
   [gbastien]
+- Improved batching module
+  [sgeulette]
+- Added `batching.can_delete_batch_files`
+  [sgeulette]
 
 1.0.0rc4 (2024-07-08)
 ---------------------
