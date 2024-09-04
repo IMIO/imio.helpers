@@ -135,7 +135,6 @@ class TestEmail(IntegrationTestCase):
             self.assertIn('reply-to: =?utf-8?q?reply=40to=2Eorg?=\n', mail_host.messages[0])
             self.assertNotIn('=?utf-8?q?bcc=40to=2Eorg?=\n', mail_host.messages[0])
 
-
     def test_validate_email_address(self):
         self.assertTupleEqual(validate_email_address('name@domain.org'), (u'', u'name@domain.org'))
         self.assertTupleEqual(validate_email_address(u'name@domain.org'), (u'', u'name@domain.org'))
