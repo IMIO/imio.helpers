@@ -42,7 +42,8 @@ def batch_get_keys(infile, loop_length=0, a_set=None):
     :param a_set: a given data structure to get the stored keys
     :return: 2 parameters: 1) a_set fulled with pickled data,
     2) a config dict {'bn': batch_number, 'bl': batch_last, 'cn': commit_number, 'll': loop_length, 'lc': loop_count,
-                      'pf': infile, 'cf': config_file}
+                      'pf': infile, 'cf': config_file, 'kc': keys_count, 'lk': last_key, 'ldk': last_dump_key,
+                      'fr'; first_run_bool}
     """
     infile = os.path.abspath(infile)
     commit_number = int(os.getenv('COMMIT', '0'))
@@ -50,15 +51,16 @@ def batch_get_keys(infile, loop_length=0, a_set=None):
     batch_last = bool(int(os.getenv('BATCH_LAST', '0')))
     if not batch_number:
         return None, {'bn': batch_number, 'bl': batch_last, 'cn': commit_number, 'll': loop_length, 'lc': 0,
-                      'pf': infile, 'cf': None, 'kc': 0}
+                      'pf': infile, 'cf': None, 'kc': 0, 'fr': False}
     if not infile.endswith('.pkl'):
         raise Exception("The giver file '{}' must be a pickle file ending with '.pkl'".format(infile))
     if a_set is None:
         a_set = set()
     load_pickle(infile, a_set)
     dic_file = infile.replace('.pkl', '_config.txt')
+    first_run = not os.path.exists(dic_file)
     config = {'bn': batch_number, 'bl': batch_last, 'cn': commit_number, 'll': loop_length, 'lc': 0, 'pf': infile,
-              'cf': dic_file, 'kc': len(a_set)}
+              'cf': dic_file, 'kc': len(a_set), 'fr': first_run}
     dump_var(dic_file, config)
     return a_set, config
 
@@ -72,8 +74,9 @@ def batch_skip_key(key, batch_keys, config):
 
     :param key: the hashable key of the current item
     :param batch_keys: the treated keys set
-    :param config: a config dict {'bn': batch_number, 'bl': last, 'cn': commit, 'll': loop_length, 'lc': loop_count,
-                                  'pf': infile}
+    :param config: a config dict {'bn': batch_number, 'bl': batch_last, 'cn': commit_number, 'll': loop_length,
+                                  'lc': loop_count, 'pf': infile, 'cf': config_file, 'kc': keys_count, 'lk': last_key,
+                                  'ldk': last_dump_key, 'fr'; first_run_bool}
     :return: True if a "continue" must be done. False otherwise.
     """
     if batch_keys is None:
@@ -95,13 +98,15 @@ def batch_handle_key(key, batch_keys, config):
 
     :param key: the hashable key of the current item
     :param batch_keys: the treated keys set
-    :param config: a config dict {'bn': batch_number, 'bl': last, 'cn': commit, 'll': loop_length, 'lc': loop_count,
-                                  'pf': infile}
+    :param config: a config dict {'bn': batch_number, 'bl': batch_last, 'cn': commit_number, 'll': loop_length,
+                                  'lc': loop_count, 'pf': infile, 'cf': config_file, 'kc': keys_count, 'lk': last_key,
+                                  'ldk': last_dump_key, 'fr'; first_run_bool}
     :return: True if the loop must be exited. False otherwise.
     """
     if batch_keys is None:
         return False
     batch_keys.add(key)
+    config['lk'] = key
     # stopping batch ?
     if config['lc'] >= config['bn']:
         if config['cn']:
@@ -125,23 +130,23 @@ def batch_handle_key(key, batch_keys, config):
 
 
 # 6) when the loop is globally finished, we do a commit and dump the dictionary
-def batch_loop_else(key, batch_keys, config):
+def batch_loop_else(batch_keys, config):
     """Does a commit and dump the dictionary when the loop is globally finished.
     Must be used like this, in the else part of the for loop:
     batch_loop_else(batch_keys, config)
 
-    :param key: last key (can be None)
     :param batch_keys: the treated keys set
-    :param config: a config dict {'bn': batch_number, 'bl': last, 'cn': commit, 'll': loop_length, 'lc': loop_count,
-                                  'pf': infile, 'ldk': last_dump_key}
+    :param config: a config dict {'bn': batch_number, 'bl': batch_last, 'cn': commit_number, 'll': loop_length,
+                                  'lc': loop_count, 'pf': infile, 'cf': config_file, 'kc': keys_count, 'lk': last_key,
+                                  'ldk': last_dump_key, 'fr'; first_run_bool}
     """
     if batch_keys is None:
         return
-    if key is None or (config.get('ldk') is not None and config['ldk'] == key):  # avoid if already done on last key
+    last_key = config.get("lk")
+    # avoid if nothing was done or already done on last key
+    if last_key is None or (config.get('ldk') is not None and config['ldk'] == last_key):
         return
     logger.info("BATCHED %s / %s, already done %s", config['lc'], config['ll'], len(batch_keys))
-    if config['lc'] == 0:  # nothing was done
-        return
     if config['cn']:
         transaction.commit()
     config['kc'] = len(batch_keys)
@@ -156,8 +161,9 @@ def batch_delete_files(batch_keys, config, rename=True):
     """Deletes the file containing the batched keys.
 
     :param batch_keys: the treated keys set
-    :param config: a config dict {'bn': batch_number, 'bl': last, 'cn': commit, 'll': loop_length, 'lc': loop_count,
-                                  'pf': infile}
+    :param config: a config dict {'bn': batch_number, 'bl': batch_last, 'cn': commit_number, 'll': loop_length,
+                                  'lc': loop_count, 'pf': infile, 'cf': config_file, 'kc': keys_count, 'lk': last_key,
+                                  'ldk': last_dump_key, 'fr'; first_run_bool}
     :param rename: do not delete but rename
     """
     if batch_keys is None:
@@ -177,16 +183,20 @@ def batch_globally_finished(batch_keys, config):
     """Is the loop globally finished?
 
     :param batch_keys: the treated keys set
-    :param config: a config dict {'bn': batch_number, 'bl': last, 'cn': commit, 'll': loop_length, 'lc': loop_count,
-                                  'pf': infile}
+    :param config: a config dict {'bn': batch_number, 'bl': batch_last, 'cn': commit_number, 'll': loop_length,
+                                  'lc': loop_count, 'pf': infile, 'cf': config_file, 'kc': keys_count, 'lk': last_key,
+                                  'ldk': last_dump_key, 'fr'; first_run_bool}
     :return: True if the loop is globally finished. False otherwise.
     """
     # if not batch_keys:
     #     return True
-    # finished if the treated items number is higher than the items to treat or if nothing else is treated
-    if config['ll']:
-        return len(batch_keys) >= config['ll'] or config['lc'] == 0
-    return config['lc'] == 0
+    if config['lc'] == 0:  # nothing treated
+        return True
+    elif config['fr']:  # first run with results
+        return len(batch_keys) >= config['ll']
+    elif config["bl"]:
+        return True
+    return False
 
 
 def batch_hashed_filename(filename, to_hash=(), add_dir=True):
@@ -201,3 +211,17 @@ def batch_hashed_filename(filename, to_hash=(), add_dir=True):
     if add_dir:
         pklfile = os.path.join(os.getenv('INSTANCE_HOME', '.'), pklfile)
     return pklfile
+
+
+def can_delete_batch_files(batch_keys, config):
+    """Returns True if the batch config files can be deleted.
+
+    :param batch_keys: the treated keys set
+    :param config: a config dict {'bn': batch_number, 'bl': batch_last, 'cn': commit_number, 'll': loop_length,
+                                  'lc': loop_count, 'pf': infile, 'cf': config_file, 'kc': keys_count, 'lk': last_key,
+                                  'ldk': last_dump_key, 'fr'; first_run_bool}
+    :return: boolean
+    """
+    if config["fr"] and os.getenv("IU_RUN1", "0") == "1":  # if first run by imio.updates, the config file is needed.
+        return False
+    return batch_globally_finished(batch_keys, config)
