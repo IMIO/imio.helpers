@@ -163,15 +163,13 @@ def send_email(eml, subject, mfrom, mto, mcc=None, mbcc=None, replyto=None, imme
     # Add extra headers
     _addHeaders(eml, Subject=Header(subject, charset),
                 **dict((k, Header(v, charset)) for k, v in iteritems(addrs) if v))
-    # Handle all recipients to add bcc, considered as bcc and not removed from header
+    # Handle all recipients to add bcc: smtplib sends to all but a recipient not found in header is considered as bcc...
     all_recipients = [formataddr(pair) for pair in
                       getaddresses([addrs['To'], addrs['Cc'], mbcc])]
+    all_recipients = [a for a in all_recipients if a]
     try:
         # send is protected by permission 'Use mailhost'
-        # secureSend is deprecated and patched in Products/CMFPlone/patches/securemailhost.py
-        # send remove from headers bcc but if in all_recipients, it is handled as bcc in email ?!
-        # mail_host._send(addrs['From'], all_recipients, eml.as_string(), immediate=immediate)
-        # use send to work with MockMailHost
+        # send remove from headers bcc but if in all_recipients, it is handled as bcc in email...
         mail_host.send(eml.as_string(), all_recipients, addrs['From'], immediate=immediate, charset=charset)
     except (socket.error, SMTPException) as e:
         logger.error(u"Cannot send email to '{}' with subject '{}': {}".format(mto, subject, e))
