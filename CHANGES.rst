@@ -4,6 +4,8 @@ Changelog
 1.0.0rc5 (unreleased)
 ---------------------
 
+- Improved `emailer.send_email` to use send in place of securesend (not using queue).
+  [sgeulette]
 - Added `EMPTY_DATETIME` value that corresponds to `01/01/1950 at 12:00`.
   [gbastien]
 - Improved batching module
