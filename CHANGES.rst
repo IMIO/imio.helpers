@@ -1,8 +1,8 @@
 Changelog
 =========
 
-1.0.0rc5 (unreleased)
----------------------
+1.0.0 (2024-09-16)
+------------------
 
 - Improved `emailer.send_email` to use send in place of securesend (not using queue).
   [sgeulette]
