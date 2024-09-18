@@ -76,4 +76,5 @@ setup(
     [z3c.autoinclude.plugin]
     target = plone
     """,
+    options={"bdist_wheel": {"universal": True}},
 )
