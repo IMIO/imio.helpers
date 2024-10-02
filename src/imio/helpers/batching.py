@@ -17,7 +17,7 @@ Idea: a batch number, a commit number and a loop number are considered
 See `loop_process` function in `test_batching.py` file for a complete example.
 """
 
-from datetime import datetime
+from imio.pyutils.batching import batch_delete_files  # noqa: F401
 from imio.pyutils.system import dump_pickle
 from imio.pyutils.system import dump_var
 from imio.pyutils.system import hashed_filename
@@ -157,26 +157,7 @@ def batch_loop_else(batch_keys, config):
 
 
 # 7) when all the items are treated, we can delete the dictionary file
-def batch_delete_files(batch_keys, config, rename=True):
-    """Deletes the file containing the batched keys.
-
-    :param batch_keys: the treated keys set
-    :param config: a config dict {'bn': batch_number, 'bl': batch_last, 'cn': commit_number, 'll': loop_length,
-                                  'lc': loop_count, 'pf': infile, 'cf': config_file, 'kc': keys_count, 'lk': last_key,
-                                  'ldk': last_dump_key, 'fr'; first_run_bool}
-    :param rename: do not delete but rename
-    """
-    if batch_keys is None:
-        return
-    try:
-        for key in ('pf', 'cf'):
-            if config[key] and os.path.exists(config[key]):
-                if rename:
-                    os.rename(config[key], '{}.{}'.format(config[key], datetime.now().strftime('%Y%m%d-%H%M%S')))
-                else:
-                    os.remove(config[key])
-    except Exception as error:
-        logger.exception('Error while deleting the file %s: %s', config['pf'], error)
+# we use now batch_delete_files from imio.pyutils
 
 
 def batch_globally_finished(batch_keys, config):

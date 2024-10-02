@@ -4,8 +4,8 @@ Changelog
 1.0.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- Imported batch_delete_files from imio.pyutils if someone is yet using it from here.
+  [sgeulette]
 
 1.0.1 (2024-09-18)
 ------------------
