@@ -171,6 +171,8 @@ def batch_globally_finished(batch_keys, config):
     """
     # if not batch_keys:
     #     return True
+    if not config["bn"]:  # no batching
+        return True
     if config['lc'] == 0:  # nothing treated
         return True
     elif config['fr']:  # first run with results

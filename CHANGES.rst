@@ -6,6 +6,8 @@ Changelog
 
 - Imported batch_delete_files from imio.pyutils if someone is yet using it from here.
   [sgeulette]
+- batch is considered finished if no batching.
+  [sgeulette]
 
 1.0.1 (2024-09-18)
 ------------------
