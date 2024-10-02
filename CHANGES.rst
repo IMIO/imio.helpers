@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.0.2 (unreleased)
+1.1.0 (2024-10-02)
 ------------------
 
 - Imported batch_delete_files from imio.pyutils if someone is yet using it from here.
