@@ -4,8 +4,8 @@ Changelog
 1.1.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- Added new parameter to `batching.batch_get_keys`.
+  [sgeulette]
 
 1.1.0 (2024-10-02)
 ------------------

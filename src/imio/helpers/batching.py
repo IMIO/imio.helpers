@@ -7,9 +7,9 @@ Batching utilities methods to do a process in multiple passes (divide a for loop
 Idea: a batch number, a commit number and a loop number are considered
 
 1) we get a stored dictionary containing the treated keys (using load_pickle function)
-2) if the key is already in the dictionary, we skip it (continue)
+2) if the key is already in the dictionary, we skip it (continue). Otherwise, we increase the loop count
 3) if the treated items number is >= batch number, we exit the for loop, do a commit and dump the dictionary
-4) otherwise, we store the corresponding key in the dictionary and increase the loop number
+4) otherwise, we store the corresponding key in the dictionary
 5) when the current loop number is a multiple of the commit number, we do a commit and dump the dictionary
 6) when the for loop is globally finished, we do a commit and dump the dictionary
 7) when all the items are treated, we can delete the dictionary file
@@ -32,7 +32,7 @@ logger = logging.getLogger('imio.helpers')
 
 
 # 1) we get a stored dictionary containing the treated keys (using load_pickle function)
-def batch_get_keys(infile, loop_length=0, a_set=None):
+def batch_get_keys(infile, loop_length=0, a_set=None, add_files=None):
     """Returns the stored batched keys from the file.
     Must be used like this, before the loop:
     batch_keys, config = batch_get_keys(infile, batch_number, commit_number)
@@ -40,32 +40,35 @@ def batch_get_keys(infile, loop_length=0, a_set=None):
     :param infile: file name where the set is stored
     :param loop_length: the loop length number
     :param a_set: a given data structure to get the stored keys
+    :param add_files: a list of additional files to consider when deleting files
     :return: 2 parameters: 1) a_set fulled with pickled data,
     2) a config dict {'bn': batch_number, 'bl': batch_last, 'cn': commit_number, 'll': loop_length, 'lc': loop_count,
                       'pf': infile, 'cf': config_file, 'kc': keys_count, 'lk': last_key, 'ldk': last_dump_key,
-                      'fr'; first_run_bool}
+                      'fr'; first_run_bool, 'af': add_files}
     """
     infile = os.path.abspath(infile)
     commit_number = int(os.getenv('COMMIT', '0'))
     batch_number = int(os.getenv('BATCH', '0'))
     batch_last = bool(int(os.getenv('BATCH_LAST', '0')))
+    if not add_files:
+        add_files = []
     if not batch_number:
         return None, {'bn': batch_number, 'bl': batch_last, 'cn': commit_number, 'll': loop_length, 'lc': 0,
-                      'pf': infile, 'cf': None, 'kc': 0, 'fr': False}
+                      'pf': infile, 'cf': None, 'kc': 0, 'fr': False, 'af': add_files}
     if not infile.endswith('.pkl'):
-        raise Exception("The giver file '{}' must be a pickle file ending with '.pkl'".format(infile))
+        raise Exception("The given file '{}' must be a pickle file ending with '.pkl'".format(infile))
     if a_set is None:
         a_set = set()
     load_pickle(infile, a_set)
     dic_file = infile.replace('.pkl', '_config.txt')
     first_run = not os.path.exists(dic_file)
     config = {'bn': batch_number, 'bl': batch_last, 'cn': commit_number, 'll': loop_length, 'lc': 0, 'pf': infile,
-              'cf': dic_file, 'kc': len(a_set), 'fr': first_run}
+              'cf': dic_file, 'kc': len(a_set), 'fr': first_run, 'af': add_files}
     dump_var(dic_file, config)
     return a_set, config
 
 
-# 2) if the key is already in the dictionary, we skip it (continue)
+# 2) if the key is already in the dictionary, we skip it (continue). Otherwise, we increase the loop count
 def batch_skip_key(key, batch_keys, config):
     """Returns True if the key is already in the batch_keys.
     Must be used like this, at the beginning of the loop:
@@ -76,7 +79,7 @@ def batch_skip_key(key, batch_keys, config):
     :param batch_keys: the treated keys set
     :param config: a config dict {'bn': batch_number, 'bl': batch_last, 'cn': commit_number, 'll': loop_length,
                                   'lc': loop_count, 'pf': infile, 'cf': config_file, 'kc': keys_count, 'lk': last_key,
-                                  'ldk': last_dump_key, 'fr'; first_run_bool}
+                                  'ldk': last_dump_key, 'fr'; first_run_bool, 'af': add_files}
     :return: True if a "continue" must be done. False otherwise.
     """
     if batch_keys is None:
@@ -88,7 +91,7 @@ def batch_skip_key(key, batch_keys, config):
 
 
 # 3) if the treated items number is higher than the batch number, we exit the loop, do a commit and dump the dictionary
-# 4) otherwise, we store the corresponding key in the dictionary and increase the loop number
+# 4) otherwise, we store the corresponding key in the dictionary
 # 5) when the current loop number is a multiple of the commit number, we do a commit and dump the dictionary
 def batch_handle_key(key, batch_keys, config):
     """Returns True if the loop must be exited.
@@ -100,7 +103,7 @@ def batch_handle_key(key, batch_keys, config):
     :param batch_keys: the treated keys set
     :param config: a config dict {'bn': batch_number, 'bl': batch_last, 'cn': commit_number, 'll': loop_length,
                                   'lc': loop_count, 'pf': infile, 'cf': config_file, 'kc': keys_count, 'lk': last_key,
-                                  'ldk': last_dump_key, 'fr'; first_run_bool}
+                                  'ldk': last_dump_key, 'fr'; first_run_bool, 'af': add_files}
     :return: True if the loop must be exited. False otherwise.
     """
     if batch_keys is None:
@@ -138,7 +141,7 @@ def batch_loop_else(batch_keys, config):
     :param batch_keys: the treated keys set
     :param config: a config dict {'bn': batch_number, 'bl': batch_last, 'cn': commit_number, 'll': loop_length,
                                   'lc': loop_count, 'pf': infile, 'cf': config_file, 'kc': keys_count, 'lk': last_key,
-                                  'ldk': last_dump_key, 'fr'; first_run_bool}
+                                  'ldk': last_dump_key, 'fr'; first_run_bool, 'af': add_files}
     """
     if batch_keys is None:
         return
@@ -166,7 +169,7 @@ def batch_globally_finished(batch_keys, config):
     :param batch_keys: the treated keys set
     :param config: a config dict {'bn': batch_number, 'bl': batch_last, 'cn': commit_number, 'll': loop_length,
                                   'lc': loop_count, 'pf': infile, 'cf': config_file, 'kc': keys_count, 'lk': last_key,
-                                  'ldk': last_dump_key, 'fr'; first_run_bool}
+                                  'ldk': last_dump_key, 'fr'; first_run_bool, 'af': add_files}
     :return: True if the loop is globally finished. False otherwise.
     """
     # if not batch_keys:
@@ -202,7 +205,7 @@ def can_delete_batch_files(batch_keys, config):
     :param batch_keys: the treated keys set
     :param config: a config dict {'bn': batch_number, 'bl': batch_last, 'cn': commit_number, 'll': loop_length,
                                   'lc': loop_count, 'pf': infile, 'cf': config_file, 'kc': keys_count, 'lk': last_key,
-                                  'ldk': last_dump_key, 'fr'; first_run_bool}
+                                  'ldk': last_dump_key, 'fr'; first_run_bool, 'af': add_files}
     :return: boolean
     """
     if config["fr"] and os.getenv("IU_RUN1", "0") == "1":  # if first run by imio.updates, the config file is needed.

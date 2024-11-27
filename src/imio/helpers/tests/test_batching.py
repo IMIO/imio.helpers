@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-from imio.helpers.batching import batch_delete_files
 from imio.helpers.batching import batch_get_keys
 from imio.helpers.batching import batch_handle_key
 from imio.helpers.batching import batch_hashed_filename
 from imio.helpers.batching import batch_loop_else
 from imio.helpers.batching import batch_skip_key
 from imio.helpers.batching import can_delete_batch_files
+from imio.pyutils.batching import batch_delete_files
 
 import logging
 import os
@@ -18,12 +18,12 @@ CONFIG_FILE = 'keys_config.txt'
 processed = {'keys': [], 'commits': 0, 'errors': 0}
 
 
-def loop_process(loop_len, batch_number, commit_number, a_set, last=False):
+def loop_process(loop_len, batch_number, commit_number, a_set, last=False, add_files=()):
     """Process the loop using the batching module."""
     os.environ['BATCH'] = str(batch_number)
     os.environ['COMMIT'] = str(commit_number)
     os.environ['BATCH_LAST'] = str(int(last))
-    batch_keys, config = batch_get_keys(KEYS_PKL_FILE, loop_len, a_set=a_set)
+    batch_keys, config = batch_get_keys(KEYS_PKL_FILE, loop_len, a_set=a_set, add_files=add_files)
     for key in range(1, loop_len + 1):
         if batch_skip_key(key, batch_keys, config):
             continue
@@ -80,6 +80,7 @@ class TestBatching(unittest.TestCase):
         self.assertEqual(conf['kc'], 0)
         self.assertEqual(conf['lc'], 0)
         self.assertEqual(conf.get('lk'), None)
+        self.assertListEqual(conf["af"], [])
         self.assertIsNone(keys)
         self.assertFalse(os.path.exists(KEYS_PKL_FILE))
         self.assertFalse(os.path.exists(CONFIG_FILE))
@@ -108,7 +109,9 @@ class TestBatching(unittest.TestCase):
         self.assertFalse(os.path.exists(CONFIG_FILE))
         # batching: 2 passes with commit each item
         reset_processed()
-        keys, conf = loop_process(5, 3, 1, a_set)
+        with open("various.pkl", 'w'):
+            pass
+        keys, conf = loop_process(5, 3, 1, a_set, add_files=["various.pkl"])
         self.assertEqual(processed['keys'], [1, 2, 3])
         self.assertEqual(processed['commits'], 3)
         self.assertSetEqual(a_set, {1, 2, 3})
@@ -118,7 +121,9 @@ class TestBatching(unittest.TestCase):
         self.assertSetEqual(keys, a_set)
         self.assertTrue(os.path.exists(KEYS_PKL_FILE))
         self.assertTrue(os.path.exists(CONFIG_FILE))
-        keys, conf = loop_process(5, 3, 1, a_set, last=True)
+        self.assertEqual(len(conf["af"]), 1)
+        self.assertTrue(os.path.exists("various.pkl"))
+        keys, conf = loop_process(5, 3, 1, a_set, last=True, add_files=["various.pkl"])
         self.assertEqual(processed['keys'], [1, 2, 3, 4, 5])
         self.assertEqual(processed['commits'], 5)
         self.assertSetEqual(a_set, {1, 2, 3, 4, 5})
@@ -128,6 +133,7 @@ class TestBatching(unittest.TestCase):
         self.assertSetEqual(keys, a_set)
         self.assertFalse(os.path.exists(KEYS_PKL_FILE))
         self.assertFalse(os.path.exists(CONFIG_FILE))
+        self.assertFalse(os.path.exists("various.pkl"))
         # batching: 2 passes with commit each 3 items
         reset_processed()
         a_set = set()
