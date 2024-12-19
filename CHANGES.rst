@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.1.1 (unreleased)
+1.2.0 (2024-12-19)
 ------------------
 
 - Added new parameter to `batching.batch_get_keys`.
