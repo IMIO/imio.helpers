@@ -6,6 +6,8 @@ Changelog
 
 - Improved `emailer.send_email` to take into account 3.10.12 python bug.
   [sgeulette]
+- Removed ipython
+  [sgeulette]
 
 1.2.0 (2024-12-19)
 ------------------

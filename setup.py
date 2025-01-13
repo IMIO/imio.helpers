@@ -60,7 +60,6 @@ setup(
         'test': [
             'collective.behavior.talcondition',
             'collective.MockMailHost',
-            'ipdb',
             'plone.app.dexterity',
             'plone.app.testing',
         ],
