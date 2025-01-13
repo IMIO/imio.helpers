@@ -4,8 +4,8 @@ Changelog
 1.2.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- Improved `emailer.send_email` to take into account 3.10.12 python bug.
+  [sgeulette]
 
 1.2.0 (2024-12-19)
 ------------------

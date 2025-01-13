@@ -164,9 +164,10 @@ def send_email(eml, subject, mfrom, mto, mcc=None, mbcc=None, replyto=None, imme
     _addHeaders(eml, Subject=Header(subject, charset),
                 **dict((k, Header(v, charset)) for k, v in iteritems(addrs) if v))
     # Handle all recipients to add bcc: smtplib sends to all but a recipient not found in header is considered as bcc...
-    all_recipients = [formataddr(pair) for pair in
-                      getaddresses([addrs['To'], addrs['Cc'], mbcc])]
-    all_recipients = [a for a in all_recipients if a]
+    # bug in python 3.10.12 with getaddresses and parameters like ["xx@yy.be", "", ""]
+    all_recipients = [
+        formataddr(pair) for pair in getaddresses([addr for addr in (addrs["To"], addrs["Cc"], mbcc) if addr])
+    ]
     try:
         # send is protected by permission 'Use mailhost'
         # send remove from headers bcc but if in all_recipients, it is handled as bcc in email...

@@ -71,6 +71,15 @@ class TestEmail(IntegrationTestCase):
         add_attachment(eml, 'barcode.png', filepath=filepath)
         mail_host = get_mail_host()
         mail_host.reset()
+
+        call_args = []
+        orig_mmh_send = MockMailHost.send
+
+        def mock_send(*args, **kwargs):
+            call_args.append(args)
+            orig_mmh_send(*args, **kwargs)
+
+        MockMailHost.send = mock_send
         if six.PY3:
             # Python 3 raises an error with accented characters in emails
             # see https://github.com/zopefoundation/Products.MailHost/issues/29
@@ -80,15 +89,19 @@ class TestEmail(IntegrationTestCase):
             self.assertIn(b'Subject: =?utf-8?q?Email_subject_h=C3=A9_h=C3=A9?=', mail_host.messages[0])
             self.assertIn(b'From: noreply@from.org', mail_host.messages[0])
             self.assertIn(b'To: dest@to.org', mail_host.messages[0])
+            self.assertListEqual(call_args[0][2], ['dest@to.org'])
         else:
             send_email(eml, 'Email subject hé hé', 'noréply@from.org', 'dèst@to.org')
             self.assertIn('Subject: =?utf-8?q?Email_subject_h=C3=A9_h=C3=A9?=\n', mail_host.messages[0])
             self.assertIn('From: nor\xc3\xa9ply@from.org\n', mail_host.messages[0])
             # self.assertIn('To: d\xc3\xa8st@to.org\n', mail_host.messages[0])
             self.assertIn('To: =?utf-8?q?d=C3=A8st=40to=2Eorg?=\n', mail_host.messages[0])
+            self.assertListEqual(call_args[0][2], ['dèst@to.org'])
         mail_host.reset()
+        call_args = []
         # multiple recipients
         send_email(eml, u'Email subject', '<noreply@from.org>', ['dest@to.org', 'Stéphan Geulette <seg@to.org>'])
+        self.assertListEqual(call_args[0][2], ['dest@to.org', '=?utf-8?q?St=C3=A9phan_Geulette?= <seg@to.org>'])
         if six.PY3:
             self.assertIn(b'To: dest@to.org, =?utf-8?q?St=C3=A9phan_Geulette?= <seg@to.org>', mail_host.messages[0])
         else:
@@ -96,6 +109,7 @@ class TestEmail(IntegrationTestCase):
             self.assertIn('To: =?utf-8?q?dest=40to=2Eorg=2C_=3D=3Futf-8=3Fq=3FSt=3DC3=3DA9phan=5FGeulett?=\n',
                           mail_host.messages[0])
         mail_host.reset()
+        call_args = []
         # unicode parameters
         if six.PY3:
             self.assertTrue(send_email(eml, u'Email subject hé hé', u'noreply@from.org', u'dest@to.org'))
@@ -110,16 +124,8 @@ class TestEmail(IntegrationTestCase):
         # cc, bcc and reply_to
         mail_host.reset()
         call_args = []
-        orig_mmh_send = MockMailHost.send
-
-        def mock_send(*args, **kwargs):
-            call_args.append(args)
-            orig_mmh_send(*args, **kwargs)
-
-        MockMailHost.send = mock_send
         send_email(eml, 'Email subject', 'noreply@from.org', 'dest@to.org', mcc='copy@to.org', mbcc='bcc@to.org',
                    replyto='reply@to.org')
-        MockMailHost.send = orig_mmh_send
         # all recipients are in mto parameter
         self.assertListEqual(call_args[0][2], ['dest@to.org', 'copy@to.org', 'bcc@to.org'])
         if six.PY3:
@@ -134,6 +140,8 @@ class TestEmail(IntegrationTestCase):
             self.assertIn('Cc: =?utf-8?q?copy=40to=2Eorg?=\n', mail_host.messages[0])
             self.assertIn('reply-to: =?utf-8?q?reply=40to=2Eorg?=\n', mail_host.messages[0])
             self.assertNotIn('=?utf-8?q?bcc=40to=2Eorg?=\n', mail_host.messages[0])
+
+        MockMailHost.send = orig_mmh_send
 
     def test_validate_email_address(self):
         self.assertTupleEqual(validate_email_address('name@domain.org'), (u'', u'name@domain.org'))
