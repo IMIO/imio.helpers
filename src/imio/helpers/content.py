@@ -750,7 +750,7 @@ def sort_on_vocab_order(values, vocab=None, obj=None, vocab_name=None):
         vocab = get_vocab(obj, vocab_name)
 
     ordered_values = [term.value for term in vocab._terms]
-    # do not fail a a value of values is not in ordered_values
+    # do not fail if a value of values is not in ordered_values
     values_indexes = [ordered_values.index(value) if value in ordered_values else 999
                       for value in values]
     return sort_by_indexes(list(values), values_indexes)
