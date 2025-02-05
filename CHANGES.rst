@@ -4,8 +4,10 @@ Changelog
 1.2.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- Added parameters `ask_confirm=false, confirm_msg='are_you_sure'` to
+  JS function `callViewAndReload` so it is possible to have a
+  confirmation dialog to execute the action or not.
+  [gbastien]
 
 1.2.1 (2025-01-20)
 ------------------
