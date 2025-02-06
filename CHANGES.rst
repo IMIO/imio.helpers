@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.2.2 (unreleased)
+1.2.2 (2025-02-06)
 ------------------
 
 - Added parameters `ask_confirm=false, confirm_msg='are_you_sure'` to
