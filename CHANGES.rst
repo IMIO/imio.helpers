@@ -4,8 +4,8 @@ Changelog
 1.2.3 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- Improved `email.validate_email_address` to replace '""' in email.
+  [sgeulette]
 
 1.2.2 (2025-02-06)
 ------------------

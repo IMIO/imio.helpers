@@ -148,6 +148,10 @@ class TestEmail(IntegrationTestCase):
         self.assertTupleEqual(validate_email_address(u'name@domain.org'), (u'', u'name@domain.org'))
         self.assertTupleEqual(validate_email_address('"Real Name" <name@domain.org>'),
                               (u'Real Name', u'name@domain.org'))
+        self.assertTupleEqual(validate_email_address('"\\"Real Name\\"" <name@domain.org>'),
+                              (u'"Real Name"', u'name@domain.org'))
+        self.assertTupleEqual(validate_email_address('""Real Name"" <name@domain.org>'),
+                              (u'Real Name', u'name@domain.org'))
         self.assertTupleEqual(validate_email_address('Real Name <name@domain.org>'),
                               (u'Real Name', u'name@domain.org'))
         self.assertTupleEqual(validate_email_address('name@domain.org (Real Name)'),

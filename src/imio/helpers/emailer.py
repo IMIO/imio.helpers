@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 from email import encoders
 from email.header import Header
 from email.mime.base import MIMEBase
@@ -21,6 +20,7 @@ from zope.component import getMultiAdapter
 
 import csv
 import logging
+import re
 import socket
 
 
@@ -244,10 +244,12 @@ def validate_email_address(value):
         return True
     eml = safe_text(value)
     realname = u''
-    complex_form = True in [b in eml and e in eml for b, e in ('<>', '()')]
+    complex_form = any([b in eml and e in eml for b, e in ('<>', '()')])
     # Use parseaddr only when necessary to avoid correction like 'a @d.c' => 'a@d.c'
     # or to avoid bad split like 'a<a@d.c' => 'a@d.c'
     if complex_form:
+        if '""' in eml:  # '"\\"' ends with '""' and must be corrected. We choose to un-double the doublequotes
+            eml = re.sub(r'""([^"<]+)""\s*<(.*)>', r'"\1" <\2>', eml)
         realname, eml = parseaddr(eml)
         if not realname and not eml:
             raise InvalidEmailAddressFormat(value)
