@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.2.3 (unreleased)
+1.2.3 (2025-03-11)
 ------------------
 
 - Improved `email.validate_email_address` to replace '""' in email.
