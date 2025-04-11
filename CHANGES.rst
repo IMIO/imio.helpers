@@ -4,8 +4,8 @@ Changelog
 1.2.4 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- Fixed `cache.obj_modified` when _p_mtime is None on the object.
+  [aduchene]
 
 1.2.3 (2025-03-11)
 ------------------

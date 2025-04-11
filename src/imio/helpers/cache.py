@@ -184,19 +184,22 @@ def obj_modified(obj, asdatetime=True, check_annotation=True):
        to check also attribute modification and annotation modification.
        Returns a float when asdatetime=False.
     """
-    modified = max(float(obj.modified()), obj._p_mtime)
+    # _p_mtime could be None if the object is not persistent so we need to handle it
+    _handle_p_mtime = lambda obj: obj._p_mtime if hasattr(obj, "_p_mtime") and obj._p_mtime is not None else 0
+    modified = max(float(obj.modified()), _handle_p_mtime(obj._p_mtime))
     if check_annotation and base_hasattr(obj, '__annotations__'):
         # when stored annotation is a PersistentMapping, we need to check _p_mtime
         # of stored annotation because a change in the PersistentMapping will not change
         # the __annotations__ _p_mtime
         ann_max_time = max(
-            [obj.__annotations__._p_mtime] +
-            [obj.__annotations__[k]._p_mtime
+            [_handle_p_mtime(obj.__annotations__)] +
+            [_handle_p_mtime(obj.__annotations__[k])
              for k in obj.__annotations__.keys()
              if hasattr(obj.__annotations__[k], '_p_mtime')])
+
         modified = max(float(obj.modified()),
-                       obj._p_mtime,
-                       ann_max_time)
+                       _handle_p_mtime(obj._p_mtime),
+                       _handle_p_mtime(ann_max_time))
     if asdatetime:
         modified = datetime.fromtimestamp(modified)
     return modified
