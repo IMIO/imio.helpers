@@ -15,6 +15,8 @@ Changelog
 - Fixed `content.base_getattr` that was not returning the `default` if attribute
   not existing.
   [gbastien]
+- Added Plone 6.1 version in buildout.
+  [chris-adam]
 
 0.80 (2023-12-11)
 -----------------

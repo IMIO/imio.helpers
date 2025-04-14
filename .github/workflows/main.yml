@@ -10,7 +10,7 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
@@ -21,28 +21,23 @@ jobs:
             plone: 5.2
           - python: 3.10.11
             plone: "6.0"
+          - python: 3.12.7
+            plone: "6.1"
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Set up pyenv and Python
-        uses: "gabrielfalcao/pyenv-action@v14"
+        uses: "gabrielfalcao/pyenv-action@v18"
         with:
           default: "${{ matrix.python }}"
       - name: Setup Env
         run: |
           sudo apt-get update -qqy
-          sudo apt-get install -qqy g++ libpng-dev cmake libqt5widgets5 qttools5-dev
-          wget -t 3 -T 60 --waitretry 5 -O zint-2.8.0.tar.gz https://sourceforge.net/projects/zint/files/zint/2.8.0/zint-2.8.0.tar.gz/download
-          tar -xf zint-2.8.0.tar.gz
-          cd zint-2.8.0
-          sudo cmake .
-          sudo make
-          sudo make install
-          cd ..
+          sudo apt-get install -qqy g++ libpng-dev cmake libqt5widgets5 qttools5-dev zint
           pip install --upgrade pip
           pip install -r requirements-${{ matrix.plone }}.txt
       - name: Cache eggs
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         env:
           cache-name: cache-eggs
         with:
@@ -70,7 +65,7 @@ jobs:
         run: |
           bin/test -t !robot
   coverage:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
@@ -79,29 +74,20 @@ jobs:
             plone: "4.3"
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Set up pyenv and Python
-        uses: "gabrielfalcao/pyenv-action@v14"
+        uses: "gabrielfalcao/pyenv-action@v18"
         with:
           default: "${{ matrix.python }}"
       - name: Setup Env
         run: |
           sudo apt-get update -qqy
-          sudo apt-get install -qqy g++ libpng-dev cmake libqt5widgets5 qttools5-dev
-          wget -t 3 -T 60 --waitretry 5 -O zint-2.8.0.tar.gz https://sourceforge.net/projects/zint/files/zint/2.8.0/zint-2.8.0.tar.gz/download
-          tar -xf zint-2.8.0.tar.gz
-          cd zint-2.8.0
-          sudo cmake .
-          sudo make
-          sudo make install
-          cd ..
+          sudo apt-get install -qqy g++ libpng-dev cmake libqt5widgets5 qttools5-dev zint
           pip install --upgrade pip
           pip install -r requirements-${{ matrix.plone }}.txt
-          pip install --upgrade pip
-          pip install -r requirements-${{matrix.plone}}.txt
           pip install -U coveralls coverage
       - name: Cache eggs
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         env:
           cache-name: cache-eggs
         with:

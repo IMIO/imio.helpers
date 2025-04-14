@@ -6,6 +6,7 @@ from imio.helpers.setup import remove_gs_step
 from imio.helpers.testing import IntegrationTestCase
 from plone import api
 
+import six
 import unittest
 
 
@@ -18,13 +19,18 @@ class TestSetupModule(IntegrationTestCase):
         self.portal = self.layer['portal']
 
     def test_load_type_from_package(self):
+        if six.PY3:
+            from Products.CMFPlone.utils import get_installer
+            installer = get_installer(self.portal)
+            installer.install_product("plone.app.discussion")
+
         types_tool = api.portal.get_tool('portal_types')
         portal_type = types_tool.get('Discussion Item')
         self.assertTrue(portal_type.filter_content_types)
         portal_type.filter_content_types = False
         self.assertFalse(portal_type.filter_content_types)
         self.assertTrue(load_type_from_package(
-            'Discussion Item', 'profile-Products.CMFPlone:plone'))
+            'Discussion Item', 'plone.app.discussion:default'))
         portal_type = types_tool.get('Discussion Item')
         self.assertTrue(portal_type.filter_content_types)
         # not found portal_type
