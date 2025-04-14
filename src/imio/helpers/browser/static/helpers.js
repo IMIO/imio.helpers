@@ -84,6 +84,18 @@ function toggleDetails(id, toggle_parent_active=true, parent_tag=null, load_view
   }
 }
 
+// function that will expand a collapsible if asked thru request parameter
+function expandCollapsible() {
+  let searchParams = new URLSearchParams(window.location.search);
+  expand_collapsibles = searchParams.getAll('expand-collapsible');
+  for (let i = 0; i < expand_collapsibles.length; i++) {
+    label_tag = $('div#' + expand_collapsibles[i])[0].click();
+  }
+}
+$(document).ready(function () {
+    expandCollapsible();
+});
+
 function loadContent(tag, load_view, async=true, base_url=null, event_name=null) {
     // load content in the collapsible-inner-content div
     var url = base_url || canonical_url();

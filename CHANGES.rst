@@ -4,8 +4,9 @@ Changelog
 1.2.4 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- Added JS function `expandCollapsible` that will expand a list of collapsibles
+  (`toggleDetails`) passed as query parameter.
+  [gbastien]
 
 1.2.3 (2025-03-11)
 ------------------
