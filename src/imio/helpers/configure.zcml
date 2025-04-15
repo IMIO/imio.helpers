@@ -90,11 +90,21 @@
         replacement=".patches._listAllowedRolesAndUsers"
         preserveOriginal="true" />
 
+    <monkey:patch zcml:condition="not-have plone-5"
+        description="Monkeypatch getVocabularyValues from plone.app.querystring to keep vocabulary order"
+        class="plone.app.querystring.registryreader.QuerystringRegistryReader"
+        original="getVocabularyValues"
+        replacement=".patches.getVocabularyValues"
+        preserveOriginal="true" />
+
     <utility component=".vocabularies.SortedUsersFactory"
              name="imio.helpers.SortedUsers" />
 
     <utility component=".vocabularies.SimplySortedUsersFactory"
              name="imio.helpers.SimplySortedUsers" />
+
+    <utility name="imio.helpers.YesNoForFacetedVocabulary"
+             factory="imio.helpers.vocabularies.YesNoForFacetedVocabulary" />
 
     <!-- Upgrade steps -->
     <genericsetup:upgradeSteps

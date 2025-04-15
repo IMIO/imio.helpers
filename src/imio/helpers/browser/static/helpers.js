@@ -1,6 +1,5 @@
 // fix for Firefox bug that is not able to print a fieldset on several pages, see https://bugzilla.mozilla.org/show_bug.cgi?id=471015
-//   we replace <fieldset> by <div class="fieldset"> for the printing process.  Grabbed from https://stackoverflow.com/a/14237116
-
+// we replace <fieldset> by <div class="fieldset"> for the printing process.  Grabbed from https://stackoverflow.com/a/14237116
 $(window).bind('beforeprint', function(){
     $('fieldset').each(
         function(item)
@@ -24,35 +23,40 @@ function has_faceted() {
 }
 
 // ajax call managing a call to a given p_view_name and reload taking faceted into account
-function callViewAndReload(baseUrl, view_name, params, force_faceted=false, onsuccess=null) {
-  redirect = '0';
-  if (!force_faceted && !has_faceted()) {
-    redirect = '1';
+function callViewAndReload(baseUrl, view_name, params, force_faceted=false, onsuccess=null, ask_confirm=false, confirm_msg='are_you_sure') {
+
+  // confirm_msg must exist or it will break
+  if ((ask_confirm === false) || confirm(window.eval(confirm_msg)))
+  {
+    redirect = '0';
+    if (!force_faceted && !has_faceted()) {
+      redirect = '1';
+    }
+    $.ajax({
+      url: baseUrl + "/" + view_name,
+      data: params,
+      dataType: 'html',
+      cache: false,
+      async: true,
+      success: function(data) {
+          // reload the faceted page if we are on it, refresh current if not
+          if ((redirect === '0') && !(data)) {
+              Faceted.URLHandler.hash_changed();
+          }
+          else {
+              if (onsuccess) {
+                  return onsuccess(data);
+              } else {
+                  window.location.href = data;
+                  }
+          }
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        /*console.log(textStatus);*/
+        window.location.href = window.location.href;
+        }
+      });
   }
-  $.ajax({
-    url: baseUrl + "/" + view_name,
-    data: params,
-    dataType: 'html',
-    cache: false,
-    async: true,
-    success: function(data) {
-        // reload the faceted page if we are on it, refresh current if not
-        if ((redirect === '0') && !(data)) {
-            Faceted.URLHandler.hash_changed();
-        }
-        else {
-            if (onsuccess) {
-                return onsuccess(data);
-            } else {
-                window.location.href = data;
-                }
-        }
-    },
-    error: function(jqXHR, textStatus, errorThrown) {
-      /*console.log(textStatus);*/
-      window.location.href = window.location.href;
-      }
-    });
 }
 
 // return the canonical url in JS, so the URL of the main object, useful when on a view
@@ -199,12 +203,18 @@ function submitFormHelperOnsuccessDefault(data, textStatus, request) {
   contentType = request.getResponseHeader('content-type');
   if (contentType && contentType.startsWith('application')) {
     data = new Uint8Array(data);
+    // to be able to download the blob and set a correct filename
+    // we need to add a fictious link (a), click on it then remove it...
     contentType = request.getResponseHeader('content-type');
+    fileName = request.getResponseHeader('Content-Disposition').split("filename=")[1];
     var blob = new Blob([data], {type: contentType});
-    var objectUrl = URL.createObjectURL(blob);
-    window.open(objectUrl);
+    var link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
     cancel_button.click();
-    URL.revokeObjectURL(objectUrl);
   } else {
     // close the overlay
     if (cancel_button) {
@@ -218,4 +228,12 @@ function submitFormHelperOnsuccessDefault(data, textStatus, request) {
         window.location.href = window.location.href;
     }
   }
+}
+
+function temp_disable_link(tag) {
+    // avoid double clicks
+    tag.style = "pointer-events:none;";
+    setTimeout(function() {
+        tag.style = "";
+    }, 2000);
 }

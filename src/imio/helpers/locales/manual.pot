@@ -17,3 +17,14 @@ msgstr ""
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: imio.helpers\n"
 
+#: ../__init__.py
+msgid "No value"
+msgstr ""
+
+#: ../vocabularies.py
+msgid "yesno_value_false"
+msgstr ""
+
+#: ../vocabularies.py
+msgid "yesno_value_true"
+msgstr ""

@@ -56,6 +56,16 @@ class TestVocabularies(IntegrationTestCase):
              u'new_user',
              u'test_user_1_'])
 
+    def test_YesNoForFacetedVocabulary(self):
+        """ """
+        vocab = get_vocab(self.portal, "imio.helpers.YesNoForFacetedVocabulary")
+        self.assertEqual(
+            [term.value for term in vocab._terms],
+            ['0', '1'])
+        self.assertEqual(
+            [term.title for term in vocab._terms],
+            ['yesno_value_false', 'yesno_value_true'])
+
 
 class EnhancedTermTests(SimpleTermTests):
     """Inherited class tests are also called"""

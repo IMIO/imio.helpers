@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from imio.helpers import HAS_PLONE_4
 from imio.helpers.cache import get_cachekey_volatile
 from imio.helpers.cache import get_plone_groups_for_user
 from imio.helpers.cache import invalidate_cachekey_volatile_for
@@ -86,3 +87,37 @@ def _listAllowedRolesAndUsers(self, user):
     result.insert(0, 'user:%s' % user.getId())
     result.append('Anonymous')
     return result
+
+
+if HAS_PLONE_4:
+    from operator import attrgetter
+    from plone.app.querystring.registryreader import logger
+    from zope.component import queryUtility
+    from zope.i18n import translate
+    from zope.i18nmessageid import Message
+    from zope.schema.interfaces import IVocabularyFactory
+
+    def getVocabularyValues(self, values):
+        """Get all vocabulary values if a vocabulary is defined"""
+
+        for field in values.get(self.prefix + '.field').values():
+            # XXX begin change by imio.helpers
+            # field['values'] = {}
+            from collections import OrderedDict
+            field['values'] = OrderedDict()
+            # XXX end change by imio.helpers
+            vocabulary = field.get('vocabulary', [])
+            if vocabulary:
+                utility = queryUtility(IVocabularyFactory, vocabulary)
+                if utility is not None:
+                    for item in sorted(utility(self.context),
+                                       key=attrgetter('title')):
+                        if isinstance(item.title, Message):
+                            title = translate(item.title, context=self.request)
+                        else:
+                            title = item.title
+
+                        field['values'][item.value] = {'title': title}
+                else:
+                    logger.info("%s is missing, ignored." % vocabulary)
+        return values

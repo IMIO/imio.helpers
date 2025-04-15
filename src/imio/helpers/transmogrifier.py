@@ -1,14 +1,20 @@
 # -*- coding: utf-8 -*-
+
 from copy import deepcopy
 from datetime import datetime
-from imio.helpers.content import safe_encode
 from imio.pyutils.utils import letters_sequence
+from imio.pyutils.utils import safe_encode
 from Products.CMFPlone.utils import safe_unicode
 from six.moves import range
 from six.moves import zip
+from zope.tales.tales import CompilerError
 
+import logging
 import os
 import re
+
+
+logger = logging.getLogger('imio.helpers: transmogrifier')
 
 
 def clean_value(value, isep=u'\n', strip=u' ', patterns=(), osep=None):
@@ -231,3 +237,33 @@ def str_to_date(item, key, log_method, fmt='%Y/%m/%d', can_be_empty=True, as_dat
         log_method(item, u"not a valid date '{}' in key '{}': {}".format(val, key, ex), **log_params)
         return None
     return dt
+
+
+try:
+    from collective.transmogrifier.utils import Expression as OrigExpression
+
+    class Expression(OrigExpression):
+        """Call the expression and log the expression"""
+
+        def __init__(self, expression, transmogrifier, name, options, **extras):
+            try:
+                super(Expression, self).__init__(expression, transmogrifier, name, options, **extras)
+            except CompilerError as e:
+                logger.error("Error in part '{}', expression: '{}': {}".format(name, expression, e))
+                raise e
+
+        def __call__(self, item, **extras):
+            try:
+                return super(Expression, self).__call__(item, **extras)
+            except Exception as e:
+                logger.error("Error in part '{}', expression: '{}': {}".format(self.name, self.expression.text, e))
+                raise e
+
+    class Condition(Expression):
+        """A transmogrifier condition expression with logging"""
+
+        def __call__(self, item, **extras):
+            return bool(super(Condition, self).__call__(item, **extras))
+
+except ImportError:
+    pass

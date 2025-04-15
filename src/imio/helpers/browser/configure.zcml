@@ -2,6 +2,7 @@
     xmlns="http://namespaces.zope.org/zope"
     xmlns:browser="http://namespaces.zope.org/browser"
     xmlns:plone="http://namespaces.plone.org/plone"
+    xmlns:zcml="http://namespaces.zope.org/zcml"
     i18n_domain="imio.helpers">
 
     <!-- Publish static files -->
@@ -43,5 +44,24 @@
         template="ramcache.pt"
         layer="imio.helpers.interfaces.IIMIOHelpersLayer"
         permission="cmf.ManagePortal" />
+
+    <!-- Override @@folder_contents to work with DashboardCollection -->
+    <!-- Folder contents -->
+    <configure package="plone.app.content" zcml:condition="not-have plone-5">
+        <browser:page
+            for="*"
+            class="imio.helpers.browser.views.IMIOFolderContentsView"
+            name="folder_contents"
+            template="browser/folder_contents.pt"
+            layer="imio.helpers.interfaces.IIMIOHelpersLayer"
+            permission="cmf.ListFolderContents" />
+        <browser:page
+            for="*"
+            class="imio.helpers.browser.views.IMIOFolderContentsBrowserView"
+            attribute="update_table"
+            name="foldercontents_get_table"
+            layer="imio.helpers.interfaces.IIMIOHelpersLayer"
+            permission="cmf.ListFolderContents" />
+    </configure>
 
 </configure>

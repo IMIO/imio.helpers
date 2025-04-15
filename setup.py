@@ -10,7 +10,7 @@ long_description = (
 
 setup(
     name='imio.helpers',
-    version='1.0.0.dev0',
+    version='1.2.3',
     description="Various helper methods for development.",
     long_description=long_description,
     # Get more from http://pypi.python.org/pypi?%3Aaction=list_classifiers
@@ -46,7 +46,7 @@ setup(
         'collective.fingerpointing',
         'collective.monkeypatcher',
         'future>=0.18.2',
-        'imio.pyutils>=1.0.0a0',
+        'imio.pyutils>=1.1.1',
         'natsort',
         "pathlib2;python_version<'3'",
         'plone.api>1.9.1',
@@ -62,7 +62,6 @@ setup(
         'test': [
             'collective.behavior.talcondition',
             'collective.MockMailHost',
-            'ipdb',
             'plone.app.dexterity',
             'plone.app.testing',
         ],
@@ -78,4 +77,5 @@ setup(
     [z3c.autoinclude.plugin]
     target = plone
     """,
+    options={"bdist_wheel": {"universal": True}},
 )

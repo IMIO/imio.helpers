@@ -1,9 +1,102 @@
 Changelog
 =========
 
-1.0.0 (unreleased)
+1.2.3 (2025-03-11)
 ------------------
 
+- Improved `email.validate_email_address` to replace '""' in email.
+  [sgeulette]
+- Added Plone 6.1 version in buildout.
+  [chris-adam]
+
+1.2.2 (2025-02-06)
+------------------
+
+- Added parameters `ask_confirm=false, confirm_msg='are_you_sure'` to
+  JS function `callViewAndReload` so it is possible to have a
+  confirmation dialog to execute the action or not.
+  [gbastien]
+
+1.2.1 (2025-01-20)
+------------------
+
+- Improved `emailer.send_email` to take into account 3.10.12 python bug.
+  [sgeulette]
+- Removed ipython
+  [sgeulette]
+
+1.2.0 (2024-12-19)
+------------------
+
+- Added new parameter to `batching.batch_get_keys`.
+  [sgeulette]
+
+1.1.0 (2024-10-02)
+------------------
+
+- Imported batch_delete_files from imio.pyutils if someone is yet using it from here.
+  [sgeulette]
+- batch is considered finished if no batching.
+  [sgeulette]
+
+1.0.1 (2024-09-18)
+------------------
+
+- Generated universal wheel version.
+  [sgeulette]
+
+1.0.0 (2024-09-16)
+------------------
+
+- Improved `emailer.send_email` to use send in place of securesend (not using queue).
+  [sgeulette]
+- Added `EMPTY_DATETIME` value that corresponds to `01/01/1950 at 12:00`.
+  [gbastien]
+- Improved batching module
+  [sgeulette]
+- Added `batching.can_delete_batch_files`
+  [sgeulette]
+
+1.0.0rc4 (2024-07-08)
+---------------------
+
+- Added "empty" variables to handle empty indexes searches.
+  [sgeulette]
+
+1.0.0rc3 (2024-06-07)
+---------------------
+
+- Added `temp_disable_link` JS helper that will disable a link for 2 seconds
+  and to avoid double clicks.
+  [gbastien]
+
+1.0.0rc2 (2024-04-10)
+---------------------
+
+- Added batching module.
+  [sgeulette]
+- Fixed the way JS function `submitFormHelperOnsuccessDefault` manages
+  returned result when it is a file, now we have a correct `filename`.
+  [gbastien]
+- Added transmogrifier Expression and Condition classes to log expression
+  compilation or interpretation errors.
+  [sgeulette]
+- Removed `content.safe_encode` as already defined in `imio.pyutils`.
+  Import it from `imio.pyutils` in `imio.helpers.content` for temporary backward
+  compatibility, to be removed.
+  [gbastien]
+- Overrided `@@folder_contents` to make it work with `DashboardCollection`.
+  [gbastien]
+- Monkeypatched `plone.app.querystring.registryreader.getVocabularyValues`
+  to keep vocabulary order onloy for Plone4, behavior is correct in Plone5+.
+  Manage every `HAS_PLONE_X` values.
+  [gbastien]
+
+1.0.0rc1 (2024-02-08)
+---------------------
+
+- Made compliant with Plone 4, Plone 5, Plone 6
+  [boulch, laulaz, sgeulette]
 - Require `pathlib2` in `setup.py`, backport `pathlib` for `py2.7`.
   [gbastien]
 - Added `security.setup_app` to be used in run scripts.
@@ -12,11 +105,11 @@ Changelog
   [sgeulette]
 - Added `setup.test_remove_gs_step` to remove a generic setup step.
   [sgeulette]
+- Added `imio.helpers.YesNoForFacetedVocabulary`
+  [sgeulette]
 - Fixed `content.base_getattr` that was not returning the `default` if attribute
   not existing.
   [gbastien]
-- Added Plone 6.1 version in buildout.
-  [chris-adam]
 
 0.80 (2023-12-11)
 -----------------

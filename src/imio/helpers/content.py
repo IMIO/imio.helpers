@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
+from imio.helpers import HAS_PLONE_5_AND_MORE
 from imio.helpers.interfaces import IContainerOfUnindexedElementsMarker
 from imio.helpers.workflow import do_transitions
+from imio.pyutils.utils import safe_encode  # noqa, temporary import for backward compatibility as was also defined here
 from imio.pyutils.utils import sort_by_indexes
 from persistent.list import PersistentList
 from plone import api
@@ -15,7 +17,6 @@ from plone.namedfile.file import NamedBlobImage
 from plone.registry.interfaces import IRegistry
 from Products.CMFCore.interfaces import IPropertiesTool
 from Products.CMFPlone.utils import base_hasattr
-from Products.CMFPlone.utils import getFSVersionTuple
 from Products.CMFPlone.utils import safe_unicode
 from zc.relation.interfaces import ICatalog
 from zope.annotation import IAnnotations
@@ -28,11 +29,9 @@ from zope.schema.interfaces import IVocabularyFactory
 
 import logging
 import os
-import six
 
 
-HAS_PLONE5 = bool(getFSVersionTuple()[0] >= 5)
-if HAS_PLONE5:
+if HAS_PLONE_5_AND_MORE:
     from Products.CMFPlone.interfaces import IEditingSchema
 
 logger = logging.getLogger('imio.helpers.content')
@@ -277,13 +276,6 @@ def validate_fields(obj, behaviors=True, raise_on_errors=False):
             obj.portal_type, obj.id, '\n'.join([repr(error) for error in errors]))
         raise ValueError(error_msg)
     return errors
-
-
-def safe_encode(value, encoding='utf-8'):
-    """
-        Converts a value to encoding, only when it is not already encoded.
-    """
-    return six.ensure_str(value, encoding=encoding)
 
 
 @mutually_exclusive_parameters('obj', 'uid')
@@ -758,7 +750,7 @@ def sort_on_vocab_order(values, vocab=None, obj=None, vocab_name=None):
         vocab = get_vocab(obj, vocab_name)
 
     ordered_values = [term.value for term in vocab._terms]
-    # do not fail a a value of values is not in ordered_values
+    # do not fail if a value of values is not in ordered_values
     values_indexes = [ordered_values.index(value) if value in ordered_values else 999
                       for value in values]
     return sort_by_indexes(list(values), values_indexes)
