@@ -93,34 +93,34 @@ class TestCacheModule(IntegrationTestCase):
         # once get, it is cached
         vocab(self.portal)
         self.assertTrue(getattr(vocab, memPropName))
-        self.assertEquals([term.token for term in vocab(self.portal)._terms],
+        self.assertEqual([term.token for term in vocab(self.portal)._terms],
                           ['1', '2'])
 
         # change value but do not clean cache
         self.request.set('vocab_values', ('1', '2', '3'))
-        self.assertEquals([term.token for term in vocab(self.portal)._terms],
+        self.assertEqual([term.token for term in vocab(self.portal)._terms],
                           ['1', '2'])
         # clean vocabulary cache
         cleanVocabularyCacheFor("imio.helpers.testing.testingvocabulary")
-        self.assertEquals([term.token for term in vocab(self.portal)._terms],
+        self.assertEqual([term.token for term in vocab(self.portal)._terms],
                           ['1', '2', '3'])
 
         # every existing vocabularies can also be cleaned if nothing passed to cleanVocabularyCacheFor
         self.request.set('vocab_values', ('1', '2', '3', '4'))
-        self.assertEquals([term.token for term in vocab(self.portal)._terms],
+        self.assertEqual([term.token for term in vocab(self.portal)._terms],
                           ['1', '2', '3'])
         # clean vocabulary cache
         cleanVocabularyCacheFor("imio.helpers.testing.testingvocabulary")
-        self.assertEquals([term.token for term in vocab(self.portal)._terms],
+        self.assertEqual([term.token for term in vocab(self.portal)._terms],
                           ['1', '2', '3', '4'])
 
         # if cleanVocabularyCacheFor is called without parameter,
         # every registered vocabularies cache is cleaned
         self.request.set('vocab_values', ('1', '2', '3', '4', '5'))
-        self.assertEquals([term.token for term in vocab(self.portal)._terms],
+        self.assertEqual([term.token for term in vocab(self.portal)._terms],
                           ['1', '2', '3', '4'])
         cleanVocabularyCacheFor()
-        self.assertEquals([term.token for term in vocab(self.portal)._terms],
+        self.assertEqual([term.token for term in vocab(self.portal)._terms],
                           ['1', '2', '3', '4', '5'])
 
     def test_cleanRamCache(self):
@@ -128,34 +128,34 @@ class TestCacheModule(IntegrationTestCase):
         This helper method invalidates all ram.cache.
         """
         self.request.set('ramcached', 'a')
-        self.assertEquals(ramCachedMethod(self.portal, param='1'), 'a')
+        self.assertEqual(ramCachedMethod(self.portal, param='1'), 'a')
         # change value in REQUEST, as it is ram cached, it will still return 'a'
         self.request.set('ramcached', 'b')
-        self.assertEquals(ramCachedMethod(self.portal, param='1'), 'a')
+        self.assertEqual(ramCachedMethod(self.portal, param='1'), 'a')
         # ram.cache works as expected if param changes
-        self.assertEquals(ramCachedMethod(self.portal, param='2'), 'b')
+        self.assertEqual(ramCachedMethod(self.portal, param='2'), 'b')
         # try again
-        self.assertEquals(ramCachedMethod(self.portal, param='1'), 'a')
+        self.assertEqual(ramCachedMethod(self.portal, param='1'), 'a')
         # now clean all caches, it will returns 'b'
         cleanRamCache()
-        self.assertEquals(ramCachedMethod(self.portal, param='1'), 'b')
+        self.assertEqual(ramCachedMethod(self.portal, param='1'), 'b')
 
     def test_cleanRamCacheFor(self):
         """
         This helper method invalidates ram.cache for given method.
         """
         self.request.set('ramcached', 'a')
-        self.assertEquals(ramCachedMethod(self.portal, param='1'), 'a')
+        self.assertEqual(ramCachedMethod(self.portal, param='1'), 'a')
         # change value in REQUEST, as it is ram cached, it will still return 'a'
         self.request.set('ramcached', 'b')
-        self.assertEquals(ramCachedMethod(self.portal, param='1'), 'a')
+        self.assertEqual(ramCachedMethod(self.portal, param='1'), 'a')
         # ram.cache works as expected if param changes
-        self.assertEquals(ramCachedMethod(self.portal, param='2'), 'b')
+        self.assertEqual(ramCachedMethod(self.portal, param='2'), 'b')
         # try again
-        self.assertEquals(ramCachedMethod(self.portal, param='1'), 'a')
+        self.assertEqual(ramCachedMethod(self.portal, param='1'), 'a')
         # now clean cache, it will returns 'b'
         cleanRamCacheFor('imio.helpers.tests.test_cache.ramCachedMethod')
-        self.assertEquals(ramCachedMethod(self.portal, param='1'), 'b')
+        self.assertEqual(ramCachedMethod(self.portal, param='1'), 'b')
 
     def test_cleanForeverCache(self):
         """Test the cache.cleanForeverCache function."""
@@ -179,7 +179,7 @@ class TestCacheModule(IntegrationTestCase):
         volatiles = getattr(self.portal, VOLATILE_ATTR, {})
         self.assertTrue(isinstance(volatiles.get(volatile_name), datetime))
         # calling it again will still return same date
-        self.assertEquals(date, get_cachekey_volatile(method_name))
+        self.assertEqual(date, get_cachekey_volatile(method_name))
         # volatiles are not removed by tearDown, remove it now to avoid
         # test isolation issues with test test_invalidate_cachekey_volatile_for
         invalidate_cachekey_volatile_for(method_name)

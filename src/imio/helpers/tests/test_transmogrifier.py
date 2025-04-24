@@ -15,6 +15,7 @@ from imio.helpers.transmogrifier import str_to_date
 
 import datetime
 import os
+import six
 
 
 # logger simulation for some tests
@@ -23,6 +24,10 @@ def logger(item, msg):
 
 
 class TestTesting(IntegrationTestCase):
+    def assertRaisesRegex(self, *args, **kwargs):
+        if six.PY3:
+            return super().assertRaisesRegex(*args, **kwargs)
+        return self.assertRaisesRegexp(*args, **kwargs)
 
     def test_clean_value(self):
         self.assertEqual(clean_value(None), None)
@@ -41,37 +46,37 @@ class TestTesting(IntegrationTestCase):
                          u'stri p-line 2')
 
     def test_get_correct_id(self):
-        self.assertEquals(get_correct_id(self.portal, 'abcde'), 'abcde')
+        self.assertEqual(get_correct_id(self.portal, 'abcde'), 'abcde')
         self.assertIn('folder', self.portal.objectIds())
-        self.assertEquals(get_correct_id(self.portal, 'folder'), 'folder-1')
-        self.assertEquals(get_correct_id(self.portal, 'folder', with_letter=True), 'folder-a')
-        self.assertEquals(get_correct_id(self.portal.folder, 'abcde'), 'abcde')
+        self.assertEqual(get_correct_id(self.portal, 'folder'), 'folder-1')
+        self.assertEqual(get_correct_id(self.portal, 'folder', with_letter=True), 'folder-a')
+        self.assertEqual(get_correct_id(self.portal.folder, 'abcde'), 'abcde')
         self.portal.folder.invokeFactory('Document', id='abcde', title='Document')
-        self.assertEquals(get_correct_id(self.portal.folder, 'abcde'), 'abcde-1')
-        self.assertEquals(get_correct_id(self.portal.folder, 'abcde', True), 'abcde-a')
+        self.assertEqual(get_correct_id(self.portal.folder, 'abcde'), 'abcde-1')
+        self.assertEqual(get_correct_id(self.portal.folder, 'abcde', True), 'abcde-a')
         self.portal.folder.invokeFactory('Document', id='abcde-1', title='Document')
-        self.assertEquals(get_correct_id(self.portal.folder, 'abcde'), 'abcde-2')
+        self.assertEqual(get_correct_id(self.portal.folder, 'abcde'), 'abcde-2')
 
     def test_get_correct_id_dic(self):
         lst = ['a']
-        self.assertEquals(get_correct_id(lst, 'z'), 'z')
-        self.assertEquals(get_correct_id(lst, 'a'), 'a-1')
-        self.assertEquals(get_correct_id(lst, 'a', True), 'a-a')
+        self.assertEqual(get_correct_id(lst, 'z'), 'z')
+        self.assertEqual(get_correct_id(lst, 'a'), 'a-1')
+        self.assertEqual(get_correct_id(lst, 'a', True), 'a-a')
         lst.extend(['a-1', 'a-a'])
-        self.assertEquals(get_correct_id(lst, 'a'), 'a-2')
-        self.assertEquals(get_correct_id(lst, 'a', True), 'a-b')
+        self.assertEqual(get_correct_id(lst, 'a'), 'a-2')
+        self.assertEqual(get_correct_id(lst, 'a', True), 'a-b')
         lst.extend(['a-{}'.format(lt) for lt in 'bcdefghijklmnopqrstuvwxyz'])
-        self.assertEquals(get_correct_id(lst, 'a', True), 'a-aa')
+        self.assertEqual(get_correct_id(lst, 'a', True), 'a-aa')
 
     def test_get_correct_path(self):
-        self.assertEquals(get_correct_path(self.portal, 'abcde'), 'abcde')
+        self.assertEqual(get_correct_path(self.portal, 'abcde'), 'abcde')
         self.assertIn('folder', self.portal.objectIds())
-        self.assertEquals(get_correct_path(self.portal, 'folder'), 'folder-1')
-        self.assertEquals(get_correct_path(self.portal, 'folder/abcde'), 'folder/abcde')
+        self.assertEqual(get_correct_path(self.portal, 'folder'), 'folder-1')
+        self.assertEqual(get_correct_path(self.portal, 'folder/abcde'), 'folder/abcde')
         self.portal.folder.invokeFactory('Document', id='abcde', title='Document')
-        self.assertEquals(get_correct_path(self.portal, 'folder/abcde'), 'folder/abcde-1')
+        self.assertEqual(get_correct_path(self.portal, 'folder/abcde'), 'folder/abcde-1')
         self.portal.folder.invokeFactory('Document', id='abcde-1', title='Document')
-        self.assertEquals(get_correct_path(self.portal, 'folder/abcde'), 'folder/abcde-2')
+        self.assertEqual(get_correct_path(self.portal, 'folder/abcde'), 'folder/abcde-2')
 
     def test_filter_keys(self):
         dic = {'a': 1, 'b': 2, 'c': 3}
@@ -101,14 +106,14 @@ class TestTesting(IntegrationTestCase):
     def test_get_main_path(self):
         orig_home = os.getenv('INSTANCE_HOME')
         orig_pwd = os.getenv('PWD')
-        self.assertEquals(get_main_path('/etc'), '/etc')
+        self.assertEqual(get_main_path('/etc'), '/etc')
         os.environ['INSTANCE_HOME'] = '/etc/parts/xx'
-        self.assertEquals(get_main_path(), '/etc')
+        self.assertEqual(get_main_path(), '/etc')
         os.environ['INSTANCE_HOME'] = '/etc/abcd'
         os.environ['PWD'] = '/myhome'
-        self.assertRaisesRegexp(Exception, u"Path '/myhome' doesn't exist", get_main_path)  # path doesn't exist
-        self.assertRaisesRegexp(Exception, u"Path '/myhome/toto' doesn't exist", get_main_path, subpath='toto')
-        self.assertEquals(get_main_path('/', 'etc'), '/etc')
+        self.assertRaisesRegex(Exception, u"Path '/myhome' doesn't exist", get_main_path)  # path doesn't exist
+        self.assertRaisesRegex(Exception, u"Path '/myhome/toto' doesn't exist", get_main_path, subpath='toto')
+        self.assertEqual(get_main_path('/', 'etc'), '/etc')
         os.environ['INSTANCE_HOME'] = orig_home
         os.environ['PWD'] = orig_pwd
 
@@ -131,9 +136,9 @@ class TestTesting(IntegrationTestCase):
                          "value = '[1, 2, 3]'")
 
     def test_relative_path(self):
-        self.assertEquals(relative_path(self.portal, '/plone/directory'), '/directory')
-        self.assertEquals(relative_path(self.portal, '/plone/directory', False), 'directory')
-        self.assertEquals(relative_path(self.portal, '/alone/directory'), '/alone/directory')
+        self.assertEqual(relative_path(self.portal, '/plone/directory'), '/directory')
+        self.assertEqual(relative_path(self.portal, '/plone/directory', False), 'directory')
+        self.assertEqual(relative_path(self.portal, '/alone/directory'), '/alone/directory')
 
     def test_split_text(self):
         self.assertTupleEqual(split_text(None, 50), (u'', u''))
@@ -158,9 +163,9 @@ class TestTesting(IntegrationTestCase):
         self.assertFalse(str_to_bool(dic, 0, logger))
         self.assertTrue(str_to_bool(dic, '1', logger))
         self.assertTrue(str_to_bool(dic, 123, logger))
-        self.assertEquals(dic['errors'], 0)
+        self.assertEqual(dic['errors'], 0)
         self.assertFalse(str_to_bool(dic, 'a', logger))
-        self.assertEquals(dic['errors'], 1)
+        self.assertEqual(dic['errors'], 1)
 
     def test_str_to_date(self):
         dic = {1: '2023/03/03', 2: '2023/03/03 09:29', 'errors': 0}
@@ -168,12 +173,12 @@ class TestTesting(IntegrationTestCase):
         self.assertIsNone(str_to_date(dic, 'bad_key', logger))
         self.assertRaises(TypeError, str_to_date, dic, 'bad_key', logger, can_be_empty=False)
         self.assertIsNone(str_to_date(dic, 1, logger, min_val=datetime.date(2023, 4, 1)))
-        self.assertEquals(dic['errors'], 1)
+        self.assertEqual(dic['errors'], 1)
         self.assertIsNone(str_to_date(dic, 1, logger, max_val=datetime.date(2022, 4, 1)))
-        self.assertEquals(dic['errors'], 2)
+        self.assertEqual(dic['errors'], 2)
         self.assertIsNone(str_to_date(dic, 1, logger, min_val=datetime.date(2023, 4, 1),
                                       max_val=datetime.date(2022, 4, 1)))
-        self.assertEquals(dic['errors'], 3)
+        self.assertEqual(dic['errors'], 3)
         ret = str_to_date(dic, 1, logger)
         self.assertIsInstance(ret, datetime.date)
         self.assertEqual(str(ret), '2023-03-03')
@@ -181,4 +186,4 @@ class TestTesting(IntegrationTestCase):
         self.assertIsInstance(ret, datetime.datetime)
         self.assertEqual(str(ret), '2023-03-03 09:29:00')
         ret = str_to_date(dic, 2, logger, fmt='%Y/%m/%d %M:%H', as_date=False)
-        self.assertEquals(dic['errors'], 4)
+        self.assertEqual(dic['errors'], 4)

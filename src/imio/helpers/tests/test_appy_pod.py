@@ -19,10 +19,10 @@ class TestAppyPod(IntegrationTestCase):
         # does not break if called on an unexisting field or
         # not RichText field, just do nothing and display a portal_message
         view(field_name='title')
-        self.assertEquals(doc.Title(), 'Original title')
+        self.assertEqual(doc.Title(), 'Original title')
         view(field_name='unexisting_field_name')
         # call it on a real RichText field_name
-        self.assertEquals(doc.getText(), '')
+        self.assertEqual(doc.getText(), '')
         view(field_name='text')
         self.assertNotEquals(doc.getText(), '')
 
@@ -36,9 +36,9 @@ class TestAppyPod(IntegrationTestCase):
         # does not break if called on an unexisting field or
         # not RichText field, just do nothing and display a portal_message
         view(field_name='title')
-        self.assertEquals(doc.Title(), 'Original title')
+        self.assertEqual(doc.Title(), 'Original title')
         view(field_name='unexisting_field_name')
         # call it on a real RichText field_name
-        self.assertEquals(doc.text, None)
+        self.assertEqual(doc.text, None)
         view(field_name='text')
         self.assertTrue(isinstance(doc.text, RichTextValue))

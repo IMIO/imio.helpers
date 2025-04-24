@@ -10,7 +10,7 @@ class TestBarcode(unittest.TestCase):
 
     def test_generate_barcode(self):
         current_dir = os.path.dirname(os.path.abspath(__file__))
-        barcode_resource = "barcode_python2_zint_60x60_278bytes.png"
+        barcode_resource = "barcode_python3_zint_60x60_156bytes.png"
         with open(os.path.join(current_dir, barcode_resource), 'rb') as barcode_file:
             bc = barcode_file.read()
             result = barcode.generate_barcode('123')
