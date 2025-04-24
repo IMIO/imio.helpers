@@ -1,6 +1,15 @@
 Changelog
 =========
 
+1.2.4 (unreleased)
+------------------
+
+- Added JS function `expandCollapsible` that will expand a list of collapsibles
+  (`toggleDetails`) passed as query parameter.
+  [gbastien]
+- Pinned `z3c.unconfigure` to `2.1` instead `3.0` as it breaks Plone6.0 tests.
+  [gbastien]
+
 1.2.3 (2025-03-11)
 ------------------
 

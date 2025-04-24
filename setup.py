@@ -10,7 +10,7 @@ long_description = (
 
 setup(
     name='imio.helpers',
-    version='1.2.3',
+    version='1.2.4.dev0',
     description="Various helper methods for development.",
     long_description=long_description,
     # Get more from http://pypi.python.org/pypi?%3Aaction=list_classifiers
