@@ -249,3 +249,19 @@ function temp_disable_link(tag) {
         tag.style = "";
     }, 2000);
 }
+
+// override quickupload _addSelection to select elements in correct order
+qq.FileUploader.prototype._addSelection = function(files) {
+        var valid = true;
+        for (var i = 0; i < files.length; i++){
+            if (!this._validateFile(files[i])){
+                valid = false;
+                break;
+            }
+        }
+        if (valid){
+            for (var i = 0; i < files.length; i++){
+                this._addFile(files[i]);
+            }
+        }
+    }
