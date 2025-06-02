@@ -88,9 +88,9 @@ jobs:
         run: |
           sudo apt-get update -qqy
           sudo apt-get install -qqy g++ libpng-dev cmake libqt5widgets5 qttools5-dev
-          wget -t 3 -T 60 --waitretry 5 -O zint-2.9.1.tar.gz https://sourceforge.net/projects/zint/files/zint/2.9.1/zint-2.9.1.tar.gz/download
-          tar -xf zint-2.9.1.tar.gz
-          cd zint-2.9.1
+          wget -t 3 -T 60 --waitretry 5 -O zint-2.9.1.tar.gz https://sourceforge.net/projects/zint/files/zint/2.9.1/zint-2.9.1-src.tar.gz
+          tar -xvf zint-2.9.1.tar.gz
+          cd zint-2.9.1-src
           sudo cmake .
           sudo make
           sudo make install
