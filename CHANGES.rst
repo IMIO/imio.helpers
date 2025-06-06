@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.2.4 (unreleased)
+1.2.4 (2025-06-06)
 ------------------
 
 - Added JS function `expandCollapsible` that will expand a list of collapsibles
