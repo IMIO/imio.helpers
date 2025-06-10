@@ -6,6 +6,7 @@ from imio.helpers.setup import remove_gs_step
 from imio.helpers.testing import IntegrationTestCase
 from plone import api
 
+import six
 import unittest
 
 
@@ -18,24 +19,27 @@ class TestSetupModule(IntegrationTestCase):
         self.portal = self.layer['portal']
 
     def test_load_type_from_package(self):
+        if six.PY2:
+            package = 'profile-Products.CMFPlone:plone'
+        else:
+            package = 'plone.app.contenttypes:default'
         types_tool = api.portal.get_tool('portal_types')
         portal_type = types_tool.get('File')
         self.assertTrue(portal_type.filter_content_types)
         portal_type.filter_content_types = False
         self.assertFalse(portal_type.filter_content_types)
-        self.assertTrue(load_type_from_package(
-            'File', 'plone.app.contenttypes:default'))
+        self.assertTrue(load_type_from_package('File', package))
         portal_type = types_tool.get('File')
         self.assertTrue(portal_type.filter_content_types)
         # not found portal_type
         self.assertFalse(load_type_from_package(
-            'Folder2', 'plone.app.contenttypes:default'))
+            'Folder2', package))
         # not found profile_id
         self.assertFalse(load_type_from_package(
-            'Folder', 'plone.app.contenttypes:default2'))
+            'Folder', package+'2'))
         # type not managed by given profile_id
         self.assertFalse(load_type_from_package(
-            'testingtype', 'plone.app.contenttypes:default'))
+            'testingtype', package))
         # reimport a Dexterity fti
         self.assertTrue(load_type_from_package(
             'testingtype', 'profile-imio.helpers:testing'))
