@@ -33,7 +33,7 @@ ifeq ($(plone),6.0)
   python=3.10
 endif
 ifeq ($(plone),6.1)
-  python=3.12
+  python=3.13
 endif
 endif
 
