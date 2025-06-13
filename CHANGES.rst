@@ -24,6 +24,8 @@ Changelog
 
 - Improved `email.validate_email_address` to replace '""' in email.
   [sgeulette]
+- Added Plone 6.1 version in buildout.
+  [chris-adam]
 
 1.2.2 (2025-02-06)
 ------------------
