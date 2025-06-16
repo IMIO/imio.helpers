@@ -1,0 +1,41 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    xmlns:zcml="http://namespaces.zope.org/zcml"
+    i18n_domain="imio.helpers">
+
+    <genericsetup:registerProfile
+        name="install-base"
+        title="imio.helpers base"
+        directory="profiles/base"
+        description="imio.helpers"
+        provides="Products.GenericSetup.interfaces.EXTENSION" />
+    
+    <genericsetup:registerProfile
+        zcml:condition="not-have plone-5"
+        name="default"
+        title="imio.helpers default"
+        directory="profiles/plone4"
+        description="imio.helpers for Plone 4"
+        provides="Products.GenericSetup.interfaces.EXTENSION" />
+    
+    <genericsetup:registerProfile
+        zcml:condition="have plone-60"
+        name="default"
+        title="imio.helpers default"
+        directory="profiles/plone6"
+        description="imio.helpers for Plone 6"
+        provides="Products.GenericSetup.interfaces.EXTENSION" />
+
+    <!-- Upgrade steps -->
+    <genericsetup:upgradeSteps
+        source="1"
+        destination="2"
+        profile="imio.helpers:default">
+        <genericsetup:upgradeDepends
+            title="Register BrowserLayer"
+            description=""
+            import_steps="browserlayer" />
+    </genericsetup:upgradeSteps>
+
+</configure>
