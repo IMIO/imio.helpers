@@ -12,5 +12,5 @@ class TestPath(unittest.TestCase):
         self.assertTrue(path.path_to_package(path).
                         endswith('/src/imio/helpers/'))
         self.assertTrue(path.path_to_package(browser,
-                                             filepart='static/listing.js').
-                        endswith('/src/imio/helpers/browser/static/listing.js'))
+                                             filepart='static/listings.js').
+                        endswith('/src/imio/helpers/browser/static/listings.js'))
