@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from collections import OrderedDict
-from imio.helpers import HAS_PLONE_5_AND_MORE
+from imio.helpers import HAS_PLONE_6_AND_MORE
 from imio.helpers.catalog import addOrUpdateColumns
 from imio.helpers.catalog import addOrUpdateIndexes
 from imio.helpers.catalog import get_intid
@@ -50,7 +50,7 @@ class TestCatalogModule(IntegrationTestCase):
         # for now reversedUID index does not exist...
         self.assertTrue('reversedUID' not in self.catalog.indexes())
         # and add an existing index UID
-        if HAS_PLONE_5_AND_MORE:
+        if HAS_PLONE_6_AND_MORE:
             tagname = self.catalog.Indexes['UID'].__class__.__name__
         else:
             tagname = self.catalog.Indexes['UID'].getTagName()

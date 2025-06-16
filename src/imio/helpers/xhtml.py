@@ -2,7 +2,7 @@
 
 from Acquisition import aq_base
 from html import escape
-from imio.helpers import HAS_PLONE_5_AND_MORE
+from imio.helpers import HAS_PLONE_6_AND_MORE
 from imio.helpers.utils import create_image_content
 from os import path
 from plone import api
@@ -30,7 +30,7 @@ except ImportError:
     import pathlib2 as pathlib
 
 
-if HAS_PLONE_5_AND_MORE:
+if HAS_PLONE_6_AND_MORE:
     from plone.namedfile.scaling import ImageScale
 else:
     from plone.app.imaging.scale import ImageScale
@@ -398,7 +398,7 @@ def _get_image_blob(imageObj):
     """Be defensinve in case this is a wrong <img> with a src
        to someting else than an image... """
     blob = None
-    if HAS_PLONE_5_AND_MORE:
+    if HAS_PLONE_6_AND_MORE:
         if hasattr(imageObj, 'image') and imageObj.image and imageObj.get_size():
             blob = imageObj.image
     else:
@@ -447,7 +447,7 @@ def _transform_images(context, xhtmlContent, pretty_print=False, transform_type=
         blob_path = None
         if blob:
             if transform_type == "path":
-                if HAS_PLONE_5_AND_MORE:
+                if HAS_PLONE_6_AND_MORE:
                     blob_path = blob._blob._p_blob_committed
                 else:
                     blob_path = blob.blob._p_blob_committed
@@ -456,7 +456,7 @@ def _transform_images(context, xhtmlContent, pretty_print=False, transform_type=
             elif transform_type == "data":
                 # blob_path = blob.blob._p_blob_committed
                 # blob_path and
-                if HAS_PLONE_5_AND_MORE:
+                if HAS_PLONE_6_AND_MORE:
                     blob_content_type = blob.contentType
                     if blob_content_type.startswith('image/'):
                         # py3
@@ -546,7 +546,7 @@ def storeImagesLocally(context,
             return None, None
 
         filename = imageObj.getId()
-        if HAS_PLONE_5_AND_MORE:
+        if HAS_PLONE_6_AND_MORE:
             data = imageObj.image.data
         else:
             # In Plone4 python 2.x : imageObj is <ATImage at /plone/dot.gif>

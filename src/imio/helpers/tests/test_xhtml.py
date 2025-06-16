@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from imio.helpers import HAS_PLONE_5_AND_MORE
+from imio.helpers import HAS_PLONE_6_AND_MORE
 from imio.helpers import PLONE_MAJOR_VERSION
 from imio.helpers.testing import FUNCTIONAL
 from imio.helpers.testing import IntegrationTestCase
@@ -396,7 +396,7 @@ class TestXHTMLModule(IntegrationTestCase):
         transaction.savepoint()
         # has a blob
         self.assertEqual(img.get_size(), 873)
-        if HAS_PLONE_5_AND_MORE:
+        if HAS_PLONE_6_AND_MORE:
             blob = img.image._blob
         else:
             blob = img.getBlobWrapper().blob

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from imio.helpers import HAS_PLONE_5_AND_MORE
+from imio.helpers import HAS_PLONE_6_AND_MORE
 from imio.helpers.testing import IntegrationTestCase
 from unittest import TestLoader
 from unittest import TestSuite
@@ -28,7 +28,7 @@ class TestConverters(IntegrationTestCase, HTTPRequestTests):
         with self.assertRaises(ValueError) as cm:
             self._processInputs(inputs)
         error_message = 'Invalid json \'{"key1": "value1, "key2": "value2"}\''
-        if HAS_PLONE_5_AND_MORE:
+        if HAS_PLONE_6_AND_MORE:
             self.assertEqual(html.unescape(cm.exception.args[0]), error_message)
         else:
             self.assertEqual(cm.exception.message, error_message)

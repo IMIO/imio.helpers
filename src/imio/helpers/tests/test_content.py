@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from imio.helpers import HAS_PLONE_5_AND_MORE
+from imio.helpers import HAS_PLONE_6_AND_MORE
 from imio.helpers.content import add_file
 from imio.helpers.content import add_image
 from imio.helpers.content import add_to_annotation
@@ -48,7 +48,7 @@ import os
 import six
 
 
-if HAS_PLONE_5_AND_MORE:
+if HAS_PLONE_6_AND_MORE:
     from Products.CMFPlone.interfaces import IEditingSchema
 
 
@@ -334,7 +334,7 @@ class TestContentModule(IntegrationTestCase):
         self.assertIsNone(uuidToObject('unknown_uid'))
 
     def test_disable_link_integrity_checks(self):
-        if HAS_PLONE_5_AND_MORE:
+        if HAS_PLONE_6_AND_MORE:
             registry = getUtility(IRegistry)
             settings = registry.forInterface(IEditingSchema, prefix="plone")
         else:
@@ -344,7 +344,7 @@ class TestContentModule(IntegrationTestCase):
         self.assertFalse(settings.enable_link_integrity_checks)
 
     def test_restore_link_integrity_checks(self):
-        if HAS_PLONE_5_AND_MORE:
+        if HAS_PLONE_6_AND_MORE:
             registry = getUtility(IRegistry)
             settings = registry.forInterface(IEditingSchema, prefix="plone")
         else:

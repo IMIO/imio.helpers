@@ -4,8 +4,8 @@ Changelog
 1.2.5 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- Fix Plone 6 JS registration & remove unused Plone 5.2 compatibility
+  [laulaz]
 
 1.2.4 (2025-06-06)
 ------------------
