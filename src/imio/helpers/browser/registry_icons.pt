@@ -7,14 +7,16 @@
       .registry-icons-grid {
           display: grid;
           grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-          gap: 20px;
+          gap: 10px;
       }
       .icon-item {
           text-align: center;
       }
       img {
           max-width: 48px;
+          min-width: 48px;
           max-height: 48px;
+          min-height: 48px;
           margin-bottom: 10px;
       }
     </style>
@@ -24,7 +26,7 @@
     <div class="registry-icons-grid">
       <tal:icons tal:repeat="icon icons">
         <div class="icon-item">
-          <img tal:attributes="src icon/path" style="max-width: 48px; max-height: 48px;" />
+          <img tal:attributes="src icon/path"/>
           <p tal:content="icon/key"></p>
         </div>
       </tal:icons>
