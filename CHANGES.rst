@@ -6,6 +6,8 @@ Changelog
 
 - Fix Plone 6 JS registration & remove unused Plone 5.2 compatibility
   [laulaz]
+- Added `registry-icons` view to display all available registry icons.
+  [sgeulette]
 
 1.2.4 (2025-06-06)
 ------------------

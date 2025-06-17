@@ -1,0 +1,33 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+  <head>
+    <style>
+      .registry-icons-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+          gap: 20px;
+      }
+      .icon-item {
+          text-align: center;
+      }
+      img {
+          max-width: 48px;
+          max-height: 48px;
+          margin-bottom: 10px;
+      }
+    </style>
+  </head>
+  <body tal:define="icons view/get_icons">
+    <div>Number of icons: <span tal:content="python: len(icons)" /></div>
+    <div class="registry-icons-grid">
+      <tal:icons tal:repeat="icon icons">
+        <div class="icon-item">
+          <img tal:attributes="src icon/path" style="max-width: 48px; max-height: 48px;" />
+          <p tal:content="icon/key"></p>
+        </div>
+      </tal:icons>
+    </div>
+  </body>
+</html>

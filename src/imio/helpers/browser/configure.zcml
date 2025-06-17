@@ -64,4 +64,13 @@
             permission="cmf.ListFolderContents" />
     </configure>
 
+    <configure package="imio.helpers.browser" zcml:condition="have plone-60">
+        <browser:page
+            for="plone.base.interfaces.siteroot.IPloneSiteRoot"
+            class="imio.helpers.browser.views.RegistryIconsView"
+            name="registry-icons"
+            template="registry_icons.pt"
+            permission="zope2.View" />
+    </configure>
+
 </configure>
