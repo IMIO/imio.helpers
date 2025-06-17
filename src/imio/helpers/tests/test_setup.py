@@ -36,7 +36,7 @@ class TestSetupModule(IntegrationTestCase):
             'Folder2', package))
         # not found profile_id
         self.assertFalse(load_type_from_package(
-            'Folder', package+'2'))
+            'Folder', package + '2'))
         # type not managed by given profile_id
         self.assertFalse(load_type_from_package(
             'testingtype', package))
