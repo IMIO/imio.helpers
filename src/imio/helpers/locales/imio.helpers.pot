@@ -81,3 +81,7 @@ msgstr ""
 #: ../vocabularies.py
 msgid "yesno_value_true"
 msgstr ""
+
+#: ../utils.py:21
+msgid "Invalid JSON."
+msgstr ""
