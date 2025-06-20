@@ -106,7 +106,7 @@ def setup_logger(level=20):
     log = logging.getLogger()
     log.setLevel(level)
     for handler in logging.root.handlers:
-        if handler.level == 30 and handler.formatter is not None:
+        if handler.level and handler.level != level and handler.formatter is not None:
             handler.level = level
             break
 
