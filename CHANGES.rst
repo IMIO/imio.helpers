@@ -8,6 +8,8 @@ Changelog
   [laulaz]
 - Added `registry-icons` view to display all available registry icons.
   [sgeulette]
+- Added Plone 6 uninstall profile.
+  [chris-adam]
 
 1.2.4 (2025-06-06)
 ------------------
