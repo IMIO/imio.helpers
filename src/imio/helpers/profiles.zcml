@@ -27,6 +27,14 @@
         description="imio.helpers for Plone 6"
         provides="Products.GenericSetup.interfaces.EXTENSION" />
 
+    <genericsetup:registerProfile
+        name="uninstall"
+        zcml:condition="have plone-60"
+        title="imio.helpers uninstall"
+        directory="profiles/uninstall"
+        description="imio.helpers"
+        provides="Products.GenericSetup.interfaces.EXTENSION" />
+
     <!-- Upgrade steps -->
     <genericsetup:upgradeSteps
         source="1"

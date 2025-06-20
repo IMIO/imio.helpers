@@ -10,6 +10,8 @@ Changelog
   [sgeulette]
 - Added utils function is_valid_json.
   [chris-adam]
+- Added Plone 6 uninstall profile.
+  [chris-adam]
 
 1.2.4 (2025-06-06)
 ------------------

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from imio.helpers import HAS_PLONE_6_AND_MORE
 from imio.helpers.setup import load_type_from_package
 from imio.helpers.setup import load_workflow_from_package
 from imio.helpers.setup import load_xml_tool_only_from_package
@@ -17,6 +18,11 @@ class TestSetupModule(IntegrationTestCase):
 
     def setUp(self):
         self.portal = self.layer['portal']
+        try:
+            from Products.CMFPlone.utils import get_installer
+            self.installer = get_installer(self.portal)
+        except ImportError:
+            self.installer = None
 
     def test_load_type_from_package(self):
         if six.PY2:
@@ -102,3 +108,16 @@ class TestSetupModule(IntegrationTestCase):
         self.assertIn(step_id, ps_tool.getSortedImportSteps())
         self.assertTrue(remove_gs_step(step_id))
         self.assertNotIn(step_id, ps_tool.getSortedImportSteps())
+
+    def test_product_installed(self):
+        """Test if imio.helpers is installed with portal_quickinstaller."""
+        if not HAS_PLONE_6_AND_MORE:
+            return
+        self.assertTrue(self.installer.is_product_installed("imio.helpers"))
+
+    def test_uninstall(self):
+        """Test if imio.helpers is cleanly uninstalled."""
+        if not HAS_PLONE_6_AND_MORE:
+            return
+        self.installer.uninstall_product("imio.helpers")
+        self.assertFalse(self.installer.is_product_installed("imio.helpers"))
