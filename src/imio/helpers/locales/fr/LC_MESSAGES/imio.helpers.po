@@ -78,3 +78,7 @@ msgstr "Non"
 #: ../vocabularies.py
 msgid "yesno_value_true"
 msgstr "Oui"
+
+#: ../utils.py
+msgid "Invalid JSON."
+msgstr "JSON invalide."

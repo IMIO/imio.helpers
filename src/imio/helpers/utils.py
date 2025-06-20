@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 
+from imio.helpers import _
 from imio.helpers import HAS_PLONE_6_AND_MORE
 from plone import api
 from plone.namedfile.file import NamedBlobImage
+from zope.interface import Invalid
+
+import json
 
 
 def create_image_content(
@@ -26,3 +30,12 @@ def create_image_content(
             file=data,
         )
     return obj
+
+
+def is_valid_json(value):
+    if value:
+        try:
+            json.loads(value)
+        except:  # NOQA: E722
+            raise Invalid(_(u"Invalid JSON."))
+    return True
