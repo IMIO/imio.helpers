@@ -5,6 +5,7 @@ from imio.helpers.setup import load_xml_tool_only_from_package
 from imio.helpers.setup import remove_gs_step
 from imio.helpers.testing import IntegrationTestCase
 from plone import api
+from Products.CMFPlone.utils import get_installer
 
 import six
 import unittest
@@ -17,6 +18,7 @@ class TestSetupModule(IntegrationTestCase):
 
     def setUp(self):
         self.portal = self.layer['portal']
+        self.installer = get_installer(self.portal)
 
     def test_load_type_from_package(self):
         if six.PY2:
@@ -102,3 +104,12 @@ class TestSetupModule(IntegrationTestCase):
         self.assertIn(step_id, ps_tool.getSortedImportSteps())
         self.assertTrue(remove_gs_step(step_id))
         self.assertNotIn(step_id, ps_tool.getSortedImportSteps())
+
+    def test_product_installed(self):
+        """Test if imio.helpers is installed with portal_quickinstaller."""
+        self.assertTrue(self.installer.is_product_installed("imio.helpers"))
+
+    def test_uninstall(self):
+        """Test if imio.helpers is cleanly uninstalled."""
+        self.installer.uninstall_product("imio.helpers")
+        self.assertFalse(self.installer.is_product_installed("imio.helpers"))
