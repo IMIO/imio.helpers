@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.3.0 (unreleased)
+1.3.0 (2025-06-25)
 ------------------
 
 - Fix Plone 6 JS registration & remove unused Plone 5.2 compatibility
