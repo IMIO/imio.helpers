@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.2.5 (unreleased)
+1.3.0 (unreleased)
 ------------------
 
 - Fix Plone 6 JS registration & remove unused Plone 5.2 compatibility
