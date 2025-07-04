@@ -31,7 +31,7 @@ jobs:
       - name: Setup Env
         run: |
           sudo apt-get update -qqy
-          sudo apt-get install -qqy g++ libpng-dev cmake libqt5widgets5 qttools5-dev zint
+          sudo apt-get install -qqy g++ libpng-dev cmake libqt5widgets5 qttools5-dev zint libbz2-dev
           pip install --upgrade pip
           pip install -r requirements-${{ matrix.plone }}.txt
       - name: Cache eggs
