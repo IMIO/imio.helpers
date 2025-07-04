@@ -24,14 +24,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: packages
+        run: |
+          sudo apt-get update -qqy
+          sudo apt-get install -qqy g++ libpng-dev cmake libqt5widgets5 qttools5-dev zint libbz2-dev
       - name: Set up pyenv and Python
         uses: "gabrielfalcao/pyenv-action@v18"
         with:
           default: "${{ matrix.python }}"
       - name: Setup Env
         run: |
-          sudo apt-get update -qqy
-          sudo apt-get install -qqy g++ libpng-dev cmake libqt5widgets5 qttools5-dev zint libbz2-dev
           pip install --upgrade pip
           pip install -r requirements-${{ matrix.plone }}.txt
       - name: Cache eggs
