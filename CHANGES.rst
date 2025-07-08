@@ -4,8 +4,8 @@ Changelog
 1.3.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- Improved uninstall profile to permit install-base reinstall.
+  [sgeulette]
 
 1.3.0 (2025-06-25)
 ------------------
