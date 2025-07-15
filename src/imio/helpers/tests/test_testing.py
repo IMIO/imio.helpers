@@ -10,7 +10,7 @@ class TestTesting(IntegrationTestCase):
     """
 
     def test_testing_logger(self):
-        logger = testing_logger('imio.helpers: testing')
-        logger.info('Testing logger info')
-        logger.warning('Testing logger warning')
-        logger.error('Testing logger error')
+        logger = testing_logger("imio.helpers: testing")
+        logger.info("Testing logger info")
+        logger.warning("Testing logger warning")
+        logger.error("Testing logger error")

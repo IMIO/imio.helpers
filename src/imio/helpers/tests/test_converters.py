@@ -11,20 +11,20 @@ import imio.helpers.converters  # noqa
 
 
 class TestConverters(IntegrationTestCase, HTTPRequestTests):
-
     def test_imiohelpers_json_converter(self):
         inputs = (
-            ('data:json', '{"key1": "value1", "key2": "value2"}'),
-            ('data2:json', '{"key3": "value3", "key4": "value4"}'), )
+            ("data:json", '{"key1": "value1", "key2": "value2"}'),
+            ("data2:json", '{"key3": "value3", "key4": "value4"}'),
+        )
         req = self._processInputs(inputs)
-        self.assertEqual(req.form,
-                         {'data': {u'key2': u'value2', u'key1': u'value1'},
-                          'data2': {u'key3': u'value3', u'key4': u'value4'}})
+        self.assertEqual(
+            req.form,
+            {"data": {u"key2": u"value2", u"key1": u"value1"}, "data2": {u"key3": u"value3", u"key4": u"value4"}},
+        )
 
     def test_imiohelpers_json_converter_wrong_format(self):
         # missing " after value1
-        inputs = (
-            ('data:json', '{"key1": "value1, "key2": "value2"}'), )
+        inputs = (("data:json", '{"key1": "value1, "key2": "value2"}'),)
         with self.assertRaises(ValueError) as cm:
             self._processInputs(inputs)
         error_message = 'Invalid json \'{"key1": "value1, "key2": "value2"}\''
@@ -38,6 +38,6 @@ def test_suite():
     suite = TestSuite()
     for name in TestLoader().getTestCaseNames(TestConverters):
         # change prefix to avoid executing every tests of HTTPRequestTests
-        if name.startswith('test_imiohelpers_'):
+        if name.startswith("test_imiohelpers_"):
             suite.addTest(TestConverters(name))
     return suite

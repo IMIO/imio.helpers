@@ -14,10 +14,10 @@ import os
 import re
 
 
-logger = logging.getLogger('imio.helpers: transmogrifier')
+logger = logging.getLogger("imio.helpers: transmogrifier")
 
 
-def clean_value(value, isep=u'\n', strip=u' ', patterns=(), osep=None):
+def clean_value(value, isep=u"\n", strip=u" ", patterns=(), osep=None):
     """Clean unicode multiline value
 
     :param value: input string
@@ -58,7 +58,7 @@ def filter_keys(item, keys, unfound=None):
 
 
 def get_correct_id(obj, oid, with_letter=False):
-    """ Modify an id already existing in obj.
+    """Modify an id already existing in obj.
 
     :param obj: plone obj or dict or list
     :param oid: id to check
@@ -69,22 +69,22 @@ def get_correct_id(obj, oid, with_letter=False):
     i = 1
     while oid in obj:
         sfx = with_letter and letters_sequence(i) or i
-        oid = u'{}-{}'.format(original, sfx)
+        oid = u"{}-{}".format(original, sfx)
         i += 1
     return oid
 
 
 def get_correct_path(portal, path):
-    """ Check if a path already exists on obj """
+    """Check if a path already exists on obj"""
     original = path
     i = 1
     while portal.unrestrictedTraverse(path, default=None) is not None:  # path exists
-        path = '{}-{:d}'.format(original, i)
+        path = "{}-{:d}".format(original, i)
         i += 1
     return path
 
 
-def get_obj_from_path(root, item={}, path_key='_path', path=None):
+def get_obj_from_path(root, item={}, path_key="_path", path=None):
     """Gets object from path stored in item (dic) or from given path
 
     :param root: root object from where the search is done
@@ -98,7 +98,7 @@ def get_obj_from_path(root, item={}, path_key='_path', path=None):
     if not path:
         return None
     path = safe_encode(path)
-    if path.startswith('/'):
+    if path.startswith("/"):
         path = path[1:]
     try:
         return root.unrestrictedTraverse(path)
@@ -106,16 +106,16 @@ def get_obj_from_path(root, item={}, path_key='_path', path=None):
         return None
 
 
-def get_main_path(path='', subpath=''):
+def get_main_path(path="", subpath=""):
     """Return path/subpath if it exists. If path is empty, return buildout path."""
     if not path:
         # Are we in a classic buildout
-        instance_home = os.getenv('INSTANCE_HOME')
-        match = re.match('(.+)/parts/.+', instance_home)
+        instance_home = os.getenv("INSTANCE_HOME")
+        match = re.match("(.+)/parts/.+", instance_home)
         if match:
             path = match.group(1)
         else:
-            path = os.getenv('PWD')
+            path = os.getenv("PWD")
     if subpath:
         path = os.path.join(path, subpath)
     if os.path.exists(path):
@@ -123,7 +123,7 @@ def get_main_path(path='', subpath=''):
     raise Exception("Path '{}' doesn't exist".format(path))
 
 
-def pool_tuples(iterable, pool_len=2, e_msg=''):
+def pool_tuples(iterable, pool_len=2, e_msg=""):
     """Returns the iterable as tuples
 
     :param iterable: a list or tuple
@@ -134,8 +134,11 @@ def pool_tuples(iterable, pool_len=2, e_msg=''):
     if not iterable:
         return iterable
     if len(iterable) % pool_len:
-        raise ValueError("{}: the given iterable must contain a multiple of {} elements: value = '{}'".format(
-                         e_msg, pool_len, iterable))
+        raise ValueError(
+            "{}: the given iterable must contain a multiple of {} elements: value = '{}'".format(
+                e_msg, pool_len, iterable
+            )
+        )
     l_iter = iter(iterable)
     args = [l_iter for x in range(0, pool_len)]
     return list(zip(*args))
@@ -149,15 +152,15 @@ def relative_path(portal, fullpath, with_slash=True):
     :param with_slash: keep leadind slash
     :return: new path relative to portal object parameter
     """
-    portal_path = '/'.join(portal.getPhysicalPath())  # not unicode, brain.getPath is also encoded
+    portal_path = "/".join(portal.getPhysicalPath())  # not unicode, brain.getPath is also encoded
     if not fullpath.startswith(portal_path):
         return fullpath
     shift = not with_slash and 1 or 0
-    return fullpath[len(portal_path) + shift:]
+    return fullpath[len(portal_path) + shift :]  # noqa: E203
 
 
 def key_val(key, dic):
-    """ Return a dic value or the key
+    """Return a dic value or the key
 
     :param key: given key
     :param dic: dict
@@ -177,9 +180,9 @@ def str_to_bool(item, key, log_method, **log_params):
     """
     if log_params is None:
         log_params = {}
-    if item[key] in (u'True', u'true'):
+    if item[key] in (u"True", u"true"):
         return True
-    elif item[key] in (u'False', u'false'):
+    elif item[key] in (u"False", u"false"):
         return False
     try:
         return bool(int(item[key] or 0))
@@ -191,22 +194,23 @@ def str_to_bool(item, key, log_method, **log_params):
 def split_text(text, length):
     """Split text on a word boundary at max length"""
     if text is None:
-        return u'', u''
+        return u"", u""
     part1 = text = safe_unicode(text)
-    part2 = u''
+    part2 = u""
     if len(text) > length:
         part1 = text[:length]
         part2 = text[length:]
-        if part2[:1] != u' ':  # cut in a word
-            s_i = part1.rfind(u' ')
+        if part2[:1] != u" ":  # cut in a word
+            s_i = part1.rfind(u" ")
             if s_i > length / 2:  # space after the middle of the part1
-                part1 = part1[:s_i + 1]
-                part2 = text[s_i + 1:]
+                part1 = part1[: s_i + 1]
+                part2 = text[s_i + 1 :]  # noqa: E203
     return part1, part2
 
 
-def str_to_date(item, key, log_method, fmt='%Y/%m/%d', can_be_empty=True, as_date=True, min_val=None, max_val=None,
-                **log_params):
+def str_to_date(
+    item, key, log_method, fmt="%Y/%m/%d", can_be_empty=True, as_date=True, min_val=None, max_val=None, **log_params
+):
     """Changed to date or datetime the text value of item[key]
 
     :param item: yielded item (usually dict)

@@ -1,6 +1,6 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <layers>
-  <layer
-    name="imio.helpers"
-    interface="imio.helpers.interfaces.IIMIOHelpersLayer" />
+  <layer interface="imio.helpers.interfaces.IIMIOHelpersLayer"
+         name="imio.helpers"
+  />
 </layers>

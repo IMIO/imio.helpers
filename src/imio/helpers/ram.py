@@ -22,8 +22,7 @@ class IMIORAMCache(RAMCache):
         with writelock:
             if cacheId not in caches:
                 # imio.helpers, only changed here, use IMIOStorage instead Storage
-                caches[cacheId] = IMIOStorage(
-                    self.maxEntries, self.maxAge, self.cleanupInterval)
+                caches[cacheId] = IMIOStorage(self.maxEntries, self.maxAge, self.cleanupInterval)
             return caches[cacheId]
 
 
@@ -72,8 +71,9 @@ class IMIOStorage(Storage):
             except Exception as exc:
                 size = 0
                 api.portal.show_message(
-                    'Could not compute size for "%s", original exception was "%s"'
-                    % (repr(ob), repr(exc)), request=getRequest())
+                    'Could not compute size for "%s", original exception was "%s"' % (repr(ob), repr(exc)),
+                    request=getRequest(),
+                )
 
             hits = 0
             older_date = None
@@ -86,12 +86,16 @@ class IMIOStorage(Storage):
                     hits += entry.access_count
                     older_date = older_date and min(older_date, entry.ctime) or entry.ctime
 
-            result.append({'path': ob,
-                           'hits': hits,
-                           'misses': self._misses.get(ob, 0),
-                           'size': size,
-                           'entries': len(self._data[ob]),
-                           'older_date': older_date and DateTime(older_date)})
+            result.append(
+                {
+                    "path": ob,
+                    "hits": hits,
+                    "misses": self._misses.get(ob, 0),
+                    "size": size,
+                    "entries": len(self._data[ob]),
+                    "older_date": older_date and DateTime(older_date),
+                }
+            )
         return tuple(result)
 
 

@@ -1,36 +1,59 @@
-<tal:defines define="batch python: view.listRenderedContainedElements(widgets_to_render=('dummy_unexisting_field_name'),
-                                                                      b_start=request.get('b_start', 0))">
-<div id="imio-helpers-folder-listing" i18n:domain="imio.helpers">
-<table id="imio-helpers-folder-listing-table"
-       class="listing"
-       tal:condition="batch">
-    <tr>
-        <th class='header_title' i18n:translate="">Title</th>
-        <th class='header_description' i18n:translate="">Description</th>
-        <th class='header_state' i18n:translate="">State</th>
-        <th class='header_author' i18n:translate="">Author</th>
-    </tr>
-    <tr tal:repeat="renderedElement batch">
-        <tal:defines define="obj python: renderedElement.context;
-                             widgets renderedElement/widgets;">
-        <td><a href="#" class="#"
+<tal:defines define="
+               batch python: view.listRenderedContainedElements(widgets_to_render=('dummy_unexisting_field_name'),
+                                                                      b_start=request.get('b_start', 0));
+             ">
+  <div id="imio-helpers-folder-listing"
+       i18n:domain="imio.helpers"
+  >
+    <table class="listing"
+           id="imio-helpers-folder-listing-table"
+           tal:condition="batch"
+    >
+      <tr>
+        <th class="header_title"
+            i18n:translate=""
+        >Title</th>
+        <th class="header_description"
+            i18n:translate=""
+        >Description</th>
+        <th class="header_state"
+            i18n:translate=""
+        >State</th>
+        <th class="header_author"
+            i18n:translate=""
+        >Author</th>
+      </tr>
+      <tr tal:repeat="renderedElement batch">
+        <tal:defines define="
+                       obj python: renderedElement.context;
+                       widgets renderedElement/widgets;
+                     ">
+          <td><a class="#"
+               href="#"
                tal:content="obj/title"
-               tal:attributes="href obj/absolute_url;
-                               class string:contenttype-${obj/portal_type} state-${obj/@@plone_context_state/workflow_state};">Object title</a></td>
-        <td tal:content="obj/Description">Object description</td>
-        <td tal:content="obj/@@plone_context_state/workflow_state" i18n:translate="" i18n:domain="plone">State</td>
-        <td tal:content="python: view.author(obj.Creator())">Creator</td>
+               tal:attributes="
+                 href obj/absolute_url;
+                 class string:contenttype-${obj/portal_type} state-${obj/@@plone_context_state/workflow_state};
+               "
+            >Object title</a></td>
+          <td tal:content="obj/Description">Object description</td>
+          <td tal:content="obj/@@plone_context_state/workflow_state"
+              i18n:domain="plone"
+              i18n:translate=""
+          >State</td>
+          <td tal:content="python: view.author(obj.Creator())">Creator</td>
         </tal:defines>
-    </tr>
-</table>
+      </tr>
+    </table>
 
-<div metal:use-macro="context/batch_macros/macros/navigation" />
+    <div metal:use-macro="context/batch_macros/macros/navigation"></div>
 
-<p class="discreet"
-   tal:condition="not: batch"
-   i18n:domain="plone"
-   i18n:translate="description_no_items_in_folder">
+    <p class="discreet"
+       tal:condition="not: batch"
+       i18n:domain="plone"
+       i18n:translate="description_no_items_in_folder"
+    >
     There are currently no items in this folder.
-</p>
-</div>
+    </p>
+  </div>
 </tal:defines>

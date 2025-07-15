@@ -10,6 +10,8 @@ Changelog
 - Gracefully close the subprocess.Popen in `barcode.generate_barcode`
   to avoid "ResourceWarning: unclosed file..."
   [aduchene]
+- Improved uninstall profile to permit install-base reinstall.
+  [sgeulette]
 
 1.3.0 (2025-06-25)
 ------------------

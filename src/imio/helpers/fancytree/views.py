@@ -13,44 +13,44 @@ class BaseRenderFancyTree(BrowserView):  # pylint: disable=R0921
 
     """Base view that displays a fancytree from a catalog query."""
 
-    index = ViewPageTemplateFile('fancytree.pt')
-    root = '/'  # must begin with slash
+    index = ViewPageTemplateFile("fancytree.pt")
+    root = "/"  # must begin with slash
 
     def __init__(self, context, request):
         self.context = context
         self.request = request
         self.portal = api.portal.get()
-        self.root_path = '/'.join(self.portal.getPhysicalPath()) + (self.root.lstrip('/') and self.root or '')
+        self.root_path = "/".join(self.portal.getPhysicalPath()) + (self.root.lstrip("/") and self.root or "")
 
     def label(self):
         return self.context.Title()
 
     def __call__(self):
-        if self.request.method == 'POST':
-            uid = self.request.get('uid')
+        if self.request.method == "POST":
+            uid = self.request.get("uid")
             self.request.response.redirect(self.redirect_url(uid))
-            return ''
+            return ""
 
         return self.index()
 
     def folder_tree_to_fancytree(self, folder_tree):
         """Transform folder tree to a dict that will be used by fancy tree."""
         fancytree_data = []
-        for child in folder_tree['children']:
-            brain = child['item']
-            if brain.portal_type == 'Folder' and not child['children']:
+        for child in folder_tree["children"]:
+            brain = child["item"]
+            if brain.portal_type == "Folder" and not child["children"]:
                 # don't render empty folders
                 continue
 
             item_info = {
-                'title': brain.Title,
-                'key': brain.UID,
-                'folder': False,
+                "title": brain.Title,
+                "key": brain.UID,
+                "folder": False,
             }
 
-            if child['children']:
-                item_info['folder'] = True
-                item_info['children'] = self.folder_tree_to_fancytree(child)
+            if child["children"]:
+                item_info["folder"] = True
+                item_info["children"] = self.folder_tree_to_fancytree(child)
 
             fancytree_data.append(item_info)
 

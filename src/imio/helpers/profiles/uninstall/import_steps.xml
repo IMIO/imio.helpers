@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<import-steps>
+  <import-step id="imio.helpers.uninstall_cleanup"
+               handler="imio.helpers.setuphandlers.uninstall_product"
+               title="Clean portal_setup for imio.helpers uninstall"
+               version="2025-07-07"
+  >
+    <dependency step="browserlayer" />
+    <dependency step="registry" />
+    manual coded uninstall
+  </import-step>
+</import-steps>

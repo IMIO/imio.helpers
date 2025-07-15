@@ -21,19 +21,19 @@ from zope.schema.interfaces import IVocabularyFactory
 import logging
 
 
-logger = logging.getLogger('imio.helpers:cache')
+logger = logging.getLogger("imio.helpers:cache")
 VOLATILE_NAME_MAX_LENGTH = 200
-VOLATILE_ATTR = '_volatile_cache_keys'
-METHODS_MAPPING_NAME = '_methods_invalidation_mapping'
+VOLATILE_ATTR = "_volatile_cache_keys"
+METHODS_MAPPING_NAME = "_methods_invalidation_mapping"
 
 
 def cleanVocabularyCacheFor(vocabulary=None):
     """Clean _memojito_ attribute for given p_vocabulary name.
-       If p_vocabulary is None, it will clean every vocabulary _memojito_ attribute."""
+    If p_vocabulary is None, it will clean every vocabulary _memojito_ attribute."""
 
     # we received a vocabulary name, just clean this one
     if vocabulary:
-        vocabularies = (queryUtility(IVocabularyFactory, vocabulary), )
+        vocabularies = (queryUtility(IVocabularyFactory, vocabulary),)
     else:
         # clean every vocabularies having a _memojito_ attribute
         vocabularies = getAllUtilitiesRegisteredFor(IVocabularyFactory)
@@ -46,7 +46,7 @@ def cleanVocabularyCacheFor(vocabulary=None):
 def cleanRamCache():
     """Clean the entire ram.cache."""
     cache_chooser = getUtility(ICacheChooser)
-    thecache = cache_chooser('')
+    thecache = cache_chooser("")
     thecache.ramcache.invalidateAll()
 
 
@@ -64,14 +64,13 @@ def cleanForeverCache():
 
 def get_cachekey_volatile(name, method=None, ttl=0):
     """Helper for using a volatile corresponding to p_name
-       to be used as cachekey stored in a volatile.
-       If it exists, we return the value, either we store datetime.now().
-       If p_ttl (time to live) is given, a cachekey older that ttl is updated."""
+    to be used as cachekey stored in a volatile.
+    If it exists, we return the value, either we store datetime.now().
+    If p_ttl (time to live) is given, a cachekey older that ttl is updated."""
     portal = api.portal.get()
     # use max_length of VOLATILE_NAME_MAX_LENGTH to avoid cropped names
     # that could lead to having 2 names beginning with same part using same volatile...
-    normalized_name = queryUtility(IIDNormalizer).normalize(
-        name, max_length=VOLATILE_NAME_MAX_LENGTH)
+    normalized_name = queryUtility(IIDNormalizer).normalize(name, max_length=VOLATILE_NAME_MAX_LENGTH)
     volatile_name = normalized_name
     volatiles = getattr(portal, VOLATILE_ATTR, None)
     if volatiles is None:
@@ -85,7 +84,7 @@ def get_cachekey_volatile(name, method=None, ttl=0):
         volatiles[volatile_name] = date
     # store caller method path so it will be invalidated in invalidate_cachekey_volatile_for
     if method:
-        key = '%s.%s' % (method.__module__, method.__name__)
+        key = "%s.%s" % (method.__module__, method.__name__)
         methods = volatiles.get(METHODS_MAPPING_NAME)
         if methods is None:
             volatiles[METHODS_MAPPING_NAME] = PersistentMapping()
@@ -99,8 +98,7 @@ def get_cachekey_volatile(name, method=None, ttl=0):
 def invalidate_cachekey_volatile_for(name, get_again=False, invalidate_cache=True):
     """ """
     portal = api.portal.get()
-    normalized_name = queryUtility(IIDNormalizer).normalize(
-        name, max_length=VOLATILE_NAME_MAX_LENGTH)
+    normalized_name = queryUtility(IIDNormalizer).normalize(name, max_length=VOLATILE_NAME_MAX_LENGTH)
     volatile_name = normalized_name
     volatiles = getattr(portal, VOLATILE_ATTR, {})
     if volatile_name in volatiles:
@@ -134,21 +132,20 @@ def _generate_params_key(*args, **kwargs):
 
 def generate_key(func):
     """Return the complete path for a function e.g. module.function"""
-    if hasattr(func, '_cache_key'):
+    if hasattr(func, "_cache_key"):
         return func._cache_key
     path = [func.__module__]
-    if hasattr(func, 'im_class'):  # unbounded func (no more in py3)
+    if hasattr(func, "im_class"):  # unbounded func (no more in py3)
         path.append(func.im_class.__name__)
         path.append(func.__name__)
-    elif hasattr(func, '__qualname__'):
+    elif hasattr(func, "__qualname__"):
         path.append(func.__qualname__)
     else:
         path.append(func.__name__)
-    return '.'.join(path)
+    return ".".join(path)
 
 
 def volatile_cache_with_parameters(func):
-
     def get_key(func, *args, **kwargs):
         return (
             get_cachekey_volatile(generate_key(func)),
@@ -164,7 +161,6 @@ def volatile_cache_with_parameters(func):
 
 
 def volatile_cache_without_parameters(func):
-
     def get_key(func, *args, **kwargs):
         return (
             get_cachekey_volatile(generate_key(func)),
@@ -181,22 +177,23 @@ def volatile_cache_without_parameters(func):
 
 def obj_modified(obj, asdatetime=True, check_annotation=True):
     """Returns max value between obj.modified(), obj._p_mtime and __anotations__._p_mtime
-       to check also attribute modification and annotation modification.
-       Returns a float when asdatetime=False.
+    to check also attribute modification and annotation modification.
+    Returns a float when asdatetime=False.
     """
     modified = max(float(obj.modified()), obj._p_mtime)
-    if check_annotation and base_hasattr(obj, '__annotations__'):
+    if check_annotation and base_hasattr(obj, "__annotations__"):
         # when stored annotation is a PersistentMapping, we need to check _p_mtime
         # of stored annotation because a change in the PersistentMapping will not change
         # the __annotations__ _p_mtime
         ann_max_time = max(
-            [obj.__annotations__._p_mtime] +
-            [obj.__annotations__[k]._p_mtime
-             for k in obj.__annotations__.keys()
-             if hasattr(obj.__annotations__[k], '_p_mtime')])
-        modified = max(float(obj.modified()),
-                       obj._p_mtime,
-                       ann_max_time)
+            [obj.__annotations__._p_mtime]
+            + [
+                obj.__annotations__[k]._p_mtime
+                for k in obj.__annotations__.keys()
+                if hasattr(obj.__annotations__[k], "_p_mtime")
+            ]
+        )
+        modified = max(float(obj.modified()), obj._p_mtime, ann_max_time)
     if asdatetime:
         modified = datetime.fromtimestamp(modified)
     return modified
@@ -211,8 +208,10 @@ def extract_wrapped(decorated):
 def setup_ram_cache(max_entries=100000, max_age=2400, cleanup_interval=600):
     """Can be called in IProcessStarting subscriber"""
     ramcache = queryUtility(IRAMCache)
-    logger.info('=> Setting ramcache parameters (maxEntries=%s, maxAge=%s, cleanupInterval=%s)' %
-                (max_entries, max_age, cleanup_interval))
+    logger.info(
+        "=> Setting ramcache parameters (maxEntries=%s, maxAge=%s, cleanupInterval=%s)"
+        % (max_entries, max_age, cleanup_interval)
+    )
     ramcache.update(maxEntries=max_entries, maxAge=max_age, cleanupInterval=cleanup_interval)
 
 
@@ -230,19 +229,21 @@ def get_current_user_id(request=None):
 
 def get_plone_groups_for_user_cachekey(method, user_id=None, user=None, the_objects=False):
     """cachekey method for self.get_plone_groups_for_user."""
-    date = get_cachekey_volatile('_users_groups_value')
-    return (date,
-            # use user.getId() and not user.id because when user is a PloneUser instance
-            # it does not have a "id" and returns "acl_users" which break the invalidation
-            user and user.getId() or user_id or get_current_user_id(getRequest()),
-            the_objects)
+    date = get_cachekey_volatile("_users_groups_value")
+    return (
+        date,
+        # use user.getId() and not user.id because when user is a PloneUser instance
+        # it does not have a "id" and returns "acl_users" which break the invalidation
+        user and user.getId() or user_id or get_current_user_id(getRequest()),
+        the_objects,
+    )
 
 
 @ram.cache(get_plone_groups_for_user_cachekey)
 def get_plone_groups_for_user(user_id=None, user=None, the_objects=False):
     """Just return user.getGroups but cached.
-       This method is tested in
-       Products.PloneMeeting.tests.testToolPloneMeeting.test_pm_Get_plone_groups_for_user."""
+    This method is tested in
+    Products.PloneMeeting.tests.testToolPloneMeeting.test_pm_Get_plone_groups_for_user."""
     if api.user.is_anonymous():
         return []
     if user is None:
@@ -259,10 +260,8 @@ def get_plone_groups_for_user(user_id=None, user=None, the_objects=False):
 
 def get_users_in_plone_groups_cachekey(method, group_id=None, group=None, the_objects=False):
     """cachekey method for self.get_users_in_plone_groups."""
-    date = get_cachekey_volatile('_users_groups_value')
-    return (date,
-            group and group.getId() or group_id,
-            the_objects)
+    date = get_cachekey_volatile("_users_groups_value")
+    return (date, group and group.getId() or group_id, the_objects)
 
 
 @ram.cache(get_users_in_plone_groups_cachekey)

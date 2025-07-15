@@ -2,48 +2,55 @@
     xmlns="http://namespaces.zope.org/zope"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
     xmlns:zcml="http://namespaces.zope.org/zcml"
-    i18n_domain="imio.helpers">
+    i18n_domain="imio.helpers"
+    >
 
-    <genericsetup:registerProfile
-        name="install-base"
-        title="imio.helpers base"
-        directory="profiles/base"
-        description="imio.helpers"
-        provides="Products.GenericSetup.interfaces.EXTENSION" />
-    
-    <genericsetup:registerProfile
-        zcml:condition="not-have plone-5"
-        name="default"
-        title="imio.helpers default"
-        directory="profiles/plone4"
-        description="imio.helpers for Plone 4"
-        provides="Products.GenericSetup.interfaces.EXTENSION" />
-    
-    <genericsetup:registerProfile
-        zcml:condition="have plone-60"
-        name="default"
-        title="imio.helpers default"
-        directory="profiles/plone6"
-        description="imio.helpers for Plone 6"
-        provides="Products.GenericSetup.interfaces.EXTENSION" />
+  <genericsetup:registerProfile
+      name="install-base"
+      title="imio.helpers base"
+      description="imio.helpers"
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      directory="profiles/base"
+      />
 
-    <genericsetup:registerProfile
-        name="uninstall"
-        zcml:condition="have plone-60"
-        title="imio.helpers uninstall"
-        directory="profiles/uninstall"
-        description="imio.helpers"
-        provides="Products.GenericSetup.interfaces.EXTENSION" />
+  <genericsetup:registerProfile
+      name="default"
+      title="imio.helpers default"
+      description="imio.helpers for Plone 4"
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      directory="profiles/plone4"
+      zcml:condition="not-have plone-5"
+      />
 
-    <!-- Upgrade steps -->
-    <genericsetup:upgradeSteps
-        source="1"
-        destination="2"
-        profile="imio.helpers:default">
-        <genericsetup:upgradeDepends
-            title="Register BrowserLayer"
-            description=""
-            import_steps="browserlayer" />
-    </genericsetup:upgradeSteps>
+  <genericsetup:registerProfile
+      name="default"
+      title="imio.helpers default"
+      description="imio.helpers for Plone 6"
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      directory="profiles/plone6"
+      zcml:condition="have plone-60"
+      />
+
+  <genericsetup:registerProfile
+      name="uninstall"
+      title="imio.helpers uninstall"
+      description="imio.helpers"
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      directory="profiles/uninstall"
+      zcml:condition="have plone-60"
+      />
+
+  <!-- Upgrade steps -->
+  <genericsetup:upgradeSteps
+      profile="imio.helpers:default"
+      source="1"
+      destination="2"
+      >
+    <genericsetup:upgradeDepends
+        title="Register BrowserLayer"
+        description=""
+        import_steps="browserlayer"
+        />
+  </genericsetup:upgradeSteps>
 
 </configure>

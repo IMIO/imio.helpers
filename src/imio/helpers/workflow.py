@@ -8,12 +8,12 @@ from zope.i18n import translate
 import logging
 
 
-logger = logging.getLogger('imio.helpers.wokflow')
+logger = logging.getLogger("imio.helpers.wokflow")
 
 
 def do_transitions(obj, transitions, warn=False):
     """
-        Apply multiple transitions on obj
+    Apply multiple transitions on obj
     """
     wkf_tool = api.portal.get_tool("portal_workflow")
     if not isinstance(transitions, (list, tuple)):
@@ -28,22 +28,22 @@ def do_transitions(obj, transitions, warn=False):
 
 def get_state_infos(obj):
     """ """
-    wkf_tool = api.portal.get_tool('portal_workflow')
-    review_state = wkf_tool.getInfoFor(obj, 'review_state')
+    wkf_tool = api.portal.get_tool("portal_workflow")
+    review_state = wkf_tool.getInfoFor(obj, "review_state")
     wf = wkf_tool.getWorkflowsFor(obj)[0]
     state = wf.states.get(review_state)
     state_title = state and state.title or review_state
-    return {'state_name': review_state,
-            'state_title': translate(safe_unicode(state_title),
-                                     domain="plone",
-                                     context=obj.REQUEST)}
+    return {
+        "state_name": review_state,
+        "state_title": translate(safe_unicode(state_title), domain="plone", context=obj.REQUEST),
+    }
 
 
 def get_transitions(obj):
     """Return the ids of the available transitions as portal_workflow.getTransitionsFor
-       will actually return a list of dict with various infos (id, title, name, ...) of
-       the available transitions."""
-    wf_tool = api.portal.get_tool('portal_workflow')
+    will actually return a list of dict with various infos (id, title, name, ...) of
+    the available transitions."""
+    wf_tool = api.portal.get_tool("portal_workflow")
     return [tr["id"] for tr in wf_tool.getTransitionsFor(obj)]
 
 
@@ -57,8 +57,7 @@ def get_leading_transitions(wf, state_id, not_starting_with=None):
     """
     res = []
     for tr in wf.transitions.values():
-        if tr.new_state_id == state_id and \
-           (not_starting_with is None or not tr.id.startswith(not_starting_with)):
+        if tr.new_state_id == state_id and (not_starting_with is None or not tr.id.startswith(not_starting_with)):
             res.append(tr)
     return res
 
@@ -71,7 +70,7 @@ def remove_state_transitions(wf_name, state_id, remv_trs=[]):
     :param remv_trs: list of transitions to remove
     :return: True if removed
     """
-    wf_tool = api.portal.get_tool('portal_workflow')
+    wf_tool = api.portal.get_tool("portal_workflow")
     # if wf_name not in wf_tool:  # prefer an exception...
     wf = wf_tool[wf_name]
     if state_id not in wf.states:
@@ -95,7 +94,7 @@ def update_role_mappings_for(obj, wf=None):
     :param obj: object to update role mappings for
     """
     if not wf:
-        wf_tool = api.portal.get_tool('portal_workflow')
+        wf_tool = api.portal.get_tool("portal_workflow")
         wf = wf_tool.getWorkflowsFor(obj)[0]
     updated = wf.updateRoleMappingsFor(obj)
     if updated:
@@ -103,7 +102,7 @@ def update_role_mappings_for(obj, wf=None):
     return updated
 
 
-def get_final_states(wf, ignored_transition_prefix='back', ignored_transition_ids=[]):
+def get_final_states(wf, ignored_transition_prefix="back", ignored_transition_ids=[]):
     """Return the final states of a workflow.
        Final states are states with only "back" transitions.
     :param wf: the obj workflow
@@ -115,9 +114,10 @@ def get_final_states(wf, ignored_transition_prefix='back', ignored_transition_id
     res = []
     for state in wf.states.values():
         not_final_transitions = [
-            tr for tr in state.transitions
-            if not tr.startswith(ignored_transition_prefix) and
-            tr not in ignored_transition_ids]
+            tr
+            for tr in state.transitions
+            if not tr.startswith(ignored_transition_prefix) and tr not in ignored_transition_ids
+        ]
         # no other transitions left, then it is a final state
         if not not_final_transitions:
             res.append(state.id)

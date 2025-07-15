@@ -32,15 +32,15 @@ logger = logging.getLogger("imio.helpers")
 
 def is_develop_environment():
     """
-        Test if the environment variable named ENV is added by the buildout and get the value
+    Test if the environment variable named ENV is added by the buildout and get the value
     """
-    TRUISMS = ['yes', 'y', 'true', 'on']
-    var = os.getenv('IS_DEV_ENV', 'false')
+    TRUISMS = ["yes", "y", "true", "on"]
+    var = os.getenv("IS_DEV_ENV", "false")
 
     if var.lower() in TRUISMS:
-        logger.info('IS_DEV_ENV is deprecated, please use ENV variable.')
+        logger.info("IS_DEV_ENV is deprecated, please use ENV variable.")
         return True
-    elif get_environment() == 'dev':
+    elif get_environment() == "dev":
         return True
     else:
         return False
@@ -48,23 +48,23 @@ def is_develop_environment():
 
 def get_environment():
     """
-        Get value of ENV environment variable.
-        Value should be : dev, staging, preprod or prod.
+    Get value of ENV environment variable.
+    Value should be : dev, staging, preprod or prod.
     """
-    env = os.getenv('ENV', 'prod')
+    env = os.getenv("ENV", "prod")
     return env.lower()
 
 
 def generate_password(length=10, digits=3, upper=2, lower=1, special=1, readable=True):
     """
-        Create a random password with the specified length and minimum numbers
-        of digit, upper and lower case letters, special characters.
+    Create a random password with the specified length and minimum numbers
+    of digit, upper and lower case letters, special characters.
     """
     seed(time())
     # string.punctuation contains !"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~
-    specials = '!#$%&*+-<=>?@'
-    lowercase = 'abcdefghijklmnopqrstuvwxyz'
-    uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    specials = "!#$%&*+-<=>?@"
+    lowercase = "abcdefghijklmnopqrstuvwxyz"
+    uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     letters = "{0:s}".format(lowercase)
 
     password = list(
@@ -81,9 +81,10 @@ def generate_password(length=10, digits=3, upper=2, lower=1, special=1, readable
     return "".join(password)
 
 
-def setup_app(app, username='admin', logger=None):
+def setup_app(app, username="admin", logger=None):
     # import here to avoid weird init making Data.fs not useable
     from Testing.makerequest import makerequest
+
     acl_users = app.acl_users
     user = acl_users.getUser(username)
     if user:
@@ -93,15 +94,15 @@ def setup_app(app, username='admin', logger=None):
         logger.error("Cannot find zope user '%s'" % username)
     app = makerequest(app)
     # support plone.subrequest
-    app.REQUEST['PARENTS'] = [app]
+    app.REQUEST["PARENTS"] = [app]
     setRequest(app.REQUEST)
     return user
 
 
 def setup_logger(level=20):
     """
-        When running "bin/instance run ...", the logger level is 30 (warn).
-        It is possible to set it to 20 (info) or 10 (debug).
+    When running "bin/instance run ...", the logger level is 30 (warn).
+    It is possible to set it to 20 (info) or 10 (debug).
     """
     log = logging.getLogger()
     log.setLevel(level)
@@ -117,8 +118,8 @@ def fplog(action, extras):
     log_info(AUDIT_MESSAGE.format(user, ip, action, extras))
 
 
-@mutually_exclusive_parameters('email', 'fullname', 'userid')
-@at_least_one_of('email', 'fullname', 'userid')
+@mutually_exclusive_parameters("email", "fullname", "userid")
+@at_least_one_of("email", "fullname", "userid")
 def get_user_from_criteria(context, email=None, fullname=None, userid=None):
     """
     :param context: context, with request as context.REQUEST
@@ -134,20 +135,20 @@ def get_user_from_criteria(context, email=None, fullname=None, userid=None):
                'id': 'luc.oil', 'cn': '', 'description': 'Luc.Oil', 'email': 'luc.oil@xx.com'}]
     """
     # TODO check if cache is necessary ???
-    hunter = getMultiAdapter((context, context.REQUEST), name='pas_search')
+    hunter = getMultiAdapter((context, context.REQUEST), name="pas_search")
     criteria = {}
     if email:
-        criteria['email'] = email
+        criteria["email"] = email
     if fullname:
-        criteria['fullname'] = fullname
+        criteria["fullname"] = fullname
     if userid:
-        criteria['id'] = userid
+        criteria["id"] = userid
     res = hunter.searchUsers(**criteria)
     for dic in res:
-        if 'email' not in dic or 'description' not in dic:  # ldap
-            member = api.user.get(userid=dic['userid'])
-            dic['email'] = member.getProperty('email', default='')  # following plonepas.plugins.property.enumerateUsers
-            dic['description'] = safe_unicode(member.getProperty('fullname', default=dic['userid']))
+        if "email" not in dic or "description" not in dic:  # ldap
+            member = api.user.get(userid=dic["userid"])
+            dic["email"] = member.getProperty("email", default="")  # following plonepas.plugins.property.enumerateUsers
+            dic["description"] = safe_unicode(member.getProperty("fullname", default=dic["userid"]))
     return res
 
 
@@ -157,7 +158,7 @@ def get_zope_root():
     """
     db = Zope2.DB
     connection = db.open()
-    return connection.root().get('Application', None)
+    return connection.root().get("Application", None)
 
 
 def set_site_from_package_config(product_name, zope_app=None):
@@ -172,13 +173,13 @@ def set_site_from_package_config(product_name, zope_app=None):
     :param zope_app: zope application (to avoid to open a second connection if not necessary)
     :return: portal object if defined or None
     """
-    config = getattr(getConfiguration(), 'product_config', {})
+    config = getattr(getConfiguration(), "product_config", {})
     package_config = config.get(product_name)
-    if package_config and package_config.get('plone-path'):  # can be set on instance1 only or not at all
+    if package_config and package_config.get("plone-path"):  # can be set on instance1 only or not at all
         if not zope_app:
             zope_app = get_zope_root()
         try:
-            site = zope_app.unrestrictedTraverse(package_config['plone-path'])
+            site = zope_app.unrestrictedTraverse(package_config["plone-path"])
         except KeyError:  # site not found
             return None
         try:
@@ -190,13 +191,12 @@ def set_site_from_package_config(product_name, zope_app=None):
     return None
 
 
-def counted_logger(logger_name=''):
+def counted_logger(logger_name=""):
     """ """
     caller = inspect.stack()[1][3]
-    logger = logging.getLogger("{0} ({1})".format(
-        logger_name, inspect.stack()[1][3]))
+    logger = logging.getLogger("{0} ({1})".format(logger_name, inspect.stack()[1][3]))
     request = getRequest()
-    req_key = "counter_logger__{0}".format(caller.replace(' ', ''))
+    req_key = "counter_logger__{0}".format(caller.replace(" ", ""))
     counter = request.get(req_key, 0) + 1
     request.set(req_key, counter)
     logger.info("Counter {0}".format(counter))
@@ -205,7 +205,7 @@ def counted_logger(logger_name=''):
 
 def check_zope_admin():
     """
-        Check if current user is the Zope admin.
+    Check if current user is the Zope admin.
     """
     user = getSecurityManager().getUser()
     if user.has_role("Manager") and user.__module__ in (
