@@ -22,21 +22,21 @@ except ImportError:
     from plone.app.vocabularies.users import UsersFactory
 
 
-def voc_cache_key(method, self, context=None, query=''):
+def voc_cache_key(method, self, context=None, query=""):
     """Returns a persistent portal stored date following the given cache key.
 
     Must be programatically invalidated."""
-    return get_cachekey_volatile('_users_groups_value')
+    return get_cachekey_volatile("_users_groups_value")
 
 
 def get_users_voc(with_userid):
-    acl_users = api.portal.get_tool('acl_users')
-    users = acl_users.searchUsers(sort_by='')
+    acl_users = api.portal.get_tool("acl_users")
+    users = acl_users.searchUsers(sort_by="")
     terms = []
     # manage duplicates, this can be the case when using LDAP and same userid in source_users
     userids = []
     for user in users:
-        user_id = user['id']
+        user_id = user["id"]
         if user_id not in userids:
             userids.append(user_id)
             # bypass special characters, may happen when using LDAP
@@ -45,12 +45,12 @@ def get_users_voc(with_userid):
             except UnicodeDecodeError:
                 continue
             if with_userid:
-                term_title = u'{0} ({1})'.format(get_user_fullname(user_id), user_id)
+                term_title = u"{0} ({1})".format(get_user_fullname(user_id), user_id)
             else:
                 term_title = get_user_fullname(user_id)
             term = SimpleTerm(user_id, user_id, term_title)
             terms.append(term)
-    terms = humansorted(terms, key=attrgetter('title'))
+    terms = humansorted(terms, key=attrgetter("title"))
     return SimpleVocabulary(terms)
 
 
@@ -59,7 +59,7 @@ class SortedUsers(UsersFactory):
     Append ' (userid)' to term title."""
 
     @ram.cache(voc_cache_key)
-    def SortedUsers__call__(self, context=None, query=''):
+    def SortedUsers__call__(self, context=None, query=""):
         return get_users_voc(True)
 
     __call__ = SortedUsers__call__
@@ -72,7 +72,7 @@ class SimplySortedUsers(SortedUsers):
     """With userid as value and fullname as title"""
 
     @ram.cache(voc_cache_key)
-    def SimplySortedUsers__call__(self, context=None, query=''):
+    def SimplySortedUsers__call__(self, context=None, query=""):
         return get_users_voc(False)
 
     __call__ = SimplySortedUsers__call__
@@ -82,7 +82,6 @@ SimplySortedUsersFactory = SimplySortedUsers()
 
 
 class EnhancedTerm(SimpleTerm):
-
     def __init__(self, value, token=None, title=None, **attrs):
         super(EnhancedTerm, self).__init__(value, token=token, title=title)
         self.attrs = attrs
@@ -92,14 +91,20 @@ class EnhancedTerm(SimpleTerm):
 class YesNoForFacetedVocabulary(object):
     """Vocabulary to be used with a faceted radio widget on a field index containing prefixed 0 and 1 strings."""
 
-    prefix = ''
+    prefix = ""
 
     def __call__(self, context):
         """ """
         res = [
-            SimpleTerm(self.prefix + '0', self.prefix + '0',
-                       safe_unicode(translate('yesno_value_false', domain='imio.helpers', context=context.REQUEST))),
-            SimpleTerm(self.prefix + '1', self.prefix + '1',
-                       safe_unicode(translate('yesno_value_true', domain='imio.helpers', context=context.REQUEST)))
+            SimpleTerm(
+                self.prefix + "0",
+                self.prefix + "0",
+                safe_unicode(translate("yesno_value_false", domain="imio.helpers", context=context.REQUEST)),
+            ),
+            SimpleTerm(
+                self.prefix + "1",
+                self.prefix + "1",
+                safe_unicode(translate("yesno_value_true", domain="imio.helpers", context=context.REQUEST)),
+            ),
         ]
         return SimpleVocabulary(res)

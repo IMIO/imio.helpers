@@ -9,9 +9,7 @@ from zope.interface import Invalid
 import json
 
 
-def create_image_content(
-    container, title, id, data, filename=None, portal_type="Image"
-):
+def create_image_content(container, title, id, data, filename=None, portal_type="Image"):
     if HAS_PLONE_6_AND_MORE:
         obj = api.content.create(
             container=container,

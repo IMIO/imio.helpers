@@ -26,13 +26,7 @@ class BarcodeStamp(object):
     )
     """
 
-    def __init__(self,
-                 filepath,
-                 barcode_value,
-                 x=0,
-                 y=0,
-                 tmp_path='/tmp',
-                 scale=4):
+    def __init__(self, filepath, barcode_value, x=0, y=0, tmp_path="/tmp", scale=4):
         self.filepath = filepath
         self.output = StringIO()
         self.uuid = uuid.uuid4()
@@ -43,10 +37,10 @@ class BarcodeStamp(object):
         self.tmp_path = tmp_path
         self.scale = scale
 
-    def _path(self, extension, suffix=''):
-        filename = '{name}{suffix}.{ext}'.format(
+    def _path(self, extension, suffix=""):
+        filename = "{name}{suffix}.{ext}".format(
             name=self.uuid,
-            suffix=suffix and '-{0}'.format(suffix) or '',
+            suffix=suffix and "-{0}".format(suffix) or "",
             ext=extension,
         )
         return os.path.join(self.tmp_path, filename)
@@ -58,15 +52,15 @@ class BarcodeStamp(object):
         return self.output
 
     def _create_barcode(self):
-        path = self._path('png')
+        path = self._path("png")
         barcode_io = barcode.generate_barcode(self.barcode_value, scale=self.scale)
-        f = open(path, 'w')
+        f = open(path, "w")
         f.write(barcode_io.getvalue())
         f.close()
         return path
 
     def _create_stamp(self, barcode_path):
-        path = self._path('pdf', suffix='stamp')
+        path = self._path("pdf", suffix="stamp")
         io = StringIO()
         doc = SimpleDocTemplate(
             io,
@@ -77,7 +71,7 @@ class BarcodeStamp(object):
             leftMargin=0 - 2 * mm,
         )
         doc.build([BarcodeFlowable(barcode_path, self.x, self.y)])
-        f = open(path, 'w')
+        f = open(path, "w")
         f.write(io.getvalue())
         f.close()
         os.remove(barcode_path)
@@ -85,8 +79,8 @@ class BarcodeStamp(object):
 
     def _merge_pdf(self, stamp_path):
         output_writer = PdfFileWriter()
-        stamp = PdfFileReader(open(stamp_path, 'rb'))
-        content_file = open(self.filepath, 'rb')
+        stamp = PdfFileReader(open(stamp_path, "rb"))
+        content_file = open(self.filepath, "rb")
         content = PdfFileReader(content_file)
         counter = 0
         for page in content.pages:
@@ -100,7 +94,6 @@ class BarcodeStamp(object):
 
 
 class BarcodeFlowable(Flowable):
-
     def __init__(self, barcode, x, y):
         Flowable.__init__(self)
         self.barcode = barcode
@@ -111,8 +104,8 @@ class BarcodeFlowable(Flowable):
         canvas = self.canv
         img = Image(self.barcode)
         width, height = img.wrapOn(canvas, 0, 0)
-        width = width * 72. / 300
-        height = height * 72. / 300
+        width = width * 72.0 / 300
+        height = height * 72.0 / 300
         canvas.drawImage(
             self.barcode,
             self.x * mm,

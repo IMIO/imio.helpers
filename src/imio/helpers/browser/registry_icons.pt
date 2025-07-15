@@ -1,7 +1,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       xmlns:metal="http://xml.zope.org/namespaces/metal"
-      xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+>
   <head>
     <style>
       .registry-icons-grid {
@@ -21,12 +22,17 @@
       }
     </style>
   </head>
-  <body tal:define="icons view/get_icons">
-    <div>Number of icons: <span tal:content="python: len(icons)" /></div>
+  <body tal:define="
+          icons view/get_icons;
+        ">
+    <div>Number of icons:
+      <span tal:content="python: len(icons)"></span></div>
     <div class="registry-icons-grid">
       <tal:icons tal:repeat="icon icons">
         <div class="icon-item">
-          <img tal:attributes="src icon/path"/>
+          <img tal:attributes="
+                 src icon/path;
+               " />
           <p tal:content="icon/key"></p>
         </div>
       </tal:icons>

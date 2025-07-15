@@ -7,10 +7,10 @@ import unittest
 
 
 class TestPath(unittest.TestCase):
-
     def test_path_to_package(self):
-        self.assertTrue(path.path_to_package(path).
-                        endswith('/src/imio/helpers/'))
-        self.assertTrue(path.path_to_package(browser,
-                                             filepart='static/listings.js').
-                        endswith('/src/imio/helpers/browser/static/listings.js'))
+        self.assertTrue(path.path_to_package(path).endswith("/src/imio/helpers/"))
+        self.assertTrue(
+            path.path_to_package(browser, filepart="static/listings.js").endswith(
+                "/src/imio/helpers/browser/static/listings.js"
+            )
+        )

@@ -1,8 +1,9 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <registry>
 
-  <records prefix="plone.bundles/imio-helpers"
-           interface='Products.CMFPlone.interfaces.IBundleRegistry'>
+  <records interface="Products.CMFPlone.interfaces.IBundleRegistry"
+           prefix="plone.bundles/imio-helpers"
+  >
     <value key="depends">plone</value>
     <value key="enabled">True</value>
     <value key="jscompilation">++resource++imio.helpers/helpers.js</value>

@@ -1,9 +1,10 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <registry>
 
-    <records prefix="plone.bundles/imio.helpers"
-        interface='Products.CMFPlone.interfaces.IBundleRegistry'
-        remove="True">
-    </records>
+  <records interface="Products.CMFPlone.interfaces.IBundleRegistry"
+           prefix="plone.bundles/imio.helpers"
+           remove="True"
+  >
+</records>
 
 </registry>

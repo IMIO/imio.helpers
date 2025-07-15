@@ -28,7 +28,7 @@ import os
 import transaction
 
 
-logger = logging.getLogger('imio.helpers')
+logger = logging.getLogger("imio.helpers")
 
 
 # 1) we get a stored dictionary containing the treated keys (using load_pickle function)
@@ -47,23 +47,43 @@ def batch_get_keys(infile, loop_length=0, a_set=None, add_files=None):
                       'fr'; first_run_bool, 'af': add_files}
     """
     infile = os.path.abspath(infile)
-    commit_number = int(os.getenv('COMMIT', '0'))
-    batch_number = int(os.getenv('BATCH', '0'))
-    batch_last = bool(int(os.getenv('BATCH_LAST', '0')))
+    commit_number = int(os.getenv("COMMIT", "0"))
+    batch_number = int(os.getenv("BATCH", "0"))
+    batch_last = bool(int(os.getenv("BATCH_LAST", "0")))
     if not add_files:
         add_files = []
     if not batch_number:
-        return None, {'bn': batch_number, 'bl': batch_last, 'cn': commit_number, 'll': loop_length, 'lc': 0,
-                      'pf': infile, 'cf': None, 'kc': 0, 'fr': False, 'af': add_files}
-    if not infile.endswith('.pkl'):
+        return None, {
+            "bn": batch_number,
+            "bl": batch_last,
+            "cn": commit_number,
+            "ll": loop_length,
+            "lc": 0,
+            "pf": infile,
+            "cf": None,
+            "kc": 0,
+            "fr": False,
+            "af": add_files,
+        }
+    if not infile.endswith(".pkl"):
         raise Exception("The given file '{}' must be a pickle file ending with '.pkl'".format(infile))
     if a_set is None:
         a_set = set()
     load_pickle(infile, a_set)
-    dic_file = infile.replace('.pkl', '_config.txt')
+    dic_file = infile.replace(".pkl", "_config.txt")
     first_run = not os.path.exists(dic_file)
-    config = {'bn': batch_number, 'bl': batch_last, 'cn': commit_number, 'll': loop_length, 'lc': 0, 'pf': infile,
-              'cf': dic_file, 'kc': len(a_set), 'fr': first_run, 'af': add_files}
+    config = {
+        "bn": batch_number,
+        "bl": batch_last,
+        "cn": commit_number,
+        "ll": loop_length,
+        "lc": 0,
+        "pf": infile,
+        "cf": dic_file,
+        "kc": len(a_set),
+        "fr": first_run,
+        "af": add_files,
+    }
     dump_var(dic_file, config)
     return a_set, config
 
@@ -85,7 +105,7 @@ def batch_skip_key(key, batch_keys, config):
     if batch_keys is None:
         return False
     if key not in batch_keys:
-        config['lc'] += 1
+        config["lc"] += 1
         return False
     return True
 
@@ -109,26 +129,26 @@ def batch_handle_key(key, batch_keys, config):
     if batch_keys is None:
         return False
     batch_keys.add(key)
-    config['lk'] = key
+    config["lk"] = key
     # stopping batch ?
-    if config['lc'] >= config['bn']:
-        if config['cn']:
+    if config["lc"] >= config["bn"]:
+        if config["cn"]:
             transaction.commit()
-        config['ldk'] = key
-        config['kc'] = len(batch_keys)
-        dump_pickle(config['pf'], batch_keys)
-        dump_var(config['cf'], config)
-        logger.info("BATCHED %s / %s, already done %s", config['lc'], config['ll'], config['kc'])
-        if config['bl'] and not batch_globally_finished(batch_keys, config):
-            logger.error('BATCHING MAYBE STOPPED TOO EARLY: %s / %s', config['kc'], config['ll'])
+        config["ldk"] = key
+        config["kc"] = len(batch_keys)
+        dump_pickle(config["pf"], batch_keys)
+        dump_var(config["cf"], config)
+        logger.info("BATCHED %s / %s, already done %s", config["lc"], config["ll"], config["kc"])
+        if config["bl"] and not batch_globally_finished(batch_keys, config):
+            logger.error("BATCHING MAYBE STOPPED TOO EARLY: %s / %s", config["kc"], config["ll"])
         return True
     # commit time ?
-    if config['cn'] and config['lc'] % config['cn'] == 0:
+    if config["cn"] and config["lc"] % config["cn"] == 0:
         transaction.commit()
-        config['ldk'] = key
-        config['kc'] = len(batch_keys)
-        dump_pickle(config['pf'], batch_keys)
-        dump_var(config['cf'], config)
+        config["ldk"] = key
+        config["kc"] = len(batch_keys)
+        dump_pickle(config["pf"], batch_keys)
+        dump_var(config["cf"], config)
     return False
 
 
@@ -147,16 +167,16 @@ def batch_loop_else(batch_keys, config):
         return
     last_key = config.get("lk")
     # avoid if nothing was done or already done on last key
-    if last_key is None or (config.get('ldk') is not None and config['ldk'] == last_key):
+    if last_key is None or (config.get("ldk") is not None and config["ldk"] == last_key):
         return
-    logger.info("BATCHED %s / %s, already done %s", config['lc'], config['ll'], len(batch_keys))
-    if config['cn']:
+    logger.info("BATCHED %s / %s, already done %s", config["lc"], config["ll"], len(batch_keys))
+    if config["cn"]:
         transaction.commit()
-    config['kc'] = len(batch_keys)
-    dump_pickle(config['pf'], batch_keys)
-    dump_var(config['cf'], config)
-    if config['bl'] and not batch_globally_finished(batch_keys, config):
-        logger.error('BATCHING MAYBE STOPPED TOO EARLY: %s / %s', config['kc'], config['ll'])
+    config["kc"] = len(batch_keys)
+    dump_pickle(config["pf"], batch_keys)
+    dump_var(config["cf"], config)
+    if config["bl"] and not batch_globally_finished(batch_keys, config):
+        logger.error("BATCHING MAYBE STOPPED TOO EARLY: %s / %s", config["kc"], config["ll"])
 
 
 # 7) when all the items are treated, we can delete the dictionary file
@@ -176,10 +196,10 @@ def batch_globally_finished(batch_keys, config):
     #     return True
     if not config["bn"]:  # no batching
         return True
-    if config['lc'] == 0:  # nothing treated
+    if config["lc"] == 0:  # nothing treated
         return True
-    elif config['fr']:  # first run with results
-        return len(batch_keys) >= config['ll']
+    elif config["fr"]:  # first run with results
+        return len(batch_keys) >= config["ll"]
     elif config["bl"]:
         return True
     return False
@@ -193,9 +213,9 @@ def batch_hashed_filename(filename, to_hash=(), add_dir=True):
     :param add_dir: boolean to know if we must prefix with the INSTANCE_HOME directory
     :return: the hashed filename
     """
-    pklfile = hashed_filename(filename, '_'.join(map(repr, to_hash)))
+    pklfile = hashed_filename(filename, "_".join(map(repr, to_hash)))
     if add_dir:
-        pklfile = os.path.join(os.getenv('INSTANCE_HOME', '.'), pklfile)
+        pklfile = os.path.join(os.getenv("INSTANCE_HOME", "."), pklfile)
     return pklfile
 
 

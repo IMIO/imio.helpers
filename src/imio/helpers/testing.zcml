@@ -1,7 +1,8 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
-    i18n_domain="imio.helpers">
+    i18n_domain="imio.helpers"
+    >
 
   <include file="configure.zcml" />
   <include package="plone.app.dexterity" />
@@ -10,19 +11,24 @@
   <include package="collective.MockMailHost" />
 
   <!-- This index is used by test_catalog.py -->
-  <adapter name="reversedUID" factory=".tests.indexes.reversedUID" />
+  <adapter
+      factory=".tests.indexes.reversedUID"
+      name="reversedUID"
+      />
 
   <!-- This vocabulary is used by test_cache.py -->
-  <utility component=".tests.vocabularies.TestingVocabularyFactory"
-           name="imio.helpers.testing.testingvocabulary" />
+  <utility
+      name="imio.helpers.testing.testingvocabulary"
+      component=".tests.vocabularies.TestingVocabularyFactory"
+      />
 
   <!-- This will load a dexterity testingtype used by test_appy_pod.py -->
   <genericsetup:registerProfile
       name="testing"
       title="imio.helpers testing"
-      directory="profiles/testing"
       description="Steps to ease tests of imio.helpers"
       provides="Products.GenericSetup.interfaces.EXTENSION"
+      directory="profiles/testing"
       />
 
 </configure>

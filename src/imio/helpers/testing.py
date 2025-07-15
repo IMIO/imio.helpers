@@ -23,7 +23,7 @@ import sys
 import unittest
 
 
-def testing_logger(logger_name=''):
+def testing_logger(logger_name=""):
     logger = logging.getLogger(logger_name)
     logger.setLevel(logging.DEBUG)
     handler = logging.StreamHandler(sys.stdout)
@@ -40,25 +40,22 @@ class PloneWithHelpersLayer(PloneSandboxLayer):
     def setUpZope(self, app, configurationContext):
         """Set up Zope."""
         # Load ZCML
-        self.loadZCML(
-            package=imio.helpers,
-            name='testing.zcml'
-        )
+        self.loadZCML(package=imio.helpers, name="testing.zcml")
 
     def setUpPloneSite(self, portal):
         """Set up Plone."""
         # Install into Plone site using portal_setup
-        applyProfile(portal, 'imio.helpers:testing')
-        applyProfile(portal, 'collective.MockMailHost:default')
+        applyProfile(portal, "imio.helpers:testing")
+        applyProfile(portal, "collective.MockMailHost:default")
 
         # use intranet_workflow for every types
-        portal.portal_workflow.setDefaultChain('intranet_workflow')
+        portal.portal_workflow.setDefaultChain("intranet_workflow")
         # Login and create some test content
-        setRoles(portal, TEST_USER_ID, ['Manager'])
+        setRoles(portal, TEST_USER_ID, ["Manager"])
         login(portal, TEST_USER_NAME)
-        folder_id = portal.invokeFactory('Folder', 'folder')
+        folder_id = portal.invokeFactory("Folder", "folder")
         portal[folder_id].reindexObject()
-        folder2_id = portal.invokeFactory('Folder', 'folder2')
+        folder2_id = portal.invokeFactory("Folder", "folder2")
         portal[folder2_id].reindexObject()
 
         if not isinstance(getUtility(IRAMCache), IMIORAMCache):
@@ -69,35 +66,27 @@ class PloneWithHelpersLayer(PloneSandboxLayer):
 
         # Commit so that the test browser sees these objects
         import transaction
+
         transaction.commit()
 
     def tearDownZope(self, app):
         """Tear down Zope."""
-        z2.uninstallProduct(app, 'imio.helpers')
+        z2.uninstallProduct(app, "imio.helpers")
 
 
-FIXTURE = PloneWithHelpersLayer(
-    name="FIXTURE"
-)
+FIXTURE = PloneWithHelpersLayer(name="FIXTURE")
 
 
-INTEGRATION = IntegrationTesting(
-    bases=(FIXTURE,),
-    name="INTEGRATION"
-)
+INTEGRATION = IntegrationTesting(bases=(FIXTURE,), name="INTEGRATION")
 
 
-FUNCTIONAL = FunctionalTesting(
-    bases=(FIXTURE,),
-    name="FUNCTIONAL"
-)
+FUNCTIONAL = FunctionalTesting(bases=(FIXTURE,), name="FUNCTIONAL")
 
 
 class CommonTestCase(unittest.TestCase):
-
     def setUp(self):
         super(CommonTestCase, self).setUp()
-        self.portal = self.layer['portal']
+        self.portal = self.layer["portal"]
         self.portal_url = self.portal.absolute_url()
         self.request = self.portal.REQUEST
         self.catalog = self.portal.portal_catalog

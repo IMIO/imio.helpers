@@ -3,74 +3,87 @@
     xmlns:browser="http://namespaces.zope.org/browser"
     xmlns:plone="http://namespaces.plone.org/plone"
     xmlns:zcml="http://namespaces.zope.org/zcml"
-    i18n_domain="imio.helpers">
+    i18n_domain="imio.helpers"
+    >
 
-    <!-- Publish static files -->
-    <browser:resourceDirectory
+  <!-- Publish static files -->
+  <browser:resourceDirectory
       name="imio.helpers"
       directory="static"
       />
 
-    <!-- The view rendering imio-folder-listing -->
+  <!-- The view rendering imio-folder-listing -->
+  <browser:page
+      name="imio-folder-listing"
+      for="plone.dexterity.interfaces.IDexterityContainer"
+      class="imio.helpers.browser.views.ContainerFolderListingView"
+      template="folder_listing.pt"
+      permission="zope2.View"
+      />
+
+  <!-- The view rendering the table displayed in imio-folder-listing, aka imio-folder-listing-table -->
+  <browser:page
+      name="imio-folder-listing-table"
+      for="plone.dexterity.interfaces.IDexterityContainer"
+      class="imio.helpers.browser.views.ContainerFolderListingView"
+      template="folder_listing_table.pt"
+      permission="zope2.View"
+      />
+
+  <!-- The jQuery/ajax table refresh view that refresh imio-folder-listing-table -->
+  <browser:page
+      name="get_imio_folder_listing"
+      for="plone.dexterity.interfaces.IDexterityContainer"
+      class="imio.helpers.browser.views.ContainerFolderListingView"
+      attribute="update_table"
+      permission="zope2.View"
+      />
+
+  <!-- Override @@caching-controlpanel-ramcache -->
+  <browser:page
+      name="caching-controlpanel-ramcache"
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      class=".views.IMIORAMCache"
+      template="ramcache.pt"
+      permission="cmf.ManagePortal"
+      layer="imio.helpers.interfaces.IIMIOHelpersLayer"
+      />
+
+  <!-- Override @@folder_contents to work with DashboardCollection -->
+  <!-- Folder contents -->
+  <configure
+      package="plone.app.content"
+      zcml:condition="not-have plone-5"
+      >
     <browser:page
-        for="plone.dexterity.interfaces.IDexterityContainer"
-        class="imio.helpers.browser.views.ContainerFolderListingView"
-        name="imio-folder-listing"
-        template="folder_listing.pt"
+        name="folder_contents"
+        for="*"
+        class="imio.helpers.browser.views.IMIOFolderContentsView"
+        template="browser/folder_contents.pt"
+        permission="cmf.ListFolderContents"
+        layer="imio.helpers.interfaces.IIMIOHelpersLayer"
+        />
+    <browser:page
+        name="foldercontents_get_table"
+        for="*"
+        class="imio.helpers.browser.views.IMIOFolderContentsBrowserView"
+        attribute="update_table"
+        permission="cmf.ListFolderContents"
+        layer="imio.helpers.interfaces.IIMIOHelpersLayer"
+        />
+  </configure>
+
+  <configure
+      package="imio.helpers.browser"
+      zcml:condition="have plone-60"
+      >
+    <browser:page
+        name="registry-icons"
+        for="plone.base.interfaces.siteroot.IPloneSiteRoot"
+        class="imio.helpers.browser.views.RegistryIconsView"
+        template="registry_icons.pt"
         permission="zope2.View"
         />
-
-    <!-- The view rendering the table displayed in imio-folder-listing, aka imio-folder-listing-table -->
-    <browser:page
-        for="plone.dexterity.interfaces.IDexterityContainer"
-        class="imio.helpers.browser.views.ContainerFolderListingView"
-        name="imio-folder-listing-table"
-        template="folder_listing_table.pt"
-        permission="zope2.View" />
-
-    <!-- The jQuery/ajax table refresh view that refresh imio-folder-listing-table -->
-    <browser:page
-        for="plone.dexterity.interfaces.IDexterityContainer"
-        class="imio.helpers.browser.views.ContainerFolderListingView"
-        name="get_imio_folder_listing"
-        attribute="update_table"
-        permission="zope2.View" />
-
-    <!-- Override @@caching-controlpanel-ramcache -->
-    <browser:page
-        name="caching-controlpanel-ramcache"
-        for="Products.CMFPlone.interfaces.IPloneSiteRoot"
-        class=".views.IMIORAMCache"
-        template="ramcache.pt"
-        layer="imio.helpers.interfaces.IIMIOHelpersLayer"
-        permission="cmf.ManagePortal" />
-
-    <!-- Override @@folder_contents to work with DashboardCollection -->
-    <!-- Folder contents -->
-    <configure package="plone.app.content" zcml:condition="not-have plone-5">
-        <browser:page
-            for="*"
-            class="imio.helpers.browser.views.IMIOFolderContentsView"
-            name="folder_contents"
-            template="browser/folder_contents.pt"
-            layer="imio.helpers.interfaces.IIMIOHelpersLayer"
-            permission="cmf.ListFolderContents" />
-        <browser:page
-            for="*"
-            class="imio.helpers.browser.views.IMIOFolderContentsBrowserView"
-            attribute="update_table"
-            name="foldercontents_get_table"
-            layer="imio.helpers.interfaces.IIMIOHelpersLayer"
-            permission="cmf.ListFolderContents" />
-    </configure>
-
-    <configure package="imio.helpers.browser" zcml:condition="have plone-60">
-        <browser:page
-            for="plone.base.interfaces.siteroot.IPloneSiteRoot"
-            class="imio.helpers.browser.views.RegistryIconsView"
-            name="registry-icons"
-            template="registry_icons.pt"
-            permission="zope2.View" />
-    </configure>
+  </configure>
 
 </configure>

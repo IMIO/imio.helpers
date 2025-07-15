@@ -14,6 +14,6 @@ from plone.indexer import indexer
 @indexer(IItem)
 def reversedUID(obj):
     """
-      Return UID reversed...
+    Return UID reversed...
     """
     return obj.UID()[::-1]

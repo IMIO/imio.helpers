@@ -12,11 +12,13 @@ except ImportError:
 
 
 # create type converter for :json
-if 'json' not in type_converters:
+if "json" not in type_converters:
+
     def field2json(v):
         try:
             v = json.loads(v)
         except ValueError:
             raise ValueError("Invalid json " + escape(repr(v)))
         return v
-    type_converters['json'] = field2json
+
+    type_converters["json"] = field2json

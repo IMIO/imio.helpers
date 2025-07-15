@@ -1,104 +1,131 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
     xmlns:browser="http://namespaces.zope.org/browser"
-    xmlns:i18n="http://namespaces.zope.org/i18n"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
-    xmlns:zcml="http://namespaces.zope.org/zcml"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
     xmlns:monkey="http://namespaces.plone.org/monkey"
-    i18n_domain="imio.helpers">
+    xmlns:zcml="http://namespaces.zope.org/zcml"
+    i18n_domain="imio.helpers"
+    >
 
-    <include package="z3c.unconfigure" file="meta.zcml"/>
-    <include package="Products.CMFCore" file="permissions.zcml" />
+  <include
+      package="z3c.unconfigure"
+      file="meta.zcml"
+      />
+  <include
+      package="Products.CMFCore"
+      file="permissions.zcml"
+      />
 
-    <include package="plone.app.intid" />
-    <include package="plone.memoize" />
-    <include package=".browser" />
-    <include package=".fancytree" />
-    <include file="profiles.zcml" />
-    <include file="events.zcml" />
+  <include package="plone.app.intid" />
+  <include package="plone.memoize" />
+  <include package=".browser" />
+  <include package=".fancytree" />
+  <include file="profiles.zcml" />
+  <include file="events.zcml" />
 
-    <i18n:registerTranslations directory="locales" />
+  <i18n:registerTranslations directory="locales" />
 
-    <!-- unconfigure the default plone.memoize RAM cache utility,
+  <!-- unconfigure the default plone.memoize RAM cache utility,
          and register our own -->
-    <unconfigure package="plone.memoize">
-        <utility component="plone.memoize.ram.global_cache"
-                 provides="zope.ramcache.interfaces.ram.IRAMCache" />
-    </unconfigure>
-    <utility component=".ram.imio_global_cache"
-             provides="zope.ramcache.interfaces.ram.IRAMCache" />
+  <unconfigure package="plone.memoize">
+    <utility
+        provides="zope.ramcache.interfaces.ram.IRAMCache"
+        component="plone.memoize.ram.global_cache"
+        />
+  </unconfigure>
+  <utility
+      provides="zope.ramcache.interfaces.ram.IRAMCache"
+      component=".ram.imio_global_cache"
+      />
 
-    <browser:page
-        for="*"
-        name="appy_pod_sample"
-        class=".appy_pod.AppyPodSampleHTML"
-        permission="zope.Public" />
+  <browser:page
+      name="appy_pod_sample"
+      for="*"
+      class=".appy_pod.AppyPodSampleHTML"
+      permission="zope.Public"
+      />
 
-    <adapter
-        factory=".adapters.ListContainedDexterityObjectsForDisplayAdapter"
-        provides="imio.helpers.interfaces.IListContainedDexterityObjectsForDisplay"
-        for="plone.dexterity.interfaces.IDexterityContainer" />
+  <adapter
+      factory=".adapters.ListContainedDexterityObjectsForDisplayAdapter"
+      provides="imio.helpers.interfaces.IListContainedDexterityObjectsForDisplay"
+      for="plone.dexterity.interfaces.IDexterityContainer"
+      />
 
-    <include package="collective.monkeypatcher" />
+  <include package="collective.monkeypatcher" />
 
-    <configure zcml:condition="installed collective.solr">
-      <monkey:patch
-          description="Fix the issue https://github.com/collective/collective.solr/issues/189"
-          class="collective.solr.indexer.SolrIndexProcessor"
-          original="index"
-          replacement=".patches.solr_index"
-          preserveOriginal="true" />
-    </configure>
-
+  <configure zcml:condition="installed collective.solr">
     <monkey:patch
-        description="Handled 465 port (SSL) smtp"
-        class="Products.MailHost.MailHost.MailBase"
-        original="_makeMailer"
-        replacement=".patches.ssl_makeMailer"
-        preserveOriginal="true" />
+        original="index"
+        replacement=".patches.solr_index"
+        class="collective.solr.indexer.SolrIndexProcessor"
+        description="Fix the issue https://github.com/collective/collective.solr/issues/189"
+        preserveOriginal="true"
+        />
+  </configure>
 
-    <monkey:patch
-        description="Invalidate '_users_groups_value' volatile after principal role change"
-        class="Products.PlonePAS.plugins.role.GroupAwareRoleManager"
-        original="assignRolesToPrincipal"
-        replacement=".patches.assignRolesToPrincipal"
-        preserveOriginal="true" />
+  <monkey:patch
+      original="_makeMailer"
+      replacement=".patches.ssl_makeMailer"
+      class="Products.MailHost.MailHost.MailBase"
+      description="Handled 465 port (SSL) smtp"
+      preserveOriginal="true"
+      />
 
-    <monkey:patch
-        description="Invalidate '_users_groups_value' volatile after principal role change"
-        class="Products.PluggableAuthService.plugins.ZODBRoleManager.ZODBRoleManager"
-        original="assignRoleToPrincipal"
-        replacement=".patches.assignRoleToPrincipal"
-        preserveOriginal="true" />
+  <monkey:patch
+      original="assignRolesToPrincipal"
+      replacement=".patches.assignRolesToPrincipal"
+      class="Products.PlonePAS.plugins.role.GroupAwareRoleManager"
+      description="Invalidate '_users_groups_value' volatile after principal role change"
+      preserveOriginal="true"
+      />
 
-    <monkey:patch
-        description="Invalidate '_users_groups_value' volatile after principal role change"
-        class="Products.PluggableAuthService.plugins.ZODBRoleManager.ZODBRoleManager"
-        original="removeRoleFromPrincipal"
-        replacement=".patches.removeRoleFromPrincipal"
-        preserveOriginal="true" />
+  <monkey:patch
+      original="assignRoleToPrincipal"
+      replacement=".patches.assignRoleToPrincipal"
+      class="Products.PluggableAuthService.plugins.ZODBRoleManager.ZODBRoleManager"
+      description="Invalidate '_users_groups_value' volatile after principal role change"
+      preserveOriginal="true"
+      />
 
-    <monkey:patch
-        description="Monkeypatch _listAllowedRolesAndUsers to add ram.cache on '_users_groups_value'"
-        class="Products.CMFPlone.CatalogTool.CatalogTool"
-        original="_listAllowedRolesAndUsers"
-        replacement=".patches._listAllowedRolesAndUsers"
-        preserveOriginal="true" />
+  <monkey:patch
+      original="removeRoleFromPrincipal"
+      replacement=".patches.removeRoleFromPrincipal"
+      class="Products.PluggableAuthService.plugins.ZODBRoleManager.ZODBRoleManager"
+      description="Invalidate '_users_groups_value' volatile after principal role change"
+      preserveOriginal="true"
+      />
 
-    <monkey:patch zcml:condition="not-have plone-5"
-        description="Monkeypatch getVocabularyValues from plone.app.querystring to keep vocabulary order"
-        class="plone.app.querystring.registryreader.QuerystringRegistryReader"
-        original="getVocabularyValues"
-        replacement=".patches.getVocabularyValues"
-        preserveOriginal="true" />
+  <monkey:patch
+      original="_listAllowedRolesAndUsers"
+      replacement=".patches._listAllowedRolesAndUsers"
+      class="Products.CMFPlone.CatalogTool.CatalogTool"
+      description="Monkeypatch _listAllowedRolesAndUsers to add ram.cache on '_users_groups_value'"
+      preserveOriginal="true"
+      />
 
-    <utility component=".vocabularies.SortedUsersFactory"
-             name="imio.helpers.SortedUsers" />
+  <monkey:patch
+      original="getVocabularyValues"
+      replacement=".patches.getVocabularyValues"
+      class="plone.app.querystring.registryreader.QuerystringRegistryReader"
+      description="Monkeypatch getVocabularyValues from plone.app.querystring to keep vocabulary order"
+      preserveOriginal="true"
+      zcml:condition="not-have plone-5"
+      />
 
-    <utility component=".vocabularies.SimplySortedUsersFactory"
-             name="imio.helpers.SimplySortedUsers" />
+  <utility
+      name="imio.helpers.SortedUsers"
+      component=".vocabularies.SortedUsersFactory"
+      />
 
-    <utility name="imio.helpers.YesNoForFacetedVocabulary"
-             factory="imio.helpers.vocabularies.YesNoForFacetedVocabulary" />
+  <utility
+      name="imio.helpers.SimplySortedUsers"
+      component=".vocabularies.SimplySortedUsersFactory"
+      />
+
+  <utility
+      factory="imio.helpers.vocabularies.YesNoForFacetedVocabulary"
+      name="imio.helpers.YesNoForFacetedVocabulary"
+      />
 
 </configure>
