@@ -4,8 +4,12 @@ Changelog
 1.3.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- Add a parameter `extra_args=""` to `barcode.generate_barcode` to be able to pass extra arguments to the
+  `zint` command line tool.
+  [aduchene]
+- Gracefully close the subprocess.Popen in `barcode.generate_barcode`
+  to avoid "ResourceWarning: unclosed file..."
+  [aduchene]
 
 1.3.0 (2025-06-25)
 ------------------
