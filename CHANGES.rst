@@ -4,14 +4,14 @@ Changelog
 1.3.1 (unreleased)
 ------------------
 
-- Add a parameter `extra_args=""` to `barcode.generate_barcode` to be able to pass extra arguments to the
-  `zint` command line tool.
+- Improved uninstall profile to permit install-base reinstall.
+  [sgeulette]
+- Add a parameter `extra_args=""` to `barcode.generate_barcode`
+  to be able to pass extra arguments to the executable.
   [aduchene]
 - Gracefully close the subprocess.Popen in `barcode.generate_barcode`
   to avoid "ResourceWarning: unclosed file..."
   [aduchene]
-- Improved uninstall profile to permit install-base reinstall.
-  [sgeulette]
 
 1.3.0 (2025-06-25)
 ------------------

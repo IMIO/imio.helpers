@@ -4,14 +4,14 @@ import six
 import subprocess
 
 
-def generate_barcode(data, executable='zint', barcode=92, scale=2, filetype='PNG', extra_args=""):
+def generate_barcode(data, executable='zint', barcode=92, scale=2, filetype='PNG', extra_args=None):
     """Generate a barcode with zint in BytesIO and return it
     :param data: barcode content string
     :param executable: executable used to generate barcode
     :param barcode: barcode type number
     :param scale: scale of generated output
     :param filetype: image
-    :param extra_args: additional arguments for zint, for example "--secure=2"
+    :param extra_args: additional arguments for zint, for example ["--secure=2"]
     :return: BytesIO handler
     """
     output = six.BytesIO()
@@ -25,7 +25,7 @@ def generate_barcode(data, executable='zint', barcode=92, scale=2, filetype='PNG
         "--scale={0}".format(scale),
     ]
     if extra_args:
-        command += extra_args.split()
+        command += extra_args
     # Data must be the last argument
     command.append("--data={0}".format(data))
 
