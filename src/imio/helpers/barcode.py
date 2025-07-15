@@ -29,10 +29,10 @@ def generate_barcode(data, executable='zint', barcode=92, scale=2, filetype='PNG
     # Data must be the last argument
     command.append("--data={0}".format(data))
 
-    with subprocess.Popen(command, stdout=subprocess.PIPE) as process:
-        output.write(process.stdout.read())
-        process.stdout.close()
-        process.wait()
+    process = subprocess.Popen(command, stdout=subprocess.PIPE)
+    output.write(process.stdout.read())
+    process.stdout.close()
+    process.wait()
 
     output.seek(0)
     return output
