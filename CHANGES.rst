@@ -12,6 +12,8 @@ Changelog
 - Gracefully close the subprocess.Popen in `barcode.generate_barcode`
   to avoid "ResourceWarning: unclosed file..."
   [aduchene]
+- Fixed obj_modified datetime that was sometimes None.
+  [chris-adam]
 
 1.3.0 (2025-06-25)
 ------------------
