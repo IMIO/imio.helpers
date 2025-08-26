@@ -4,8 +4,8 @@ Changelog
 1.3.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- Improved `set.load_workflow_from_package` with default option `purge_workflow=True`.
+  [sgeulette]
 
 1.3.1 (2025-08-26)
 ------------------

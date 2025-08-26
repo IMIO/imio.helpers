@@ -60,6 +60,13 @@ class TestSetupModule(IntegrationTestCase):
         wkf_obj = wkf_tool.get("intranet_workflow")
         states = wkf_obj.states
         self.assertIn("internal", states)
+        # purge ok ?
+        states.addState("imio")
+        self.assertIn("imio", states)
+        self.assertTrue(load_workflow_from_package("intranet_workflow", "profile-Products.CMFPlone:plone"))
+        wkf_obj = wkf_tool.get("intranet_workflow")
+        states = wkf_obj.states
+        self.assertNotIn("imio", states)
         # not found WF
         self.assertFalse(load_workflow_from_package("intranet_workflow2", "profile-Products.CMFPlone:plone"))
         # not found profile_id

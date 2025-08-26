@@ -48,10 +48,11 @@ def load_type_from_package(type_name, profile_id, purge_actions=False):
     return True
 
 
-def load_workflow_from_package(wkf_name, profile_id):
+def load_workflow_from_package(wkf_name, profile_id, purge_workflow=True):
     """Loads a workflow from his xml definition.
     :param wkf_name: workflow id
     :param profile_id: package profile id
+    :param purge_workflow: remove states and transitions before loading
     :return: status as boolean
     """
     wkf_tool = api.portal.get_tool("portal_workflow")
@@ -59,6 +60,9 @@ def load_workflow_from_package(wkf_name, profile_id):
     if wkf_obj is None:
         logger.error("Cannot find '{}' workflow name in portal".format(wkf_name))
         return False
+    if purge_workflow:
+        wkf_obj.states.deleteStates(list(wkf_obj.states.keys()))
+        wkf_obj.transitions.deleteTransitions(list(wkf_obj.transitions.keys()))
     ps_tool = api.portal.get_tool("portal_setup")
     try:
         context = ps_tool._getImportContext(profile_id, True)
