@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.3.1 (unreleased)
+1.3.1 (2025-08-26)
 ------------------
 
 - Improved uninstall profile to permit install-base reinstall.
