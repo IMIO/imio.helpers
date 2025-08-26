@@ -9,7 +9,7 @@ long_description = open("README.rst").read() + "\n" + open("CHANGES.rst").read()
 
 setup(
     name="imio.helpers",
-    version="1.3.1",
+    version="1.3.2.dev0",
     description="Various helper methods for development.",
     long_description=long_description,
     # Get more from http://pypi.python.org/pypi?%3Aaction=list_classifiers
