@@ -48,7 +48,8 @@ class PloneWithHelpersLayer(PloneSandboxLayer):
         # Install into Plone site using portal_setup
         applyProfile(portal, "imio.helpers:testing")
         applyProfile(portal, "collective.MockMailHost:default")
-        applyProfile(portal, "ftw.labels:default")
+        if HAS_FTW_LABELS:
+            applyProfile(portal, "ftw.labels:default")
 
         # use intranet_workflow for every types
         portal.portal_workflow.setDefaultChain("intranet_workflow")
