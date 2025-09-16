@@ -17,6 +17,7 @@ class TestSetupModule(IntegrationTestCase):
     """
 
     def setUp(self):
+        super(TestSetupModule, self).setUp()
         try:
             from Products.CMFPlone.utils import get_installer
 
