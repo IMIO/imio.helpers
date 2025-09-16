@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
 
-from ftw.labels.interfaces import ILabelJar
-from ftw.labels.interfaces import ILabelRoot
-from ftw.labels.interfaces import ILabelSupport
+from imio.helpers import HAS_FTW_LABELS
 from imio.helpers.testing import IntegrationTestCase
 from imio.helpers.tests.utils import require_module
 from plone import api
 from zope.interface import alsoProvides
+
+
+if HAS_FTW_LABELS:
+    from ftw.labels.interfaces import ILabelJar
+    from ftw.labels.interfaces import ILabelRoot
+    from ftw.labels.interfaces import ILabelSupport
 
 
 class TestFtwLabels(IntegrationTestCase):

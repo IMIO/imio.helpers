@@ -1,15 +1,15 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
-    i18n_domain="imio.helpers"
-    >
+    xmlns:zcml="http://namespaces.zope.org/zcml"
+    i18n_domain="imio.helpers">
 
   <include file="configure.zcml" />
   <include package="plone.app.dexterity" />
   <include package="plone.app.relationfield" />
   <include package="collective.behavior.talcondition" />
   <include package="collective.MockMailHost" />
-  <include package="ftw.labels" />
+  <include zcml:condition="installed ftw.labels"  package="ftw.labels" />
 
   <!-- This index is used by test_catalog.py -->
   <adapter
