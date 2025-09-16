@@ -104,6 +104,7 @@ jobs:
       - name: test coverage
         run: |
           coverage run bin/test -t !robot
+          coverage report
       - name: Set up Python 3.8
         uses: actions/setup-python@v2
         with:
