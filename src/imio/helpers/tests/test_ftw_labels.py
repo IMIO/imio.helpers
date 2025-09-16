@@ -14,6 +14,12 @@ if HAS_FTW_LABELS:
 
 
 class TestFtwLabels(IntegrationTestCase):
+
+    def test_dummy_ftw_labels(self):
+        """Avoid "TypeError: Module imio.helpers.tests.test_ftw_labels does not define any tests"
+           whhen tests are executed without ftw.labels."""
+        pass
+
     @require_module("ftw.labels")
     def test_labels_indexer(self):
         """ """
