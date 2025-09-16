@@ -9,6 +9,7 @@
   <include package="plone.app.relationfield" />
   <include package="collective.behavior.talcondition" />
   <include package="collective.MockMailHost" />
+  <include package="ftw.labels" />
 
   <!-- This index is used by test_catalog.py -->
   <adapter

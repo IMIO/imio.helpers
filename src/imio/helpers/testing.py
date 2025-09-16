@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Base module for unittesting."""
+from imio.helpers import HAS_FTW_LABELS
 from imio.helpers.cache import setup_ram_cache
 from imio.helpers.ram import imio_global_cache
 from imio.helpers.ram import IMIORAMCache
@@ -47,6 +48,7 @@ class PloneWithHelpersLayer(PloneSandboxLayer):
         # Install into Plone site using portal_setup
         applyProfile(portal, "imio.helpers:testing")
         applyProfile(portal, "collective.MockMailHost:default")
+        applyProfile(portal, "ftw.labels:default")
 
         # use intranet_workflow for every types
         portal.portal_workflow.setDefaultChain("intranet_workflow")

@@ -57,9 +57,6 @@ class TestContentModule(IntegrationTestCase):
     Test all helper methods of content module.
     """
 
-    def setUp(self):
-        self.portal = self.layer["portal"]
-
     def test_get_object(self):
         obj = api.content.create(container=self.portal.folder, id="mydoc", title="My document", type="Document")
         # Give parent information

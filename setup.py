@@ -61,6 +61,7 @@ setup(
         "test": [
             "collective.behavior.talcondition",
             "collective.MockMailHost",
+            "ftw.labels",
             "plone.app.dexterity",
             "plone.app.testing",
         ],
