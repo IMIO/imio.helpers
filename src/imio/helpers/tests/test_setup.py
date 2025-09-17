@@ -17,7 +17,7 @@ class TestSetupModule(IntegrationTestCase):
     """
 
     def setUp(self):
-        self.portal = self.layer["portal"]
+        super(TestSetupModule, self).setUp()
         try:
             from Products.CMFPlone.utils import get_installer
 

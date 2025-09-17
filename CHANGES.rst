@@ -6,6 +6,9 @@ Changelog
 
 - Improved `set.load_workflow_from_package` with default option `purge_workflow=True`.
   [sgeulette]
+- Override `ftw.labels` portal_catalog index `labels` to add `EMPTY_STRING`
+  value when no global label selected.
+  [gbastien]
 
 1.3.1 (2025-08-26)
 ------------------

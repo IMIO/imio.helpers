@@ -28,11 +28,11 @@ class TestSecurityModule(IntegrationTestCase):
     """
 
     def setUp(self):
+        super(TestSecurityModule, self).setUp()
         if "IS_DEV_ENV" in list(os.environ.keys()):
             del os.environ["IS_DEV_ENV"]
         if "ENV" in list(os.environ.keys()):
             del os.environ["ENV"]
-        self.portal = self.layer["portal"]
 
     def test_fplog(self):
         fplog("test_action", "test_extras")

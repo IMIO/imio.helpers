@@ -16,9 +16,6 @@ class TestWorkflowModule(IntegrationTestCase):
     Test all helper methods of workflow module.
     """
 
-    def setUp(self):
-        self.portal = self.layer["portal"]
-
     def test_do_transitions(self):
         obj = api.content.create(container=self.portal.folder, id="mydoc", type="Document")
         self.assertEqual(api.content.get_state(obj), "internal")

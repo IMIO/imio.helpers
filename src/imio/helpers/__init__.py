@@ -13,6 +13,7 @@ from zope.i18nmessageid import MessageFactory
 
 import logging
 import os
+import pkg_resources
 
 
 _ = MessageFactory("imio.helpers")
@@ -30,6 +31,37 @@ EMPTY_TITLE = "No value"
 EMPTY_STRING = "__empty_string__"
 EMPTY_DATE = date(1950, 1, 1)
 EMPTY_DATETIME = datetime(1950, 1, 1, 12, 0)
+
+
+try:
+    pkg_resources.get_distribution("ftw.labels")
+    HAS_FTW_LABELS = True
+except pkg_resources.DistributionNotFound:  # pragma: no cover
+    HAS_FTW_LABELS = False
+
+
+if HAS_FTW_LABELS:
+
+    from ftw.labels import indexer as ftw_indexer
+    from ftw.labels.interfaces import ILabelSupport
+    from plone.indexer.decorator import indexer
+
+    ftw_indexer.__old_labels = ftw_indexer.labels
+
+    @indexer(ILabelSupport)
+    def labels(obj):
+        original_labels = ftw_indexer.__old_labels(obj)()
+        # add EMPTY_STRING if no selected global labels
+        # ftw.labels returns ['_'] when no global/personal labels at all
+        # personal labels are indexed as ["pers-label", "username:pers-label"]
+        pers_labels = [ol.split(':')[1] for ol in original_labels if ':' in ol]
+        if original_labels == ['_'] or \
+           not [ol for ol in original_labels
+                if ':' not in ol and ol not in pers_labels]:
+            original_labels.append(EMPTY_STRING)
+        return original_labels
+
+    ftw_indexer.labels = labels
 
 
 def GroupsTool__getGroupsForPrincipal_cachekey(method, self, principal):
