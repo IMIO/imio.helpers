@@ -112,7 +112,7 @@ jobs:
       - name: Install Coveralls
         run: |
           pip3 install -U pip setuptools --no-cache-dir
-          pip3 install -U "coveralls>=3.0.0" coverage==7.10.7 --no-cache-dir
+          pip3 install -U "coveralls>=3.0.0" coverage==7.6.1 --no-cache-dir
       - name: Publish to Coveralls
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
