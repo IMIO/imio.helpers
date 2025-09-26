@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.3.2 (unreleased)
+1.3.2 (2025-09-26)
 ------------------
 
 - Improved `set.load_workflow_from_package` with default option `purge_workflow=True`.
