@@ -264,4 +264,18 @@ qq.FileUploader.prototype._addSelection = function(files) {
                 this._addFile(files[i]);
             }
         }
+};
+
+// function that will filter displayed elements from a text input
+function filterByName(event, selector="span.option") {
+  const searchTerm = event.target.value.trim().toLowerCase();
+  const checkboxes = document.querySelectorAll(selector);
+
+  checkboxes.forEach(function(checkbox) {
+    checkbox.style.display = 'block';
+
+    if (!checkbox.innerText.toLowerCase().includes(searchTerm)) {
+      checkbox.style.display = 'none';
     }
+  });
+}

@@ -4,8 +4,9 @@ Changelog
 1.3.3 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- Added JS helper function `filterByName` that let filter a list of elements
+  from a text input.
+  [gbastien]
 
 1.3.2 (2025-09-26)
 ------------------
