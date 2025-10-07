@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.3.3 (unreleased)
+1.3.3 (2025-10-07)
 ------------------
 
 - Added JS helper function `filterByName` that let filter a list of elements
