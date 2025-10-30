@@ -174,9 +174,13 @@ $.ajaxTransport("+binary", function (options, originalOptions, jqXHR) {
     }
 });
 
-function submitFormHelper(form, onsuccess=submitFormHelperOnsuccessDefault, onerror=null) {
+function submitFormHelper(onsuccess=submitFormHelperOnsuccessDefault, onerror=null) {
     $('input#form-buttons-apply').click(function(event) {
       event.preventDefault();
+      // store CKEDITOR instances value into the related textarea widget so it is submitted
+      textareas = $('textarea.ckeditor_plone', this.form);
+      textareas.each(function() {this.value = CKEDITOR.instances[this.name].getData();});
+      // retrieve form data
       data = $(this.form).serializeArray();
       // buttons are not included by serializeArray but we need it
       buttons = $("input[name^='form.buttons']", this.form);

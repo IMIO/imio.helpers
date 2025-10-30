@@ -4,8 +4,12 @@ Changelog
 1.3.4 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Adapted JS function `submitFormHelper`:
 
+  - removed first parameter `form` that was not used;
+  - manage CKeditor fields so it is correctly submitted.
+
+  [gbastien]
 
 1.3.3 (2025-10-07)
 ------------------
