@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.3.4 (unreleased)
+1.3.4 (2025-11-05)
 ------------------
 
 - Adapted JS function `submitFormHelper`:
