@@ -4,8 +4,8 @@ Changelog
 1.3.6 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- Try to fix broken release.
+  [gbastien]
 
 1.3.5 (2025-11-05)
 ------------------
