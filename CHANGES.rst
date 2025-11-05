@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.3.6 (unreleased)
+1.3.6 (2025-11-05)
 ------------------
 
 - Try to fix broken release.
