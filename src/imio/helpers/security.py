@@ -215,3 +215,24 @@ def check_zope_admin():
     ):
         return True
     return False
+
+
+def separate_fullname(user, fn_first=True, fullname=None):
+    """Separate firstname and lastname from fullname"""
+    if not fullname:
+        fullname = safe_unicode(user.getProperty("fullname"))
+    lastname = firstname = u""
+    if fullname:
+        parts = fullname.split()
+        if len(parts) == 1:
+            lastname = parts[0]
+        elif len(parts) > 1:
+            if fn_first:
+                firstname = parts[0]
+                lastname = " ".join(parts[1:])
+            else:
+                lastname = parts[0]
+                firstname = " ".join(parts[1:])
+    elif user:
+        lastname = safe_unicode(user.id)
+    return firstname, lastname

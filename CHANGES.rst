@@ -4,8 +4,8 @@ Changelog
 1.3.8 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- Added `security.separate_fullname` function.
+  [sgeulette]
 
 1.3.7 (2025-11-05)
 ------------------
