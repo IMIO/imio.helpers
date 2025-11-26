@@ -32,7 +32,7 @@ logger = logging.getLogger("imio.helpers")
 
 
 # 1) we get a stored dictionary containing the treated keys (using load_pickle function)
-def batch_get_keys(infile, loop_length=0, a_set=None, add_files=None):
+def batch_get_keys(infile, loop_length=0, a_set=None, add_files=None, log=False):
     """Returns the stored batched keys from the file.
     Must be used like this, before the loop:
     batch_keys, config = batch_get_keys(infile, batch_number, commit_number)
@@ -41,6 +41,7 @@ def batch_get_keys(infile, loop_length=0, a_set=None, add_files=None):
     :param loop_length: the loop length number
     :param a_set: a given data structure to get the stored keys
     :param add_files: a list of additional files to consider when deleting files
+    :param log: if True, log infile name
     :return: 2 parameters: 1) a_set fulled with pickled data,
     2) a config dict {'bn': batch_number, 'bl': batch_last, 'cn': commit_number, 'll': loop_length, 'lc': loop_count,
                       'pf': infile, 'cf': config_file, 'kc': keys_count, 'lk': last_key, 'ldk': last_dump_key,
@@ -72,6 +73,8 @@ def batch_get_keys(infile, loop_length=0, a_set=None, add_files=None):
     load_pickle(infile, a_set)
     dic_file = infile.replace(".pkl", "_config.txt")
     first_run = not os.path.exists(dic_file)
+    if first_run and log:
+        logger.info('"BATCHING started with infile: "%s""', infile)
     config = {
         "bn": batch_number,
         "bl": batch_last,
