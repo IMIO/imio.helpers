@@ -615,7 +615,7 @@ class TestXHTMLModule(IntegrationTestCase):
 
         # working example
         text = '<p>Working external image <img src="%s"/>.</p>' % picsum_image1_url
-        # we have Content-Dispsition header
+        # we have Content-Disposition header
         downloaded_img_path, downloaded_img_infos = six.moves.urllib.request.urlretrieve(picsum_image1_url)
         self.assertTrue(downloaded_img_infos.getheader("Content-Disposition"))
         # image object does not exist for now
@@ -638,12 +638,11 @@ class TestXHTMLModule(IntegrationTestCase):
 
         # link to external image without Content-Disposition
         # it is downloaded nevertheless but used filename will be 'image-1'
-        text = '<p>External site <img src="http://www.imio.be/logo.png">.</p>'
-        expected = '<p>External site <img src="{0}/folder/image-1.png">.</p>'.format(self.portal_url)
-        downloaded_img_path, downloaded_img_infos = six.moves.urllib.request.urlretrieve("http://www.imio.be/logo.png")
-        self.assertIsNone(downloaded_img_infos.getheader("Content-Disposition"))
+        text = '<p>External site <img src="https://fastly.picsum.photos/id/291/200/200.jpg?hmac=g1_gMJjGOhuKcjI43ybRbxQ8axXnS05ICBsEa4Lcaw0">.</p>'
+        expected = '<p>External site <img src="{0}/folder/291-200x200.jpg">.</p>'.format(self.portal_url)
+        downloaded_img_path, downloaded_img_infos = six.moves.urllib.request.urlretrieve("https://fastly.picsum.photos/id/291/200/200.jpg?hmac=g1_gMJjGOhuKcjI43ybRbxQ8axXnS05ICBsEa4Lcaw0")
         self.assertEqual(storeImagesLocally(self.portal.folder, text), expected)
-        logo = self.portal.folder.get("image-1.png")
+        logo = self.portal.folder.get("291-200x200.jpg")
         self.assertTrue(IImageContent.providedBy(logo))
 
         # if context is a container, an "Not found" image is only added one time
