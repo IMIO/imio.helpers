@@ -19,6 +19,7 @@ from imio.helpers.content import get_vocab_values
 from imio.helpers.content import normalize_name
 from imio.helpers.content import object_ids
 from imio.helpers.content import object_values
+from imio.helpers.content import pop_from_annotation
 from imio.helpers.content import restore_link_integrity_checks
 from imio.helpers.content import richtextval
 from imio.helpers.content import safe_delattr
@@ -32,6 +33,7 @@ from imio.helpers.content import validate_fields
 from imio.helpers.testing import IntegrationTestCase
 from imio.helpers.tests.utils import require_module
 from imio.helpers.tests.utils import unrequire_module
+from persistent.mapping import PersistentMapping
 from plone import api
 from plone.app.vocabularies.types import PortalTypesVocabulary
 from plone.registry.interfaces import IRegistry
@@ -298,6 +300,33 @@ class TestContentModule(IntegrationTestCase):
         self.assertEqual(IAnnotations(obj)["test_annot"], "trululuid")
         ret = set_to_annotation("test_annot", "trululu", uid="df dgf fdsqqe dsf")
         self.assertIsNone(ret)
+
+    def test_pop_annotation(self):
+        obj = api.content.create(
+            container=self.portal.folder, id="tt", type="testingtype")
+        fakeUid = obj.UID()
+        api.content.delete(obj)
+        obj = api.content.create(
+            container=self.portal.folder, id="tt", type="testingtype")
+        # test get
+        self.assertIsNone(get_from_annotation("test_annot", obj=obj))
+        self.assertEqual(get_from_annotation("test_annot", obj=obj, default="empty"), "empty")
+        # get value with uid that doesn't match an object raises no error.
+        self.assertEqual(get_from_annotation("test_annot", uid=fakeUid, default="empty"), "empty")
+        # test pop
+        ann = IAnnotations(obj)
+        ann["test_annot"] = PersistentMapping()
+        self.assertEqual(ann["test_annot"], {})
+        ann["test_annot"]["key1"] = "value1"
+        ann["test_annot"]["key2"] = "value2"
+        self.assertEqual(ann["test_annot"], {"key1": "value1", "key2": "value2"})
+        ret = pop_from_annotation("test_annot", "tralala", uid=obj.UID())
+        self.assertIsNone(ret)
+        ret = pop_from_annotation("test_annot", "value1", uid=obj.UID())
+        self.assertIsNone(ret)
+        ret = pop_from_annotation("test_annot", "key1", uid=obj.UID())
+        self.assertEqual(ret, "key1")
+        self.assertEqual(ann["test_annot"], {"key2": "value2"})
 
     def test_uuidsToCatalogBrains(self):
         folder_uid = self.portal.folder.UID()

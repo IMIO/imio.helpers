@@ -343,6 +343,23 @@ def set_to_annotation(annotation_key, value, obj=None, uid=None):
     return value
 
 
+@mutually_exclusive_parameters("obj", "uid")
+def pop_from_annotation(annotation_key, key, obj=None, uid=None):
+    """Pop (remove) annotation related to obj or uid when annotation is stored as a mapping."""
+    if not obj:
+        obj = api.content.get(UID=uid)
+        # api.content.get may return None
+        if not obj:
+            return
+
+    annot = IAnnotations(obj)
+    if annotation_key not in annot:
+        return
+    if key in annot[annotation_key]:
+        annot[annotation_key].pop(key)
+        return key
+
+
 def uuidsToCatalogBrains(
     uuids=[], ordered=False, query={}, check_contained_uids=False, unrestricted=False, catalog="portal_catalog"
 ):

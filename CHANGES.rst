@@ -8,6 +8,9 @@ Changelog
   [sgeulette]
 - Added log parameter in `batching.batch_get_keys`
   [sgeulette]
+- Added `content.pop_from_annotation` to be able to remove a key from an
+  annotation that is stored as a `PersistentMapping`.
+  [gbastien]
 
 1.3.7 (2025-11-05)
 ------------------
