@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.3.8 (unreleased)
+1.3.8 (2025-12-16)
 ------------------
 
 - Added `security.separate_fullname` function.
