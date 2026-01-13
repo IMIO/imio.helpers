@@ -4,8 +4,9 @@ Changelog
 1.3.9 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- Added `ws` package with `ws.get_auth_token` and
+  `ws.send_json_request` functions.
+  [gbastien]
 
 1.3.8 (2025-12-16)
 ------------------

@@ -32,6 +32,14 @@ EMPTY_STRING = "__empty_string__"
 EMPTY_DATE = date(1950, 1, 1)
 EMPTY_DATETIME = datetime(1950, 1, 1, 12, 0)
 
+# keycloak auth token configuration
+# attribute name on the portal to store keycloak auth token
+AUTH_INFOS_ATTR = "keycloak_auth_infos"
+SSO_APPS_URL = os.getenv('SSO_APPS_URL')
+SSO_APPS_CLIENT_ID = os.getenv('SSO_APPS_CLIENT_ID')
+SSO_APPS_CLIENT_SECRET = os.getenv('SSO_APPS_CLIENT_SECRET')
+SSO_APPS_USER_USERNAME = os.getenv('SSO_APPS_USER_USERNAME')
+SSO_APPS_USER_PASSWORD = os.getenv('SSO_APPS_USER_PASSWORD')
 
 try:
     pkg_resources.get_distribution("ftw.labels")
