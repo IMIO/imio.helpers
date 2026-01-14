@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.3.9 (unreleased)
+1.3.9 (2026-01-14)
 ------------------
 
 - Added `ws` package with `ws.get_auth_token` and
