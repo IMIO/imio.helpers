@@ -92,7 +92,8 @@ def send_json_request(
         method='GET',
         data={},
         return_as_raw=False,
-        show_message=False):
+        show_message=False,
+        **kwargs):
     """Send a json request and returns decoded response."""
     token = get_auth_token()
     # error getting token?
@@ -134,7 +135,7 @@ def send_json_request(
             "GET": requests.get,
             "POST": requests.post,
             "DELETE": requests.delete}.get(method)
-        response = me(url, headers=headers, json=data)
+        response = me(url, headers=headers, json=data, **kwargs)
         content = response.content
         logger.info(datetime.now() - start)
         if response.status_code >= 300:
