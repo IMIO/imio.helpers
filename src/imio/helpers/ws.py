@@ -2,17 +2,17 @@
 
 from datetime import datetime
 from datetime import timedelta
-from imio.helpers.security import fplog
-from persistent.mapping import PersistentMapping
-from plone import api
-from Products.CMFPlone.utils import safe_unicode
-from Products.PloneMeeting import logger
 from imio.helpers import AUTH_INFOS_ATTR
+from imio.helpers import logger
 from imio.helpers import SSO_APPS_CLIENT_ID
 from imio.helpers import SSO_APPS_CLIENT_SECRET
 from imio.helpers import SSO_APPS_URL
 from imio.helpers import SSO_APPS_USER_PASSWORD
 from imio.helpers import SSO_APPS_USER_USERNAME
+from imio.helpers.security import fplog
+from persistent.mapping import PersistentMapping
+from plone import api
+from Products.CMFPlone.utils import safe_unicode
 from zope.globalrequest import getRequest
 
 import json
@@ -95,8 +95,9 @@ def send_json_request(
         show_message=False):
     """Send a json request and returns decoded response."""
     token = get_auth_token()
-    if 'error' in token:
-        return "Error getting token: %s (%s)" % (token['error'], token.get('error_description', ''))
+    # error getting token?
+    if isinstance(token, requests.Response):
+        return token
     headers = {
         'Accept': 'application/json',
         'Cache-Control': 'no-store',
@@ -146,7 +147,7 @@ def send_json_request(
         if method == 'GET':
             cache[cachekey] = content
             setattr(request, cachekey_id, cache)
-    if not return_as_raw and content:
+    if content and not return_as_raw:
         return json.loads(content)
     else:
         return content
