@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from appy.gen import No
 from datetime import datetime
 from datetime import timedelta
 from imio.helpers.security import fplog
@@ -21,6 +20,10 @@ import requests
 import urllib
 
 
+try:
+    from appy.gen import No
+except ImportError:
+    pass
 try:
     from urlparse import urlparse
 except ImportError:
