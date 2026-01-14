@@ -134,6 +134,7 @@ def send_json_request(
         me = {
             "GET": requests.get,
             "POST": requests.post,
+            "PUT": requests.put,
             "DELETE": requests.delete}.get(method)
         response = me(url, headers=headers, json=data, **kwargs)
         content = response.content
