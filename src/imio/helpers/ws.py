@@ -21,10 +21,6 @@ import urllib
 
 
 try:
-    from appy.gen import No
-except ImportError:
-    pass
-try:
     from urlparse import urlparse
 except ImportError:
     from urllib.parse import urlparse
@@ -100,7 +96,7 @@ def send_json_request(
     """Send a json request and returns decoded response."""
     token = get_auth_token()
     if 'error' in token:
-        return No("Error getting token: %s (%s)" % (token['error'], token.get('error_description', '')))
+        return "Error getting token: %s (%s)" % (token['error'], token.get('error_description', ''))
     headers = {
         'Accept': 'application/json',
         'Cache-Control': 'no-store',
@@ -144,7 +140,7 @@ def send_json_request(
             logger.warn(content)
             if show_message:
                 api.portal.show_message(safe_unicode(content), request=getRequest())
-            content = No("Error status: %d (%s)" % (response.status_code, content))
+            content = "Error status: %d (%s)" % (response.status_code, content)
             content.status_code = response.status_code
         # manage cache per request for 'GET'
         if method == 'GET':
