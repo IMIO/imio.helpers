@@ -143,8 +143,7 @@ def send_json_request(
             logger.warn(content)
             if show_message:
                 api.portal.show_message(safe_unicode(content), request=getRequest())
-            content = "Error status: %d (%s)" % (response.status_code, content)
-            content.status_code = response.status_code
+            return response
         # manage cache per request for 'GET'
         if method == 'GET':
             cache[cachekey] = content

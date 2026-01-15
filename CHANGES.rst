@@ -4,8 +4,8 @@ Changelog
 1.3.10 (unreleased)
 -------------------
 
-- Nothing changed yet.
-
+- In `ws.send_json_request` in case of error we return the `requests.Response`.
+  [gbastien]
 
 1.3.9 (2026-01-14)
 ------------------
