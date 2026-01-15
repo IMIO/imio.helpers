@@ -1,22 +1,30 @@
 # -*- coding: utf-8 -*-
 
+from cryptography import x509
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import serialization
 from datetime import datetime
 from datetime import timedelta
 from imio.helpers import AUTH_INFOS_ATTR
 from imio.helpers import logger
+from imio.helpers import SSO_APPS_ALGORITHM
+from imio.helpers import SSO_APPS_AUDIENCE
 from imio.helpers import SSO_APPS_CLIENT_ID
 from imio.helpers import SSO_APPS_CLIENT_SECRET
-from imio.helpers import SSO_APPS_URL
+from imio.helpers import SSO_APPS_REALM_URL
 from imio.helpers import SSO_APPS_USER_PASSWORD
 from imio.helpers import SSO_APPS_USER_USERNAME
 from imio.helpers.security import fplog
+from jwt.exceptions import DecodeError
 from persistent.mapping import PersistentMapping
 from plone import api
 from Products.CMFPlone.utils import safe_unicode
 from zope.globalrequest import getRequest
 
 import json
+import jwt
 import requests
+import textwrap
 import urllib
 
 
@@ -26,7 +34,7 @@ except ImportError:
     from urllib.parse import urlparse
 
 
-def get_auth_token(sso_url=SSO_APPS_URL,
+def get_auth_token(sso_realm_url=SSO_APPS_REALM_URL,
                    sso_client_id=SSO_APPS_CLIENT_ID,
                    sso_client_secret=SSO_APPS_CLIENT_SECRET,
                    sso_user_username=SSO_APPS_USER_USERNAME,
@@ -38,6 +46,7 @@ def get_auth_token(sso_url=SSO_APPS_URL,
     """Get the auth token and store it on the portal.
        Get it again if expired or expires in less than
        given expire_treshold seconds."""
+    sso_url = sso_realm_url + '/protocol/openid-connect/token'
     portal = api.portal.get()
     auth_infos = getattr(portal, AUTH_INFOS_ATTR, PersistentMapping())
     if not auth_infos or auth_infos['expires_in'] < datetime.now():
@@ -153,3 +162,53 @@ def send_json_request(
         return json.loads(content)
     else:
         return content
+
+
+def verify_auth_token(token,
+                      sso_realm_url=SSO_APPS_REALM_URL,
+                      sso_algorithm=SSO_APPS_ALGORITHM,
+                      sso_audience=SSO_APPS_AUDIENCE,
+                      groups=None,
+                      log=True):
+    """Verify given jwt token."""
+    sso_url = sso_realm_url + '/protocol/openid-connect/certs'
+    certs = requests.get(sso_url).json()
+    x5c_certs = {}
+    for cert in certs['keys']:
+        alg = cert['alg']
+        x5c_certs[alg] = cert['x5c'][0]
+    x5c_cert = x5c_certs.get(sso_algorithm, '')
+    cert_pem = "-----BEGIN CERTIFICATE-----\n{}\n-----END CERTIFICATE-----".format(
+        "\n".join(textwrap.wrap(x5c_cert, 64))
+    )
+    cert = x509.load_pem_x509_certificate(
+        cert_pem.encode('ascii'),
+        default_backend()
+    )
+
+    public_key = cert.public_key()
+
+    public_key_pem = public_key.public_bytes(
+        encoding=serialization.Encoding.PEM,
+        format=serialization.PublicFormat.SubjectPublicKeyInfo
+    )
+
+    try:
+        decoded = jwt.decode(
+            token,
+            public_key_pem,
+            algorithms=['RS256'],
+            audience=sso_audience,
+            issuer=SSO_APPS_REALM_URL,
+        )
+    except DecodeError:
+        return False
+
+    if groups:
+        user_groups = decoded.get('groups', [])
+        for group in groups:
+            if group not in user_groups:
+                if log is True:
+                    logger.warning('Token verification failed: missing group "%s"', group)
+                return False
+    return True
