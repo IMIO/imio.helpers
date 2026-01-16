@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.3.10 (unreleased)
+1.3.10 (2026-01-16)
 -------------------
 
 - In `ws.send_json_request` in case of error we return the `requests.Response`.
