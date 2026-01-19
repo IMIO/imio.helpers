@@ -170,7 +170,16 @@ def verify_auth_token(token,
                       sso_audience=SSO_APPS_AUDIENCE,
                       groups=None,
                       log=True):
-    """Verify given jwt token."""
+    """Verify given jwt token.
+
+    :param token: the jwt token to verify
+    :param sso_realm_url: Keycloak URL in the form 'https://<keycloak-server>/realms/<realm-name>'
+    :param sso_algorithm: the sso algorithm used, e.g. 'RS256'
+    :param sso_audience: the expected audience in the token, e.g. 'account'
+    :param groups: list of groups the token must contain
+    :param log: whether to log verification steps
+    :return: True if the token is valid and contains the required groups, False otherwise
+    """
     sso_url = sso_realm_url + '/protocol/openid-connect/certs'
     certs = requests.get(sso_url).json()
     x5c_certs = {}
