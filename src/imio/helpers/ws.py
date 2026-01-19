@@ -9,9 +9,11 @@ from imio.helpers import AUTH_INFOS_ATTR
 from imio.helpers import logger
 from imio.helpers import SSO_APPS_ALGORITHM
 from imio.helpers import SSO_APPS_AUDIENCE
+from imio.helpers import SSO_APPS_CERTS_URL
 from imio.helpers import SSO_APPS_CLIENT_ID
 from imio.helpers import SSO_APPS_CLIENT_SECRET
 from imio.helpers import SSO_APPS_REALM_URL
+from imio.helpers import SSO_APPS_TOKEN_URL
 from imio.helpers import SSO_APPS_USER_PASSWORD
 from imio.helpers import SSO_APPS_USER_USERNAME
 from imio.helpers.security import fplog
@@ -34,7 +36,7 @@ except ImportError:
     from urllib.parse import urlparse
 
 
-def get_auth_token(sso_realm_url=SSO_APPS_REALM_URL,
+def get_auth_token(sso_url=SSO_APPS_TOKEN_URL,
                    sso_client_id=SSO_APPS_CLIENT_ID,
                    sso_client_secret=SSO_APPS_CLIENT_SECRET,
                    sso_user_username=SSO_APPS_USER_USERNAME,
@@ -46,7 +48,6 @@ def get_auth_token(sso_realm_url=SSO_APPS_REALM_URL,
     """Get the auth token and store it on the portal.
        Get it again if expired or expires in less than
        given expire_treshold seconds."""
-    sso_url = sso_realm_url + '/protocol/openid-connect/token'
     portal = api.portal.get()
     auth_infos = getattr(portal, AUTH_INFOS_ATTR, PersistentMapping())
     if not auth_infos or auth_infos['expires_in'] < datetime.now():
@@ -165,23 +166,24 @@ def send_json_request(
 
 
 def verify_auth_token(token,
-                      sso_realm_url=SSO_APPS_REALM_URL,
+                      sso_certs_url=SSO_APPS_CERTS_URL,
                       sso_algorithm=SSO_APPS_ALGORITHM,
                       sso_audience=SSO_APPS_AUDIENCE,
+                      issuer=SSO_APPS_REALM_URL,
                       groups=None,
                       log=True):
     """Verify given jwt token.
 
     :param token: the jwt token to verify
     :param sso_realm_url: Keycloak URL in the form 'https://<keycloak-server>/realms/<realm-name>'
+    :param sso_certs_url: the url to get the sso certs, e.g. 'https://<keycloak-server>/realms/<realm-name>/protocol/openid-connect/certs'
     :param sso_algorithm: the sso algorithm used, e.g. 'RS256'
     :param sso_audience: the expected audience in the token, e.g. 'account'
     :param groups: list of groups the token must contain
     :param log: whether to log verification steps
     :return: True if the token is valid and contains the required groups, False otherwise
     """
-    sso_url = sso_realm_url + '/protocol/openid-connect/certs'
-    certs = requests.get(sso_url).json()
+    certs = requests.get(sso_certs_url).json()
     x5c_certs = {}
     for cert in certs['keys']:
         alg = cert['alg']
@@ -206,9 +208,9 @@ def verify_auth_token(token,
         decoded = jwt.decode(
             token,
             public_key_pem,
-            algorithms=['RS256'],
+            algorithms=[sso_algorithm],
             audience=sso_audience,
-            issuer=SSO_APPS_REALM_URL,
+            issuer=issuer,
         )
     except DecodeError:
         return False
