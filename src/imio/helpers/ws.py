@@ -1,22 +1,32 @@
 # -*- coding: utf-8 -*-
 
+from cryptography import x509
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import serialization
 from datetime import datetime
 from datetime import timedelta
 from imio.helpers import AUTH_INFOS_ATTR
 from imio.helpers import logger
+from imio.helpers import SSO_APPS_ALGORITHM
+from imio.helpers import SSO_APPS_AUDIENCE
+from imio.helpers import SSO_APPS_CERTS_URL
 from imio.helpers import SSO_APPS_CLIENT_ID
 from imio.helpers import SSO_APPS_CLIENT_SECRET
-from imio.helpers import SSO_APPS_URL
+from imio.helpers import SSO_APPS_REALM_URL
+from imio.helpers import SSO_APPS_TOKEN_URL
 from imio.helpers import SSO_APPS_USER_PASSWORD
 from imio.helpers import SSO_APPS_USER_USERNAME
 from imio.helpers.security import fplog
+from jwt.exceptions import DecodeError
 from persistent.mapping import PersistentMapping
 from plone import api
 from Products.CMFPlone.utils import safe_unicode
 from zope.globalrequest import getRequest
 
 import json
+import jwt
 import requests
+import textwrap
 import urllib
 
 
@@ -26,7 +36,7 @@ except ImportError:
     from urllib.parse import urlparse
 
 
-def get_auth_token(sso_url=SSO_APPS_URL,
+def get_auth_token(sso_url=SSO_APPS_TOKEN_URL,
                    sso_client_id=SSO_APPS_CLIENT_ID,
                    sso_client_secret=SSO_APPS_CLIENT_SECRET,
                    sso_user_username=SSO_APPS_USER_USERNAME,
@@ -153,3 +163,63 @@ def send_json_request(
         return json.loads(content)
     else:
         return content
+
+
+def verify_auth_token(token,
+                      sso_certs_url=SSO_APPS_CERTS_URL,
+                      sso_algorithm=SSO_APPS_ALGORITHM,
+                      sso_audience=SSO_APPS_AUDIENCE,
+                      issuer=SSO_APPS_REALM_URL,
+                      groups=None,
+                      log=True):
+    """Verify given jwt token.
+
+    :param token: the jwt token to verify
+    :param sso_realm_url: Keycloak URL in the form 'https://<keycloak-server>/realms/<realm-name>'
+    :param sso_certs_url: the url to get the sso certs, e.g. 'https://<keycloak-server>/realms/<realm-name>/protocol/openid-connect/certs'
+    :param sso_algorithm: the sso algorithm used, e.g. 'RS256'
+    :param sso_audience: the expected audience in the token, e.g. 'account'
+    :param groups: list of groups the token must contain
+    :param log: whether to log verification steps
+    :return: True if the token is valid and contains the required groups, False otherwise
+    """
+    certs = requests.get(sso_certs_url).json()
+    x5c_certs = {}
+    for cert in certs['keys']:
+        alg = cert['alg']
+        x5c_certs[alg] = cert['x5c'][0]
+    x5c_cert = x5c_certs.get(sso_algorithm, '')
+    cert_pem = "-----BEGIN CERTIFICATE-----\n{}\n-----END CERTIFICATE-----".format(
+        "\n".join(textwrap.wrap(x5c_cert, 64))
+    )
+    cert = x509.load_pem_x509_certificate(
+        cert_pem.encode('ascii'),
+        default_backend()
+    )
+
+    public_key = cert.public_key()
+
+    public_key_pem = public_key.public_bytes(
+        encoding=serialization.Encoding.PEM,
+        format=serialization.PublicFormat.SubjectPublicKeyInfo
+    )
+
+    try:
+        decoded = jwt.decode(
+            token,
+            public_key_pem,
+            algorithms=[sso_algorithm],
+            audience=sso_audience,
+            issuer=issuer,
+        )
+    except DecodeError:
+        return False
+
+    if groups:
+        user_groups = decoded.get('groups', [])
+        for group in groups:
+            if group not in user_groups:
+                if log is True:
+                    logger.warning('Token verification failed: missing group "%s"', group)
+                return False
+    return True

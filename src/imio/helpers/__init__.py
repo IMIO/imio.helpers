@@ -16,6 +16,12 @@ import os
 import pkg_resources
 
 
+try:
+    from urlparse import urlparse
+except ImportError:
+    from urllib.parse import urlparse
+
+
 _ = MessageFactory("imio.helpers")
 logger = logging.getLogger("imio.helpers")
 
@@ -35,11 +41,19 @@ EMPTY_DATETIME = datetime(1950, 1, 1, 12, 0)
 # keycloak auth token configuration
 # attribute name on the portal to store keycloak auth token
 AUTH_INFOS_ATTR = "keycloak_auth_infos"
-SSO_APPS_URL = os.getenv('SSO_APPS_URL')
+SSO_APPS_URL = os.getenv('SSO_APPS_URL', '')
 SSO_APPS_CLIENT_ID = os.getenv('SSO_APPS_CLIENT_ID')
 SSO_APPS_CLIENT_SECRET = os.getenv('SSO_APPS_CLIENT_SECRET')
 SSO_APPS_USER_USERNAME = os.getenv('SSO_APPS_USER_USERNAME')
 SSO_APPS_USER_PASSWORD = os.getenv('SSO_APPS_USER_PASSWORD')
+
+sso_apps_realm = urlparse(SSO_APPS_URL).path.split('/')[2] if SSO_APPS_URL and len(urlparse(SSO_APPS_URL).path.split('/')) > 2 else 'sso-apps'
+SSO_APPS_REALM_URL = urlparse(SSO_APPS_URL)._replace(path='/realms/{}'.format(sso_apps_realm)).geturl()
+SSO_APPS_TOKEN_URL = urlparse(SSO_APPS_URL)._replace(path='/realms/{}/protocol/openid-connect/token'.format(sso_apps_realm)).geturl()
+SSO_APPS_CERTS_URL = urlparse(SSO_APPS_URL)._replace(path='/realms/{}/protocol/openid-connect/certs'.format(sso_apps_realm)).geturl()
+SSO_APPS_AUDIENCE = os.getenv('SSO_APPS_AUDIENCE', 'account')
+SSO_APPS_ALGORITHM = os.getenv('SSO_APPS_ALGORITHM', 'RS256')
+
 
 try:
     pkg_resources.get_distribution("ftw.labels")
