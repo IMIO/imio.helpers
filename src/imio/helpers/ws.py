@@ -46,9 +46,7 @@ def get_auth_token(sso_url=SSO_APPS_URL,
         # first try with "refresh_token" if available
         result = None
         data = {'client_id': sso_client_id,
-                'client_secret': sso_client_secret,
-                'username': sso_user_username,
-                'password': sso_user_password}
+                'client_secret': sso_client_secret}
         if auth_infos.get('refresh_token', None):
             if log is True:
                 logger.info('Getting authentication token from "refresh_token"')
@@ -61,6 +59,9 @@ def get_auth_token(sso_url=SSO_APPS_URL,
         if not result or result.status_code != 200:
             data['grant_type'] = "password"
             data.pop('refresh_token', None)
+            # username/password is not necessary for "refresh_token"
+            data['username'] = sso_user_username
+            data['password'] = sso_user_password
             if log is True:
                 logger.info('Getting new authentication token')
             result = requests.post(

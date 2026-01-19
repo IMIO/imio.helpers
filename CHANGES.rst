@@ -4,8 +4,9 @@ Changelog
 1.3.11 (unreleased)
 -------------------
 
-- Nothing changed yet.
-
+- In `ws.get_auth_token`, do not pass `username/password`
+  when using `refresh_token`.
+  [gbastien]
 
 1.3.10 (2026-01-16)
 -------------------
