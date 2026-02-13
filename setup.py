@@ -56,6 +56,8 @@ setup(
         "six",
         "Plone",
         "z3c.unconfigure",
+        "pyjwt",
+        "cryptography",
     ],
     extras_require={
         "test": [
