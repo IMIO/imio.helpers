@@ -4,6 +4,8 @@ Changelog
 1.3.11 (unreleased)
 -------------------
 
+- Added `ws.verify_auth_token` to verify JWT validity.
+  [chris-adam]
 - In `ws.get_auth_token`, do not pass `username/password`
   when using `refresh_token`.
   [gbastien]
