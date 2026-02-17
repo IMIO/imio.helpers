@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.3.11 (unreleased)
+1.3.11 (2026-02-17)
 -------------------
 
 - Added `ws.verify_auth_token` to verify JWT validity.
