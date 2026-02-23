@@ -361,7 +361,7 @@ def pop_from_annotation(annotation_key, key, obj=None, uid=None):
 
 
 def uuidsToCatalogBrains(
-    uuids=[], ordered=False, query={}, check_contained_uids=False, unrestricted=False, catalog="portal_catalog"
+    uuids=[], ordered=False, query={}, check_contained_uids=False, unrestricted=False, catalog="portal_catalog", attr_name="UID"
 ):
     """Given a list of UUIDs, attempt to return catalog brains,
     keeping original uuids list order if p_ordered=True.
@@ -374,7 +374,8 @@ def uuidsToCatalogBrains(
     if unrestricted:
         searcher = catalog.unrestrictedSearchResults
 
-    brains = searcher(UID=uuids, **query)
+    query[attr_name] = uuids
+    brains = searcher(**query)
 
     if not brains and check_contained_uids and "contained_uids" in catalog.Indexes:
         brains = searcher(contained_uids=uuids, **query)
@@ -382,7 +383,7 @@ def uuidsToCatalogBrains(
     if ordered:
         # we need to sort found brains according to uuids
         def getKey(item):
-            return uuids.index(item.UID)
+            return uuids.index(getattr(item, attr_name))
 
         brains = sorted(brains, key=getKey)
 
@@ -390,7 +391,7 @@ def uuidsToCatalogBrains(
 
 
 def uuidToCatalogBrain(
-    uuid, ordered=False, query={}, check_contained_uids=False, unrestricted=False, catalog="portal_catalog"
+    uuid, ordered=False, query={}, check_contained_uids=False, unrestricted=False, catalog="portal_catalog", attr_name="UID"
 ):
     """Shortcut to call uuidsToCatalogBrains to get one single element."""
     res = uuidsToCatalogBrains(
@@ -400,6 +401,7 @@ def uuidToCatalogBrain(
         check_contained_uids=check_contained_uids,
         unrestricted=unrestricted,
         catalog=catalog,
+        attr_name=attr_name
     )
     if res:
         res = res[0]
@@ -423,7 +425,7 @@ def _contained_objects(obj, only_unindexed=False):
 
 
 def uuidsToObjects(
-    uuids=[], ordered=False, query={}, check_contained_uids=False, unrestricted=False, catalog="portal_catalog"
+    uuids=[], ordered=False, query={}, check_contained_uids=False, unrestricted=False, catalog="portal_catalog", attr_name="UID"
 ):
     """Given a list of UUIDs, attempt to return content objects,
     keeping original uuids list order if p_ordered=True.
@@ -438,16 +440,23 @@ def uuidsToObjects(
         check_contained_uids=check_contained_uids,
         unrestricted=unrestricted,
         catalog=catalog,
+        attr_name=attr_name,
     )
     res = []
     if check_contained_uids:
         need_reorder = False
         for brain in brains:
             obj = brain._unrestrictedGetObject()
-            if obj.UID() not in uuids:
+            attr = getattr(obj, attr_name)
+            if callable(attr):
+                attr = attr()
+            if attr not in uuids:
                 # it means we have a brain using a contained_uids
                 for contained in _contained_objects(obj):
-                    if contained.UID() in uuids:
+                    contained_attr = getattr(contained, attr_name)
+                    if callable(contained_attr):
+                        contained_attr = contained_attr()
+                    if contained_attr in uuids:
                         need_reorder = True
                         res.append(contained)
             else:
@@ -455,7 +464,10 @@ def uuidsToObjects(
         if ordered and need_reorder:
             # need to sort here as disabled when calling uuidsToCatalogBrains
             def getKey(item):
-                return uuids.index(item.UID())
+                attr = getattr(item, attr_name)
+                if callable(attr_name):
+                    attr = attr()
+                return uuids.index(attr)
 
             res = sorted(res, key=getKey)
     else:
@@ -464,7 +476,7 @@ def uuidsToObjects(
 
 
 def uuidToObject(
-    uuid, ordered=False, query={}, check_contained_uids=False, unrestricted=False, catalog="portal_catalog"
+    uuid, ordered=False, query={}, check_contained_uids=False, unrestricted=False, catalog="portal_catalog", attr_name="UID"
 ):
     """Shortcut to call uuidsToObjects to get one single element."""
     res = uuidsToObjects(
@@ -474,6 +486,7 @@ def uuidToObject(
         check_contained_uids=check_contained_uids,
         unrestricted=unrestricted,
         catalog=catalog,
+        attr_name=attr_name,
     )
     if res:
         res = res[0]
