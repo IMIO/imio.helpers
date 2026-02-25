@@ -374,8 +374,7 @@ def uuidsToCatalogBrains(
     if unrestricted:
         searcher = catalog.unrestrictedSearchResults
 
-    query[attr_name] = uuids
-    brains = searcher(**query)
+    brains = searcher({attr_name: uuids}, **query)
 
     if not brains and check_contained_uids and "contained_uids" in catalog.Indexes:
         brains = searcher(contained_uids=uuids, **query)
