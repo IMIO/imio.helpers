@@ -10,6 +10,7 @@ from reportlab.platypus import Flowable
 from reportlab.platypus import SimpleDocTemplate
 from reportlab.platypus.flowables import Image
 
+import io
 import os
 import uuid
 
@@ -113,3 +114,19 @@ class BarcodeFlowable(Flowable):
             width,
             height,
         )
+
+
+def merge_pdf(*pdf_datas):
+    """Merge multiple PDFs into one.
+
+    :param pdf_datas: bytes of each PDF to merge, in order
+    :return: merged PDF bytes
+    """
+    writer = PdfFileWriter()
+    for data in pdf_datas:
+        reader = PdfFileReader(io.BytesIO(data))
+        for page in reader.pages:
+            writer.addPage(page)
+    output = io.BytesIO()
+    writer.write(output)
+    return output.getvalue()
