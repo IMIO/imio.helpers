@@ -1,9 +1,19 @@
 # -*- coding: utf-8 -*-
 
+
+try:
+    from PyPDF2 import PdfReader
+except ImportError:
+    from PyPDF2 import PdfFileReader as PdfReader
+
+
+try:
+    from PyPDF2.utils import PdfReadError
+except ImportError:
+    from PyPDF2.errors import PdfReadError
+
 from imio.helpers.pdf import merge_pdf
 from io import BytesIO
-from PyPDF2 import PdfFileReader
-from PyPDF2.utils import PdfReadError
 from reportlab.pdfgen import canvas
 
 import unittest
@@ -22,7 +32,7 @@ def _make_pdf(n_pages=2):
 
 def _pdf_page_count(pdf_data):
     """Return the number of pages in pdf_data using PyPDF2."""
-    return len(PdfFileReader(BytesIO(pdf_data)).pages)
+    return len(PdfReader(BytesIO(pdf_data)).pages)
 
 
 class TestPdf(unittest.TestCase):
