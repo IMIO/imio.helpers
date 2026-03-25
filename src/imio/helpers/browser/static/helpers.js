@@ -84,6 +84,13 @@ function toggleDetails(id, toggle_parent_active=true, parent_tag=null, load_view
   }
 }
 
+// function that will configure a simple overlay that may be closed whenever clicking outside
+function infoOverlays(tag=null) {
+    $('a.link-overlay-info', tag).prepOverlay({
+    subtype: 'ajax',
+    closeselector: '[name="form.buttons.cancel"]',
+});
+}
 // function that will expand a collapsible if asked thru request parameter
 function expandCollapsible() {
   let searchParams = new URLSearchParams(window.location.search);
@@ -92,9 +99,17 @@ function expandCollapsible() {
     label_tag = $('div#' + expand_collapsibles[i])[0].click();
   }
 }
+// function called when a loadContent is done (thru a toggleDetails for example)
+function initInfoOverlays(event) {
+    infoOverlays(event.tag);
+}
+
 $(document).ready(function () {
     expandCollapsible();
+    infoOverlays();
 });
+$(document).on('toggle_details_ajax_success', initInfoOverlays);
+
 
 function loadContent(tag, load_view, async=true, base_url=null, event_name=null) {
     // load content in the collapsible-inner-content div

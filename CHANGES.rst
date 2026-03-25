@@ -4,8 +4,9 @@ Changelog
 1.3.12 (unreleased)
 -------------------
 
-- Nothing changed yet.
-
+- Added JS helper to configure a simple overlay when a html link uses
+  the CSS class `link-overlay-info`.
+  [gbastien]
 
 1.3.11 (2026-02-17)
 -------------------
