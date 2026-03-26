@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.3.12 (unreleased)
+1.3.12 (2026-03-26)
 -------------------
 
 - Added JS helper to configure a simple overlay when a html link uses
