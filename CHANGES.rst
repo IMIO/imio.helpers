@@ -4,8 +4,9 @@ Changelog
 1.3.13 (unreleased)
 -------------------
 
-- Nothing changed yet.
-
+- Added `utils.is_pdf` that checks if a given DX file content is PDF.
+  Added `file` on `testingtype` for the tests.
+  [gbastien]
 
 1.3.12 (2026-03-26)
 -------------------

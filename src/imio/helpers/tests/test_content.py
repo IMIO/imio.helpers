@@ -185,7 +185,7 @@ class TestContentModule(IntegrationTestCase):
         )
         self.assertListEqual(
             sorted([name for (name, fld) in get_schema_fields(obj=obj, behaviors=False)]),
-            sorted(["text", "enabled", "mandatory_textline", "relations", "textline"]),
+            sorted(["text", "enabled", "file", "mandatory_textline", "relations", "textline"]),
         )
         self.assertListEqual(
             sorted([name for (name, fld) in get_schema_fields(obj=obj)]),
@@ -194,6 +194,7 @@ class TestContentModule(IntegrationTestCase):
                     "text",
                     "enabled",
                     "mandatory_textline",
+                    "file",
                     "relations",
                     "textline",
                     "description",
@@ -211,6 +212,7 @@ class TestContentModule(IntegrationTestCase):
                     "text",
                     "enabled",
                     "mandatory_textline",
+                    "file",
                     "relations",
                     "textline",
                     "IBasic.description",

@@ -4,6 +4,7 @@ from imio.helpers import _
 from imio.helpers import HAS_PLONE_6_AND_MORE
 from plone import api
 from plone.namedfile.file import NamedBlobImage
+from plone.rfc822.interfaces import IPrimaryFieldInfo
 from zope.interface import Invalid
 
 import json
@@ -37,3 +38,10 @@ def is_valid_json(value):
         except:  # NOQA: E722
             raise Invalid(_(u"Invalid JSON."))
     return True
+
+
+def is_pdf(obj):
+    """Check if given obj file is PDF."""
+    file_field_name = IPrimaryFieldInfo(obj).fieldname
+    file_obj = getattr(obj, file_field_name)
+    return file_obj.contentType == 'application/pdf'
