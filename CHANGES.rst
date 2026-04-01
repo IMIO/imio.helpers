@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.3.13 (unreleased)
+1.3.13 (2026-04-01)
 -------------------
 
 - Added `utils.is_pdf` that checks if a given DX file content is PDF.
