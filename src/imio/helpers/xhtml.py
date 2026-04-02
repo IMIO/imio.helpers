@@ -125,7 +125,7 @@ def removeBlanks(xhtmlContent, pretty_print=False):
     return "".join(result)
 
 
-def replace_content(xhtml_content, css_class, new_content=u"", new_content_link={}, pretty_print=False):
+def replace_content(xhtml_content, css_class, new_content=u"", new_content_link={}, new_css_class=None, pretty_print=False):
     """This method will get tags using given p_css_class and
     replace it's content with given p_content."""
     tree = _turnToLxmlTree(xhtml_content)
@@ -162,6 +162,9 @@ def replace_content(xhtml_content, css_class, new_content=u"", new_content_link=
                 elt.tag = "span"
                 elt.text = u""
                 elt.tail = u""
+            if new_css_class:
+                elt.attrib["class"] = new_css_class
+
     if six.PY3:
         result = [
             lxml.html.tostring(x, encoding="ascii", pretty_print=pretty_print, method="html").decode()

@@ -998,10 +998,21 @@ class TestXHTMLModule(IntegrationTestCase):
             '<table><tr><td>Text <span class="to-hide">replaced</span></td>'
             "<td>Text not hidden</td></tr></table>"
         )
+        expected_new_css_class = (
+            '<p>Text <span class="hidden"></span> some other text.</p>'
+            '<p>Text <span class="hidden"></span> some other text.</p>'
+            '<p><span class="hidden"></span> some other text.</p>'
+            '<p><span class="hidden"></span></p>'
+            '<p><span class="hidden"></span></p>'
+            '<table><tr><td>Text <span class="hidden"></span></td>'
+            "<td>Text not hidden</td></tr></table>"
+        )
         res = replace_content(text, css_class="to-hide")
         self.assertEqual(res, expected)
         res = replace_content(text, css_class="to-hide", new_content=u"replaced")
         self.assertEqual(res, expected_new_content)
+        res = replace_content(text, css_class="to-hide", new_css_class=u"hidden")
+        self.assertEqual(res, expected_new_css_class)
         text_link = '<p>Text <span class="to-hide">hidden <strong>hidden</strong></span></p>'
         expected_link = (
             '<p>Text <span class="to-hide">' '<a href="https://python.org" title="Explanation">replaced</a></span></p>'

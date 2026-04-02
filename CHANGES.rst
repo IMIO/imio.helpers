@@ -4,8 +4,8 @@ Changelog
 1.3.14 (unreleased)
 -------------------
 
-- Nothing changed yet.
-
+- Added parameter `new_css_class` to `xhtml.replace_content`.
+  [gbastien]
 
 1.3.13 (2026-04-01)
 -------------------
