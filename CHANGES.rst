@@ -6,6 +6,8 @@ Changelog
 
 - Added parameter `new_css_class` to `xhtml.replace_content`.
   [gbastien]
+- Added `pdf.Merge_pdf` to merge several PDF files into one single PDF file.
+  [chris-adam, sgeulette]
 
 1.3.13 (2026-04-01)
 -------------------
