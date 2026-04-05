@@ -1,13 +1,9 @@
 # -*- coding: utf-8 -*-
 
 
-try:
-    from PyPDF2 import PdfReader
-    from PyPDF2 import PdfWriter
-except ImportError:
-    from PyPDF2 import PdfFileReader as PdfReader, PdfFileWriter as PdfWriter
-
 from imio.helpers import barcode
+from PyPDF2 import PdfReader
+from PyPDF2 import PdfWriter
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import mm
 from reportlab.platypus import Flowable

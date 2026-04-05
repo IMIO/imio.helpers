@@ -68,7 +68,7 @@ setup(
             "plone.app.testing",
         ],
         "pdf": [
-            "PyPDF2",
+            "PyPDF2>=1.28.6",
             "reportlab",
         ],
         "lxml": [
