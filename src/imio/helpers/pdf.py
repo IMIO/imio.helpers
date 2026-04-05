@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 
-from cStringIO import StringIO
+
 from imio.helpers import barcode
-from PyPDF2 import PdfFileReader
-from PyPDF2 import PdfFileWriter
+from PyPDF2 import PdfReader
+from PyPDF2 import PdfWriter
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import mm
 from reportlab.platypus import Flowable
 from reportlab.platypus import SimpleDocTemplate
 from reportlab.platypus.flowables import Image
 
+import io
 import os
 import uuid
 
@@ -28,7 +29,7 @@ class BarcodeStamp(object):
 
     def __init__(self, filepath, barcode_value, x=0, y=0, tmp_path="/tmp", scale=4):
         self.filepath = filepath
-        self.output = StringIO()
+        self.output = io.BytesIO()
         self.uuid = uuid.uuid4()
         self.barcode_value = barcode_value
 
@@ -54,16 +55,16 @@ class BarcodeStamp(object):
     def _create_barcode(self):
         path = self._path("png")
         barcode_io = barcode.generate_barcode(self.barcode_value, scale=self.scale)
-        f = open(path, "w")
+        f = open(path, "wb")
         f.write(barcode_io.getvalue())
         f.close()
         return path
 
     def _create_stamp(self, barcode_path):
         path = self._path("pdf", suffix="stamp")
-        io = StringIO()
+        buf = io.BytesIO()
         doc = SimpleDocTemplate(
-            io,
+            buf,
             pagesize=A4,
             topMargin=0 - 2 * mm,
             rightMargin=0,
@@ -71,23 +72,23 @@ class BarcodeStamp(object):
             leftMargin=0 - 2 * mm,
         )
         doc.build([BarcodeFlowable(barcode_path, self.x, self.y)])
-        f = open(path, "w")
-        f.write(io.getvalue())
+        f = open(path, "wb")
+        f.write(buf.getvalue())
         f.close()
         os.remove(barcode_path)
         return path
 
     def _merge_pdf(self, stamp_path):
-        output_writer = PdfFileWriter()
-        stamp = PdfFileReader(open(stamp_path, "rb"))
+        output_writer = PdfWriter()
+        stamp = PdfReader(open(stamp_path, "rb"))
         content_file = open(self.filepath, "rb")
-        content = PdfFileReader(content_file)
+        content = PdfReader(content_file)
         counter = 0
         for page in content.pages:
             if counter == 0:
-                stamp_content = stamp.getPage(0)
-                page.mergePage(stamp_content)
-            output_writer.addPage(page)
+                stamp_content = stamp.pages[0]
+                (getattr(page, "merge_page", None) or page.mergePage)(stamp_content)
+            (getattr(output_writer, "add_page", None) or output_writer.addPage)(page)
             counter += 1
         output_writer.write(self.output)
         os.remove(stamp_path)
@@ -113,3 +114,19 @@ class BarcodeFlowable(Flowable):
             width,
             height,
         )
+
+
+def merge_pdf(*pdf_datas):
+    """Merge multiple PDFs into one.
+
+    :param pdf_datas: bytes of each PDF to merge, in order
+    :return: merged PDF bytes
+    """
+    writer = PdfWriter()
+    for data in pdf_datas:
+        reader = PdfReader(io.BytesIO(data))
+        for page in reader.pages:
+            (getattr(writer, "add_page", None) or writer.addPage)(page)
+    output = io.BytesIO()
+    writer.write(output)
+    return output.getvalue()
