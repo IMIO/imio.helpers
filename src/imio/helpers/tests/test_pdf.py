@@ -1,19 +1,10 @@
 # -*- coding: utf-8 -*-
 
 
-try:
-    from PyPDF2 import PdfReader
-except ImportError:
-    from PyPDF2 import PdfFileReader as PdfReader
-
-
-try:
-    from PyPDF2.utils import PdfReadError
-except ImportError:
-    from PyPDF2.errors import PdfReadError
-
 from imio.helpers.pdf import merge_pdf
 from io import BytesIO
+from PyPDF2 import PdfReader
+from PyPDF2.errors import PdfReadError
 from reportlab.pdfgen import canvas
 
 import unittest
