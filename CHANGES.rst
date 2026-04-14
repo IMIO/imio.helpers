@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.3.14 (unreleased)
+1.3.14 (2026-04-14)
 -------------------
 
 - Added parameter `new_css_class` to `xhtml.replace_content`.
