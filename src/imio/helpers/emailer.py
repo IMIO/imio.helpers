@@ -249,8 +249,13 @@ def validate_email_address(value):
     # Use parseaddr only when necessary to avoid correction like 'a @d.c' => 'a@d.c'
     # or to avoid bad split like 'a<a@d.c' => 'a@d.c'
     if complex_form:
-        if '""' in eml:  # '"\\"' ends with '""' and must be corrected. We choose to un-double the doublequotes
-            eml = re.sub(r'""([^"<]+)""\s*<(.*)>', r'"\1" <\2>', eml)
+        if eml.startswith('""'):  # '"\\"' ends with '""' and must be corrected. We choose to un-double the doublequotes
+            eml = re.sub(r'^""(.*?)""?\s*<', r'"\1" <', eml)
+            m = re.match(r'^"(.*)"\s*<(.*)>', eml)
+            if m:
+                name_part, addr_part = m.groups()
+                clean_name = name_part.replace('"', '')
+                eml = u'"{}" <{}>'.format(clean_name, addr_part)
         realname, eml = parseaddr(eml)
         if not realname and not eml:
             raise InvalidEmailAddressFormat(value)
