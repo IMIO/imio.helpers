@@ -174,6 +174,10 @@ class TestEmail(IntegrationTestCase):
         )
         self.assertTupleEqual(validate_email_address("Real Name <name@domain.org>"), (u"Real Name", u"name@domain.org"))
         self.assertTupleEqual(validate_email_address("name@domain.org (Real Name)"), (u"Real Name", u"name@domain.org"))
+        self.assertTupleEqual(
+            validate_email_address("\"\"Real name\", Long real name\" <name@domain.org>"),
+            (u"Real name, Long real name", u"name@domain.org"),
+        )
         # errors on format
         self.assertRaises(InvalidEmailAddressFormat, validate_email_address, "<>")
         self.assertRaises(InvalidEmailAddressFormat, validate_email_address, "()")
