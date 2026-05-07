@@ -4,8 +4,8 @@ Changelog
 1.3.15 (unreleased)
 -------------------
 
-- Nothing changed yet.
-
+- Used also `security.is_develop_environment` in `path.is_test_url`.
+  [sgeulette]
 
 1.3.14 (2026-04-14)
 -------------------
