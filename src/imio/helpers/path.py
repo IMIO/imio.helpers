@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from imio.helpers.security import is_develop_environment
+
 import os
 
 
@@ -10,4 +12,4 @@ def path_to_package(package, filepart=""):
 def is_test_url():
     """Return True if the current URL is a test URL, False otherwise."""
     url = os.getenv("PUBLIC_URL", "")
-    return ".imio-test.be" in url or ".imio-acceptation.be" in url
+    return "imio-test.be" in url or ".imio-acceptation.be" in url or is_develop_environment()

@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 from imio.helpers import browser
 from imio.helpers import path
 
@@ -17,6 +16,9 @@ class TestPath(unittest.TestCase):
         )
 
     def test_is_test_url(self):
+        orig_env = os.getenv("ENV")
+        if orig_env:
+            os.environ["ENV"] = "PROD"
         os.environ["PUBLIC_URL"] = ""
         self.assertFalse(path.is_test_url())
         os.environ["PUBLIC_URL"] = "http://example.com"
@@ -25,3 +27,10 @@ class TestPath(unittest.TestCase):
         self.assertTrue(path.is_test_url())
         os.environ["PUBLIC_URL"] = "https://xxx.imio-acceptation.be"
         self.assertTrue(path.is_test_url())
+        os.environ["ENV"] = "DEV"
+        os.environ["PUBLIC_URL"] = ""
+        self.assertTrue(path.is_test_url())
+        if orig_env:
+            os.environ["ENV"] = orig_env
+        else:
+            del os.environ["ENV"]
