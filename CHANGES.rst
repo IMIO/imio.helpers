@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.3.15 (unreleased)
+1.3.15 (2026-05-08)
 -------------------
 
 - Fix double quoted email address validation.
