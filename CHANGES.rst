@@ -4,6 +4,8 @@ Changelog
 1.3.15 (unreleased)
 -------------------
 
+- Fix double quoted email address validation.
+  [chris-adam]
 - Used also `security.is_develop_environment` in `path.is_test_url`.
   [sgeulette]
 
