@@ -4,8 +4,8 @@ Changelog
 1.3.16 (unreleased)
 -------------------
 
-- Nothing changed yet.
-
+- Improved `path.is_test_url`.
+  [sgeulette]
 
 1.3.15 (2026-05-08)
 -------------------

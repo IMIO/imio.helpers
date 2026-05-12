@@ -23,12 +23,22 @@ class TestPath(unittest.TestCase):
         self.assertFalse(path.is_test_url())
         os.environ["PUBLIC_URL"] = "http://example.com"
         self.assertFalse(path.is_test_url())
+        os.environ["PUBLIC_URL"] = "https://example.com"
+        self.assertFalse(path.is_test_url())
         os.environ["PUBLIC_URL"] = "https://xxx.imio-test.be"
         self.assertTrue(path.is_test_url())
         os.environ["PUBLIC_URL"] = "https://xxx.imio-acceptation.be"
         self.assertTrue(path.is_test_url())
         os.environ["ENV"] = "DEV"
         os.environ["PUBLIC_URL"] = ""
+        self.assertTrue(path.is_test_url())
+        os.environ["PUBLIC_URL"] = "http://example.com"
+        self.assertTrue(path.is_test_url())
+        os.environ["PUBLIC_URL"] = "https://example.com"
+        self.assertFalse(path.is_test_url())
+        os.environ["PUBLIC_URL"] = "https://xxx.imio-test.be"
+        self.assertTrue(path.is_test_url())
+        os.environ["PUBLIC_URL"] = "http://xxx.imio-acceptation.be"
         self.assertTrue(path.is_test_url())
         if orig_env:
             os.environ["ENV"] = orig_env
