@@ -6,6 +6,8 @@ Changelog
 
 - Improved `path.is_test_url`.
   [sgeulette]
+- Added resize option to `barcode.generate_barcode`
+  [sgeulette]
 
 1.3.15 (2026-05-08)
 -------------------

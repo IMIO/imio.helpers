@@ -22,3 +22,21 @@ class TestBarcode(unittest.TestCase):
 
     def test_generate_barcode_missing_executable(self):
         self.assertRaises(OSError, barcode.generate_barcode, "123", executable="zints")
+
+    def test_generate_barcode_resize(self):
+        from PIL import Image
+
+        original = Image.open(barcode.generate_barcode("123"))
+        resized = Image.open(barcode.generate_barcode("123", resize=0.5))
+        self.assertEqual(resized.size, (int(round(original.width * 0.5)),
+                                       int(round(original.height * 0.5))))
+
+    def test_generate_barcode_resize_none(self):
+        ref = barcode.generate_barcode("123").read()
+        same = barcode.generate_barcode("123", resize=None).read()
+        self.assertEqual(ref, same)
+
+    def test_generate_barcode_resize_ignored_for_non_raster(self):
+        # SVG is not a PIL raster format; resize must be silently ignored.
+        result = barcode.generate_barcode("123", filetype="SVG", resize=0.5).read()
+        self.assertTrue(result.lstrip().startswith(b"<"))
