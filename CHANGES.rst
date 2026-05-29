@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.3.16 (unreleased)
+1.3.16 (2026-05-29)
 -------------------
 
 - Improved `path.is_test_url`.
