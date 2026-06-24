@@ -4,8 +4,9 @@ Changelog
 1.3.17 (unreleased)
 -------------------
 
-- Nothing changed yet.
-
+- Try to avoid being blocked when downloading image in
+  `xhtml.storeImagesLocally` by setting a `User-agent` header.
+  [gbastien]
 
 1.3.16 (2026-05-29)
 -------------------

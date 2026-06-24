@@ -21,6 +21,7 @@ import lxml.html
 import os
 import pkg_resources
 import six
+import six.moves.urllib.request as urllib_request
 
 
 try:
@@ -576,6 +577,10 @@ def storeImagesLocally(
         """ """
         # right, we have an external image, download it, stores it in context and update img_src
         try:
+            # add User-agent header to avoid being blocked
+            opener = urllib_request.build_opener()
+            opener.addheaders = [('User-agent', 'Mozilla/5.0')]
+            urllib_request.install_opener(opener)
             downloaded_img_path, downloaded_img_infos = urlretrieve(img_src)
         except (IOError, UnicodeError):
             # url not existing
