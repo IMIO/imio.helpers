@@ -48,6 +48,15 @@ class TestSetupModule(IntegrationTestCase):
         self.assertTrue(load_type_from_package("testingtype", "profile-imio.helpers:testing"))
         # with purge_actions=True
         self.assertTrue(load_type_from_package("testingtype", "profile-imio.helpers:testing", purge_actions=True))
+        # first load: the type does not exist yet
+        types_tool.manage_delObjects(["testingtype"])
+        self.assertIsNone(types_tool.get("testingtype"))
+        # without create=True, a missing type still fails
+        self.assertFalse(load_type_from_package("testingtype", "profile-imio.helpers:testing"))
+        self.assertIsNone(types_tool.get("testingtype"))
+        # with create=True, the empty fti is created then filled from the xml
+        self.assertTrue(load_type_from_package("testingtype", "profile-imio.helpers:testing", create=True))
+        self.assertIsNotNone(types_tool.get("testingtype"))
 
     def test_load_workflow_from_package(self):
         wkf_tool = api.portal.get_tool("portal_workflow")
@@ -73,6 +82,19 @@ class TestSetupModule(IntegrationTestCase):
         self.assertFalse(load_workflow_from_package("intranet_workflow", "profile-Products.CMFPlone:plone2"))
         # WF not managed by given profile_id
         self.assertFalse(load_workflow_from_package("comment_review_workflow", "profile-Products.CMFPlone:plone"))
+        # first load: the workflow does not exist yet
+        wkf_tool.manage_delObjects(["intranet_workflow"])
+        self.assertIsNone(wkf_tool.get("intranet_workflow"))
+        # without create=True, a missing workflow still fails
+        self.assertFalse(load_workflow_from_package("intranet_workflow", "profile-Products.CMFPlone:plone"))
+        self.assertIsNone(wkf_tool.get("intranet_workflow"))
+        # with create=True, the empty DCWorkflow is created then filled from the xml
+        self.assertTrue(
+            load_workflow_from_package("intranet_workflow", "profile-Products.CMFPlone:plone", create=True)
+        )
+        wkf_obj = wkf_tool.get("intranet_workflow")
+        self.assertIsNotNone(wkf_obj)
+        self.assertIn("internal", wkf_obj.states)
 
     @unittest.skip("Not working")
     def test_load_xml_tool_only_from_package(self):

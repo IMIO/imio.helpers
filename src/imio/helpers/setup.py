@@ -3,6 +3,7 @@
 from plone import api
 from plone.api.exc import InvalidParameterError
 from plone.dexterity.fti import DexterityFTI
+from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition
 from Products.GenericSetup.interfaces import IBody
 from Products.GenericSetup.utils import importObjects
 from zope.component import queryMultiAdapter
@@ -13,18 +14,25 @@ import logging
 logger = logging.getLogger("imio.helpers.setup")
 
 
-def load_type_from_package(type_name, profile_id, purge_actions=False):
+def load_type_from_package(type_name, profile_id, purge_actions=False, create=False):
     """Loads a portal_type from his xml definition.
     :param type_name: portal_type id
     :param profile_id: package profile id
     :param purge_actions: empties type actions
+    :param create: create an empty Dexterity FTI when the type does not exist yet (first load)
     :return: status as boolean
     """
     types_tool = api.portal.get_tool("portal_types")
     portal_type = types_tool.get(type_name)
+    created = False
     if portal_type is None:
-        logger.error("Cannot find '{}' portal_type name in portal".format(type_name))
-        return False
+        if not create:
+            logger.error("Cannot find '{}' portal_type name in portal".format(type_name))
+            return False
+        # first load: create an empty Dexterity FTI so importObjects can fill it from the xml
+        types_tool._setObject(type_name, DexterityFTI(type_name))
+        portal_type = types_tool.get(type_name)
+        created = True
     ps_tool = api.portal.get_tool("portal_setup")
     try:
         context = ps_tool._getImportContext(profile_id, True)
@@ -42,24 +50,34 @@ def load_type_from_package(type_name, profile_id, purge_actions=False):
 
     # ps_tool.applyContext(context)  # necessary ?
     importObjects(portal_type, "types/", context)
-    if portal_type._p_changed is False:
+    # a freshly created fti fills sub-attributes: _p_changed on the fti itself may stay False
+    if not created and portal_type._p_changed is False:
         logger.error("Could not update '{}' using profile '{}'".format(type_name, profile_id))
         return False
     return True
 
 
-def load_workflow_from_package(wkf_name, profile_id, purge_workflow=True):
+def load_workflow_from_package(wkf_name, profile_id, purge_workflow=True, create=False):
     """Loads a workflow from his xml definition.
     :param wkf_name: workflow id
     :param profile_id: package profile id
     :param purge_workflow: remove states and transitions before loading
+    :param create: create an empty DCWorkflow when the workflow does not exist yet (first load).
+                   Note: the type/workflow binding (stored in workflows.xml) still has to be set separately.
     :return: status as boolean
     """
     wkf_tool = api.portal.get_tool("portal_workflow")
     wkf_obj = wkf_tool.get(wkf_name)
+    created = False
     if wkf_obj is None:
-        logger.error("Cannot find '{}' workflow name in portal".format(wkf_name))
-        return False
+        if not create:
+            logger.error("Cannot find '{}' workflow name in portal".format(wkf_name))
+            return False
+        # first load: create an empty DCWorkflow so importObjects can fill it from the xml
+        wkf_tool._setObject(wkf_name, DCWorkflowDefinition(wkf_name))
+        wkf_obj = wkf_tool.get(wkf_name)
+        purge_workflow = False  # brand new workflow, nothing to purge
+        created = True
     if purge_workflow:
         wkf_obj.states.deleteStates(list(wkf_obj.states.keys()))
         wkf_obj.transitions.deleteTransitions(list(wkf_obj.transitions.keys()))
@@ -71,7 +89,10 @@ def load_workflow_from_package(wkf_name, profile_id, purge_workflow=True):
         return False
     # ps_tool.applyContext(context)  # necessary ?
     importObjects(wkf_obj, "workflows/", context)
-    if wkf_obj._p_changed is False:
+    logger.info("'%s' workflow info imported", wkf_name)
+    # a freshly created workflow fills its states/transitions sub-objects: _p_changed on the
+    # workflow itself may stay False
+    if not created and wkf_obj._p_changed is False:
         logger.error("Could not update '{}' using profile '{}'".format(wkf_name, profile_id))
         return False
     return True
