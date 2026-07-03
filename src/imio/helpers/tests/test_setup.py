@@ -54,6 +54,9 @@ class TestSetupModule(IntegrationTestCase):
         # without create=True, a missing type still fails
         self.assertFalse(load_type_from_package("testingtype", "profile-imio.helpers:testing"))
         self.assertIsNone(types_tool.get("testingtype"))
+        # with create=True but a profile that has no xml for this type: no empty object is created
+        self.assertFalse(load_type_from_package("testingtype", package, create=True))
+        self.assertIsNone(types_tool.get("testingtype"))
         # with create=True, the empty fti is created then filled from the xml
         self.assertTrue(load_type_from_package("testingtype", "profile-imio.helpers:testing", create=True))
         self.assertIsNotNone(types_tool.get("testingtype"))
@@ -87,6 +90,11 @@ class TestSetupModule(IntegrationTestCase):
         self.assertIsNone(wkf_tool.get("intranet_workflow"))
         # without create=True, a missing workflow still fails
         self.assertFalse(load_workflow_from_package("intranet_workflow", "profile-Products.CMFPlone:plone"))
+        self.assertIsNone(wkf_tool.get("intranet_workflow"))
+        # with create=True but a profile that has no xml for this workflow: no empty object is created
+        self.assertFalse(
+            load_workflow_from_package("intranet_workflow", "profile-imio.helpers:testing", create=True)
+        )
         self.assertIsNone(wkf_tool.get("intranet_workflow"))
         # with create=True, the empty DCWorkflow is created then filled from the xml
         self.assertTrue(

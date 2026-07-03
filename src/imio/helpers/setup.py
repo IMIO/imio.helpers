@@ -23,22 +23,26 @@ def load_type_from_package(type_name, profile_id, purge_actions=False, create=Fa
     :return: status as boolean
     """
     types_tool = api.portal.get_tool("portal_types")
-    portal_type = types_tool.get(type_name)
-    created = False
-    if portal_type is None:
-        if not create:
-            logger.error("Cannot find '{}' portal_type name in portal".format(type_name))
-            return False
-        # first load: create an empty Dexterity FTI so importObjects can fill it from the xml
-        types_tool._setObject(type_name, DexterityFTI(type_name))
-        portal_type = types_tool.get(type_name)
-        created = True
     ps_tool = api.portal.get_tool("portal_setup")
     try:
         context = ps_tool._getImportContext(profile_id, True)
     except KeyError:
         logger.error("Cannot find '{}' profile id".format(profile_id))
         return False
+    if context.readDataFile("types/%s.xml" % type_name) is None:
+        logger.error("No type xml definition for '{}' in profile '{}'".format(type_name, profile_id))
+        return False
+    portal_type = types_tool.get(type_name)
+    created = False
+    if portal_type is None:
+        if not create:
+            logger.error("Cannot find '{}' portal_type name in portal".format(type_name))
+            return False
+
+        # first load: create an empty Dexterity FTI so importObjects can fill it from the xml
+        types_tool._setObject(type_name, DexterityFTI(type_name))
+        portal_type = types_tool.get(type_name)
+        created = True
 
     # special case for DX FTI, _should_purge is set to False or it fails when purging
     if isinstance(portal_type, DexterityFTI):
@@ -67,6 +71,15 @@ def load_workflow_from_package(wkf_name, profile_id, purge_workflow=True, create
     :return: status as boolean
     """
     wkf_tool = api.portal.get_tool("portal_workflow")
+    ps_tool = api.portal.get_tool("portal_setup")
+    try:
+        context = ps_tool._getImportContext(profile_id, True)
+    except KeyError:
+        logger.error("Cannot find '{}' profile id".format(profile_id))
+        return False
+    if context.readDataFile("workflows/%s/definition.xml" % wkf_name) is None:
+        logger.error("No workflow xml definition for '{}' in profile '{}'".format(wkf_name, profile_id))
+        return False
     wkf_obj = wkf_tool.get(wkf_name)
     created = False
     if wkf_obj is None:
@@ -81,12 +94,6 @@ def load_workflow_from_package(wkf_name, profile_id, purge_workflow=True, create
     if purge_workflow:
         wkf_obj.states.deleteStates(list(wkf_obj.states.keys()))
         wkf_obj.transitions.deleteTransitions(list(wkf_obj.transitions.keys()))
-    ps_tool = api.portal.get_tool("portal_setup")
-    try:
-        context = ps_tool._getImportContext(profile_id, True)
-    except KeyError:
-        logger.error("Cannot find '{}' profile id".format(profile_id))
-        return False
     # ps_tool.applyContext(context)  # necessary ?
     importObjects(wkf_obj, "workflows/", context)
     logger.info("'%s' workflow info imported", wkf_name)
