@@ -4,6 +4,9 @@
 from imio.helpers import barcode
 from PyPDF2 import PdfReader
 from PyPDF2 import PdfWriter
+from PyPDF2.errors import PdfReadError
+from PyPDF2.generic import IndirectObject
+from PyPDF2.generic import NameObject
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import mm
 from reportlab.platypus import Flowable
@@ -13,6 +16,29 @@ from reportlab.platypus.flowables import Image
 import io
 import os
 import uuid
+
+
+def read_pdf(stream):
+    """Build a PdfReader, recovering /Root for malformed PDFs.
+
+    Some source PDFs (e.g. badly linearized ones) end with a trailer that has
+    no /Root; PyPDF2's xref rebuild then yields a reader whose trailer lacks
+    /Root, so any page access raises KeyError('/Root'). Recover by locating the
+    /Catalog object and pointing /Root at it.
+    """
+    reader = PdfReader(stream)
+    if "/Root" in reader.trailer:
+        return reader
+    for gen, idmap in reader.xref.items():
+        for idnum in idmap:
+            try:
+                obj = IndirectObject(idnum, gen, reader).get_object()
+            except Exception:
+                continue
+            if getattr(obj, "get", None) and obj.get("/Type") == "/Catalog":
+                reader.trailer[NameObject("/Root")] = IndirectObject(idnum, gen, reader)
+                return reader
+    raise PdfReadError("PDF trailer has no /Root and no /Catalog object was found")
 
 
 class BarcodeStamp(object):
@@ -82,7 +108,7 @@ class BarcodeStamp(object):
         output_writer = PdfWriter()
         stamp = PdfReader(open(stamp_path, "rb"))
         content_file = open(self.filepath, "rb")
-        content = PdfReader(content_file)
+        content = read_pdf(content_file)
         counter = 0
         for page in content.pages:
             if counter == 0:
@@ -124,7 +150,7 @@ def merge_pdf(*pdf_datas):
     """
     writer = PdfWriter()
     for data in pdf_datas:
-        reader = PdfReader(io.BytesIO(data))
+        reader = read_pdf(io.BytesIO(data))
         for page in reader.pages:
             (getattr(writer, "add_page", None) or writer.addPage)(page)
     output = io.BytesIO()
