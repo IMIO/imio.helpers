@@ -10,6 +10,8 @@ Changelog
 - Added create parameter in `setup.load_type_from_package` and `setup.load_workflow_from_package` to create the type
   or workflow if it does not exist.
   [sgeulette]
+- Fixed PDF merge when source PDF has no /Root in trailer. (PARAF-492)
+  [chris-adam]
 
 1.3.16 (2026-05-29)
 -------------------
