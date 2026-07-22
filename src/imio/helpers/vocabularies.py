@@ -2,6 +2,7 @@
 
 from imio.helpers import get_cachekey_volatile
 from imio.helpers.content import get_user_fullname
+from itertools import chain
 from natsort import humansorted
 from operator import attrgetter
 from plone import api
@@ -30,8 +31,10 @@ def voc_cache_key(method, self, context=None, query=""):
 
 
 def get_users_voc(with_userid):
-    acl_users = api.portal.get_tool("acl_users")
-    users = acl_users.searchUsers(sort_by="")
+    portal = api.portal.get()
+    search_view = portal.restrictedTraverse('@@pas_search')
+    users = search_view.merge(
+        chain(*[search_view.searchUsers() for field in ['name', 'fullname', 'email']]), 'userid')
     terms = []
     # manage duplicates, this can be the case when using LDAP and same userid in source_users
     userids = []

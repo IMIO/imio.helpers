@@ -7,9 +7,15 @@ Changelog
 - Try to avoid being blocked when downloading image in
   `xhtml.storeImagesLocally` by setting a `User-agent` header.
   [gbastien]
-- Added create parameter in `setup.load_type_from_package` and `setup.load_workflow_from_package` to create the type
-  or workflow if it does not exist.
+- Added create parameter in `setup.load_type_from_package` and
+  `setup.load_workflow_from_package` to create the type or workflow
+  if it does not exist.
   [sgeulette]
+- In `vocabularies.get_users_voc` use `@@pas_search` to get users so it will
+  merge user infos from various sources, including `mutable_properties` to
+  workaround `SIZELIMIT_EXCEEDED: {'desc': 'Size limit exceeded'}`
+  when using LDAP.
+  [gbastien]
 
 1.3.16 (2026-05-29)
 -------------------
