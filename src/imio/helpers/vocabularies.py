@@ -33,8 +33,7 @@ def voc_cache_key(method, self, context=None, query=""):
 def get_users_voc(with_userid):
     portal = api.portal.get()
     search_view = portal.restrictedTraverse('@@pas_search')
-    users = search_view.merge(
-        chain(*[search_view.searchUsers() for field in ['name', 'fullname', 'email']]), 'userid')
+    users = search_view.merge(chain(*[search_view.searchUsers()]), 'userid')
     terms = []
     # manage duplicates, this can be the case when using LDAP and same userid in source_users
     userids = []
