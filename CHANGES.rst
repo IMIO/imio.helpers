@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.3.17 (unreleased)
+1.3.17 (2026-07-31)
 -------------------
 
 - Try to avoid being blocked when downloading image in
