@@ -35,6 +35,7 @@ def formatDate(date, month_name=True, context=None, long_format=False):
         # we want the current date, calculate it
         date = DateTime()
 
+    # dd() return long day in string, so "02" for example
     day = date.dd()
     year = str(date.year())
     month = date.mm()
@@ -45,12 +46,14 @@ def formatDate(date, month_name=True, context=None, long_format=False):
         hour = ""
     # check if we need to return the month name
     if month_name:
+        # when month_name=True, we use short version for date, so 2 instead "02"
+        day = date.day()
         month = date.month()
         translated_month = translate(
             msgid=MONTHIDS[month], domain="plonelocales", context=context, default=MONTHIDS[month], target_language="fr"
         )
-        # replace '01 ' by '1er '
-        if date.day() == 1:
+        # replace 1 by '1er'
+        if day == 1:
             day = "1er"
         return u"{0} {1} {2}{3}".format(day, translated_month.lower(), year, hour)
     else:
