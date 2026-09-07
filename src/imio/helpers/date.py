@@ -52,7 +52,7 @@ def formatDate(date, month_name=True, context=None, long_format=False):
         translated_month = translate(
             msgid=MONTHIDS[month], domain="plonelocales", context=context, default=MONTHIDS[month], target_language="fr"
         )
-        # replace 1 by '1er'
+        # replace 1 by "1er"
         if day == 1:
             day = "1er"
         return u"{0} {1} {2}{3}".format(day, translated_month.lower(), year, hour)
