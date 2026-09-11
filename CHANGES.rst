@@ -4,8 +4,9 @@ Changelog
 1.3.18 (unreleased)
 -------------------
 
-- Nothing changed yet.
-
+- Adapted `date.formatDate` so we use short day format (`2` instead `02`)
+  when `month_name=True`.
+  [gbastien]
 
 1.3.17 (2026-07-31)
 -------------------
