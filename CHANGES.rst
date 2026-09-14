@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.3.18 (unreleased)
+1.3.18 (2026-09-14)
 -------------------
 
 - Adapted `date.formatDate` so we use short day format (`2` instead `02`)
