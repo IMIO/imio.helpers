@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from collective.documentviewer.config import DocType
 from datetime import date
 from datetime import datetime
 from imio.helpers.cache import get_cachekey_volatile
@@ -97,17 +96,18 @@ try:
 
     # modify in place: other modules already hold references to these dicts
     new_conv_types = config.CONVERTABLE_TYPES
-    new_conv_types["word"] = DocType(u"Word Document", ("docx",))
-    new_conv_types["word_old"] = DocType(u"Old Word Document", ("doc", "dot", "wiz"))
-    new_conv_types["odt"] = DocType(u"Libre Office Document", ("odt",))
-    new_conv_types["odt_old"] = DocType(u"Old Libre Office Document", ("sxw", "wks", "wpd", "vor", "sdw"))
-    new_conv_types["excel"] = DocType(u"Excel File", ("xlsx",))
-    new_conv_types["excel_old"] = DocType(u"Old Excel File", ("xls", "xlt"))
-    new_conv_types["ods"] = DocType(u"Libre Office Sheet", ("ods", "csv"))
-    new_conv_types["ppt"] = DocType(u"Powerpoint", ("pptx",))
-    new_conv_types["ppt_old"] = DocType(u"Old Powerpoint", ("ppt", "pps", "ppa", "pwz"))
-    new_conv_types["odp"] = DocType(u"Libre Office Presentation", ("odp",))
-    new_conv_types["odp_old"] = DocType(u"Old Libre Office Presentation", ("sxi",))
+    new_conv_types["word"] = config.DocType(u"Word Document", ("docx",))
+    new_conv_types["word_old"] = config.DocType(u"Old Word Document", ("doc", "dot", "wiz"))
+    new_conv_types["odt"] = config.DocType(u"Libre Office Document", ("odt",))
+    new_conv_types["odt_old"] = config.DocType(u"Old Libre Office Document", ("sxw", "wpd", "vor", "sdw"))
+    new_conv_types["excel"] = config.DocType(u"Excel File", ("xlsx",))
+    new_conv_types["excel_old"] = config.DocType(u"Old Excel File", ("xls", "xlt"))
+    new_conv_types["ods"] = config.DocType(u"Libre Office Sheet", ("ods", "csv"))
+    new_conv_types["ods_old"] = config.DocType(u"Old Libre Office Sheet", ("wks",))
+    new_conv_types["ppt"] = config.DocType(u"Powerpoint", ("pptx",))
+    new_conv_types["ppt_old"] = config.DocType(u"Old Powerpoint", ("ppt", "pps", "ppa", "pwz"))
+    new_conv_types["odp"] = config.DocType(u"Libre Office Presentation", ("odp",))
+    new_conv_types["odp_old"] = config.DocType(u"Old Libre Office Presentation", ("sxi",))
     config.EXTENSION_TO_ID_MAPPING.clear()
     for type_id, doc in new_conv_types.items():
         for ext in doc.extensions:
