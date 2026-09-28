@@ -4,8 +4,8 @@ Changelog
 1.3.19 (unreleased)
 -------------------
 
-- Nothing changed yet.
-
+- Split documentviewer convertible types.
+  [sgeulette]
 
 1.3.18 (2026-09-14)
 -------------------

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+from collective.documentviewer.config import DocType
 from datetime import date
 from datetime import datetime
 from imio.helpers.cache import get_cachekey_volatile
@@ -47,10 +47,13 @@ SSO_APPS_CLIENT_SECRET = os.getenv('SSO_APPS_CLIENT_SECRET')
 SSO_APPS_USER_USERNAME = os.getenv('SSO_APPS_USER_USERNAME')
 SSO_APPS_USER_PASSWORD = os.getenv('SSO_APPS_USER_PASSWORD')
 
-sso_apps_realm = urlparse(SSO_APPS_URL).path.split('/')[2] if SSO_APPS_URL and len(urlparse(SSO_APPS_URL).path.split('/')) > 2 else 'sso-apps'
+sso_apps_realm = urlparse(SSO_APPS_URL).path.split('/')[2] \
+    if SSO_APPS_URL and len(urlparse(SSO_APPS_URL).path.split('/')) > 2 else 'sso-apps'
 SSO_APPS_REALM_URL = urlparse(SSO_APPS_URL)._replace(path='/realms/{}'.format(sso_apps_realm)).geturl()
-SSO_APPS_TOKEN_URL = urlparse(SSO_APPS_URL)._replace(path='/realms/{}/protocol/openid-connect/token'.format(sso_apps_realm)).geturl()
-SSO_APPS_CERTS_URL = urlparse(SSO_APPS_URL)._replace(path='/realms/{}/protocol/openid-connect/certs'.format(sso_apps_realm)).geturl()
+SSO_APPS_TOKEN_URL = urlparse(SSO_APPS_URL)._replace(
+    path='/realms/{}/protocol/openid-connect/token'.format(sso_apps_realm)).geturl()
+SSO_APPS_CERTS_URL = urlparse(SSO_APPS_URL)._replace(
+    path='/realms/{}/protocol/openid-connect/certs'.format(sso_apps_realm)).geturl()
 SSO_APPS_AUDIENCE = os.getenv('SSO_APPS_AUDIENCE', 'account')
 SSO_APPS_ALGORITHM = os.getenv('SSO_APPS_ALGORITHM', 'RS256')
 
@@ -84,6 +87,36 @@ if HAS_FTW_LABELS:
         return original_labels
 
     ftw_indexer.labels = labels
+
+# Update collective.documentviewer convertable types
+try:
+    from collective.documentviewer import config
+    from collective.documentviewer.interfaces import IGlobalDocumentViewerSettings
+    from zope.schema.vocabulary import SimpleTerm
+    from zope.schema.vocabulary import SimpleVocabulary
+
+    # modify in place: other modules already hold references to these dicts
+    new_conv_types = config.CONVERTABLE_TYPES
+    new_conv_types["word"] = DocType(u"Word Document", ("docx",))
+    new_conv_types["word_old"] = DocType(u"Old Word Document", ("doc", "dot", "wiz"))
+    new_conv_types["odt"] = DocType(u"Libre Office Document", ("odt",))
+    new_conv_types["odt_old"] = DocType(u"Old Libre Office Document", ("sxw", "wks", "wpd", "vor", "sdw"))
+    new_conv_types["excel"] = DocType(u"Excel File", ("xlsx",))
+    new_conv_types["excel_old"] = DocType(u"Old Excel File", ("xls", "xlt"))
+    new_conv_types["ods"] = DocType(u"Libre Office Sheet", ("ods", "csv"))
+    new_conv_types["ppt"] = DocType(u"Powerpoint", ("pptx",))
+    new_conv_types["ppt_old"] = DocType(u"Old Powerpoint", ("ppt", "pps", "ppa", "pwz"))
+    new_conv_types["odp"] = DocType(u"Libre Office Presentation", ("odp",))
+    new_conv_types["odp_old"] = DocType(u"Old Libre Office Presentation", ("sxi",))
+    config.EXTENSION_TO_ID_MAPPING.clear()
+    for type_id, doc in new_conv_types.items():
+        for ext in doc.extensions:
+            config.EXTENSION_TO_ID_MAPPING[ext] = type_id
+    # vocabulary was built at import time with the old types
+    IGlobalDocumentViewerSettings["auto_layout_file_types"].value_type.vocabulary = SimpleVocabulary(
+        [SimpleTerm(tid, tid, doc.name) for tid, doc in new_conv_types.items()])
+except ImportError:
+    pass
 
 
 def GroupsTool__getGroupsForPrincipal_cachekey(method, self, principal):
