@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from email import encoders
+from email.charset import Charset
 from email.header import Header
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
@@ -163,7 +164,9 @@ def send_email(eml, subject, mfrom, mto, mcc=None, mbcc=None, replyto=None, imme
     mbcc = _email_list_to_string(mbcc, charset)
     # Add extra headers
     _addHeaders(
-        eml, Subject=Header(subject, charset), **dict((k, Header(v, charset)) for k, v in iteritems(addrs) if v)
+        eml,
+        Subject=Header(subject, charset),
+        **dict((k, _encode_address_header(v, charset)) for k, v in iteritems(addrs) if v)
     )
     # Handle all recipients to add bcc: smtplib sends to all but a recipient not found in header is considered as bcc...
     # bug in python 3.10.12 with getaddresses and parameters like ["xx@yy.be", "", ""]
@@ -196,6 +199,18 @@ def _email_list_to_string(addr_list, charset="utf8"):
         addresses = (isinstance(a, basestring) and a or formataddr(a) for a in addr_list)
         addr_str = ", ".join(str(_encode_address_string(a, charset)) for a in addresses)
     return addr_str
+
+
+def _encode_address_header(value, charset):
+    """Encodes only the display names of address list p_value: an address can't be an RFC 2047 encoded-word."""
+    pairs = []
+    for name, addr in getaddresses([value]):
+        try:
+            name.encode("ascii")
+        except UnicodeError:
+            name = Charset(charset).header_encode(safe_encode(name, charset))
+        pairs.append(formataddr((name, addr)))
+    return ", ".join(pairs)
 
 
 def _addHeaders(message, **kwargs):

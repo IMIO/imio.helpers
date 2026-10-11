@@ -93,8 +93,7 @@ class TestEmail(IntegrationTestCase):
             send_email(eml, "Email subject hé hé", "noréply@from.org", "dèst@to.org")
             self.assertIn("Subject: =?utf-8?q?Email_subject_h=C3=A9_h=C3=A9?=\n", mail_host.messages[0])
             self.assertIn("From: nor\xc3\xa9ply@from.org\n", mail_host.messages[0])
-            # self.assertIn('To: d\xc3\xa8st@to.org\n', mail_host.messages[0])
-            self.assertIn("To: =?utf-8?q?d=C3=A8st=40to=2Eorg?=\n", mail_host.messages[0])
+            self.assertIn("To: d\xc3\xa8st@to.org\n", mail_host.messages[0])
             self.assertListEqual(call_args[0][2], ["dèst@to.org"])
         mail_host.reset()
         call_args = []
@@ -104,11 +103,7 @@ class TestEmail(IntegrationTestCase):
         if six.PY3:
             self.assertIn(b"To: dest@to.org, =?utf-8?q?St=C3=A9phan_Geulette?= <seg@to.org>", mail_host.messages[0])
         else:
-            # self.assertIn('To: dest@to.org, =?utf-8?q?St=C3=A9phan_Geulette?= <seg@to.org>\n', mail_host.messages[0])
-            self.assertIn(
-                "To: =?utf-8?q?dest=40to=2Eorg=2C_=3D=3Futf-8=3Fq=3FSt=3DC3=3DA9phan=5FGeulett?=\n",
-                mail_host.messages[0],
-            )
+            self.assertIn("To: dest@to.org, =?utf-8?q?St=C3=A9phan_Geulette?= <seg@to.org>\n", mail_host.messages[0])
         mail_host.reset()
         call_args = []
         # unicode parameters
@@ -141,21 +136,22 @@ class TestEmail(IntegrationTestCase):
             "dest@to.org",
             mcc="copy@to.org",
             mbcc="bcc@to.org",
-            replyto="reply@to.org",
+            replyto="Stéphan Geulette <reply@to.org>",
         )
         # all recipients are in mto parameter
         self.assertListEqual(call_args[0][2], ["dest@to.org", "copy@to.org", "bcc@to.org"])
         if six.PY3:
             self.assertIn(b"From: noreply@from.org", mail_host.messages[0])
             self.assertIn(b"To: dest@to.org", mail_host.messages[0])
-            self.assertIn(b"Cc: =?utf-8?q?copy=40to=2Eorg?=", mail_host.messages[0])
-            self.assertIn(b"reply-to: =?utf-8?q?reply=40to=2Eorg?=", mail_host.messages[0])
+            # only display names are encoded, not addresses (MailHost doesn't rewrite Cc and reply-to)
+            self.assertIn(b"Cc: copy@to.org\r\n", mail_host.messages[0])
+            self.assertIn(b"reply-to: =?utf-8?q?St=C3=A9phan_Geulette?= <reply@to.org>\r\n", mail_host.messages[0])
             self.assertNotIn(b"=?utf-8?q?bcc=40to=2Eorg?=", mail_host.messages[0])
         else:
             self.assertIn("From: noreply@from.org", mail_host.messages[0])
-            self.assertIn("To: =?utf-8?q?dest=40to=2Eorg?=\n", mail_host.messages[0])
-            self.assertIn("Cc: =?utf-8?q?copy=40to=2Eorg?=\n", mail_host.messages[0])
-            self.assertIn("reply-to: =?utf-8?q?reply=40to=2Eorg?=\n", mail_host.messages[0])
+            self.assertIn("To: dest@to.org\n", mail_host.messages[0])
+            self.assertIn("Cc: copy@to.org\n", mail_host.messages[0])
+            self.assertIn("reply-to: =?utf-8?q?St=C3=A9phan_Geulette?= <reply@to.org>\n", mail_host.messages[0])
             self.assertNotIn("=?utf-8?q?bcc=40to=2Eorg?=\n", mail_host.messages[0])
 
         MockMailHost.send = orig_mmh_send
