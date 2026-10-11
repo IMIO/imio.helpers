@@ -7,6 +7,9 @@ Changelog
 - `emailer.send_email`: encode only the display names of the address headers, not the addresses
   (`reply-to: =?utf-8?q?a=40b=2Ebe?=` on Python 3).
   [chris-adam]
+- `emailer.send_email`: bcc recipients are no more visible in the `To` header with MailHost >= 4 (Plone 6),
+  and the address headers of a previous call aren't kept on a reused message.
+  [chris-adam]
 
 
 1.3.18 (2026-09-14)

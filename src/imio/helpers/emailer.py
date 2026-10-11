@@ -159,24 +159,19 @@ def send_email(eml, subject, mfrom, mto, mcc=None, mbcc=None, replyto=None, imme
         "From": _email_list_to_string(mfrom, charset),
         "To": _email_list_to_string(mto, charset),
         "Cc": _email_list_to_string(mcc, charset),
+        "Bcc": _email_list_to_string(mbcc, charset),
         "reply-to": _email_list_to_string(replyto, charset),
     }
-    mbcc = _email_list_to_string(mbcc, charset)
     # Add extra headers
     _addHeaders(
         eml,
         Subject=Header(subject, charset),
-        **dict((k, _encode_address_header(v, charset)) for k, v in iteritems(addrs) if v)
+        **dict((k, v and _encode_address_header(v, charset)) for k, v in iteritems(addrs))
     )
-    # Handle all recipients to add bcc: smtplib sends to all but a recipient not found in header is considered as bcc...
-    # bug in python 3.10.12 with getaddresses and parameters like ["xx@yy.be", "", ""]
-    all_recipients = [
-        formataddr(pair) for pair in getaddresses([addr for addr in (addrs["To"], addrs["Cc"], mbcc) if addr])
-    ]
     try:
         # send is protected by permission 'Use mailhost'
-        # send remove from headers bcc but if in all_recipients, it is handled as bcc in email...
-        mail_host.send(eml.as_string(), all_recipients, addrs["From"], immediate=immediate, charset=charset)
+        # without mto, MailHost sends to To, Cc and Bcc and removes Bcc (MailHost >= 4 writes a given mto in To)
+        mail_host.send(eml.as_string(), mfrom=addrs["From"], immediate=immediate, charset=charset)
     except (socket.error, SMTPException) as e:
         logger.error(u"Cannot send email to '{}' with subject '{}': {}".format(mto, subject, e))
         return False, "Could not send email : {}".format(e)
@@ -216,7 +211,8 @@ def _encode_address_header(value, charset):
 def _addHeaders(message, **kwargs):
     for key, value in iteritems(kwargs):
         del message[key]
-        message[key] = value
+        if value:
+            message[key] = value
 
 
 class InvalidEmailAddressFormat(schema.ValidationError):
