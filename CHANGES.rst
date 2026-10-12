@@ -4,8 +4,8 @@ Changelog
 1.3.19 (unreleased)
 -------------------
 
-- Nothing changed yet.
-
+- Added `EMPTY_DATE_IN_SOLR` constant.
+  [chris-adam]
 
 1.3.18 (2026-09-14)
 -------------------
