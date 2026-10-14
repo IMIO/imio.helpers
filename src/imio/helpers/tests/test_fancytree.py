@@ -3,8 +3,10 @@
 from imio.helpers.fancytree.views import BaseRenderFancyTree
 from imio.helpers.testing import IntegrationTestCase
 from plone import api
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 import json
+import lxml.html
 
 
 class RenderFancyTreeExample(BaseRenderFancyTree):
@@ -25,6 +27,16 @@ class RenderFancyTreeExample(BaseRenderFancyTree):
 
     def redirect_url(self, uid):
         return uid
+
+
+class TemplateFancyTreeExample(RenderFancyTreeExample):
+
+    """Fancy tree view rendering the real template, for tests purpose."""
+
+    index = ViewPageTemplateFile("../fancytree/fancytree.pt")
+
+    def get_action_name(self):
+        return "Choose"
 
 
 class TestBaseRenderFancyTree(IntegrationTestCase):
@@ -89,3 +101,11 @@ class TestBaseRenderFancyTree(IntegrationTestCase):
         expected = sorted(json.loads(expected))
         output = sorted(json.loads(output))
         self.assertEqual(output, expected)
+
+    def test_index(self):
+        view = TemplateFancyTreeExample(self.portal, self.request)
+        form = lxml.html.fromstring(view.index()).get_element_by_id("tree-form")
+        self.assertIsNone(form.get("target"))
+        view.form_target = "_blank"
+        form = lxml.html.fromstring(view.index()).get_element_by_id("tree-form")
+        self.assertEqual(form.get("target"), "_blank")
