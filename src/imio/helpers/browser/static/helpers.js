@@ -246,6 +246,10 @@ function submitFormHelperOnsuccessDefault(data, textStatus, request) {
     link.click();
     link.remove();
     cancel_button.click();
+    // the action may also have changed the elements (state, ...)
+    if (request.getResponseHeader('X-Refresh-Faceted') && has_faceted()) {
+      Faceted.URLHandler.hash_changed();
+    }
   } else {
     // close the overlay
     if (cancel_button) {
