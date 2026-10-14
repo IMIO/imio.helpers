@@ -6,6 +6,8 @@ Changelog
 
 - Added `EMPTY_DATE_IN_SOLR` constant.
   [chris-adam]
+- Added `form_target` on `BaseRenderFancyTree` to set the fancytree form `target` (DMS-1243).
+  [chris-adam]
 
 1.3.18 (2026-09-14)
 -------------------
