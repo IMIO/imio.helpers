@@ -4,6 +4,8 @@ Changelog
 1.3.19 (unreleased)
 -------------------
 
+- Split documentviewer convertible types.
+  [sgeulette]
 - Added `EMPTY_DATE_IN_SOLR` constant.
   [chris-adam]
 - Refreshed the faceted after a file download in `submitFormHelperOnsuccessDefault`
