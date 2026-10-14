@@ -4,8 +4,8 @@ Changelog
 1.3.20 (unreleased)
 -------------------
 
-- Nothing changed yet.
-
+- Added `form_target` on `BaseRenderFancyTree` to set the fancytree form `target` (DMS-1243).
+  [chris-adam]
 
 1.3.19 (2026-11-16)
 -------------------

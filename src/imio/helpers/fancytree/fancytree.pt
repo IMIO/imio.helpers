@@ -27,6 +27,7 @@
             method="post"
             tal:attributes="
               action request/getURL;
+              target view/form_target;
             "
       >
         <div>

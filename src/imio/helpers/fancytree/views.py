@@ -15,6 +15,7 @@ class BaseRenderFancyTree(BrowserView):  # pylint: disable=R0921
 
     index = ViewPageTemplateFile("fancytree.pt")
     root = "/"  # must begin with slash
+    form_target = None  # e.g. "_blank" to submit the form in a new tab
 
     def __init__(self, context, request):
         self.context = context
