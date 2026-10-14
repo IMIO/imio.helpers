@@ -6,6 +6,11 @@ Changelog
 
 - Split documentviewer convertible types.
   [sgeulette]
+- Added `EMPTY_DATE_IN_SOLR` constant.
+  [chris-adam]
+- Refreshed the faceted after a file download in `submitFormHelperOnsuccessDefault`
+  when the response has the `X-Refresh-Faceted` header.
+  [sgeulette]
 
 1.3.18 (2026-09-14)
 -------------------
