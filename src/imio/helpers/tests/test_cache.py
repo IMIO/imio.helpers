@@ -34,6 +34,13 @@ from zope.schema.interfaces import IVocabularyFactory
 import os
 import time
 import transaction
+import unittest
+
+
+try:
+    from plone.protect.utils import safeWrite
+except ImportError:  # plone.protect < 3
+    safeWrite = None
 
 
 memPropName = Memojito.propname
@@ -175,6 +182,7 @@ class TestCacheModule(IntegrationTestCase):
         # test isolation issues with test test_invalidate_cachekey_volatile_for
         invalidate_cachekey_volatile_for(method_name)
 
+    @unittest.skipIf(safeWrite is None, "plone.protect < 3")
     def test_get_cachekey_volatile_safe_write(self):
         """Storing a new cachekey, on a GET, is a safe write for plone.protect."""
         get_cachekey_volatile("My method")
