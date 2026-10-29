@@ -13,6 +13,9 @@ Changelog
 - `cache.get_cachekey_volatile`: marked the stored cachekeys as a safe write, so plone.protect no longer
   redirects a GET to `@@confirm-action` (Plone 5.2+).
   [chris-adam]
+- `helpers.js` on Plone 6: the info overlays use `pat-plone-modal` and the quickupload override is skipped
+  without `qq` (the rest of the file wasn't loaded).
+  [chris-adam]
 
 
 1.3.18 (2026-09-14)

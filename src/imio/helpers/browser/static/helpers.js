@@ -86,10 +86,17 @@ function toggleDetails(id, toggle_parent_active=true, parent_tag=null, load_view
 
 // function that will configure a simple overlay that may be closed whenever clicking outside
 function infoOverlays(tag=null) {
-    $('a.link-overlay-info', tag).prepOverlay({
-    subtype: 'ajax',
-    closeselector: '[name="form.buttons.cancel"]',
-});
+    var links = $('a.link-overlay-info', tag);
+    if ($.fn.prepOverlay) {  // Plone 4
+        links.prepOverlay({
+            subtype: 'ajax',
+            closeselector: '[name="form.buttons.cancel"]',
+        });
+    } else if (window.__patternslib_registry) {  // Plone 6: pat-plone-modal
+        links.each(function() {
+            new window.__patternslib_registry['plone-modal'](this);
+        });
+    }
 }
 // function that will expand a collapsible if asked thru request parameter
 function expandCollapsible() {
@@ -269,8 +276,8 @@ function temp_disable_link(tag) {
     }, 2000);
 }
 
-// override quickupload _addSelection to select elements in correct order
-qq.FileUploader.prototype._addSelection = function(files) {
+// override quickupload _addSelection to select elements in correct order (collective.quickupload, Plone 4)
+if (typeof qq !== 'undefined') qq.FileUploader.prototype._addSelection = function(files) {
         var valid = true;
         for (var i = 0; i < files.length; i++){
             if (!this._validateFile(files[i])){
