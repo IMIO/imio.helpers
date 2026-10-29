@@ -175,6 +175,17 @@ class TestCacheModule(IntegrationTestCase):
         # test isolation issues with test test_invalidate_cachekey_volatile_for
         invalidate_cachekey_volatile_for(method_name)
 
+    def test_get_cachekey_volatile_safe_write(self):
+        """Storing a new cachekey, on a GET, is a safe write for plone.protect."""
+        get_cachekey_volatile("My method")
+        transaction.savepoint()  # gives an oid to the volatiles mapping
+        self.request.environ.pop("plone.protect.safe_oids", None)
+        invalidate_cachekey_volatile_for("My method")
+        get_cachekey_volatile("My method")
+        volatiles = getattr(self.portal, VOLATILE_ATTR)
+        self.assertIn(volatiles._p_oid, self.request.environ.get("plone.protect.safe_oids", []))
+        invalidate_cachekey_volatile_for("My method")
+
     def test_get_cachekey_volatile_method(self):
         """Test behavior when method is passed to get_cachekey_volatile."""
         cache_chooser = getUtility(ICacheChooser)

@@ -10,6 +10,9 @@ Changelog
 - `emailer.send_email`: bcc recipients are no more visible in the `To` header with MailHost >= 4 (Plone 6),
   and the address headers of a previous call aren't kept on a reused message.
   [chris-adam]
+- `cache.get_cachekey_volatile`: marked the stored cachekeys as a safe write, so plone.protect no longer
+  redirects a GET to `@@confirm-action` (Plone 5.2+).
+  [chris-adam]
 
 
 1.3.18 (2026-09-14)
