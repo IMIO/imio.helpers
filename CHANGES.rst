@@ -11,6 +11,8 @@ Changelog
 - Refreshed the faceted after a file download in `submitFormHelperOnsuccessDefault`
   when the response has the `X-Refresh-Faceted` header.
   [sgeulette]
+- Cached `GroupsTool.getGroupById` per request instead of in RAM, to avoid `ConnectionStateError`.
+  [chris-adam]
 
 1.3.18 (2026-09-14)
 -------------------
