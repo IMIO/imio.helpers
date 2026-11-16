@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.3.19 (unreleased)
+1.3.19 (2026-11-16)
 -------------------
 
 - Split documentviewer convertible types.
