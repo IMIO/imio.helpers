@@ -4,9 +4,11 @@ from datetime import datetime
 from imio.helpers.cache import get_cachekey_volatile
 from plone import api
 from plone.memoize import ram as pmram
+from plone.memoize import volatile
 from Products.PlonePAS.plugins.role import GroupAwareRoleManager
 from Products.PlonePAS.tools.groups import GroupsTool
 from Products.PluggableAuthService.PluggableAuthService import PluggableAuthService
+from zope.annotation.interfaces import IAnnotations
 from zope.globalrequest import getRequest
 from zope.i18nmessageid import MessageFactory
 
@@ -181,6 +183,11 @@ def GroupsTool_getGroupById_cachekey(method, self, group_id):
     return date, group_id
 
 
+def store_in_request(method, *args, **kwargs):
+    """Cache storage living as long as the request, for objects bound to its ZODB connection."""
+    return IAnnotations(getRequest())
+
+
 if os.getenv("decorate_acl_methods", "Nope") in ("True", "true"):
     logger.info("DECORATING various acl related methods with cache")
     decorator = pmram.cache(GroupsTool__getGroupsForPrincipal_cachekey)
@@ -193,5 +200,5 @@ if os.getenv("decorate_acl_methods", "Nope") in ("True", "true"):
     # PluggableAuthService._findUser = decorator(PluggableAuthService._findUser)
     # decorator = pmram.cache(PluggableAuthService__verifyUser_cachekey)
     # PluggableAuthService._verifyUser = decorator(PluggableAuthService._verifyUser)
-    decorator = pmram.cache(GroupsTool_getGroupById_cachekey)
+    decorator = volatile.cache(GroupsTool_getGroupById_cachekey, get_cache=store_in_request)
     GroupsTool.getGroupById = decorator(GroupsTool.getGroupById)
