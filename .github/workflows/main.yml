@@ -15,10 +15,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - python: 2.7.18
-            plone: 4.3
           - python: 3.13.1
-            plone: "6.1"
+            plone: "6.2"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -69,7 +67,7 @@ jobs:
       matrix:
         include:
           - python: 3.13.1
-            plone: "6.1"
+            plone: "6.2"
     steps:
       - name: Checkout
         uses: actions/checkout@v4

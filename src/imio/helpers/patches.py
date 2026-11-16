@@ -4,6 +4,8 @@ from imio.helpers import HAS_PLONE_4
 from imio.helpers.cache import get_cachekey_volatile
 from imio.helpers.cache import get_plone_groups_for_user
 from imio.helpers.cache import invalidate_cachekey_volatile_for
+from importlib.metadata import distribution
+from importlib.metadata import PackageNotFoundError
 from plone.api.exc import InvalidParameterError
 from plone.memoize import ram
 from Products.PlonePAS.plugins.role import GroupAwareRoleManager
@@ -11,12 +13,10 @@ from Products.PluggableAuthService.plugins.ZODBRoleManager import ZODBRoleManage
 from smtplib import SMTP_SSL
 from zope.sendmail.mailer import SMTPMailer
 
-import pkg_resources
-
 
 try:
-    pkg_resources.get_distribution("collective.solr")
-except pkg_resources.DistributionNotFound:
+    distribution("collective.solr")
+except PackageNotFoundError:
     HAS_SOLR = False
 else:
     from collective.solr.indexer import SolrIndexProcessor

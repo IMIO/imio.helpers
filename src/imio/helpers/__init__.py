@@ -2,6 +2,8 @@
 from datetime import date
 from datetime import datetime
 from imio.helpers.cache import get_cachekey_volatile
+from importlib.metadata import distribution
+from importlib.metadata import PackageNotFoundError
 from plone import api
 from plone.memoize import ram as pmram
 from Products.PlonePAS.plugins.role import GroupAwareRoleManager
@@ -12,7 +14,6 @@ from zope.i18nmessageid import MessageFactory
 
 import logging
 import os
-import pkg_resources
 
 
 try:
@@ -59,9 +60,9 @@ SSO_APPS_ALGORITHM = os.getenv('SSO_APPS_ALGORITHM', 'RS256')
 
 
 try:
-    pkg_resources.get_distribution("ftw.labels")
+    distribution("ftw.labels")
     HAS_FTW_LABELS = True
-except pkg_resources.DistributionNotFound:  # pragma: no cover
+except PackageNotFoundError:  # pragma: no cover
     HAS_FTW_LABELS = False
 
 

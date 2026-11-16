@@ -4,6 +4,8 @@ from Acquisition import aq_base
 from html import escape
 from imio.helpers import HAS_PLONE_6_AND_MORE
 from imio.helpers.utils import create_image_content
+from importlib.metadata import distribution
+from importlib.metadata import PackageNotFoundError
 from os import path
 from plone import api
 from plone.outputfilters.browser.resolveuid import uuidToURL
@@ -19,7 +21,6 @@ import cgi
 import logging
 import lxml.html
 import os
-import pkg_resources
 import six
 import six.moves.urllib.request as urllib_request
 
@@ -41,8 +42,8 @@ logger = logging.getLogger("imio.helpers:xhtml")
 
 try:
     HAS_CKEDITOR = True
-    pkg_resources.get_distribution("collective.ckeditor")
-except pkg_resources.DistributionNotFound:
+    distribution("collective.ckeditor")
+except PackageNotFoundError:
     HAS_CKEDITOR = False
 
 
