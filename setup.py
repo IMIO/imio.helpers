@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """Installer for the imio.helpers package."""
 
-from setuptools import find_namespace_packages
 from setuptools import setup
 
 
@@ -33,8 +32,6 @@ setup(
     url="https://github.com/imio/imio.helpers",
     download_url="https://pypi.org/project/imio.helpers",
     license="GPL",
-    packages=find_namespace_packages("src", exclude=["ez_setup"]),
-    package_dir={"": "src"},
     include_package_data=True,
     zip_safe=False,
     python_requires=">=3.10",
@@ -49,7 +46,6 @@ setup(
         "plone.app.intid",
         "plone.app.relationfield",
         "plone.dexterity",
-        "setuptools",
         "six",
         "Plone",
         "z3c.unconfigure",
