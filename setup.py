@@ -37,7 +37,6 @@ setup(
     download_url="https://pypi.org/project/imio.helpers",
     license="GPL",
     packages=find_packages("src", exclude=["ez_setup"]),
-    namespace_packages=["imio"],
     package_dir={"": "src"},
     include_package_data=True,
     zip_safe=False,

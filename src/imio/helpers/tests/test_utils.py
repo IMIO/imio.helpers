@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
+from imio.helpers import has_distribution
 from imio.helpers.content import add_file
 from imio.helpers.testing import IntegrationTestCase
 from imio.helpers.utils import is_pdf
@@ -28,3 +29,7 @@ class TestUtils(IntegrationTestCase):
         self.assertFalse(is_pdf(obj))
         add_file(obj, filepath=os.path.join(current_dir, "file.pdf"))
         self.assertTrue(is_pdf(obj))
+
+    def test_has_distribution(self):
+        self.assertTrue(has_distribution("plone.api"))
+        self.assertFalse(has_distribution("imio.unknown.package"))

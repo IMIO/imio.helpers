@@ -21,6 +21,14 @@ from zope.schema.interfaces import IVocabularyFactory
 import logging
 
 
+try:
+    from plone.protect.utils import safeWrite
+except ImportError:  # plone.protect < 3
+
+    def safeWrite(obj, request=None):
+        pass
+
+
 logger = logging.getLogger("imio.helpers:cache")
 VOLATILE_NAME_MAX_LENGTH = 200
 VOLATILE_ATTR = "_volatile_cache_keys"
@@ -76,12 +84,15 @@ def get_cachekey_volatile(name, method=None, ttl=0):
     if volatiles is None:
         portal._volatile_cache_keys = PersistentMapping()
         volatiles = portal._volatile_cache_keys
+        safeWrite(portal)
     date = volatiles.get(volatile_name)
     now = datetime.now()
     # compute new date if None or if using ttl and ttl is stale
     if not date or (ttl and date + timedelta(seconds=ttl) < now):
         date = now
         volatiles[volatile_name] = date
+        # a cachekey is not user data: storing it on a GET must not trigger plone.protect
+        safeWrite(volatiles)
     # store caller method path so it will be invalidated in invalidate_cachekey_volatile_for
     if method:
         key = "%s.%s" % (method.__module__, method.__name__)
@@ -92,6 +103,8 @@ def get_cachekey_volatile(name, method=None, ttl=0):
             volatiles[METHODS_MAPPING_NAME][name] = []
         if key not in volatiles[METHODS_MAPPING_NAME][name]:
             volatiles[METHODS_MAPPING_NAME][name].append(key)
+            safeWrite(volatiles)
+            safeWrite(volatiles[METHODS_MAPPING_NAME])
     return date
 
 

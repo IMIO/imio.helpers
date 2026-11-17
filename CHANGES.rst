@@ -4,7 +4,22 @@ Changelog
 1.3.20 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- `emailer.send_email`: encode only the display names of the address headers, not the addresses
+  (`reply-to: =?utf-8?q?a=40b=2Ebe?=` on Python 3).
+  [chris-adam]
+- `emailer.send_email`: bcc recipients are no more visible in the `To` header with MailHost >= 4 (Plone 6),
+  and the address headers of a previous call aren't kept on a reused message.
+  [chris-adam]
+- `cache.get_cachekey_volatile`: marked the stored cachekeys as a safe write, so plone.protect no longer
+  redirects a GET to `@@confirm-action` (Plone 5.2+).
+  [chris-adam]
+- `helpers.js` on Plone 6: the info overlays use `pat-plone-modal` and the quickupload override is skipped
+  without `qq` (the rest of the file wasn't loaded).
+  [chris-adam]
+- Replaced the import-time `pkg_resources` checks by `importlib.metadata` (`has_distribution`), `pkg_resources` is gone with setuptools 82+.
+  [chris-adam]
+- Used pkgutil-style namespace packages, so PEP 420 packages of the same namespace are not hidden.
+  [chris-adam]
 
 
 1.3.19 (2026-11-16)

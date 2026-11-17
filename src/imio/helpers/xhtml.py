@@ -2,6 +2,7 @@
 
 from Acquisition import aq_base
 from html import escape
+from imio.helpers import has_distribution
 from imio.helpers import HAS_PLONE_6_AND_MORE
 from imio.helpers.utils import create_image_content
 from os import path
@@ -19,7 +20,6 @@ import cgi
 import logging
 import lxml.html
 import os
-import pkg_resources
 import six
 import six.moves.urllib.request as urllib_request
 
@@ -39,11 +39,7 @@ else:
 
 logger = logging.getLogger("imio.helpers:xhtml")
 
-try:
-    HAS_CKEDITOR = True
-    pkg_resources.get_distribution("collective.ckeditor")
-except pkg_resources.DistributionNotFound:
-    HAS_CKEDITOR = False
+HAS_CKEDITOR = has_distribution("collective.ckeditor")
 
 
 CLASS_TO_LAST_CHILDREN_NUMBER_OF_CHARS_DEFAULT = 240

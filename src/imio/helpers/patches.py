@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from imio.helpers import has_distribution
 from imio.helpers import HAS_PLONE_4
 from imio.helpers.cache import get_cachekey_volatile
 from imio.helpers.cache import get_plone_groups_for_user
@@ -11,17 +12,10 @@ from Products.PluggableAuthService.plugins.ZODBRoleManager import ZODBRoleManage
 from smtplib import SMTP_SSL
 from zope.sendmail.mailer import SMTPMailer
 
-import pkg_resources
 
-
-try:
-    pkg_resources.get_distribution("collective.solr")
-except pkg_resources.DistributionNotFound:
-    HAS_SOLR = False
-else:
+HAS_SOLR = has_distribution("collective.solr")
+if HAS_SOLR:
     from collective.solr.indexer import SolrIndexProcessor
-
-    HAS_SOLR = True
 
 
 def solr_index(self, obj, attributes=None):

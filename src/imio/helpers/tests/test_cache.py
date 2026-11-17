@@ -34,6 +34,13 @@ from zope.schema.interfaces import IVocabularyFactory
 import os
 import time
 import transaction
+import unittest
+
+
+try:
+    from plone.protect.utils import safeWrite
+except ImportError:  # plone.protect < 3
+    safeWrite = None
 
 
 memPropName = Memojito.propname
@@ -174,6 +181,18 @@ class TestCacheModule(IntegrationTestCase):
         # volatiles are not removed by tearDown, remove it now to avoid
         # test isolation issues with test test_invalidate_cachekey_volatile_for
         invalidate_cachekey_volatile_for(method_name)
+
+    @unittest.skipIf(safeWrite is None, "plone.protect < 3")
+    def test_get_cachekey_volatile_safe_write(self):
+        """Storing a new cachekey, on a GET, is a safe write for plone.protect."""
+        get_cachekey_volatile("My method")
+        transaction.savepoint()  # gives an oid to the volatiles mapping
+        self.request.environ.pop("plone.protect.safe_oids", None)
+        invalidate_cachekey_volatile_for("My method")
+        get_cachekey_volatile("My method")
+        volatiles = getattr(self.portal, VOLATILE_ATTR)
+        self.assertIn(volatiles._p_oid, self.request.environ.get("plone.protect.safe_oids", []))
+        invalidate_cachekey_volatile_for("My method")
 
     def test_get_cachekey_volatile_method(self):
         """Test behavior when method is passed to get_cachekey_volatile."""
