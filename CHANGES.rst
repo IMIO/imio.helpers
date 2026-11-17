@@ -16,6 +16,8 @@ Changelog
 - `helpers.js` on Plone 6: the info overlays use `pat-plone-modal` and the quickupload override is skipped
   without `qq` (the rest of the file wasn't loaded).
   [chris-adam]
+- Replaced the import-time `pkg_resources` checks by `importlib.metadata` (`has_distribution`), `pkg_resources` is gone with setuptools 82+.
+  [chris-adam]
 
 
 1.3.18 (2026-09-14)

@@ -13,8 +13,14 @@ from zope.i18nmessageid import MessageFactory
 
 import logging
 import os
-import pkg_resources
 
+
+try:
+    from importlib.metadata import distribution
+    from importlib.metadata import PackageNotFoundError
+except ImportError:  # Python 2
+    from pkg_resources import DistributionNotFound as PackageNotFoundError
+    from pkg_resources import get_distribution as distribution
 
 try:
     from urlparse import urlparse
@@ -55,11 +61,16 @@ SSO_APPS_AUDIENCE = os.getenv('SSO_APPS_AUDIENCE', 'account')
 SSO_APPS_ALGORITHM = os.getenv('SSO_APPS_ALGORITHM', 'RS256')
 
 
-try:
-    pkg_resources.get_distribution("ftw.labels")
-    HAS_FTW_LABELS = True
-except pkg_resources.DistributionNotFound:  # pragma: no cover
-    HAS_FTW_LABELS = False
+def has_distribution(name):
+    """Tell if the distribution is installed."""
+    try:
+        distribution(name)
+    except PackageNotFoundError:
+        return False
+    return True
+
+
+HAS_FTW_LABELS = has_distribution("ftw.labels")
 
 
 if HAS_FTW_LABELS:
