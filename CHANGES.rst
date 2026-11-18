@@ -1,13 +1,18 @@
 Changelog
 =========
 
-1.3.19 (unreleased)
+1.3.20 (unreleased)
 -------------------
 
 - Use native namespace packages (PEP 420). Remove the `pkg_resources` namespace declaration.
   Use `importlib.metadata` instead of `pkg_resources` to find installed packages.
   This version needs Python 3.10 or later and Plone 6.2.
   [boulch]
+
+
+1.3.19 (2026-11-16)
+-------------------
+
 - Split documentviewer convertible types.
   [sgeulette]
 - Added `EMPTY_DATE_IN_SOLR` constant.
