@@ -190,6 +190,7 @@ if os.getenv("decorate_acl_methods", "Nope") in ("True", "true"):
     decorator = pmram.cache(PluggableAuthService__getGroupsForPrincipal_cachekey)
     PluggableAuthService._getGroupsForPrincipal = decorator(PluggableAuthService._getGroupsForPrincipal)
     # decorator = pmram.cache(PluggableAuthService__findUser_cachekey)
+    # beware _findUser is now in imio.dms.mail.overrides (the following will not decorate the right method if applied !)
     # PluggableAuthService._findUser = decorator(PluggableAuthService._findUser)
     # decorator = pmram.cache(PluggableAuthService__verifyUser_cachekey)
     # PluggableAuthService._verifyUser = decorator(PluggableAuthService._verifyUser)
