@@ -6,6 +6,8 @@ Changelog
 
 - Added `form_target` on `BaseRenderFancyTree` to set the fancytree form `target` (DMS-1243).
   [chris-adam]
+- Avoided a wrong "Could not update" error in `load_type_from_package` when the xml only edits existing actions.
+  [sgeulette]
 
 1.3.19 (2026-11-16)
 -------------------

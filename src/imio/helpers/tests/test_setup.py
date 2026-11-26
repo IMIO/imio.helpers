@@ -61,6 +61,20 @@ class TestSetupModule(IntegrationTestCase):
         self.assertTrue(load_type_from_package("testingtype", "profile-imio.helpers:testing", create=True))
         self.assertIsNotNone(types_tool.get("testingtype"))
 
+    def test_load_type_from_package_existing_action_only(self):
+        """A type xml with only an already existing action edits the action, not the fti."""
+        from imio.helpers import setup
+
+        def import_existing_action(portal_type, path, context):
+            portal_type.getActionObject("object/view").edit(title="Viewed")
+
+        original = setup.importObjects
+        setup.importObjects = import_existing_action
+        try:
+            self.assertTrue(load_type_from_package("testingtype", "profile-imio.helpers:testing"))
+        finally:
+            setup.importObjects = original
+
     def test_load_workflow_from_package(self):
         wkf_tool = api.portal.get_tool("portal_workflow")
         wkf_obj = wkf_tool.get("intranet_workflow")

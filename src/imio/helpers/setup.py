@@ -55,7 +55,9 @@ def load_type_from_package(type_name, profile_id, purge_actions=False, create=Fa
     # ps_tool.applyContext(context)  # necessary ?
     importObjects(portal_type, "types/", context)
     # a freshly created fti fills sub-attributes: _p_changed on the fti itself may stay False
-    if not created and portal_type._p_changed is False:
+    # an existing action is edited in place: only the action object changes, not the fti
+    changed = portal_type._p_changed or any(action._p_changed for action in portal_type._actions)
+    if not created and not changed:
         logger.error("Could not update '{}' using profile '{}'".format(type_name, profile_id))
         return False
     return True
