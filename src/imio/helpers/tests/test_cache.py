@@ -28,6 +28,7 @@ from Products.PlonePAS.plugins.ufactory import PloneUser
 from zope.annotation import IAnnotations
 from zope.component import getUtility
 from zope.component import queryUtility
+from zope.globalrequest import setRequest
 from zope.ramcache.interfaces.ram import IRAMCache
 from zope.schema.interfaces import IVocabularyFactory
 
@@ -396,6 +397,14 @@ class TestCachedMethods(IntegrationTestCase):
         self.assertListEqual(self.acl._getGroupsForPrincipal(self.user), ["Reviewers", "AuthenticatedUsers"])
         pgr.removePrincipalFromGroup("user1", "Reviewers")
         self.assertListEqual(self.acl._getGroupsForPrincipal(self.user), ["AuthenticatedUsers"])
+
+    def test_getGroupById(self):
+        pgr = self.portal["portal_groups"]
+        group = pgr.getGroupById("Reviewers")
+        self.assertIs(pgr.getGroupById("Reviewers"), group)
+        # not shared with another request, its ZODB connection may be closed
+        setRequest(self.request.clone())
+        self.assertIsNot(pgr.getGroupById("Reviewers"), group)
 
     def test_imio_global_cache(self):
         from zope.ramcache.ram import caches
